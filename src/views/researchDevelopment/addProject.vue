@@ -97,12 +97,7 @@
             <el-date-picker v-model="form.finishtime" type="date" placeholder="选择日期"></el-date-picker>
           </el-form-item>
           <el-form-item label="要求数量" prop="quantity">
-            <!--  v-model="form.quantity" -->
-            <!--  v-model.number="form.quantity" type="number" -->
-            <el-input
-              v-model="form.quantity"
-              @keyup="this.value=this.value.replace(/[^0-9-]+/,'');"
-            ></el-input>
+            <el-input v-model="form.quantity" @input="handleInput" placeholder="要求数量"></el-input>
           </el-form-item>
           <el-form-item label="详细要求" prop="detailed">
             <el-input type="textarea" v-model="form.detailed" class="textarea"></el-input>
@@ -261,29 +256,26 @@ export default {
       // 表单规则
       rules: {
         projectname: [
-          { required: true, message: "请输入项目名称", trigger: "change" }
+          { required: true, message: "请输入项目名称", trigger: "blur" }
         ],
         projecttype: [
-          { required: true, message: "请输入项目类型", trigger: "change" }
+          { required: true, message: "请输入项目类型", trigger: "blur" }
         ],
-        west: [{ required: true, message: "请输入客户", trigger: "change" }],
-        year: [{ required: true, message: "请输入年份", trigger: "change" }],
-        season: [{ required: true, message: "请输入季节", trigger: "change" }],
-        element: [{ required: true, message: "请输入元素", trigger: "change" }],
-        color: [{ required: true, message: "请输入颜色", trigger: "change" }],
+        west: [{ required: true, message: "请输入客户", trigger: "blur" }],
+        year: [{ required: true, message: "请输入年份", trigger: "blur" }],
+        season: [{ required: true, message: "请输入季节", trigger: "blur" }],
+        element: [{ required: true, message: "请输入元素", trigger: "blur" }],
+        color: [{ required: true, message: "请输入颜色", trigger: "blur" }],
         finishtime: [
-          { required: true, message: "请输入完成时间", trigger: "change" }
+          { required: true, message: "请输入完成时间", trigger: "blur" }
         ],
         quantity: [
-          { required: true, message: "请输入要求数量", trigger: "change" },
-          { type: "number", message: "请输入0-9" }
+          { required: true, message: "请输入要求数量", trigger: "blur" }
         ],
         detailed: [
-          { required: true, message: "请输入详细要求", trigger: "change" }
+          { required: true, message: "请输入详细要求", trigger: "blur" }
         ],
-        stylist: [
-          { required: true, message: "请输入设计师", trigger: "change" }
-        ]
+        stylist: [{ required: true, message: "请输入设计师", trigger: "blur" }]
       }
     };
   },
@@ -390,6 +382,9 @@ export default {
       if (e === 0) this.$router.push({ path: "/addProject?id=a" });
       if (e === 1) this.$router.push({ path: "/addProject?id=b" });
       if (e === 2) this.$router.push({ path: "/addProject?id=c" });
+    },
+    handleInput() {
+      this.form.quantity = this.form.quantity.replace(/[^0-9-]+/, "");
     },
     onSubmit() {
       console.log(this.form);

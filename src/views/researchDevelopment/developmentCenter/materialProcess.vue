@@ -31,14 +31,14 @@
                         </div>
                         <div class="cardStyle_left_content">
                           <div class="cardStyle_left_content_name">
-                            <div>{{item2.mainclass}}</div>
+                            <div>{{item2.materials_mainclass_name}} ({{item2.materials_class_name}})</div>
                             <div
                               class="el-icon-close"
                               style="cursor: pointer;"
                               @click.stop="handleStyleMaterialsDel(item2)"
                             ></div>
                           </div>
-                          <div>{{item2.color}}</div>
+                          <div>{{item2.materials_data[0].materialsname}}</div>
                           <div>内部编号:{{item2.materials_data[0].materialsno}}</div>
                           <div
                             v-if="item2.style_materials_supplier_data.length>0"
@@ -84,7 +84,8 @@
           <el-divider content-position="right">{{item.materials}}</el-divider>
         </div>
       </div>
-      <div class="del_purchase_note">
+      <div class="del_purchase_note" v-if="card.length>0">
+        <el-checkbox class="checkbox" v-model="isAllCheck" @change="handleAllCheck">全选</el-checkbox>
         <el-button size="mini" round @click="purchaseOrder">生成采购单</el-button>
       </div>
       <!-- 删除历史 -->
@@ -140,9 +141,14 @@
                         </div>
                         <div class="cardStyle_left_content">
                           <div class="cardStyle_left_content_name">
-                            <div>{{item2.mainclass}}</div>
+                            <div>{{item2.materials_mainclass_name}} ({{item2.materials_class_name}})</div>
+                            <div
+                              class="el-icon-close"
+                              style="cursor: pointer;"
+                              @click.stop="handleStyleMaterialsDel(item2)"
+                            ></div>
                           </div>
-                          <div>{{item2.color}}</div>
+                          <div>{{item2.materials_data[0].materialsname}}</div>
                           <div>内部编号:{{item2.materials_data[0].materialsno}}</div>
                           <div
                             v-if="item2.style_materials_supplier_data.length>0"
@@ -169,10 +175,15 @@
                               </div>
                             </div>
                           </el-popover>
-                          <div>{{item2.color||item2.materials_color_data[0].color}}</div>
-                          <div>{{item2.color_no||item2.materials_color_data[0].color_no}}</div>
+                          <!-- ||item2.materials_color_data[0].color -->
+                          <div>{{item2.color}}</div>
+                          <div>{{item2.color_no}}</div>
+                          <!-- ||item2.materials_color_data[0].color_no -->
                         </div>
-                        <el-checkbox v-model="item2.isCheckList" @change="isCheckListBox(item2)"></el-checkbox>
+                        <el-checkbox
+                          v-model="item2.isCheckList"
+                          @change="isCheckListBox(item2,item1)"
+                        ></el-checkbox>
                       </div>
                     </div>
                   </div>
@@ -204,10 +215,13 @@
                 <img :src="item.picurl" alt />
               </div>
               <div class="cardStyle_left_content">
-                <div class="cardStyle_left_content_name">
-                  <div>{{item.materialsname}}</div>
+                <div style="font-weight: 600;font-size: 14px;">
+                  {{item.materials_mainclass_name}}
+                  <em
+                    v-if="item.materials_class_name"
+                  >({{item.materials_class_name}})</em>
                 </div>
-                <div>{{item.color}}</div>
+                <div>{{item.materialsname}}</div>
                 <div>内部编号:{{item.materialsno}}</div>
                 <div
                   v-if="item.supplier_data.length>0"
@@ -236,12 +250,14 @@
           </div>
         </div>
       </div>
+      <!-- 分页 -->
       <el-pagination
+        v-if="total!==0"
         class="pagination"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="pageIndex"
-        :page-sizes="[10, 20, 30, 40]"
+        :page-sizes="[9, 18, 27, 36]"
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
@@ -307,7 +323,7 @@ export default {
       isCheckList1: [], //复选框数组1
       searchInput: "", //搜索值
       pageIndex: 1,
-      pageSize: 10,
+      pageSize: 9,
       total: 0,
       MaterialsList: [], //物料数组
       style_color_data_length: "", //样式颜色数据长度
@@ -323,10 +339,15 @@ export default {
       isCheckListBoxEvent: {},
       delListData: [],
       active: 0,
-      options: []
+      options: [],
+
+      isAllCheck: false
     };
   },
   methods: {
+    handleAllCheck(e) {
+      console.log(e);
+    },
     async handleRestore(item1) {
       let res = await projectStyleMaterialsHfdel({ id: item1.id });
       // console.log(res);
@@ -383,28 +404,34 @@ export default {
         });
     },
     async addMaterialsList(item) {
-      // console.log(item.id);
+      this.$confirm("确定选择", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(async () => {
+        // console.log(item.id);
 
-      // console.log(this.style_id);
-      // console.log(this.style_color_name);
-      // console.log(this.materials);
-      let style_id = this.style_id;
-      let style_color_name = this.style_color_name;
-      let mainclass = this.materials;
-      let materials_id = item.id;
-      let materials_color_id =
-        this.materials_color_id || item.materials_color_data[0].id;
-      let res = await projectStyleMaterialsAdd({
-        style_id,
-        style_color_name,
-        mainclass,
-        materials_id,
-        materials_color_id
+        // console.log(this.style_id);
+        // console.log(this.style_color_name);
+        // console.log(this.materials);
+        let style_id = this.style_id;
+        let style_color_name = this.style_color_name;
+        let mainclass = this.materials;
+        let materials_id = item.id;
+        let materials_color_id =
+          this.materials_color_id || item.materials_color_data[0].id;
+        let res = await projectStyleMaterialsAdd({
+          style_id,
+          style_color_name,
+          mainclass,
+          materials_id,
+          materials_color_id
+        });
+        console.log(res);
+        this.active = 0;
+        this.init();
+        this.centerDialogVisible1 = false;
       });
-      console.log(res);
-      this.active = 0;
-      this.init();
-      this.centerDialogVisible1 = false;
     },
     handleColourNumber(item, item1) {
       this.materials_color_id = item1.id;
@@ -448,9 +475,10 @@ export default {
         page: this.pageIndex,
         page_size: this.pageSize
       });
-      let { data } = res.data;
+      console.log(res);
+      let { data, count } = res.data;
       this.MaterialsList = data;
-      // console.log(this.MaterialsList);
+      this.total = count;
     },
     handleMaterialsCard(item) {
       this.searchInput = "";
@@ -502,22 +530,22 @@ export default {
         // console.log(obj);
 
         let res = await projectStyleMaterialsListAdd(obj);
-        // console.log(res);
+        console.log(res);
         this.init();
         this.active = 0;
         this.centerDialogVisible = false;
       }
     },
-    isCheckListBox(e) {
+    isCheckListBox(e, e1) {
       this.isCheckListBoxEvent = e;
       console.log(e);
+      console.log(e1);
 
       if (e.isCheckList === true) {
         this.isCheckList.push({
-          mainclass: e.mainclass,
+          mainclass: e1.mainclass,
           id: e.id,
-          materials_color_id:
-            this.materials_color_id1 || e.materials_color_data[0].id,
+          materials_color_id: this.materials_color_id1 || e1.style_color_id,
           materials_id: e.materials_id
         });
       }
@@ -556,14 +584,15 @@ export default {
           });
         });
       }
+      console.log(res);
       let { data } = res.data;
-      // console.log(res);
       this.card = data;
       this.card.map((v, i) => {
         v.style_materials_data.map((g, j) => {
           g.isCheckList1 = false;
         });
       });
+      console.log(this.card);
     },
     colourNumber(item2) {
       this.colourNumberId = item2.id;
@@ -606,7 +635,7 @@ export default {
             v["isCheckList"] = false;
           });
         });
-        // console.log(res1);
+        console.log(res1);
         let { data } = res1.data;
         this.card = data;
       }
@@ -623,7 +652,6 @@ export default {
           });
         });
       });
-      // console.log(this.card);
     },
     async delListInit() {
       let { id } = this.$route.query;
@@ -649,9 +677,11 @@ export default {
     },
     handleSizeChange(val) {
       this.pageSize = val;
+      this.handleSearchInput();
     },
     handleCurrentChange(val) {
       this.pageIndex = val;
+      this.handleSearchInput();
     }
   },
   mounted() {
@@ -737,6 +767,9 @@ export default {
       padding: 30px 0;
       text-align: right;
       border-bottom: 1px solid #dcdfe6;
+      .checkbox{
+        margin-right: 50px;
+      }
     }
     .del_history {
       .operation {

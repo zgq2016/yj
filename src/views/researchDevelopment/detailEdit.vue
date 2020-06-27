@@ -25,7 +25,7 @@
           <el-form-item label="项目名称" prop="projectname">
             <el-input v-model="obj.projectname"></el-input>
           </el-form-item>
-          <el-form-item label="项目类型">
+          <el-form-item label="项目类型" prop="projecttype">
             <el-select v-model="obj.projecttype" @change="handleChange($event)">
               <el-option
                 v-for="item in projecttypes"
@@ -35,131 +35,90 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <div v-if="obj.projecttype==='意向'">
-            <div>
-              <el-form-item label="客户">
-                <el-select
-                  v-model="obj.customer_companyname"
-                  placeholder="客户名称"
-                  @change="handleCustomer_id($event)"
-                >
-                  <el-option
-                    v-for="item in wests"
-                    :key="item.id"
-                    :label="item.companyname"
-                    :value="item.id"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </div>
-            <div>
-              <el-form-item label="年份">
-                <el-select v-model="obj.year" placeholder="年份">
-                  <el-option
-                    v-for="item in years"
-                    :key="item.id"
-                    :label="item.year"
-                    :value="item.year"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </div>
-            <div>
-              <el-form-item label="季节">
-                <el-select v-model="obj.season" placeholder="季节">
-                  <el-option
-                    v-for="item in seasons"
-                    :key="item.id"
-                    :label="item.season"
-                    :value="item.season"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </div>
-          </div>
-          <div v-if="obj.projecttype==='阶段'">
-            <div>
-              <el-form-item label="年份">
-                <el-select v-model="obj.year" placeholder="年份">
-                  <el-option
-                    v-for="item in years"
-                    :key="item.id"
-                    :label="item.year"
-                    :value="item.year"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </div>
-            <div>
-              <el-form-item label="季节">
-                <el-select v-model="obj.season" placeholder="季节">
-                  <el-option
-                    v-for="item in seasons"
-                    :key="item.id"
-                    :label="item.season"
-                    :value="item.season"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </div>
-          </div>
-          <div v-if="obj.projecttype==='企划'">
-            <el-form-item label="元素">
-              <el-input v-model="obj.element" placeholder="元素描述"></el-input>
-            </el-form-item>
-            <el-form-item label="色系">
-              <el-input v-model="obj.color" placeholder="色系"></el-input>
-            </el-form-item>
-            <div>
-              <el-form-item label="年份">
-                <el-select v-model="obj.year" placeholder="年份">
-                  <el-option
-                    v-for="item in years"
-                    :key="item.id"
-                    :label="item.year"
-                    :value="item.year"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </div>
-            <div>
-              <el-form-item label="季节">
-                <el-select v-model="obj.season">
-                  <el-option
-                    v-for="item in seasons"
-                    :key="item.id"
-                    :label="item.season"
-                    :value="item.season"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </div>
-          </div>
-          <el-form-item label="完成时间">
+          <el-form-item label="客户" prop="customer_companyname" v-if="obj.projecttype==='意向'">
+            <el-select
+              v-model="obj.customer_companyname"
+              placeholder="客户名称"
+              @change="handleCustomer_id($event)"
+            >
+              <el-option
+                v-for="item in wests"
+                :key="item.id"
+                :label="item.companyname"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="年份" prop="year" v-if="obj.projecttype==='意向'">
+            <el-select v-model="obj.year" placeholder="年份">
+              <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="季节" prop="season" v-if="obj.projecttype==='意向'">
+            <el-select v-model="obj.season" placeholder="季节">
+              <el-option
+                v-for="item in seasons"
+                :key="item.id"
+                :label="item.season"
+                :value="item.season"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="年份" prop="year" v-if="obj.projecttype==='阶段'">
+            <el-select v-model="obj.year" placeholder="年份">
+              <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="季节" prop="season" v-if="obj.projecttype==='阶段'">
+            <el-select v-model="obj.season" placeholder="季节">
+              <el-option
+                v-for="item in seasons"
+                :key="item.id"
+                :label="item.season"
+                :value="item.season"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="元素" prop="element" v-if="obj.projecttype==='企划'">
+            <el-input v-model="obj.element" placeholder="元素描述"></el-input>
+          </el-form-item>
+          <el-form-item label="色系" prop="color" v-if="obj.projecttype==='企划'">
+            <el-input v-model="obj.color" placeholder="色系"></el-input>
+          </el-form-item>
+          <el-form-item label="年份" prop="year" v-if="obj.projecttype==='企划'">
+            <el-select v-model="obj.year" placeholder="年份">
+              <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="季节" prop="season" v-if="obj.projecttype==='企划'">
+            <el-select v-model="obj.season">
+              <el-option
+                v-for="item in seasons"
+                :key="item.id"
+                :label="item.season"
+                :value="item.season"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="完成时间" prop="finishtime">
             <el-date-picker v-model="obj.finishtime" type="date" placeholder="选择日期"></el-date-picker>
           </el-form-item>
-          <el-form-item label="要求数量">
-            <el-input v-model="obj.quantity"></el-input>
+          <el-form-item label="要求数量" prop="quantity">
+            <el-input v-model="obj.quantity" @input="handleInput" placeholder="要求数量"></el-input>
           </el-form-item>
-          <el-form-item label="详细要求">
+          <el-form-item label="详细要求" prop="detailed">
             <el-input type="textarea" v-model="obj.detailed" class="textarea"></el-input>
           </el-form-item>
-          <div>
-            <el-form-item label="指派">
-              <el-select
-                v-model="obj.user_name"
-                placeholder="工作人员名称"
-                @change="handleUser_id($event)"
-              >
-                <el-option
-                  v-for="item in stylists"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </div>
+          <el-form-item label="指派" prop="user_name">
+            <el-select v-model="obj.user_name" placeholder="工作人员名称" @change="handleUser_id($event)">
+              <el-option
+                v-for="item in stylists"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item>
             <el-button @click="handleKeep" style="padding:10px 50px;border-radius: 15px;">保存</el-button>
             <el-button @click="handleDel" style="padding:10px 50px;border-radius: 15px;">删除</el-button>
@@ -210,27 +169,29 @@ export default {
       // 表单规则
       rules: {
         projectname: [
-          { required: true, message: "请输入项目名称", trigger: "change" }
+          { required: true, message: "请输入项目名称", trigger: "blur" }
         ],
         projecttype: [
-          { required: true, message: "请输入项目类型", trigger: "change" }
+          { required: true, message: "请输入项目类型", trigger: "blur" }
         ],
-        west: [{ required: true, message: "请输入客户", trigger: "change" }],
-        year: [{ required: true, message: "请输入年份", trigger: "change" }],
-        season: [{ required: true, message: "请输入季节", trigger: "change" }],
-        element: [{ required: true, message: "请输入元素", trigger: "change" }],
-        color: [{ required: true, message: "请输入颜色", trigger: "change" }],
+        customer_companyname: [
+          { required: true, message: "请输入客户", trigger: "blur" }
+        ],
+        year: [{ required: true, message: "请输入年份", trigger: "blur" }],
+        season: [{ required: true, message: "请输入季节", trigger: "blur" }],
+        element: [{ required: true, message: "请输入元素", trigger: "blur" }],
+        color: [{ required: true, message: "请输入颜色", trigger: "blur" }],
         finishtime: [
-          { required: true, message: "请输入完成时间", trigger: "change" }
+          { required: true, message: "请输入完成时间", trigger: "blur" }
         ],
         quantity: [
-          { required: true, message: "请输入要求数量", trigger: "change" }
+          { required: true, message: "请输入要求数量", trigger: "blur" }
         ],
         detailed: [
-          { required: true, message: "请输入详细要求", trigger: "change" }
+          { required: true, message: "请输入详细要求", trigger: "blur" }
         ],
-        stylist: [
-          { required: true, message: "请输入设计师", trigger: "change" }
+        user_name: [
+          { required: true, message: "请输入设计师", trigger: "blur" }
         ]
       }
     };
@@ -257,6 +218,9 @@ export default {
             message: "已取消删除"
           });
         });
+    },
+    handleInput() {
+      this.form.quantity = this.form.quantity.replace(/[^0-9-]+/, "");
     },
     async handleKeep() {
       this.$refs["obj"].validate(async valid => {

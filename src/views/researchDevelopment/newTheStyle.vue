@@ -25,14 +25,19 @@
         </div>
         <div class="styleNumberContent">
           <div class="form">
-            <el-form ref="form" :model="form" label-width="80px">
-              <el-form-item label="款号">
-                <div>{{form.styleno}}</div>
+            <el-form :model="form" ref="form" :rules="rules" label-width="80px">
+              <el-form-item>
+                <div style="display:flex">
+                  <div style="width:200px">款号: {{form.styleno}}</div>
+                  <div style="width:200px">年份: {{defaultData.year}}</div>
+                  <div style="width:200px">季节: {{defaultData.season}}</div>
+                  <div style="width:200px">设计师: {{defaultData.user_name}}</div>
+                </div>
               </el-form-item>
-              <el-form-item label="名称">
-                <el-input v-model="form.stylename"></el-input>
+              <el-form-item label="名称" prop="stylename">
+                <el-input v-model="form.stylename" style="width:200px"></el-input>
               </el-form-item>
-              <el-form-item label="品类">
+              <el-form-item label="品类" prop="style_type">
                 <el-select v-model="form.style_type" placeholder="品类">
                   <el-option
                     v-for="item in categorys"
@@ -42,33 +47,13 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="年份">
-                <el-select v-model="form.year" placeholder="年份">
+              <el-form-item label="颜色" prop="style_color">
+                <el-select v-model="form.style_color">
                   <el-option
-                    v-for="item in years"
+                    v-for="item in colors"
                     :key="item.id"
-                    :label="item.year"
-                    :value="item.id"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="季节">
-                <el-select v-model="form.season">
-                  <el-option
-                    v-for="item in seasons"
-                    :key="item.id"
-                    :label="item.season"
-                    :value="item.id"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="设计师">
-                <el-select v-model="user_name" placeholder="工作人员名称" @change="handleUser_id($event)">
-                  <el-option
-                    v-for="item in stylists"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id"
+                    :label="item.color_name"
+                    :value="item.color_name"
                   ></el-option>
                 </el-select>
               </el-form-item>
@@ -89,17 +74,7 @@
             <i v-else class="el-icon-upload avatar-uploader-icon"></i>
           </el-upload>
         </div>
-        <div class="form" style="margin:20px 30px">
-          <label for style="padding:10px 13px 0">颜色</label>
-          <el-select v-model="form.style_color">
-            <el-option
-              v-for="item in colors"
-              :key="item.id"
-              :label="item.color_name"
-              :value="item.color_name"
-            ></el-option>
-          </el-select>
-        </div>
+        <div class="form"></div>
       </div>
       <el-button round style="margin:30px 300px" @click="handleClick">保存</el-button>
     </div>
@@ -121,14 +96,14 @@
         </div>
         <div class="styleNumberContent">
           <div class="form">
-            <el-form ref="form" :model="form" label-width="80px">
+            <el-form ref="obj" :model="obj" :rules="rules1" label-width="80px">
               <el-form-item label="款号">
                 <div>{{styleno}}</div>
               </el-form-item>
-              <el-form-item label="名称">
+              <el-form-item label="名称" prop="stylename">
                 <el-input v-model="obj.stylename"></el-input>
               </el-form-item>
-              <el-form-item label="品类">
+              <el-form-item label="品类" prop="style_type">
                 <el-select v-model="obj.style_type" placeholder="品类">
                   <el-option
                     v-for="item in categorys"
@@ -138,7 +113,7 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="年份">
+              <el-form-item label="年份" prop="year">
                 <el-select v-model="obj.year" placeholder="年份">
                   <el-option
                     v-for="item in years"
@@ -148,7 +123,7 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="季节">
+              <el-form-item label="季节" prop="season">
                 <el-select v-model="obj.season">
                   <el-option
                     v-for="item in seasons"
@@ -158,7 +133,7 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="设计师">
+              <el-form-item label="设计师" prop="user_name">
                 <el-select
                   v-model="obj.user_name"
                   placeholder="工作人员名称"
@@ -169,6 +144,16 @@
                     :key="item.id"
                     :label="item.name"
                     :value="item.id"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="颜色" prop="style_color_name">
+                <el-select v-model="obj.style_color_name">
+                  <el-option
+                    v-for="item in colors"
+                    :key="item.id"
+                    :label="item.color_name"
+                    :value="item.color_name"
                   ></el-option>
                 </el-select>
               </el-form-item>
@@ -188,17 +173,6 @@
             <img v-if="style_color_pic_url" :src="style_color_pic_url" class="avatar" />
             <i v-else class="el-icon-upload avatar-uploader-icon"></i>
           </el-upload>
-        </div>
-        <div class="form" style="margin:20px 30px">
-          <label for style="padding:10px 13px 0">颜色</label>
-          <el-select v-model="style_color">
-            <el-option
-              v-for="item in colors"
-              :key="item.id"
-              :label="item.color_name"
-              :value="item.color_name"
-            ></el-option>
-          </el-select>
         </div>
       </div>
       <el-button round style="margin:30px 300px" @click="handleClick1">保存</el-button>
@@ -229,7 +203,8 @@ export default {
         year: "",
         style_type: "",
         style_color: "",
-        style_color_pic_url: ""
+        style_color_pic_url: "",
+        user_name: ""
       },
       styleno: "",
       style_color_pic_url: "",
@@ -239,35 +214,80 @@ export default {
       stylists: [],
       categorys: [],
       colors: [],
-      user_name: "",
       user_id: "",
-      obj: {}
+      obj: {},
+      defaultData: {},
+      // 表单规则
+      rules: {
+        stylename: [{ required: true, message: "请输入名称", trigger: "blur" }],
+        style_type: [
+          { required: true, message: "请输入品类", trigger: "blur" }
+        ],
+        style_color: [
+          { required: true, message: "请输入颜色", trigger: "blur" }
+        ]
+      },
+      rules1: {
+        stylename: [{ required: true, message: "请输入名称", trigger: "blur" }],
+        style_type: [
+          { required: true, message: "请输入品类", trigger: "blur" }
+        ],
+        year: [{ required: true, message: "请输入年份", trigger: "blur" }],
+        season: [{ required: true, message: "请输入季节", trigger: "blur" }],
+        user_name: [
+          { required: true, message: "请输入设计师", trigger: "blur" }
+        ],
+        style_color_name: [
+          { required: true, message: "请输入颜色", trigger: "blur" }
+        ]
+      },
     };
   },
   methods: {
     async handleClick() {
-      let { id } = this.$route.query;
-      this.form["project_id"] = id;
-      this.form["user_id"] = this.user_id;
-      let res = await projectStyleAdd(this.form);
-      this.$router.go(-1);
+      this.$refs["form"].validate(async valid => {
+        if (!valid) return;
+        // 调用actions的登录方法
+        console.log(this.form);
+        console.log(this.defaultData);
+        let obj = {};
+        obj["style_type"] = this.form.style_type;
+        obj["stylename"] = this.form.stylename;
+        obj["styleno"] = this.form.styleno;
+        obj["style_color"] = this.form.style_color;
+        obj["style_color_pic_url"] = this.form.style_color_pic_url;
+        obj["style_pic_url"] = this.form.style_pic_url;
+        obj["year"] = this.defaultData.year;
+        obj["season"] = this.defaultData.season;
+        obj["user_id"] = this.defaultData.user_id;
+        obj["id"] = this.defaultData.id;
+        let res = await projectStyleAdd(obj);
+        console.log(res);
+        this.$router.go(-1);
+      });
     },
     async handleClick1() {
-      let { id } = this.$route.query;
-      let obj = {};
-      obj["project_id"] = id;
-      obj["user_id"] = this.obj.user_id;
-      obj["style_pic_url"] = this.obj.style_pic_url;
-      obj["stylename"] = this.obj.stylename;
-      obj["styleno"] = this.styleno;
-      obj["season"] = this.obj.season;
-      obj["year"] = this.obj.year;
-      obj["style_type"] = this.obj.style_type;
-      obj["style_color_pic_url"] = this.style_color_pic_url;
-      obj["style_color"] = this.style_color;
-      let res = await projectStyleAdd(obj);
-      // console.log(res);
-      this.$router.go(-1);
+      this.$refs["obj"].validate(async valid => {
+        if (!valid) return;
+        // 调用actions的登录方法
+        delete this.obj.user_name;
+        let { id } = this.$route.query;
+        let obj = {};
+        console.log(obj.user_id);
+        obj["project_id"] = id;
+        obj["user_id"] = this.user_id || this.obj.user_id;
+        obj["style_pic_url"] = this.obj.style_pic_url;
+        obj["stylename"] = this.obj.stylename;
+        obj["styleno"] = this.styleno;
+        obj["season"] = this.obj.season;
+        obj["year"] = this.obj.year;
+        obj["style_type"] = this.obj.style_type;
+        obj["style_color_pic_url"] = this.style_color_pic_url;
+        obj["style_color"] = this.obj.style_color_name;
+        let res = await projectStyleAdd(obj);
+        console.log(res);
+        // this.$router.go(-1);
+      });
     },
     handleStyleNumberSuccess(res, file) {
       if (this.$route.query.oldId) {
@@ -304,7 +324,7 @@ export default {
       let res = await getYearList();
       let { data } = res.data;
       this.years = data;
-      // console.log(this.years) 
+      // console.log(this.years)
     },
     async getColor() {
       let res = await getColorSelect();
@@ -312,7 +332,6 @@ export default {
       let { data } = res.data;
       this.colors = data;
     },
-
     async getSeason() {
       let res = await getSeasonList();
       let { data } = res.data;
@@ -331,23 +350,28 @@ export default {
     async init() {
       let { id } = this.$route.query;
       let { oldId } = this.$route.query;
-      let res = await getStyle({ id:oldId });
-      // console.log(res)
-      let res1 = await getProject({id });
-      this.obj = res.data.data;
-      this.form.year = res1.data.data.finishtime.slice(0,4);
-      this.form.season = res1.data.data.season;
-      this.user_name = res1.data.data.user_name;
-      this.user_id = res1.data.data.user_id;
+
+      if (oldId === undefined) {
+        let res = await getProject({ id });
+        console.log(res);
+        this.defaultData = res.data.data;
+      }
+      if (oldId !== undefined) {
+        let res1 = await getProject({ id });
+        console.log(res1);
+        this.obj = res.data.data;
+        this.form.year = res1.data.data.year;
+        this.form.season = res1.data.data.season;
+        this.user_name = res1.data.data.user_name;
+        this.user_id = res1.data.data.user_id;
+      }
       // console.log(res1.data.data);
-     
     },
     async getStylenoData() {
       let res = await getStyleno();
       this.form.styleno = res.data.data.styleno;
       this.styleno = res.data.data.styleno;
-    },
-     
+    }
   },
   async mounted() {
     this.getStylenoData();
@@ -357,8 +381,7 @@ export default {
     this.getstylist();
     this.getColor();
     this.init();
-  },
- 
+  }
 };
 </script>
 
@@ -381,7 +404,9 @@ export default {
       }
     }
     .color {
-      margin-top: 30px;
+      position: fixed;
+      left: 460px;
+      top: 500px;
       display: flex;
     }
   }

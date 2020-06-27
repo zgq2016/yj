@@ -15,7 +15,7 @@
       <div class="right_content">
         <div class="name">项目名称：{{obj.projectname}}</div>
         <div class="client">客户：{{obj.customer_companyname}}</div>
-        <div class="year">年份：{{obj.finishtime}}</div>
+        <div class="year">年份：{{obj.year}}</div>
         <div class="season">季节：{{obj.season}}</div>
         <div class="claim">要求：{{obj.detailed}}</div>
       </div>
@@ -41,7 +41,7 @@
           </template>
         </el-table-column>
         <el-table-column property="style_color" label="颜色"></el-table-column>
-        <el-table-column property="stylename" label="名称"></el-table-column>
+        <el-table-column property="stylename" label="款式名称"></el-table-column>
         <el-table-column property="styleno" label="款号"></el-table-column>
         <el-table-column property="style_type" label="品类"></el-table-column>
         <el-table-column label="操作" align="right">
@@ -57,7 +57,7 @@
       <div>
         <el-input
           v-model="input"
-          placeholder="请输入款号"
+          placeholder="请填写款式名称或款号"
           clearable
           style="width:300px"
           @input="searchInput"
@@ -65,19 +65,20 @@
         <div style="display:flex;flex-wrap: wrap;">
           <div></div>
           <div class="search__card" v-for="(item, index) in styleList" :key="index">
-            <router-link :to="`/newTheStyle?id=${$route.query.id}&oldId=${item.id}`">
+            <div @click="handleSelectItem(item)">
+              <!-- router-link :to="`/newTheStyle?id=${$route.query.id}&oldId=${item.id}`" -->
               <div class="search_card_left">
                 <div class="search_card_left_img">
                   <img :src="item.style_pic_url" alt />
                 </div>
                 <div class="search_card_left_content">
-                  <div class="search_card_left_content_name">{{item.mainclass}}</div>
+                  <div class="search_card_left_content_name">{{item.stylename}}</div>
                   <div>{{item.style_type}}</div>
-                  <div>款号:{{item.styleno}}</div>
-                  <div>{{item.supplier_companyname}}</div>
+                  <div>{{item.year}}</div>
+                  <div>{{item.season}}</div>
                 </div>
               </div>
-            </router-link>
+            </div>
           </div>
         </div>
       </div>
@@ -117,6 +118,17 @@ export default {
     };
   },
   methods: {
+    handleSelectItem(item) {
+      this.$confirm("确定选择", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(async () => {
+        this.$router.push({
+          path: `/newTheStyle?id=${this.$route.query.id}&oldId=${item.id}`
+        });
+      });
+    },
     async searchInput() {
       let res = await getProjectStyleList({
         keyword: this.input,
@@ -177,13 +189,13 @@ export default {
     }
     .right_content {
       flex: 1;
-      .claim{
+      .claim {
         width: 900px;
         text-align: justify;
         text-justify: newspaper;
-        word-break: break-all; 
+        word-break: break-all;
       }
-     
+
       .name {
         font-size: 20px;
         font-weight: 600;
@@ -246,7 +258,7 @@ export default {
         }
       }
       .search_card_left_content {
-        padding-top:10px;
+        padding-top: 3px;
         .search_card_left_content_name {
           font-weight: 700;
         }

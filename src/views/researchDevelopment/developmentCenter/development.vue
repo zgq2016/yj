@@ -24,6 +24,7 @@ export default {
     async init() {
       let { id } = this.$route.query;
       let res = await getStyle({ id });
+      console.log(res);
       this.activities_endlong = res.data.data.style_log;
     }
   },
