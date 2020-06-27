@@ -1,0 +1,400 @@
+<template>
+  <div class="panelPurchase">
+    <!-- 面包屑 -->
+    <el-breadcrumb separator="/" class="breadcrumb">
+      <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
+      <el-breadcrumb-item>研发部</el-breadcrumb-item>
+      <el-breadcrumb-item>版料采购</el-breadcrumb-item>
+      <el-breadcrumb-item>版料采购单</el-breadcrumb-item>
+    </el-breadcrumb>
+    <div class="main">
+      <!-- 物料卡信息 供应商信息 -->
+      <div class="info">
+        <!-- header -->
+        <div style="display: flex;">
+          <div class="cardInfo">
+            <div class="cardInfoTitle">物料卡信息</div>
+            <div class="cardInfoContent">
+              <div class="cardInfoContentImg">
+                <img :src="header.picurl" alt />
+              </div>
+              <div class="cardInfoContentText">
+                <div class="cardInfoContentTextName">{{header.materialsname}}</div>
+                <div style="display: flex;">
+                  <div style="margin-right:100px">
+                    <div>内部编号：{{header.materialsno}}</div>
+                    <div>编号：{{header.materialsno}}</div>
+                    <div>面料分类：</div>
+                    <div>料属性：</div>
+                    <div style="display: flex;">
+                      <div style="margin-right:10px;width:70px;">面料成分：</div>
+                      <div style="width:70px;">
+                        <div></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="width:150px;">
+                    <div>色号：{{colors.color_no}}</div>
+                    <div>颜色：{{colors.color}}</div>
+                    <div>大货单价：{{header.wsale_price}}</div>
+                    <div>幅宽：{{header.unit}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="supplierInfo">
+            <div class="supplierInfoTitle">供应商信息</div>
+            <div class="supplierInfoContent" ref="supplier">
+              <div class="supplierInfoContentImg">
+                <img :src="supplier.cardpicurl" alt />
+              </div>
+              <div class="supplierInfoContentText">
+                <div class="supplierInfoContentTextName">{{supplier.companyname}}</div>
+                <div>1354561325</div>
+                <div></div>
+                <div>账号信息：</div>
+                <div>{{supplier.address}}</div>
+                <div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 信息部分 -->
+        <div class="purchaseInfo">
+          <div class="purchaseInfoTitle">采购信息</div>
+          <div class="userProfile">
+            <span style="padding:10px 30px">
+              事件号：
+              自动生成
+            </span>
+            <span>
+              经办人：
+              自动生成
+            </span>
+          </div>
+          <div class="form">
+            <el-form ref="form" :model="form" label-width="100px">
+              <el-form-item label="用量">
+                <el-col :span="6">
+                  <el-input v-model="form.dosage" placeholder="请输入用量(以米为单位)" style="width:200px"></el-input>
+                </el-col>
+                <el-col :span="6">
+                  <el-button size="small" round @click="readyforTheCall">备货调用</el-button>
+                </el-col>
+              </el-form-item>
+              <el-form-item label="采购量">
+                <el-input
+                  v-model="form.amountPurchased"
+                  @input="changed()"
+                  placeholder="请输入采购量(以米为单位)"
+                  style="width:200px"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="采购单价">
+                <el-input
+                  v-model="form.purchasePrice"
+                  @input="changed()"
+                  placeholder="请输入采购单价"
+                  style="width:200px"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="金额">
+                <el-input
+                  v-model="form.money"
+                  @input="changed1()"
+                  placeholder="请输入金额"
+                  style="width:200px"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="付款">
+                <el-radio-group @change="selectPayment" v-model="form.payment">
+                  <el-radio :label="0">订金</el-radio>
+                  <el-radio :label="1">全额付款</el-radio>
+                </el-radio-group>
+              </el-form-item>
+              <el-form-item v-if="form.payment==0" label="订金">
+                <el-input v-model="form.deposit" placeholder="请输入订金" style="width:200px"></el-input>
+              </el-form-item>
+              <el-form-item v-if="form.payment==1" label="全额付款">
+                <el-input
+                  v-model="form.fullPayout"
+                  disabled
+                  placeholder="请输入金额"
+                  style="width:200px"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="支付方式">
+                <el-select v-model="form.payManneItem" placeholder="请选择">
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="预计回料时间">
+                <el-date-picker v-model="form.finishTime" type="date" placeholder="选择日期"></el-date-picker>
+              </el-form-item>
+
+              <el-form-item label="上传凭证">
+                <el-upload
+                  class="avatar-uploader"
+                  action="https://yj.ppp-pay.top/uploadpic.php"
+                  :show-file-list="false"
+                  :on-success="handleAvatarSuccess"
+                  :before-upload="beforeAvatarUpload"
+                >
+                  <img v-if="form.picurl" :src="form.picurl" class="avatar" />
+                  <i v-else class="el-icon-upload avatar-uploader-icon"></i>
+                </el-upload>
+              </el-form-item>
+              <el-form-item label="备注">
+                <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="form.remark"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button round @click="onSubmit">保存</el-button>
+              </el-form-item>
+            </el-form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <el-dialog title="增加款式颜色" :visible.sync="centerDialogVisible" width="30%" center class="dialog">
+      aa
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="centerDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import moment from "moment";
+import {
+  getMaterialsInfo, //物料
+  getSupplierInfo //供应商
+} from "@/api/archives";
+import {
+  produceOrderProcureEdit //编辑物料
+} from "@/api/production";
+export default {
+  data() {
+    return {
+      form: {
+        dosage: "", //用量
+        amountPurchased: "", //采购量
+        purchasePrice: "", //单价
+        money: "", //金额
+        payManneItem: "", //支付方式
+        payment: 0, //付款
+        finishTime: "", //预计完成时间
+        deposit: "", //订金
+        fullPayout: "", //全额支付
+        picurl: "", //图片
+        remark: "" //备注
+      },
+      centerDialogVisible: false,
+      header: [], //物料信息
+      supplier: [], //供应商
+      colors: {},
+      radio: 0,
+      options: [
+        //选择支付方式
+        {
+          value: "中国农业银行",
+          label: "中国农业银行"
+        },
+        {
+          value: "中国工商银行",
+          label: "中国工商银行"
+        },
+        {
+          value: "微信",
+          label: "微信"
+        },
+        {
+          value: "支付宝",
+          label: "支付宝"
+        }
+      ]
+    };
+  },
+  methods: {
+    readyforTheCall() {
+      this.centerDialogVisible = true;
+    },
+    async changed() {
+      this.form.money = this.form.amountPurchased * this.form.purchasePrice;
+      this.form.money = String(this.form.money);
+      this.form.fullPayout = this.form.money;
+      
+    },
+    async changed1() {
+      this.form.purchasePrice = this.form.money / this.form.amountPurchased;
+      this.form.purchasePrice = String(this.form.purchasePrice);
+    },
+    async onSubmit() {
+      this.form.finishTime = moment(this.form.finishTime).format("YYYY-MM-DD");
+      
+       
+      // console.log(this.form);
+      // console.log(JSON.parse(this.$route.query.e));
+      let e = JSON.parse(this.$route.query.e);
+      // console.log(e);
+      
+      let res = await produceOrderProcureEdit({
+        id: e.id,
+        style_id:Number(e.style_id),
+        produce_no: e.produce_no,
+        style_color_name: e.style_color_name,
+        mainclass: e.mainclass,
+        materials_id: e.materials_id,
+        color: e.color,
+        color_no: e.color_no,
+        picurl: e.picurl,
+        amountPurchased: this.form.amountPurchased,
+        deposit: this.form.deposit,
+        dosage: this.form.dosage,
+        finishTime: this.form.finishTime,
+        payManneItem: this.form.payManneItem,
+        money: this.form.money,
+        payment: this.form.payment,
+        purchasePrice: this.form.purchasePrice,
+        remark: this.form.remark,
+        uploadDocuments:this.form.picurl,
+      });
+      console.log(res);
+      this.$router.push({
+        path: `/ProductionStyle?id=${e.style_id}&activeNames=2`
+      });
+    },
+    handleAvatarSuccess(res, file) {
+      this.form.picurl = res.data.pic_file_url;
+      // console.log(this.picurl);
+    },
+    beforeAvatarUpload(file) {
+      // console.log(file)
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error("上传图片只能是 JPG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
+    },
+    async init() {
+      // 物料
+      let { materials_id } = this.$route.query;
+      let res = await getMaterialsInfo({
+        id: Number(materials_id)
+      });
+      let { data } = res.data;
+      this.header = data;
+      this.colors = {
+        color: this.header.color_data[0].color,
+        color_no: this.header.color_data[0].color_no
+      };
+      // console.log(data);
+
+      // 供应商
+      let res1 = await getSupplierInfo({
+        id: Number(data.materials_supplier_data[0].supplier_id)
+      });
+      let data1 = res1.data.data;
+      this.supplier = data1;
+
+      //
+    },
+    async selectPayment(value) {
+      if (value == 1) {
+        this.form.deposit = this.form.fullPayout;
+      }else{
+        this.form.deposit = "";
+      }
+    }
+  },
+  mounted() {
+    this.init();
+  }
+};
+</script>
+
+<style lang="less" scoped>
+.panelPurchase {
+  .main {
+    .info {
+      .cardInfo {
+        margin-right: 80px;
+        .cardInfoTitle {
+          padding: 30px 10px;
+          font-size: 16px;
+        }
+        .cardInfoContent {
+          display: flex;
+          .cardInfoContentImg {
+            margin-right: 30px;
+            img {
+              width: 200px;
+              height: 200px;
+            }
+          }
+          .cardInfoContentText {
+            div {
+              margin: 3px 0;
+              font-size: 14px;
+            }
+            .cardInfoContentTextName {
+              font-size: 16px;
+              font-weight: 600;
+              margin-top: 10px;
+            }
+          }
+        }
+      }
+      .supplierInfo {
+        .supplierInfoTitle {
+          padding: 30px 10px;
+          font-size: 16px;
+        }
+        .supplierInfoContent {
+          display: flex;
+          .supplierInfoContentImg {
+            img {
+              width: 200px;
+              height: 200px;
+            }
+          }
+          .supplierInfoContentText {
+            margin: 10px 30px;
+            div {
+              margin: 3px 0;
+              font-size: 14px;
+            }
+            .supplierInfoContentTextName {
+              font-size: 16px;
+              font-weight: 600;
+              margin-top: 10px;
+            }
+          }
+        }
+      }
+      .purchaseInfo {
+        .purchaseInfoTitle {
+          padding: 30px 10px;
+          font-size: 16px;
+        }
+      }
+      .form {
+        margin: 30px 10px;
+      }
+    }
+  }
+}
+</style>
