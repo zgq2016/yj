@@ -320,7 +320,6 @@ export default {
       visible2: false,
       colourNumberId: "",
       isCheckList: [], //复选框数组
-      isCheckList1: [], //复选框数组1
       searchInput: "", //搜索值
       pageIndex: 1,
       pageSize: 9,
@@ -341,13 +340,13 @@ export default {
       active: 0,
       options: [],
 
-      isAllCheck: false
+      isAllCheck: false,
+      checkNum: 0,
+      card_length: 0,
+      isCheckList1: [] //复选框数组1
     };
   },
   methods: {
-    handleAllCheck(e) {
-      console.log(e);
-    },
     async handleRestore(item1) {
       let res = await projectStyleMaterialsHfdel({ id: item1.id });
       // console.log(res);
@@ -538,9 +537,6 @@ export default {
     },
     isCheckListBox(e, e1) {
       this.isCheckListBoxEvent = e;
-      console.log(e);
-      console.log(e1);
-
       if (e.isCheckList === true) {
         this.isCheckList.push({
           mainclass: e1.mainclass,
@@ -550,20 +546,38 @@ export default {
         });
       }
       if (e.isCheckList === false) {
-        this.isCheckList.pop();
+        this.isCheckList.map((v, i) => {
+          if (e.id === v.id) {
+            this.isCheckList.splice(i, 1);
+          }
+        });
       }
+    },
+    handleAllCheck(e) {
+      // this.isAllCheck == !this.isAllCheck;
+      console.log(e);
+      this.isAllCheck = e;
+      this.card.map((v, i) => {
+        v.style_materials_data.map((v1, i1) => {
+          v1["isCheckList1"] = this.isAllCheck;
+        });
+      });
     },
     // 选择的物料准备采购
     isCheckListBox1(e) {
-      // console.log(e);
-      if (e.isCheckList1 === true) {
-        this.isCheckList1.push({
-          id: e.id
+      this.card.map((v, i) => {
+        v.style_materials_data.map((v1, i1) => {
+          if (v1.id === e.id) {
+            v.isCheckList1 = !v.isCheckList1;
+            v1.isCheckList1 ? this.checkNum++ : this.checkNum--;
+          }
         });
-      }
-      if (e.isCheckList1 === false) {
-        this.isCheckList1.pop();
-      }
+      });
+      console.log(this.card_length);
+      console.log(this.checkNum);
+      this.card_length == this.checkNum
+        ? this.handleAllCheck(true)
+        : (this.isAllCheck = false);
     },
     // 切换颜色
     async handleColorNum(item, index) {
@@ -605,11 +619,11 @@ export default {
       // obj["materials_data"] = this.isCheckList1;
       console.log(this.isCheckList1);
 
-      let res = await stylePurchaseAdd({
-        style_id: id,
-        style_materials_list_id_data: this.isCheckList1
-      });
-      console.log(res);
+      // let res = await stylePurchaseAdd({
+      //   style_id: id,
+      //   style_materials_list_id_data: this.isCheckList1
+      // });
+      // console.log(res);
       // this.$router.push({ path: `/materialPurchasing?id=${id}` });
       // this.init()
     },
@@ -620,22 +634,25 @@ export default {
       // this.obj.style_color_data[0].style_color_name = this.obj.style_color;
       // console.log(this.obj);
       if (this.obj.style_color_data.length > 0) {
+        let arr = [];
         // 列表数据
         this.style_id = this.obj.style_color_data[0].style_id;
         this.style_color_name = this.obj.style_color_data[0].style_color_name;
-        // console.log(this.style_color_name);
-        // console.log(this.style_id);
 
         let res1 = await getStyleMaterialsList({
           style_id: this.style_id,
           style_color_name: this.style_color_name
         });
         res1.data.data.forEach((v, i) => {
-          v.style_materials_data.forEach((v, i) => {
-            v["isCheckList"] = false;
+          v.style_materials_data.forEach((v1, i1) => {
+            v1["isCheckList"] = false;
+            v1["isCheckList1"] = false;
+            arr.push({ v1 });
           });
         });
         console.log(res1);
+
+        this.card_length = arr.length;
         let { data } = res1.data;
         this.card = data;
       }
@@ -767,7 +784,7 @@ export default {
       padding: 30px 0;
       text-align: right;
       border-bottom: 1px solid #dcdfe6;
-      .checkbox{
+      .checkbox {
         margin-right: 50px;
       }
     }
