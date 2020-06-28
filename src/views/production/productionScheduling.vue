@@ -83,7 +83,6 @@
           <el-table-column align="center" width="70" property="year" label="年份"></el-table-column>
           <el-table-column align="center" width="70" property="season" label="季节"></el-table-column>
           <el-table-column align="center" property="stylist" label="设计师"></el-table-column>
-          <el-table-column align="center" property="number" label="数量"></el-table-column>
           <el-table-column align="center" width="70" property="state" label="状态"></el-table-column>
 
           <el-table-column align="center" label="操作">

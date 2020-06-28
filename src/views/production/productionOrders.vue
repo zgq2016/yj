@@ -14,15 +14,15 @@
         style="position: relative;"
       >
         <el-form-item label="商品">
-          <el-input v-model="formInline.name" placeholder="款号"></el-input>
+          <el-input v-model="formInline.styleno" placeholder="款号"></el-input>
         </el-form-item>
         <el-form-item label="年份">
-          <el-select v-model="year" placeholder="年份" style="width:120px">
+          <el-select v-model="formInline.year" placeholder="年份" style="width:120px">
             <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="季节">
-          <el-select v-model="season" placeholder="季节" style="width:120px">
+          <el-select v-model="formInline.season" placeholder="季节" style="width:120px">
             <el-option
               v-for="item in seasons"
               :key="item.id"
@@ -42,7 +42,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="类别">
-          <el-select v-model="category" placeholder="类别" style="width:120px">
+          <el-select v-model="formInline.style_type" placeholder="类别" style="width:120px">
             <el-option
               v-for="item in categorys"
               :key="item.id"
@@ -53,7 +53,7 @@
         </el-form-item>
         <el-form-item label="状态">
           <el-select
-            v-model="state"
+            v-model="formInline.state"
             placeholder="状态"
             @change="handelState($event)"
             style="width:120px"
@@ -85,13 +85,12 @@
           </el-table-column>
           <el-table-column align="center" property="stylename" label="名称"></el-table-column>
           <el-table-column align="center" property="styleno" label="款号"></el-table-column>
-          <el-table-column width="70" align="center" property="style_color" label="颜色"></el-table-column>
+          <el-table-column width="80" align="center" property="style_color" label="颜色"></el-table-column>
           <el-table-column align="center" property="style_type" label="品类"></el-table-column>
-          <el-table-column width="70" align="center" property="year" label="年份"></el-table-column>
-          <el-table-column width="70" align="center" property="season" label="季节"></el-table-column>
+          <el-table-column width="80" align="center" property="year" label="年份"></el-table-column>
+          <el-table-column width="80" align="center" property="season" label="季节"></el-table-column>
           <el-table-column align="center" property="stylist" label="设计师"></el-table-column>
-          <el-table-column align="center" property="number" label="数量"></el-table-column>
-          <el-table-column align="center" property="state" label="状态"></el-table-column>
+          <el-table-column width="80" align="center" property="state" label="状态"></el-table-column>
           <el-table-column align="center" label="操作">
             <template slot-scope="scope">
               <el-button
@@ -144,8 +143,12 @@ export default {
   data() {
     return {
       formInline: {
-        name: "",
-        region: ""
+        styleno:'',
+        year:'',
+        season:'',
+        user_id:'',
+        style_type:'',
+        state:''
       },
       years: [],
       seasons: [],
@@ -193,7 +196,13 @@ export default {
     },
     // 查询
     async onSubmit() {
-      this.init(this.page, this.page_size);
+      console.log(this.formInline);
+      
+      // this.init(this.page, this.page_size);
+    },
+    handleUser_id(v){
+      console.log(v);
+      
     },
     //  增加下单
     addOrders() {

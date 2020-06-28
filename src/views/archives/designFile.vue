@@ -14,15 +14,15 @@
         style="position: relative;"
       >
         <el-form-item label="商品">
-          <el-input v-model="formInline.name" placeholder="款号"></el-input>
+          <el-input v-model="formInline.styleno" placeholder="款号"></el-input>
         </el-form-item>
         <el-form-item label="年份">
-          <el-select v-model="year" placeholder="年份" style="width:120px">
+          <el-select v-model="formInline.year" placeholder="年份" style="width:120px">
             <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="季节">
-          <el-select v-model="season" placeholder="季节" style="width:120px">
+          <el-select v-model="formInline.season" placeholder="季节" style="width:120px">
             <el-option
               v-for="item in seasons"
               :key="item.id"
@@ -42,7 +42,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="类别">
-          <el-select v-model="category" placeholder="类别" style="width:120px">
+          <el-select v-model="formInline.style_type" placeholder="类别" style="width:120px">
             <el-option
               v-for="item in categorys"
               :key="item.id"
@@ -130,8 +130,11 @@ export default {
   data() {
     return {
       formInline: {
-        name: "",
-        region: ""
+        styleno:'',
+        year:'',
+        season:'',
+        user_id:'',
+        style_type:'',
       },
       years: [],
       seasons: [],
@@ -174,6 +177,8 @@ export default {
       });
     },
     async onSubmit() {
+      console.log(this.formInline);
+      
       // console.log("submit!");
       // let res = await getStyleList({
       //   page: this.page,
@@ -183,7 +188,10 @@ export default {
       // this.tableData =res.data.data
 
     }, 
-
+    handleUser_id(v){
+      console.log(v);
+      
+    },
     async getYear() {
       let res = await getYearList();
       let { data } = res.data;

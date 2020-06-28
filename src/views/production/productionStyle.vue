@@ -906,7 +906,7 @@
                           <div>{{item2.color||item2.materials_color_data[0].color}}</div>
                           <div>{{item2.color_no||item2.materials_color_data[0].color_no}}</div>
                         </div>
-                        <el-checkbox v-model="item2.isCheckList" @change="isCheckListBox(item2)"></el-checkbox>
+                        <el-checkbox v-model="item2.isCheckList" @change="isCheckListBox(item1)"></el-checkbox>
                       </div>
                     </div>
                   </div>
@@ -2017,18 +2017,18 @@ export default {
     isCheckListBox(e) {
       console.log(e);
 
-      this.isCheckListBoxEvent = e;
-      if (e.isCheckList === true) {
+      // this.isCheckListBoxEvent = e;
+      if (e.style_materials_data[0].isCheckList === true) {
         this.isCheckList.push({
-          mainclass: e.materials_mainclass_name,
+          mainclass: e.mainclass,
           style_materials_data: {
             materials_color_id:
-              this.materials_color_id1 || e.materials_color_data[0].id,
-            style_id: e.style_id,
-            materials_id: e.materials_id,
-            color: e.materials_color_data[0].color,
-            color_no: e.materials_color_data[0].color_no,
-            picurl: e.materials_color_data[0].picurl
+              this.materials_color_id1 || e.style_materials_data[0].materials_color_data[0].id,
+            style_id: e.style_materials_data[0].style_id,
+            materials_id: e.style_materials_data[0].materials_id,
+            color: e.style_materials_data[0].materials_color_data[0].color,
+            color_no: e.style_materials_data[0].materials_color_data[0].color_no,
+            picurl: e.style_materials_data[0].materials_color_data[0].picurl
           }
         });
       }
