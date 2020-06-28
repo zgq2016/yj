@@ -46,21 +46,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="客户">
-          <el-select
-            v-model="west"
-            placeholder="西所"
-            @change="handleCustomer_id($event)"
-            style="width:120px"
-          >
-            <el-option
-              v-for="item in wests"
-              :key="item.id"
-              :label="item.companyname"
-              :value="item.id"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+
         <el-form-item label="状态">
           <el-select
             v-model="state"
@@ -72,29 +58,35 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button @click="onSubmit">查询</el-button>
+          <el-button type="primary" @click="onSubmit">查询</el-button>
         </el-form-item>
       </el-form>
-     <div class="table">
-        <el-table ref="singleTable" :data="tableData" highlight-current-row style="width: 100%">
-          <el-table-column type="index" width="50"></el-table-column>
-          <el-table-column label="图片">
+      <div class="table">
+        <el-table
+          id="printTest"
+          ref="singleTable"
+          size="small"
+          :data="tableData"
+          highlight-current-row
+          style="width: 100%"
+        >
+          <el-table-column align="center" type="index" width="50"></el-table-column>
+          <el-table-column align="center" width="70" label="图片">
             <template slot-scope="scope" property="style_pic_url">
               <img :src="scope.row.style_pic_url" class="img" alt />
             </template>
           </el-table-column>
-          <el-table-column property="stylename" label="名称"></el-table-column>
-          <el-table-column property="styleno" label="款号"></el-table-column>
-          <el-table-column property="style_color" label="颜色"></el-table-column>
-          <el-table-column property="style_type" label="品类"></el-table-column>
-          <el-table-column property="year" label="年份"></el-table-column>
-          <el-table-column property="season" label="季节"></el-table-column>
-          <el-table-column property="stylist" label="设计师">{{this.stylist}}</el-table-column>
-          <el-table-column property="west" label="客户">{{this.west}}</el-table-column>
-          <el-table-column property="number" label="数量">{{this.number}}</el-table-column>
-          <el-table-column property="state" label="状态">{{this.state}}</el-table-column>
+          <el-table-column align="center" property="stylename" label="名称"></el-table-column>
+          <el-table-column align="center" property="styleno" label="款号"></el-table-column>
+          <el-table-column align="center" property="style_color" label="颜色"></el-table-column>
+          <el-table-column align="center" property="style_type" label="品类"></el-table-column>
+          <el-table-column align="center" width="70" property="year" label="年份"></el-table-column>
+          <el-table-column align="center" width="70" property="season" label="季节"></el-table-column>
+          <el-table-column align="center" property="stylist" label="设计师"></el-table-column>
+          <el-table-column align="center" property="number" label="数量"></el-table-column>
+          <el-table-column align="center" width="70" property="state" label="状态"></el-table-column>
 
-          <el-table-column label="操作">
+          <el-table-column align="center" label="操作">
             <template slot-scope="scope">
               <el-button
                 class="elbtn"
@@ -109,7 +101,7 @@
     <div style="display: flex;justify-content: space-between;align-items: center;">
       <!-- 打印  导出-->
       <div class="btn">
-        <el-button size="mini">打印</el-button>
+        <el-button v-print="'#printTest'" size="mini">打印</el-button>
         <el-button size="mini">导出</el-button>
       </div>
       <!-- 分页 -->
@@ -121,7 +113,7 @@
         :page-sizes="[9, 18, 27, 36]"
         :page-size="page_size"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
+        :total="count"
       ></el-pagination>
     </div>
   </div>
@@ -168,16 +160,19 @@ export default {
         }
       ],
       tableData: [],
-      count:0,
-      number:123,
+      count: 0,
+      number: 123
     };
   },
   methods: {
-    handleEdit(index,row) {
-      // console.log(row);
-      // console.log(index);
-      
-      this.$router.push({ path: "/productionStyle?id="+this.tableData[index].id +"&activeNames=3" });
+    handleEdit(index, row) {
+      console.log(row);
+      console.log(index);
+
+      // this.$router.push({
+      //   path:
+      //     "/productionStyle?id=" + this.tableData[index].id + "&activeNames=3"
+      // });
     },
     onSubmit() {
       console.log("submit!");
@@ -225,17 +220,24 @@ export default {
     handleCurrentChange(val) {
       this.pageIndex = val;
     },
-    async init(p,s){
+    async init(p, s) {
       let res = await getProjectStyleList({
-        'keyword':this.formInline.name == ''? 'z':this.formInline.name,
-        'page':p,
-        'page_size':s
+        keyword: this.formInline.name == "" ? "z" : this.formInline.name,
+        page: this.page,
+        page_size: this.page_size
       });
       console.log(res);
       this.count = res.data.count;
       let { data } = res.data;
       this.tableData = data;
       // console.log(this.tableData);
+      this.tableData.map((v, i) => {
+        this.stylists.map((j, k) => {
+          if (v.user_id == j.id) {
+            v.stylist = j.name;
+          }
+        });
+      });
     },
     handleSizeChange(val) {
       // console.log(val)
@@ -246,7 +248,7 @@ export default {
       // console.log(val)
       this.page = val;
       this.init();
-    },
+    }
   },
   mounted() {
     this.getYear();

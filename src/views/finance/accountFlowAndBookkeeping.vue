@@ -120,7 +120,7 @@
           </div>
           <div class="dv">
             支出
-            <span style="color:orange;">{{money-900000009}}</span>
+            <span style="color:orange;">{{money-9000009}}</span>
           </div>
           <div class="dv">
             盈余
@@ -129,7 +129,7 @@
         </div>
       </div>
       <div class="table">
-        <el-table :data="tableData" border>
+        <el-table :data="tableData" size="small" border>
           <el-table-column fixed prop="data" label="操作"></el-table-column>
           <el-table-column fixed prop="data" label="业务时间"></el-table-column>
           <el-table-column fixed prop="data" label="单据编号"></el-table-column>

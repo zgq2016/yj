@@ -690,16 +690,7 @@
 
                   <div @click.stop="ide(index)">
                     <span>裁床单：</span>
-                    <el-upload
-                      class="avatar-uploader"
-                      action="https://yj.ppp-pay.top/uploadpic.php"
-                      :show-file-list="false"
-                      :on-success="handleAvatarSuccess2"
-                      :before-upload="beforeAvatarUpload"
-                    >
-                      <img v-if="item.imageUrl" :src="item.imageUrl" class="avatar" />
-                      <i v-else class="el-icon-upload avatar-uploader-icon"></i>
-                    </el-upload>
+                    <img v-if="item.imageUrl" :src="item.imageUrl" class="avatar" />
                   </div>
                   <hr style="border:1px dashed #999999" />
                 </div>
@@ -1241,14 +1232,23 @@ export default {
           a += Number(this.form_i.ratio[i]);
         }
         for (let i = 0; i < this.form_i.ratio.length; i++) {
-          if (this.form_i.sum == "") {
-            this.form_i.quantity.push(0);
+          if (this.form_i.ratio[i] != 0 || this.form_i.ratio[i] != "") {
+            if (this.form_i.sum == "") {
+              this.form_i.quantity.push(0);
+            } else {
+              this.form_i.quantity.push(
+                Math.round((this.form_i.sum / a) * this.form_i.ratio[i])
+              );
+            }
           } else {
-            this.form_i.quantity.push(
-              Math.round((this.form_i.sum / a) * this.form_i.ratio[i])
-            );
+            this.form_i.quantity.push("");
           }
         }
+        this.form_i.quantity.map((j, k) => {
+          if (isNaN(j)) {
+            j = "";
+          }
+        });
       } else {
         this.form[v].ratio = this.ratio[v];
         this.quantity[v] = [];
@@ -1258,14 +1258,23 @@ export default {
           a += Number(this.form[v].ratio[i]);
         }
         for (let i = 0; i < this.form[v].ratio.length; i++) {
-          if (this.form[v].sum == undefined) {
-            this.quantity[v].push(0);
+          if (this.ratio[v][i] != 0 || this.ratio[v][i] != "") {
+            if (this.form[v].sum == undefined) {
+              this.quantity[v].push(0);
+            } else {
+              this.quantity[v].push(
+                Math.round((this.form[v].sum / a) * this.form[v].ratio[i])
+              );
+            }
           } else {
-            this.quantity[v].push(
-              Math.round((this.form[v].sum / a) * this.form[v].ratio[i])
-            );
+            this.quantity[v].push("");
           }
         }
+        this.quantity[v].map((j, k) => {
+          if (isNaN(j)) {
+            j = "";
+          }
+        });
         this.form[v].quantity = this.quantity[v];
       }
       // console.log(this.form);
@@ -1485,16 +1494,15 @@ export default {
             }
           });
           // console.log(this.form_i);
-
           // 重新计算数量
           let add = 0;
           this.form_i.ratio.forEach(el => {
             add += Number(el);
           });
-          console.log(add);
-
           this.form_i.ratio.map((q, w) => {
-            this.form_i.quantity[w] = (this.form_i.sum / add) * q;
+            if (q != 0) {
+              this.form_i.quantity[w] = Math.round((this.form_i.sum / add) * q);
+            }
           });
 
           this.last = arrNew;
@@ -1511,8 +1519,6 @@ export default {
         this.form_i.size_name = arrNew;
       } else {
         //其他表
-
-        //
         if (value.length >= this.ratio[index].length) {
           arrNew.map((j, k) => {
             if (value[value.length - 1] == j) {
@@ -1529,26 +1535,32 @@ export default {
             });
           }
           this.last1 = arrNew;
-        } else {
+        }
+        if (value.length < this.ratio[index].length) {
           //删除
           // console.log(this.form[index].size_name);
-          this.size_name[index].map((j, k) => {
+
+          this.last1.map((j, k) => {
             let bl = arrNew.indexOf(j);
             if (bl == -1) {
               this.ratio[index].splice(k, 1);
               this.quantity[index].splice(k, 1);
             }
           });
+          this.last1 = arrNew;
           // 重新计算数量
           let add = 0;
           this.ratio[index].forEach(el => {
             add += Number(el);
           });
           this.ratio[index].map((q, w) => {
-            this.quantity[index][w] = (this.form[index].sum / add) * q;
+            if (q != 0) {
+              this.quantity[index][w] = Math.round(
+                (this.form[index].sum / add) * q
+              );
+            }
           });
 
-          this.last1 = arrNew;
           if (this.table_data) {
             arrNew.map((j, k) => {
               if (value[value.length - 1] == j) {
@@ -1631,6 +1643,19 @@ export default {
               this.ratio[i].push(a.ratio);
               this.size_name[i].push(a.size);
             });
+            let arrNew1 = [];
+            let arrNew2 = [];
+            let arrNew3 = [];
+            this.sizes.map((g, h) => {
+              z.map((j, k) => {
+                if (g.size_name == j) {
+                  arrNew1.push(g.size_name);
+                  arrNew2.push(r[k]);
+                  arrNew3.push(q[k]);
+                }
+              });
+            });
+
             // this.date.push(v.expect_date);
             obj_list = {
               customer_id: v.customer_id,
@@ -1638,9 +1663,9 @@ export default {
               color: v.style_color_name,
               date: v.expect_date,
               sum: v.total,
-              quantity: q,
-              ratio: r,
-              size_name: z,
+              quantity: arrNew3,
+              ratio: arrNew2,
+              size_name: arrNew1,
               ids: ids,
               companyname: comname
             };
@@ -1727,46 +1752,6 @@ export default {
     async clickOrders() {
       // console.log(this.form);
       // console.log(this.form_i);
-      // 判断是否有未填值或输入0
-      let successed = true;
-      if (
-        this.form_i.date == "" ||
-        this.form_i.date == undefined ||
-        this.form_i.companyname == "" ||
-        this.form_i.companyname == undefined ||
-        this.form_i.sum == "" ||
-        this.form_i.sum == undefined ||
-        this.form_i.sum == 0 ||
-        this.form_i.size_name.length == 0 ||
-        this.form_i.size_name == undefined ||
-        this.form_i.ratio.length == 0 ||
-        this.form_i.ratio == undefined
-      ) {
-        successed = false;
-      }
-      this.form_i.ratio.map((j, k) => {
-        if (j == 0) {
-          successed = false;
-        }
-      });
-      this.form.map((v, i) => {
-        if (
-          v.sum == "" ||
-          v.sum == undefined ||
-          v.sum == 0 ||
-          v.size_name == undefined ||
-          v.ratio.length == 0
-        ) {
-          successed = false;
-        }
-        v.ratio.map((j, k) => {
-          if (j == 0) {
-            successed = false;
-          }
-        });
-      });
-
-      // if (successed) {
       let style_id = Number(this.$route.query.id);
       let arr = [];
       let arr1 = [[], [], [], [], [], [], [], [], [], [], []];
@@ -1811,10 +1796,12 @@ export default {
                   ratio: Number(this.form[i].ratio[a])
                 });
               }
-              // ;
               // console.log(this.form[i].size_name[a]);
               // console.log(arr1[i]);
             });
+            if (arr1[i].length == 1) {
+              arr1[i][0].ratio = 1;
+            }
             arr.push({
               style_id: style_id,
               produce_no: this.ob[this.active].produce_no,
@@ -2001,6 +1988,8 @@ export default {
       });
       let { data } = res1.data;
       let newArr = [];
+      console.log(this.isCheckList);
+      
       this.isCheckList.map(async (v, i) => {
         newArr.push({
           style_id: Number(id),
@@ -2016,7 +2005,7 @@ export default {
       let res = await produceOrderProcureAdd({
         produce_order_procure_materials: newArr
       });
-      // console.log(res);
+      console.log(res);
       this.int_i(this.active1);
       this.centerDialogVisible1 = false;
     },
@@ -2026,12 +2015,12 @@ export default {
     },
     // 增加物料弹框内的方法
     isCheckListBox(e) {
-      // console.log(e);
+      console.log(e);
 
       this.isCheckListBoxEvent = e;
       if (e.isCheckList === true) {
         this.isCheckList.push({
-          mainclass: e.mainclass,
+          mainclass: e.materials_mainclass_name,
           style_materials_data: {
             materials_color_id:
               this.materials_color_id1 || e.materials_color_data[0].id,
@@ -2111,7 +2100,6 @@ export default {
           produce_no: data[this.active].produce_no
         });
         let data3 = res2.data.data;
-        // console.log(data3);
         let all1 = [[], [], [], [], [], [], [], [], [], []];
         data3.map((v, i) => {
           this.chang_color.map((f, g) => {
@@ -2142,6 +2130,7 @@ export default {
               }
             }
           });
+          
           v.list = a;
         });
       }
@@ -2546,7 +2535,7 @@ export default {
           });
           // console.log(res1);
           let data1 = res1.data.data;
-          console.log(res1);
+          // console.log(res1);
 
           if (data1.length > 0) {
             this.vb1 = true;

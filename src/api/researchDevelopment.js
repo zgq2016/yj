@@ -283,5 +283,29 @@ export const stylePurchaseAdd = (data) => {
     data: data,
   });
 };
+// 款式档案list列表
+export const getStyleList = (data) => {
+  return axios({
+    url: "?g=get_style_list",
+    method: "post",
+    data: data,
+  });
+};
+// 生成下单表
+export const produceOrderCreateAdd = (data) => {
+  return axios({
+    url: "?g=produce_order_create_add",
+    method: "post",
+    data: data,
+  });
+};
+// 生产下单list接口
+export const getProduceOrderList = (data) => {
+  return axios({
+    url: "?g=get_produce_order_create_list",
+    method: "post",
+    data: data,
+  });
+};
 // contacts、phone
 // bank、bankid、name

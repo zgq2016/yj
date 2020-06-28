@@ -7,7 +7,12 @@
       <el-breadcrumb-item>生产下单</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main">
-      <el-form :inline="true" :model="formInline" class="demo-form-inline">
+      <el-form
+        :inline="true"
+        :model="formInline"
+        class="demo-form-inline"
+        style="position: relative;"
+      >
         <el-form-item label="商品">
           <el-input v-model="formInline.name" placeholder="款号"></el-input>
         </el-form-item>
@@ -46,21 +51,6 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="客户">
-          <el-select
-            v-model="west"
-            placeholder="西所"
-            @change="handleCustomer_id($event)"
-            style="width:120px"
-          >
-            <el-option
-              v-for="item in wests"
-              :key="item.id"
-              :label="item.companyname"
-              :value="item.id"
-            ></el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="状态">
           <el-select
             v-model="state"
@@ -72,35 +62,48 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button @click="onSubmit">查询</el-button>
+          <el-button type="primary" @click="onSubmit">查询</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="info" round @click="addOrders">新增下单</el-button>
         </el-form-item>
       </el-form>
       <div class="table">
-        <el-table ref="singleTable" :data="tableData" highlight-current-row style="width: 100%">
+        <el-table
+          id="printTest"
+          ref="singleTable"
+          :data="tableData"
+          size="small"
+          highlight-current-row
+          style="width: 100%"
+        >
           <el-table-column type="index" width="50"></el-table-column>
-          <el-table-column label="图片">
-            <template slot-scope="scope" property="style_pic_url">
+          <el-table-column align="center" width="70" label="图片">
+            <template align="center" slot-scope="scope" property="style_pic_url">
               <img :src="scope.row.style_pic_url" class="img" alt />
             </template>
           </el-table-column>
-          <el-table-column property="stylename" label="名称"></el-table-column>
-          <el-table-column property="styleno" label="款号"></el-table-column>
-          <el-table-column property="style_color" label="颜色"></el-table-column>
-          <el-table-column property="style_type" label="品类"></el-table-column>
-          <el-table-column property="year" label="年份"></el-table-column>
-          <el-table-column property="season" label="季节"></el-table-column>
-          <el-table-column property="stylist" label="设计师">{{this.stylist}}</el-table-column>
-          <el-table-column property="west" label="客户">{{this.west}}</el-table-column>
-          <el-table-column property="number" label="数量">{{this.number}}</el-table-column>
-          <el-table-column property="state" label="状态">{{this.state}}</el-table-column>
-
-          <el-table-column label="操作">
+          <el-table-column align="center" property="stylename" label="名称"></el-table-column>
+          <el-table-column align="center" property="styleno" label="款号"></el-table-column>
+          <el-table-column width="70" align="center" property="style_color" label="颜色"></el-table-column>
+          <el-table-column align="center" property="style_type" label="品类"></el-table-column>
+          <el-table-column width="70" align="center" property="year" label="年份"></el-table-column>
+          <el-table-column width="70" align="center" property="season" label="季节"></el-table-column>
+          <el-table-column align="center" property="stylist" label="设计师"></el-table-column>
+          <el-table-column align="center" property="number" label="数量"></el-table-column>
+          <el-table-column align="center" property="state" label="状态"></el-table-column>
+          <el-table-column align="center" label="操作">
             <template slot-scope="scope">
               <el-button
                 class="elbtn"
                 size="mini"
                 @click="handleEdit(scope.$index, scope.row)"
               >{{"查看"}}</el-button>
+              <el-button
+                class="elbtn"
+                size="mini"
+                @click="handleAdd(scope.$index, scope.row)"
+              >{{"下单"}}</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -109,20 +112,20 @@
     <div style="display: flex;justify-content: space-between;align-items: center;">
       <!-- 打印  导出-->
       <div class="btn">
-        <el-button size="mini">打印</el-button>
+        <el-button v-print="'#printTest'" size="mini">打印</el-button>
         <el-button size="mini">导出</el-button>
       </div>
       <!-- 分页 -->
-    <el-pagination
-      class="pagination"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="page"
-      :page-sizes="[9, 18, 27, 36]"
-      :page-size="page_size"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="count"
-    ></el-pagination>
+      <el-pagination
+        class="pagination"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="page"
+        :page-sizes="[9, 18, 27, 36]"
+        :page-size="page_size"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="count"
+      ></el-pagination>
     </div>
   </div>
 </template>
@@ -134,7 +137,8 @@ import {
   getStylistList,
   getCategoryList,
   getProjectStyleList,
-  getWestList
+  getWestList,
+  getProduceOrderList
 } from "@/api/researchDevelopment";
 export default {
   data() {
@@ -153,12 +157,12 @@ export default {
       total: 0,
       year: "", //年
       season: "", //季节
-      stylist: "小关", //设计师
+      stylist: "", //设计师
       category: "", //类别
-      west: "西所", //西所
-      state: "未下单", //状态
-      number:123,
-      count:0,
+      west: "", //西所
+      state: "", //状态
+      number: 123,
+      count: 0,
       states: [
         {
           v: "未下单",
@@ -169,104 +173,86 @@ export default {
           id: 1
         }
       ],
-      tableData: [
-        // {
-        //   picimg:
-        //     "https://axure-file.lanhuapp.com/b0e7ed9c-a55b-4903-972b-002bbf42cf81__9baf896cacfe3438e33a5434b694f14c.svg",
-        //   username: "aa",
-        //   stylenumber: "aa",
-        //   color: "aa",
-        //   category: "aa",
-        //   year: "aa",
-        //   season: "aa",
-        //   stylist: "aa",
-        //   west: "aa",
-        //   number: "aa",
-        //   state: "aa",
-        //   operation: "aa"
-        // }
-      ]
+      tableData: []
     };
   },
   methods: {
-    handleEdit(index,row) {
-      // console.log(row);
+    // 查看
+    handleEdit(index, row) {
+      console.log(row);
       // console.log(index);
-      
-      this.$router.push({ path: "/productionStyle?id="+this.tableData[index].id +"&activeNames=1" });
+      this.$router.push({
+        path: "/productionStyle?id=" + row.project_id + "&activeNames=1"
+      });
     },
+    // 下单
+    handleAdd(index, row) {
+      this.$router.push({
+        path: "/productionStyle?id=" + row.project_id + "&activeNames=1"
+      });
+    },
+    // 查询
     async onSubmit() {
-      // console.log("submit!");
-       this.init(this.page,this.page_size)
-
-    }, // 获取customer_id
-    handleCustomer_id(e) {
-      this.customer_id = e;
+      this.init(this.page, this.page_size);
     },
-    // state
+    //  增加下单
+    addOrders() {
+      this.$router.push({ path: "/designFile" });
+    },
+    // 更新状态
     handelState(e) {
       this.stateId = e;
     },
     async getYear() {
       let res = await getYearList();
       let { data } = res.data;
-      // console.log(data);
       this.years = data;
     },
     async getSeason() {
       let res = await getSeasonList();
       let { data } = res.data;
-      // console.log(data);
       this.seasons = data;
     },
     async getStylist() {
       let res = await getStylistList();
       let { data } = res.data;
-      // console.log(res);
       this.stylists = data;
-      // console.log(this.stylists);
-
     },
     async getCategory() {
       let res = await getCategoryList();
       let { data } = res.data;
-      // console.log(data);
       this.categorys = data;
     },
     async getWest() {
       let res = await getWestList();
       let { data } = res.data;
-      // console.log(data);
       this.wests = data;
     },
-    handleSizeChange(val) {
-      this.pageSize = val;
-    },
-    handleCurrentChange(val) {
-      this.pageIndex = val;
-    },
-    async init(p,s){
-      let res = await getProjectStyleList({
-        'keyword':this.formInline.name == ''? '234':this.formInline.name,
-        'page':p,
-        'page_size':s
+    async init(p, s) {
+      let res = await getProduceOrderList({
+        page: this.page,
+        page_size: this.page_size
       });
       console.log(res);
       this.count = res.data.count;
       let { data } = res.data;
       this.tableData = data;
-      // console.log(this.tableData);
+      this.tableData.map((v, i) => {
+        this.stylists.map((j, k) => {
+          if (v.user_id == j.id) {
+            v.stylist = j.name;
+          }
+        });
+      });
     },
     handleSizeChange(val) {
-      // console.log(val)
       this.page_size = val;
       this.init();
     },
     handleCurrentChange(val) {
-      // console.log(val)
       this.page = val;
       this.init();
-    },
+    }
   },
   mounted() {
     this.getYear();
@@ -275,8 +261,7 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
-  },
-
+  }
 };
 </script>
 
