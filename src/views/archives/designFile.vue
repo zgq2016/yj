@@ -13,7 +13,7 @@
         class="demo-form-inline"
         style="position: relative;"
       >
-        <el-form-item label="商品">
+        <el-form-item label="款号">
           <el-input v-model="formInline.styleno" placeholder="款号"></el-input>
         </el-form-item>
         <el-form-item label="年份">
@@ -173,7 +173,7 @@ export default {
 
       this.$router.push({
         path:
-          "/development?id=" + row.project_id
+          "/development?id=" + row.id
       });
     },
     async onSubmit() {

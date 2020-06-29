@@ -13,7 +13,7 @@
         class="demo-form-inline"
         style="position: relative;"
       >
-        <el-form-item label="商品">
+        <el-form-item label="款号">
           <el-input v-model="formInline.styleno" placeholder="款号"></el-input>
         </el-form-item>
         <el-form-item label="年份">
@@ -185,13 +185,13 @@ export default {
       console.log(row);
       // console.log(index);
       this.$router.push({
-        path: "/productionStyle?id=" + row.project_id + "&activeNames=1"
+        path: "/productionStyle?id=" + row.style_id + "&activeNames=1"
       });
     },
     // 下单
     handleAdd(index, row) {
       this.$router.push({
-        path: "/productionStyle?id=" + row.project_id + "&activeNames=1"
+        path: "/productionStyle?id=" + row.style_id + "&activeNames=1"
       });
     },
     // 查询
