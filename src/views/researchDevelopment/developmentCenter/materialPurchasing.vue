@@ -21,16 +21,22 @@
           <div class="cardStyle">
             <div class="cardStyle_left">
               <div class="cardStyle_left_img">
-                <img :src="item1.materials_color_data[0].picurl" alt />
+                <img :src="item1.picurl" alt />
               </div>
               <div class="cardStyle_left_content">
                 <div class="cardStyle_left_content_name">
-                  <div>{{item1.mainclass}}</div>
-                  <!-- <div class="el-icon-close"></div> -->
+                  <div>{{item1.materials_mainclass_name}} ({{item1.materials_class_name}})</div>
+                  <div
+                    class="el-icon-close"
+                    style="cursor: pointer;"
+                    @click.stop="handleStyleMaterialsDel(item1)"
+                  ></div>
                 </div>
-                <div>{{item1.color}}</div>
-                <div>内部编号:895565562223</div>
-                <div>某某布行</div>
+                <div>{{item1.materials_data[0].materialsname}}</div>
+                <div>内部编号:{{item1.materials_data[0].materialsno}}</div>
+                <div
+                  v-if="item1.style_materials_supplier_data.length>0"
+                >{{item1.style_materials_supplier_data[0].companyname}}</div>
               </div>
             </div>
             <div class="cardStyle_right">
@@ -63,8 +69,8 @@
               </template>
               <template v-slot:description>
                 <div class="dt">
-                  <span >{{"预计回料时间"}}</span>
-                  <span >{{"2020-10-20"}}</span>
+                  <span>{{"预计回料时间"}}</span>
+                  <span>{{"2020-10-20"}}</span>
                   <!-- ****************************************************************** -->
                   <!-- <span v-if="index_g==0">{{"预计回料时间"}}</span>
                   <span v-if="item_g.state == '2'">{{"延迟回料时间"}}</span>
@@ -72,13 +78,13 @@
                   <span v-if="item_g.state == '3'">{{"回料总量"}}</span>
                   <span v-if="item_g.state == '3'">{{item1.amountPurchased+'m'}}</span>
                   <span v-else-if="item_g.state == '0'">{{item1.finishTime}}</span>
-                  <span v-else>{{item_g.returntime}}</span> -->
+                  <span v-else>{{item_g.returntime}}</span>-->
                 </div>
               </template>
             </el-step>
           </el-steps>
           <div>
-            <el-button size="mini" round @click="goPanelPurchase">{{"查看详情"}}</el-button>
+            <el-button size="mini" round @click="goPanelPurchase">{{"采购录入"}}</el-button>
           </div>
         </div>
       </div>
@@ -90,9 +96,8 @@
 <script>
 import {
   getStyle,
-  getMaterialsProcureList,
   styleMaterialsResume,
-  getStyleMaterialsList
+  getMaterialsProcureList
 } from "@/api/researchDevelopment";
 export default {
   data() {
@@ -139,14 +144,18 @@ export default {
     };
   },
   methods: {
+    handleStyleMaterialsDel(e) {
+      console.log(e);
+    },
     async handleColorNum(item, index) {
       this.active = index;
       console.log(item);
-      let res = await getStyleMaterialsList({
+      let res1 = await getMaterialsProcureList({
         style_id: item.style_id,
         style_color_name: item.style_color_name
       });
-      let { data } = res.data;
+      console.log(res1);
+      let { data } = res1.data;
       this.style_materials = data;
     },
     goPanelPurchase() {
@@ -156,17 +165,15 @@ export default {
       let { id } = this.$route.query;
       let res = await getStyle({ id });
       this.obj = res.data.data;
-      console.log(this.obj);
       if (this.obj.style_color_data.length != 0) {
-        let res1 = await getStyleMaterialsList({
+        let res1 = await getMaterialsProcureList({
           style_id: this.obj.style_color_data[0].style_id,
           style_color_name: this.obj.style_color_data[0].style_color_name
         });
+        console.log(res1);
         let { data } = res1.data;
         this.style_materials = data;
-        console.log(data);
       }
-      // style_materials_data
     }
   },
   mounted() {
@@ -183,6 +190,7 @@ export default {
     display: flex;
   }
   .content {
+    width: 100%;
     display: flex;
     margin: 10px 0px;
     .card {
@@ -235,7 +243,8 @@ export default {
     .orderInformation {
       border-radius: 10px;
       background-color: #f2f2f2;
-      width: 600px;
+      flex: 1;
+      // width: 600px;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
@@ -254,7 +263,7 @@ export default {
       margin-bottom: 40px;
       /deep/.el-step__icon {
         width: 12px;
-        background-color:transparent; 
+        background-color: transparent;
       }
       .tt {
         position: absolute;

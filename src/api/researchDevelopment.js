@@ -251,7 +251,7 @@ export const getStyleMaterialsDellist = (data) => {
     data: data,
   });
 };
-// 项目-款式-物料关键字搜索
+// 项目-款式-物料采购列表(单颜色)
 export const getMaterialsProcureList = (data) => {
   return axios({
     url: "?g=get_materials_procure_list",

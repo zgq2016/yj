@@ -118,13 +118,12 @@
       </div>
     </div>
     <el-dialog title="增加款式颜色" :visible.sync="centerDialogVisible" width="30%" center class="dialog">
-      <!-- <el-input v-model="designColor" placeholder="请输入内容" style="width:200px"></el-input> -->
       <el-select v-model="designColor" placeholder="请选择">
         <el-option
           v-for="(item,index) in options"
           :key="index"
-          :label="item.value"
-          :value="item.value"
+          :label="item.color_name"
+          :value="item.color_name"
         ></el-option>
       </el-select>
       <div v-if="style_color_data_length!==0">
@@ -280,13 +279,13 @@ import {
   projectStyleMaterialsDel,
   styleMaterialsListColorEdit,
   projectStyleMaterialsListAdd,
-  stylePurchaseAdd
+  stylePurchaseAdd,
+  getColorSelect
 } from "@/api/researchDevelopment";
 import {
   getMaterialsInfo, //物料
   getSupplierInfo //供应商
 } from "@/api/archives";
-import { colorList } from "@/api/setting.js";
 export default {
   data() {
     return {
@@ -349,7 +348,6 @@ export default {
   methods: {
     async handleRestore(item1) {
       let res = await projectStyleMaterialsHfdel({ id: item1.id });
-      // console.log(res);
       this.init();
       this.delListInit();
     },
@@ -369,7 +367,6 @@ export default {
           });
         });
         let { data } = res1.data;
-        console.log(data);
 
         this.searchCard = data;
         this.style_color_data_length = this.obj.style_color_data.length;
@@ -378,8 +375,6 @@ export default {
       }
     },
     async handleStyleMaterialsDel(item) {
-      // console.log(item);
-
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -408,11 +403,6 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(async () => {
-        // console.log(item.id);
-
-        // console.log(this.style_id);
-        // console.log(this.style_color_name);
-        // console.log(this.materials);
         let style_id = this.style_id;
         let style_color_name = this.style_color_name;
         let mainclass = this.materials;
@@ -426,7 +416,6 @@ export default {
           materials_id,
           materials_color_id
         });
-        console.log(res);
         this.active = 0;
         this.init();
         this.centerDialogVisible1 = false;
@@ -439,7 +428,6 @@ export default {
       this.visible = false;
     },
     handleColourNumber1(item2, item3) {
-      console.log(item3);
       this.materials_color_id1 = item3.id;
       item2["color"] = item3.color;
       item2["color_no"] = item3.color_no;
@@ -460,7 +448,6 @@ export default {
       this.visible = true;
     },
     handlePopoverId1(item) {
-      // console.log(item);
       this.popoverId1 = item.id;
       this.visible1 = true;
     },
@@ -474,7 +461,6 @@ export default {
         page: this.pageIndex,
         page_size: this.pageSize
       });
-      console.log(res);
       let { data, count } = res.data;
       this.MaterialsList = data;
       this.total = count;
@@ -526,10 +512,8 @@ export default {
         obj["style_id"] = id;
         obj["style_color_name"] = this.designColor;
         obj["style_materials_list_data"] = this.isCheckList;
-        // console.log(obj);
 
         let res = await projectStyleMaterialsListAdd(obj);
-        console.log(res);
         this.init();
         this.active = 0;
         this.centerDialogVisible = false;
@@ -554,27 +538,28 @@ export default {
       }
     },
     handleAllCheck(e) {
-      // this.isAllCheck == !this.isAllCheck;
-      console.log(e);
       this.isAllCheck = e;
       this.card.map((v, i) => {
         v.style_materials_data.map((v1, i1) => {
           v1["isCheckList1"] = this.isAllCheck;
+          if (this.isAllCheck === false) this.checkNum = 0;
         });
       });
     },
     // 选择的物料准备采购
     isCheckListBox1(e) {
+      let arr = [];
       this.card.map((v, i) => {
         v.style_materials_data.map((v1, i1) => {
           if (v1.id === e.id) {
             v.isCheckList1 = !v.isCheckList1;
             v1.isCheckList1 ? this.checkNum++ : this.checkNum--;
           }
+          arr.push({ id: v1.id });
         });
       });
-      console.log(this.card_length);
-      console.log(this.checkNum);
+
+      this.card_length = arr.length;
       this.card_length == this.checkNum
         ? this.handleAllCheck(true)
         : (this.isAllCheck = false);
@@ -582,31 +567,22 @@ export default {
     // 切换颜色
     async handleColorNum(item, index) {
       this.active = index;
-      // console.log(item.style_color_name);
-
-      this.isCheckList1 = [];
-      this.style_id = item.style_id;
-      this.style_color_name = item.style_color_name;
+      console.log(item);
       let res = await getStyleMaterialsList({
         style_id: item.style_id,
         style_color_name: item.style_color_name
       });
+      console.log(res);
       if (res.data.data.length !== 0) {
         res.data.data.forEach((v, i) => {
-          v.style_materials_data.forEach((v, i) => {
-            v["isCheckList"] = false;
+          v.style_materials_data.forEach((v1, i1) => {
+            v1["isCheckList1"] = false;
+            v1["isCheckList"] = false;
           });
         });
       }
-      console.log(res);
-      let { data } = res.data;
-      this.card = data;
-      this.card.map((v, i) => {
-        v.style_materials_data.map((g, j) => {
-          g.isCheckList1 = false;
-        });
-      });
-      console.log(this.card);
+      this.card = res.data.data;
+      this.handleAllCheck(false);
     },
     colourNumber(item2) {
       this.colourNumberId = item2.id;
@@ -615,67 +591,63 @@ export default {
     // 生成采购单
     async purchaseOrder() {
       let { id } = this.$route.query;
-      // let obj = {};
-      // obj["materials_data"] = this.isCheckList1;
-      console.log(this.isCheckList1);
-
-      // let res = await stylePurchaseAdd({
-      //   style_id: id,
-      //   style_materials_list_id_data: this.isCheckList1
-      // });
-      // console.log(res);
-      // this.$router.push({ path: `/materialPurchasing?id=${id}` });
-      // this.init()
+      let style_materials_list_id_data = [];
+      this.card.map((v, i) => {
+        v.style_materials_data.map((v1, i1) => {
+          if (v1.isCheckList1 === true) {
+            style_materials_list_id_data.push({
+              id: v1.id
+            });
+          }
+        });
+      });
+      if (style_materials_list_id_data.length === 0) {
+        this.$message("请选择物料");
+      } else {
+        this.$confirm("确认生成采购单?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(async () => {
+          let res = await stylePurchaseAdd({
+            style_id: id,
+            style_materials_list_id_data
+          });
+          console.log(res);
+          this.$router.push({ path: `/materialPurchasing?id=${id}` });
+          this.init();
+        });
+      }
     },
     async init() {
       let { id } = this.$route.query;
       let res = await getStyle({ id });
       this.obj = res.data.data;
-      // this.obj.style_color_data[0].style_color_name = this.obj.style_color;
-      // console.log(this.obj);
       if (this.obj.style_color_data.length > 0) {
-        let arr = [];
-        // 列表数据
-        this.style_id = this.obj.style_color_data[0].style_id;
-        this.style_color_name = this.obj.style_color_data[0].style_color_name;
-
         let res1 = await getStyleMaterialsList({
-          style_id: this.style_id,
-          style_color_name: this.style_color_name
+          style_id: this.obj.style_color_data[0].style_id,
+          style_color_name: this.obj.style_color_data[0].style_color_name
         });
         res1.data.data.forEach((v, i) => {
           v.style_materials_data.forEach((v1, i1) => {
             v1["isCheckList"] = false;
             v1["isCheckList1"] = false;
-            arr.push({ v1 });
           });
         });
-        console.log(res1);
 
-        this.card_length = arr.length;
         let { data } = res1.data;
         this.card = data;
       }
       this.style_color_data_length = this.obj.style_color_data.length;
 
-      let res2 = await colorList();
-      // console.log(res2);
-      let data2 = res2.data.data;
-      this.options = [];
-      data2.map((v, i) => {
-        v.color_data.map((g, j) => {
-          this.options.push({
-            value: g.color_name
-          });
-        });
-      });
+      let res2 = await getColorSelect();
+      this.options = res2.data.data;
     },
     async delListInit() {
       let { id } = this.$route.query;
       let res = await getStyleMaterialsDellist({ style_id: id });
       let { data } = res.data;
       this.delListData = data;
-      // console.log(this.delListData);
 
       if (this.delListData[0].style_materials_data.length > 0) {
         this.delListData[0].style_materials_data.map(async (f, j) => {
@@ -683,14 +655,12 @@ export default {
             id: f.materials_id
           });
           let data1 = ress.data.data;
-          // console.log(data1);
 
           f["materialsno"] = data1.materialsno;
           f["companyname"] =
             data1.materials_supplier_data[0].supplier_companyname;
         });
       }
-      // console.log(this.delListData);
     },
     handleSizeChange(val) {
       this.pageSize = val;

@@ -1885,7 +1885,9 @@ export default {
       // this.itemList = item
       let obj = JSON.stringify(item);
       this.$router.push({
-        path: `/PanelPurchase?materials_id=${item.materials_id}&e=${obj}`
+        path: `/PanelPurchase?materials_id=${
+          item.materials_id
+        }&e=${obj}&tabName=${"采购"}`
       });
     },
     // 更新状态
@@ -1989,7 +1991,7 @@ export default {
       let { data } = res1.data;
       let newArr = [];
       console.log(this.isCheckList);
-      
+
       this.isCheckList.map(async (v, i) => {
         newArr.push({
           style_id: Number(id),
@@ -2023,11 +2025,13 @@ export default {
           mainclass: e.mainclass,
           style_materials_data: {
             materials_color_id:
-              this.materials_color_id1 || e.style_materials_data[0].materials_color_data[0].id,
+              this.materials_color_id1 ||
+              e.style_materials_data[0].materials_color_data[0].id,
             style_id: e.style_materials_data[0].style_id,
             materials_id: e.style_materials_data[0].materials_id,
             color: e.style_materials_data[0].materials_color_data[0].color,
-            color_no: e.style_materials_data[0].materials_color_data[0].color_no,
+            color_no:
+              e.style_materials_data[0].materials_color_data[0].color_no,
             picurl: e.style_materials_data[0].materials_color_data[0].picurl
           }
         });
@@ -2130,7 +2134,7 @@ export default {
               }
             }
           });
-          
+
           v.list = a;
         });
       }
