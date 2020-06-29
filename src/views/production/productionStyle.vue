@@ -2104,6 +2104,8 @@ export default {
           produce_no: data[this.active].produce_no
         });
         let data3 = res2.data.data;
+        console.log(data3);
+        
         let all1 = [[], [], [], [], [], [], [], [], [], []];
         data3.map((v, i) => {
           this.chang_color.map((f, g) => {
