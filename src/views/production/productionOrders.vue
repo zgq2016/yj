@@ -51,16 +51,6 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="状态">
-          <el-select
-            v-model="formInline.state"
-            placeholder="状态"
-            @change="handelState($event)"
-            style="width:120px"
-          >
-            <el-option v-for="item in states" :key="item.id" :label="item.v" :value="item.id"></el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">查询</el-button>
         </el-form-item>
@@ -77,7 +67,7 @@
           highlight-current-row
           style="width: 100%"
         >
-          <el-table-column type="index" width="50"></el-table-column>
+          <el-table-column type="index" width="50" label="序号"></el-table-column>
           <el-table-column align="center" width="70" label="图片">
             <template align="center" slot-scope="scope" property="style_pic_url">
               <img :src="scope.row.style_pic_url" class="img" alt />
@@ -85,12 +75,12 @@
           </el-table-column>
           <el-table-column align="center" property="stylename" label="名称"></el-table-column>
           <el-table-column align="center" property="styleno" label="款号"></el-table-column>
-          <el-table-column width="80" align="center" property="style_color" label="颜色"></el-table-column>
+          <el-table-column align="center" property="style_color" label="颜色"></el-table-column>
           <el-table-column align="center" property="style_type" label="品类"></el-table-column>
-          <el-table-column width="80" align="center" property="year" label="年份"></el-table-column>
-          <el-table-column width="80" align="center" property="season" label="季节"></el-table-column>
+          <el-table-column align="center" property="year" label="年份"></el-table-column>
+          <el-table-column align="center" property="season" label="季节"></el-table-column>
           <el-table-column align="center" property="stylist" label="设计师"></el-table-column>
-          <el-table-column width="80" align="center" property="state" label="状态"></el-table-column>
+          <!-- <el-table-column width="80" align="center" property="state" label="状态"></el-table-column> -->
           <el-table-column align="center" label="操作">
             <template slot-scope="scope">
               <el-button
@@ -98,11 +88,11 @@
                 size="mini"
                 @click="handleEdit(scope.$index, scope.row)"
               >{{"查看"}}</el-button>
-              <el-button
+              <!-- <el-button
                 class="elbtn"
                 size="mini"
                 @click="handleAdd(scope.$index, scope.row)"
-              >{{"下单"}}</el-button>
+              >{{"下单"}}</el-button>-->
             </template>
           </el-table-column>
         </el-table>
@@ -143,12 +133,11 @@ export default {
   data() {
     return {
       formInline: {
-        styleno:'',
-        year:'',
-        season:'',
-        user_id:'',
-        style_type:'',
-        state:''
+        styleno: "",
+        year: "",
+        season: "",
+        user_id: "",
+        style_type: "",
       },
       years: [],
       seasons: [],
@@ -196,13 +185,12 @@ export default {
     },
     // 查询
     async onSubmit() {
-      console.log(this.formInline);
-      
-      // this.init(this.page, this.page_size);
+      // console.log(this.formInline);
+
+      this.init(this.formInline);
     },
-    handleUser_id(v){
+    handleUser_id(v) {
       console.log(v);
-      
     },
     //  增加下单
     addOrders() {
@@ -237,10 +225,11 @@ export default {
       let { data } = res.data;
       this.wests = data;
     },
-    async init(p, s) {
+    async init(obj) {
       let res = await getProduceOrderList({
         page: this.page,
-        page_size: this.page_size
+        page_size: this.page_size,
+        ...obj
       });
       console.log(res);
       this.count = res.data.count;
@@ -254,13 +243,16 @@ export default {
         });
       });
     },
+    async handleUser_id(e){
+      this.formInline.user_id = e
+    },
     handleSizeChange(val) {
       this.page_size = val;
-      this.init();
+      this.init(this.formInline);
     },
     handleCurrentChange(val) {
       this.page = val;
-      this.init();
+      this.init(this.formInline);
     }
   },
   mounted() {

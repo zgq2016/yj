@@ -62,11 +62,11 @@ export default {
   },
   async mounted() {
     let { id } = this.$route.query;
-    console.log(id);
+    // console.log(id);
     let res = await getSupplierInfo({ id });
     this.obj = res.data.data;
     console.log(res);
-    console.log(this.obj.isbill);
+    // console.log(this.obj.isbill);
     if (this.obj.isbill === "0") {
       this.obj.isbill = "开";
     }

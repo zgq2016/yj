@@ -19,7 +19,7 @@
           <el-input v-model="form.phone" placeholder="电话"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button icon="el-icon-search" @click="onSubmit">搜索</el-button>
+          <el-button type="primary"  icon="el-icon-search" @click="onSubmit">搜索</el-button>
         </el-form-item>
       </el-form>
     </div>

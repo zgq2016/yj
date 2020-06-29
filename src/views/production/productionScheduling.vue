@@ -8,16 +8,16 @@
     </el-breadcrumb>
     <div class="main">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="商品">
-          <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+        <el-form-item label="款号">
+          <el-input v-model="formInline.styleno" placeholder="款号"></el-input>
         </el-form-item>
         <el-form-item label="年份">
-          <el-select v-model="year" placeholder="年份" style="width:120px">
+          <el-select v-model="formInline.year" placeholder="年份" style="width:120px">
             <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="季节">
-          <el-select v-model="season" placeholder="季节" style="width:120px">
+          <el-select v-model="formInline.season" placeholder="季节" style="width:120px">
             <el-option
               v-for="item in seasons"
               :key="item.id"
@@ -37,7 +37,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="类别">
-          <el-select v-model="category" placeholder="类别" style="width:120px">
+          <el-select v-model="formInline.style_type" placeholder="类别" style="width:120px">
             <el-option
               v-for="item in categorys"
               :key="item.id"
@@ -46,20 +46,10 @@
             ></el-option>
           </el-select>
         </el-form-item>
-
-        <el-form-item label="状态">
-          <el-select
-            v-model="state"
-            placeholder="状态"
-            @change="handelState($event)"
-            style="width:120px"
-          >
-            <el-option v-for="item in states" :key="item.id" :label="item.v" :value="item.id"></el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">查询</el-button>
         </el-form-item>
+        
       </el-form>
       <div class="table">
         <el-table
@@ -83,7 +73,6 @@
           <el-table-column align="center" width="70" property="year" label="年份"></el-table-column>
           <el-table-column align="center" width="70" property="season" label="季节"></el-table-column>
           <el-table-column align="center" property="stylist" label="设计师"></el-table-column>
-          <el-table-column align="center" width="70" property="state" label="状态"></el-table-column>
 
           <el-table-column align="center" label="操作">
             <template slot-scope="scope">
@@ -125,14 +114,18 @@ import {
   getStylistList,
   getProjectStyleList,
   getCategoryList,
-  getWestList
+  getWestList,
+  getProduceOrderList
 } from "@/api/researchDevelopment";
 export default {
   data() {
     return {
       formInline: {
-        name: "",
-        region: ""
+        styleno: "",
+        year: "",
+        season: "",
+        user_id: "",
+        style_type: ""
       },
       page: 1,
       page_size: 9,
@@ -168,21 +161,17 @@ export default {
       console.log(row);
       console.log(index);
 
-      // this.$router.push({
-      //   path:
-      //     "/productionStyle?id=" + this.tableData[index].id + "&activeNames=3"
-      // });
+      this.$router.push({
+        path: "/productionStyle?id=" + row.style_id + "&activeNames=3"
+      });
     },
     onSubmit() {
-      console.log("submit!");
+      this.init(this.formInline)
     }, // 获取customer_id
     handleCustomer_id(e) {
       this.customer_id = e;
     },
-    // state
-    handelState(e) {
-      this.stateId = e;
-    },
+
     async getYear() {
       let res = await getYearList();
       let { data } = res.data;
@@ -213,17 +202,11 @@ export default {
       // console.log(data);
       this.wests = data;
     },
-    handleSizeChange(val) {
-      this.pageSize = val;
-    },
-    handleCurrentChange(val) {
-      this.pageIndex = val;
-    },
-    async init(p, s) {
-      let res = await getProjectStyleList({
-        keyword: this.formInline.name == "" ? "z" : this.formInline.name,
+    async init(obj) {
+      let res = await getProduceOrderList({
         page: this.page,
-        page_size: this.page_size
+        page_size: this.page_size,
+        ...obj
       });
       console.log(res);
       this.count = res.data.count;
@@ -238,15 +221,18 @@ export default {
         });
       });
     },
+    async handleUser_id(e){
+      this.formInline.user_id = e
+    },
     handleSizeChange(val) {
       // console.log(val)
       this.page_size = val;
-      this.init();
+      this.init(this.formInline);
     },
     handleCurrentChange(val) {
       // console.log(val)
       this.page = val;
-      this.init();
+      this.init(this.formInline);
     }
   },
   mounted() {

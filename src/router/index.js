@@ -44,6 +44,8 @@ import ProductStorehouse from "@/views/warehouse/productStorehouse.vue";
 import Purchase from "@/views/production/purchase.vue";
 import ProductionScheduling from "@/views/production/productionScheduling.vue";
 import ProductionOrders from "@/views/production/productionOrders.vue";
+import Tailor from "@/views/production/tailor.vue";
+import Shipment from "@/views/production/shipment.vue";
 import ProductionStyle from "@/views/production/productionStyle.vue";
 import SalesOrder from "@/views/sell/salesOrder.vue";
 
@@ -151,6 +153,16 @@ const routes = [
         path: "/productionOrders",
         name: "ProductionOrders",
         component: ProductionOrders,
+      },
+      {
+        path: "/tailor",
+        name: "Tailor",
+        component: Tailor,
+      },
+      {
+        path: "/shipment",
+        name: "Shipment",
+        component: Shipment,
       },
       {
         path: "/productionStyle",

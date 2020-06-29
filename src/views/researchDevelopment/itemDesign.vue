@@ -74,7 +74,7 @@
         </el-select>
       </div>
       <div class="btn fl" @click="handlesearch">
-        <el-button icon="el-icon-search">搜索</el-button>
+        <el-button icon="el-icon-search">查询</el-button>
       </div>
     </div>
     <!-- 新增项目 -->
@@ -161,7 +161,8 @@ export default {
           v: "已下单",
           id: 1
         }
-      ]
+      ],
+      obj:{}
     };
   },
   methods: {
@@ -193,20 +194,19 @@ export default {
     },
     // 搜索
     async handlesearch() {
-      var obj = {};
       // console.log(...this.date)
-      obj["ctime_start"] = moment(this.date[0]).format("YYYY-MM-DD");
-      obj["ctime_end"] = moment(this.date[1]).format("YYYY-MM-DD");
-      obj["stylekeyword"] = this.name;
-      obj["year"] = this.year;
-      obj["season"] = this.season;
-      obj["user_id"] = this.user_id;
-      obj["style_type"] = this.category;
-      obj["customer_id"] = this.customer_id;
-      obj["state"] = this.stateId;
-      delete obj["0"];
-      delete obj["1"];
-      this.init(obj);
+      this.obj["ctime_start"] = moment(this.date[0]).format("YYYY-MM-DD");
+      this.obj["ctime_end"] = moment(this.date[1]).format("YYYY-MM-DD");
+      this.obj["stylekeyword"] = this.name;
+      this.obj["year"] = this.year;
+      this.obj["season"] = this.season;
+      this.obj["user_id"] = this.user_id;
+      this.obj["style_type"] = this.category;
+      this.obj["customer_id"] = this.customer_id;
+      this.obj["state"] = this.stateId;
+      delete this.obj["0"];
+      delete this.obj["1"];
+      this.init(this.obj);
     },
     /* 获取数据 */
     async getYear() {
@@ -241,19 +241,19 @@ export default {
     },
     handleSizeChange(val) {
       this.pageSize = val;
-      this.init();
+      this.init(this.obj);
     },
     handleCurrentChange(val) {
       this.pageIndex = val;
-      this.init();
+      this.init(this.obj);
     },
-    async init(obj) {
-      console.log(obj);
+    async init(object) {
+      console.log(object);
       
       let res = await getDataList({
         page: this.pageIndex,
         page_size: this.pageSize,
-        ...obj
+        ...object
       });
       let { data, count } = res.data;
       this.data = data;

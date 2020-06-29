@@ -29,6 +29,7 @@
             <div class="list_content_left">
               <div class="list_content_left_name">{{item.companyname}}</div>
               <div>{{item.mainclass}}<em v-if="item.materials_class_name">({{item.materials_class_name}})</em></div>
+              <div v-if="item.supplier_contact_data.length>0" >{{item.supplier_contact_data[0].contacts}}:{{item.supplier_contact_data[0].phone}}</div>
             </div>
             <!-- <div class="list_content_right">101</div> -->
           </div>
@@ -78,7 +79,7 @@ export default {
       }
     },
     addSupplier() {
-      console.log(this.data.id || 0);
+      // console.log(this.data.id || 0);
       this.$router.push({ path: `/addSupplier?id=${this.data.id || 0}` });
     },
     listDeital(item) {
@@ -86,12 +87,12 @@ export default {
     },
     async init() {
       let res = await getSupplierList({
-        materials_class_id: this.data.id || 0,
+        materials_class_id: this.data.id || "",
         page: this.pageIndex,
         page_size: this.pageSize,
         companyname: this.companyname
       });
-      console.log(res);
+      // console.log(res);
       let { data, count } = res.data;
       this.total = count;
       this.SupplierList = data;
@@ -157,7 +158,7 @@ export default {
           flex: 1;
           display: flex;
           justify-content: space-between;
-          padding: 10px 20px;
+          padding: 5px 20px;
           .list_content_left {
             .list_content_left_name {
               font-weight: 600;
