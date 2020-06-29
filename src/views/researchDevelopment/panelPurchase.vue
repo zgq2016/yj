@@ -75,8 +75,8 @@
             </span>
           </div>
           <div class="form">
-            <el-form ref="form" :model="form" label-width="100px">
-              <el-form-item label="用量">
+            <el-form :model="form" ref="form" :rules="rules" label-width="100px">
+              <el-form-item label="用量" prop="dosage">
                 <el-col :span="6">
                   <el-input v-model="form.dosage" placeholder="请输入用量(以米为单位)" style="width:200px"></el-input>
                 </el-col>
@@ -84,7 +84,7 @@
                   <el-button size="small" round @click="readyforTheCall">备货调用</el-button>
                 </el-col>
               </el-form-item>
-              <el-form-item label="采购量">
+              <el-form-item label="采购量" prop="amountPurchased">
                 <el-input
                   v-model="form.amountPurchased"
                   @input="changed()"
@@ -92,7 +92,7 @@
                   style="width:200px"
                 ></el-input>
               </el-form-item>
-              <el-form-item label="采购单价">
+              <el-form-item label="采购单价" prop="purchasePrice">
                 <el-input
                   v-model="form.purchasePrice"
                   @input="changed()"
@@ -100,7 +100,7 @@
                   style="width:200px"
                 ></el-input>
               </el-form-item>
-              <el-form-item label="金额">
+              <el-form-item label="金额" prop="money">
                 <el-input
                   v-model="form.money"
                   @input="changed1()"
@@ -108,16 +108,16 @@
                   style="width:200px"
                 ></el-input>
               </el-form-item>
-              <el-form-item label="付款">
+              <el-form-item label="付款" prop="payment">
                 <el-radio-group @change="selectPayment" v-model="form.payment">
                   <el-radio :label="0">订金</el-radio>
                   <el-radio :label="1">全额付款</el-radio>
                 </el-radio-group>
               </el-form-item>
-              <el-form-item v-if="form.payment==0" label="订金">
+              <el-form-item v-if="form.payment==0" label="订金" prop="deposit">
                 <el-input v-model="form.deposit" placeholder="请输入订金" style="width:200px"></el-input>
               </el-form-item>
-              <el-form-item v-if="form.payment==1" label="全额付款">
+              <el-form-item v-if="form.payment==1" label="全额付款" prop="fullPayout">
                 <el-input
                   v-model="form.fullPayout"
                   disabled
@@ -125,7 +125,7 @@
                   style="width:200px"
                 ></el-input>
               </el-form-item>
-              <el-form-item label="支付方式">
+              <el-form-item label="支付方式" prop="payManneItem">
                 <el-select v-model="form.payManneItem" placeholder="请选择">
                   <el-option
                     v-for="item in options"
@@ -135,7 +135,7 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="预计回料时间">
+              <el-form-item label="预计回料时间" prop="finishTime">
                 <el-date-picker v-model="form.finishTime" type="date" placeholder="选择日期"></el-date-picker>
               </el-form-item>
 
@@ -151,7 +151,7 @@
                   <i v-else class="el-icon-upload avatar-uploader-icon"></i>
                 </el-upload>
               </el-form-item>
-              <el-form-item label="备注">
+              <el-form-item label="备注" prop="remark">
                 <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="form.remark"></el-input>
               </el-form-item>
               <el-form-item>
@@ -181,6 +181,9 @@ import {
 import {
   produceOrderProcureEdit //编辑物料
 } from "@/api/production";
+import {
+  purchaseEdit //编辑物料
+} from "@/api/researchDevelopment";
 export default {
   data() {
     return {
@@ -220,7 +223,34 @@ export default {
           value: "支付宝",
           label: "支付宝"
         }
-      ]
+      ],
+      // 表单规则
+      rules: {
+        dosage: [
+          { required: true, message: "请输入项目名称", trigger: "blur" }
+        ],
+        amountPurchased: [
+          { required: true, message: "请输入项目类型", trigger: "blur" }
+        ],
+        purchasePrice: [
+          { required: true, message: "请输入客户", trigger: "blur" }
+        ],
+        money: [{ required: true, message: "请输入年份", trigger: "blur" }],
+        payManneItem: [
+          { required: true, message: "请输入季节", trigger: "blur" }
+        ],
+        payment: [{ required: true, message: "请输入元素", trigger: "blur" }],
+        finishTime: [
+          { required: true, message: "请输入颜色", trigger: "blur" }
+        ],
+        deposit: [
+          { required: true, message: "请输入完成时间", trigger: "blur" }
+        ],
+        fullPayout: [
+          { required: true, message: "请输入要求数量", trigger: "blur" }
+        ],
+        remark: [{ required: true, message: "请输入详细要求", trigger: "blur" }]
+      }
     };
   },
   methods: {
@@ -231,45 +261,69 @@ export default {
       this.form.money = this.form.amountPurchased * this.form.purchasePrice;
       this.form.money = String(this.form.money);
       this.form.fullPayout = this.form.money;
-      
     },
     async changed1() {
       this.form.purchasePrice = this.form.money / this.form.amountPurchased;
       this.form.purchasePrice = String(this.form.purchasePrice);
     },
     async onSubmit() {
-      this.form.finishTime = moment(this.form.finishTime).format("YYYY-MM-DD");
-      
-       
-      // console.log(this.form);
-      // console.log(JSON.parse(this.$route.query.e));
-      let e = JSON.parse(this.$route.query.e);
-      // console.log(e);
-      
-      let res = await produceOrderProcureEdit({
-        id: e.id,
-        style_id:Number(e.style_id),
-        produce_no: e.produce_no,
-        style_color_name: e.style_color_name,
-        mainclass: e.mainclass,
-        materials_id: e.materials_id,
-        color: e.color,
-        color_no: e.color_no,
-        picurl: e.picurl,
-        amountPurchased: this.form.amountPurchased,
-        deposit: this.form.deposit,
-        dosage: this.form.dosage,
-        finishTime: this.form.finishTime,
-        payManneItem: this.form.payManneItem,
-        money: this.form.money,
-        payment: this.form.payment,
-        purchasePrice: this.form.purchasePrice,
-        remark: this.form.remark,
-        uploadDocuments:this.form.picurl,
-      });
-      console.log(res);
-      this.$router.push({
-        path: `/ProductionStyle?id=${e.style_id}&activeNames=2`
+      this.$refs["form"].validate(async valid => {
+        if (!valid) return;
+        // 调用actions的登录方法
+        this.form.finishTime = moment(this.form.finishTime).format(
+          "YYYY-MM-DD"
+        );
+        if (this.$route.query.tabName === "采购") {
+          let e = JSON.parse(this.$route.query.e);
+          // console.log(this.form);
+          // console.log(JSON.parse(this.$route.query.e));
+          // console.log(e);
+
+          let res = await produceOrderProcureEdit({
+            id: e.id,
+            style_id: Number(e.style_id),
+            produce_no: e.produce_no,
+            style_color_name: e.style_color_name,
+            mainclass: e.mainclass,
+            materials_id: e.materials_id,
+            color: e.color,
+            color_no: e.color_no,
+            picurl: e.picurl,
+            amountPurchased: this.form.amountPurchased,
+            deposit: this.form.deposit,
+            dosage: this.form.dosage,
+            finishTime: this.form.finishTime,
+            payManneItem: this.form.payManneItem,
+            money: this.form.money,
+            payment: this.form.payment,
+            purchasePrice: this.form.purchasePrice,
+            remark: this.form.remark,
+            uploadDocuments: this.form.picurl
+          });
+          console.log(res);
+          this.$router.push({
+            path: `/ProductionStyle?id=${e.style_id}&activeNames=2`
+          });
+        }
+        if (this.$route.query.tabName === "版料采购") {
+          let res = await purchaseEdit({
+            id: this.$route.query.id,
+            amountPurchased: this.form.amountPurchased,
+            deposit: this.form.deposit,
+            dosage: this.form.dosage,
+            finishTime: this.form.finishTime,
+            payManneItem: this.form.payManneItem,
+            money: this.form.money,
+            payment: this.form.payment,
+            purchasePrice: this.form.purchasePrice,
+            remark: this.form.remark,
+            uploadDocuments: this.form.picurl
+          });
+          console.log(res);
+          this.$router.push({
+            path: `/materialPurchasing?id=${this.$route.query.style_id}`
+          });
+        }
       });
     },
     handleAvatarSuccess(res, file) {
@@ -295,13 +349,13 @@ export default {
       let res = await getMaterialsInfo({
         id: Number(materials_id)
       });
+      console.log(res);
       let { data } = res.data;
       this.header = data;
       this.colors = {
         color: this.header.color_data[0].color,
         color_no: this.header.color_data[0].color_no
       };
-      // console.log(data);
 
       // 供应商
       let res1 = await getSupplierInfo({
@@ -315,12 +369,13 @@ export default {
     async selectPayment(value) {
       if (value == 1) {
         this.form.deposit = this.form.fullPayout;
-      }else{
+      } else {
         this.form.deposit = "";
       }
     }
   },
   mounted() {
+    console.log(this.$route.query);
     this.init();
   }
 };

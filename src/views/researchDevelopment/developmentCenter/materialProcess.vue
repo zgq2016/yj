@@ -338,6 +338,7 @@ export default {
       delListData: [],
       active: 0,
       options: [],
+      activeItem: {},
 
       isAllCheck: false,
       checkNum: 0,
@@ -403,8 +404,11 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(async () => {
-        let style_id = this.style_id;
-        let style_color_name = this.style_color_name;
+        let style_id =
+          this.activeItem.style_id || this.obj.style_color_data[0].style_id;
+        let style_color_name =
+          this.activeItem.style_color_name ||
+          this.obj.style_color_data[0].style_color_name;
         let mainclass = this.materials;
         let materials_id = item.id;
         let materials_color_id =
@@ -416,6 +420,7 @@ export default {
           materials_id,
           materials_color_id
         });
+        console.log(res);
         this.active = 0;
         this.init();
         this.centerDialogVisible1 = false;
@@ -568,6 +573,7 @@ export default {
     async handleColorNum(item, index) {
       this.active = index;
       console.log(item);
+      this.activeItem = item;
       let res = await getStyleMaterialsList({
         style_id: item.style_id,
         style_color_name: item.style_color_name

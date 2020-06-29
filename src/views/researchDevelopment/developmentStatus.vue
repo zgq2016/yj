@@ -38,7 +38,7 @@
             <el-tab-pane label="版料采购" name="/materialPurchasing"></el-tab-pane>
             <el-tab-pane label="纸样" name="/patternStatus"></el-tab-pane>
             <el-tab-pane label="样衣" name="/sampleDress"></el-tab-pane>
-            <el-tab-pane label="生产信息" name="7"></el-tab-pane>
+            <el-tab-pane label="生产信息" name="/ProductionStyle"></el-tab-pane>
             <el-tab-pane label="商品信息" name="8"></el-tab-pane>
           </el-tabs>
         </el-header>
@@ -73,7 +73,7 @@ export default {
       let { id } = this.$route.query;
       let res = await getStyle({ id });
       this.obj = res.data.data;
-      // console.log(this.obj)
+      console.log(this.obj);
       this.activeName = this.$route.path;
     }
   },

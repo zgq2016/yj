@@ -307,5 +307,110 @@ export const getProduceOrderList = (data) => {
     data: data,
   });
 };
+// 款式-补录采购单接口
+export const purchaseEdit = (data) => {
+  return axios({
+    url: "?g=purchase_edit",
+    method: "post",
+    data: data,
+  });
+};
+// 物料采购删除接口
+export const stylePurchaseDel = (data) => {
+  return axios({
+    url: "?g=style_purchase_del",
+    method: "post",
+    data: data,
+  });
+};
+// 物料采购删除接口
+export const stylePurchaseLogAdd = (data) => {
+  return axios({
+    url: "?g=style_purchase_log_add",
+    method: "post",
+    data: data,
+  });
+};
+// 纸样文件
+export const stylePaperpatternList = (data) => {
+  return axios({
+    url: "?g=style_paperpattern_list",
+    method: "post",
+    data: data,
+  });
+};
+// 纸样文件增加照片
+export const stylePaperpatternAdd = (data) => {
+  return axios({
+    url: "?g=style_paperpattern_add",
+    method: "post",
+    data: data,
+  });
+};
+// 纸样文件删除照片
+export const stylePaperpatternDel = (data) => {
+  return axios({
+    url: "?g=style_paperpattern_del",
+    method: "post",
+    data: data,
+  });
+};
+// 物料用量
+export const styleMaterialsUseList = (data) => {
+  return axios({
+    url: "?g=style_materials_use_list",
+    method: "post",
+    data: data,
+  });
+};
+// 物料用量编辑
+export const styleMaterialsUseEdit = (data) => {
+  return axios({
+    url: "?g=style_materials_use_edit",
+    method: "post",
+    data: data,
+  });
+};
+// 纸样文件删除list照片
+export const stylePaperpatternDelList = (data) => {
+  return axios({
+    url: "?g=style_paperpattern_del_list",
+    method: "post",
+    data: data,
+  });
+};
+// 纸样文件恢复纸样接口
+export const stylePaperpatternResume = (data) => {
+  return axios({
+    url: "?g=style_paperpattern_resume",
+    method: "post",
+    data: data,
+  });
+};
+// 款式-样衣图片保存接口
+export const styleSampleAdd = (data) => {
+  return axios({
+    url: "?g=style_sample_add",
+    method: "post",
+    data: data,
+  });
+};
+// 款式-样衣图片list接口
+export const styleSampleList = (data) => {
+  return axios({
+    url: "?g=style_sample_list",
+    method: "post",
+    data: data,
+  });
+};
+//样衣图片删除接口
+export const styleSampleDel = (data) => {
+  return axios({
+    url: "?g=style_sample_del",
+    method: "post",
+    data: data,
+  });
+};
+
 // contacts、phone
 // bank、bankid、name
