@@ -34,7 +34,7 @@
     <!-- form -->
     <div class="form">
       <el-form label-width="100px">
-        <el-form-item label="名称">
+        <el-form-item label="公司名称">
           <el-input v-model="obj.companyname" style="width:200px" placeholder="请填写名称"></el-input>
         </el-form-item>
 
@@ -42,7 +42,7 @@
           <div>
             <el-col :span="6">
               <el-select
-                v-model="classDataName"
+                v-model="obj.mainclass"
                 placeholder="请选择"
                 @change="handleClassDatasId($event)"
               >
@@ -56,7 +56,7 @@
             </el-col>
             <div @click.capture="get_class_data">
               <el-select
-                v-model="class_data_name"
+                v-model="obj.materials_class_name"
                 placeholder="料属性"
                 @change="handle_class_datas_id($event)"
               >
@@ -269,8 +269,8 @@ export default {
     this.radio = this.obj.isbill;
     console.log(this.obj);
     this.getBankName();
-    let res1 = await getMaterialsClass()
-    this.classData = res1.data.data
+    let res1 = await getMaterialsClass();
+    this.classData = res1.data.data;
   }
 };
 </script>

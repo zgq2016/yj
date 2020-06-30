@@ -75,7 +75,7 @@
             </span>
           </div>
           <div class="form">
-            <el-form :model="form" ref="form" :rules="rules" label-width="100px">
+            <el-form :model="form" ref="form" :rules="rules" label-width="120px">
               <el-form-item label="用量" prop="dosage">
                 <el-col :span="6">
                   <el-input v-model="form.dosage" placeholder="请输入用量(以米为单位)" style="width:200px"></el-input>

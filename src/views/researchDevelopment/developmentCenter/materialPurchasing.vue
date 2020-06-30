@@ -126,7 +126,7 @@
       </el-dialog>
       <!-- 部分回料 -->
       <el-dialog width="30%" title="部分回料" :visible.sync="innerVisible" append-to-body center>
-        <el-form ref="form3" :model="form3" :rules="rules" label-width="100px">
+        <el-form ref="form3" :model="form3" :rules="rules" label-width="120px">
           <el-form-item label="回料数量" prop="number">
             <el-input placeholder="请输入内容" style="width:200px" v-model="form3.number"></el-input>
           </el-form-item>

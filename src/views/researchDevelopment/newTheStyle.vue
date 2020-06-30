@@ -240,7 +240,7 @@ export default {
         style_color_name: [
           { required: true, message: "请输入颜色", trigger: "blur" }
         ]
-      },
+      }
     };
   },
   methods: {
@@ -388,6 +388,8 @@ export default {
 <style lang="less" scoped>
 .newTheStyle {
   .main {
+    min-height: 800px;
+    position: relative;
     .basicInfo {
       font-size: 20px;
       padding: 30px 10px;
@@ -404,9 +406,9 @@ export default {
       }
     }
     .color {
-      position: fixed;
-      left: 460px;
-      top: 500px;
+      position: absolute;
+      left: 0px;
+      top: 350px;
       display: flex;
     }
   }

@@ -335,6 +335,7 @@ export default {
             display: flex;
             flex: 1;
             .img {
+              width: 90px;
               padding: 10px;
               img {
                 width: 70px;
@@ -342,9 +343,16 @@ export default {
               }
             }
             .name {
-              display: flex;
-              justify-content: center;
-              align-items: center;
+              width: 250px;
+              height: 16px;
+              margin-top: 35px;
+              display: -webkit-box;
+              overflow: hidden;
+              white-space: normal !important;
+              text-overflow: ellipsis;
+              word-wrap: break-word;
+              -webkit-line-clamp: 1;
+              -webkit-box-orient: vertical;
             }
           }
           .restore {
