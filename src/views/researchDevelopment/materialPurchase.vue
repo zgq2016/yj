@@ -59,6 +59,16 @@
               ></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="状态">
+            <el-select v-model="state" placeholder="类别" style="width:120px">
+              <el-option
+                v-for="item in states"
+                :key="item.id"
+                :label="item.name"
+                :value="item.name"
+              ></el-option>
+            </el-select>
+          </el-form-item>
 
           <el-form-item>
             <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -140,13 +150,13 @@ export default {
       count: 0,
       stylist: "",
       state:'',
-    //   states:[
-    //     {未下单},
-    //     {已下单},
-    //     {部份回料},
-    //     {延时回料},
-    //     {全部回料},
-    //   ]
+      states:[
+        {name:"未下单",id:0},
+        {name:"已下单",id:1},
+        {name:"部份回料",id:2},
+        {name:"延时回料",id:3},
+        {name:"全部回料",id:4},
+      ]
     };
   },
   methods: {

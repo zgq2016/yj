@@ -6,7 +6,7 @@
       <el-breadcrumb-item>板房</el-breadcrumb-item>
       <el-breadcrumb-item>制版</el-breadcrumb-item>
     </el-breadcrumb>
-     <div class="main">
+    <div class="main">
       <!-- search_condition -->
       <div class="search_condition">
         <el-form
@@ -48,6 +48,7 @@
               ></el-option>
             </el-select>
           </el-form-item>
+
           <el-form-item label="类别">
             <el-select v-model="formInline.style_type" placeholder="类别" style="width:120px">
               <el-option
@@ -58,7 +59,16 @@
               ></el-option>
             </el-select>
           </el-form-item>
-
+          <el-form-item label="状态">
+            <el-select v-model="state" placeholder="状态" style="width:120px">
+              <el-option
+                v-for="item in states"
+                :key="item.id"
+                :label="item.name"
+                :value="item.name"
+              ></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">查询</el-button>
           </el-form-item>
@@ -92,7 +102,7 @@
         </el-table>
       </div>
     </div>
-     <!-- 分页 -->
+    <!-- 分页 -->
     <el-pagination
       class="pagination"
       @size-change="handleSizeChange"
@@ -137,7 +147,14 @@ export default {
       page: 1,
       page_size: 9,
       count: 0,
-      stylist: ""
+      stylist: "",
+      state: "",
+      states: [
+        { name: "未开始", id: 0 },
+        { name: "开始制版", id: 1 },
+        { name: "制版中", id: 2 },
+        { name: "完成上传", id: 3 }
+      ]
     };
   },
   methods: {
@@ -149,7 +166,7 @@ export default {
       this.$router.push({ path: `/designNote?id=${row.id}` });
     },
     handleUser_id(e) {
-      this.formInline.user_id = e
+      this.formInline.user_id = e;
     },
     async getYear() {
       let res = await getYearList();
@@ -249,7 +266,7 @@ export default {
       }
     }
   }
-  .el-pagination{
+  .el-pagination {
     text-align: right;
   }
 }

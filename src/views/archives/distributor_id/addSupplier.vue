@@ -202,40 +202,40 @@ export default {
       // 表单规则
       rules: {
         companyname: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+          { required: true, message: "请输入公司名称", trigger: "blur" }
         ],
         mainclass: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+          { required: true, message: "请选择分类", trigger: "change" }
         ],
         materials_class_name: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+          { required: true, message: "请选择二级分类", trigger: "change" }
         ],
         address: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+          { required: true, message: "请填写详细地址", trigger: "blur" }
         ],
-        tax: [{ required: true, message: "请填写商品数量", trigger: "blur" }],
-        isbill: [{ required: true, message: "请填写商品数量", trigger: "blur" }],
+        tax: [{ required: true, message: "请填写税点", trigger: "blur" }],
+        isbill: [{ required: true, message: "请选择是否发票", trigger: "change" }],
         remarks: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+          { required: true, message: "请输入备注", trigger: "blur" }
         ]
       },
       contactRules: {
         contact_contacts: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+          { required: true, message: "请填写联系人名称", trigger: "blur" }
         ],
         contact_phone: [
-          { required: true, message: "请填写优惠价格", trigger: "blur" }
+          { required: true, message: "请填写联系人号码", trigger: "blur" }
         ]
       },
       bankRules: {
         bank_bank: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+          { required: true, message: "请选择银行", trigger: "change" }
         ],
         bank_name: [
-          { required: true, message: "请填写优惠价格", trigger: "blur" }
+          { required: true, message: "请填写卡号名称", trigger: "blur" }
         ],
         bank_bankid: [
-          { required: true, message: "请填写优惠价格", trigger: "blur" }
+          { required: true, message: "请填写银行卡号", trigger: "blur" }
         ]
       }
     };
@@ -251,23 +251,7 @@ export default {
 
     async handleEdit() {
       this.$refs["form"].validate(async valid => {
-        // this.form.contact.map((v, i) => {
-        //   if (v.contacts == "") {
-        //     this.bl = true;
-        //     this.bl1 = true;
-        //     contacts.style.border = "1px solid #F56C6C";
-        //   }
-        //   if (v.phone == "") {
-        //     this.bl = true;
-        //     this.bl2 = true;
-        //     phone.style.border = "1px solid #F56C6C";
-
-        //   } else if (!(/^1[3|4|5|8][0-9]\d{4,8}$/.test(v.phone))) {
-        //     this.bl = true;
-        //     this.bl2 = true;
-        //     phone.style.border = "1px solid #F56C6C";
-        //   }
-        // });
+       
         if (!valid) return;
         // 调用actions的登录方法
 
@@ -278,12 +262,7 @@ export default {
         // }
       });
     },
-    // contactBlur1(){
-    //   let contacts = document.getElementById("contacts");
-    // },
-    // contactBlur2(){
-    //   let phone = document.getElementById("phone");
-    // },
+  
     // 新增联系人
     handleAddUsers() {
       this.form.contact.push({

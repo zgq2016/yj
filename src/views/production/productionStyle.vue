@@ -87,8 +87,15 @@
             <!-- 没数据或者修改 -->
             <div v-if="!show" style="margin:0 0 10px 0;">
               <!-- 第一个表单 -->
-              <el-form style="position: relative;" v-if="king" label-width="80px">
-                <el-form-item label="客户">
+              <el-form
+                style="position: relative;"
+                :model="form_i"
+                :rules="rules"
+                ref="form_i"
+                v-if="king"
+                label-width="80px"
+              >
+                <el-form-item prop="companyname" label="客户">
                   <el-select
                     v-model="form_i.companyname"
                     @change="user_changed()"
@@ -103,7 +110,11 @@
                   </el-select>
                 </el-form-item>
 
-                <el-form-item style="position: absolute; top:0;left:300px;" label="出货时间">
+                <el-form-item
+                  style="position: absolute; top:0;left:300px;"
+                  prop="date"
+                  label="出货时间"
+                >
                   <el-date-picker
                     v-model="form_i.date"
                     @change="dateChanged()"
@@ -116,10 +127,10 @@
                   <!-- <el-input v-model="form.name" style="width:200px"></el-input> -->
                   <span :v-model="form_i.color" style="margin-left:20px;">{{form_i.color}}</span>
                 </el-form-item>
-                <el-form-item label="总量">
+                <el-form-item prop="sum" label="总量">
                   <el-input v-model="form_i.sum" @input="inputChange()" style="width:200px"></el-input>
                 </el-form-item>
-                <el-form-item label="尺码">
+                <el-form-item prop="size_name" label="尺码">
                   <div
                     style="width:100px;margin:0 10px;float:left;  display: inline-block;text-align: center;overflow: hidden;"
                     v-for="(itemSize,indexSize) in form_i.size_name"
@@ -148,13 +159,19 @@
                 </el-form-item>
 
                 <el-form-item label="比例">
-                  <el-input
-                    @input="inputChange()"
+                  <el-form-item
                     v-for="(itemScale,indexScale) in form_i.ratio"
                     :key="indexScale"
-                    v-model="form_i.ratio[indexScale]"
-                    style="display: inline-block;width:100px;margin:0 10px;"
-                  ></el-input>
+                    :prop="'ratio.'+indexScale"
+                    :rules="ratios.ratio"
+                    class="rat"
+                  >
+                    <el-input
+                      @input="inputChange()"
+                      v-model="form_i.ratio[indexScale]"
+                      style="display: inline-block;width:100px;margin:0 10px;"
+                    ></el-input>
+                  </el-form-item>
                 </el-form-item>
 
                 <el-form-item label="数量">
@@ -434,7 +451,10 @@
                 append-to-body
                 center
               >
-                <el-form ref="form2" :model="form2" label-width="100px">
+                <el-form ref="form2" :rules="rules1" :model="form2" label-width="100px">
+                  <el-form-item prop="imageUrl">
+                    <el-input v-model="form2.imageUrl" v-if="false"></el-input>
+                  </el-form-item>
                   <el-upload
                     class="avatar-uploader1"
                     action="https://yj.ppp-pay.top/uploadpic.php"
@@ -459,14 +479,14 @@
                 append-to-body
                 center
               >
-                <el-form ref="form3" :model="form3" label-width="100px">
-                  <el-form-item label="回料数量">
+                <el-form ref="form3" :rules="rules2" :model="form3" label-width="110px">
+                  <el-form-item prop="number" label="回料数量">
                     <el-input placeholder="请输入内容" style="width:200px" v-model="form3.number"></el-input>
                   </el-form-item>
-                  <el-form-item label="结算金额">
+                  <el-form-item prop="money" label="结算金额">
                     <el-input placeholder="请输入内容" style="width:200px" v-model="form3.money"></el-input>
                   </el-form-item>
-                  <el-form-item label="部分回料时间">
+                  <el-form-item prop="date" label="部分回料时间">
                     <el-date-picker v-model="form3.date" type="date" placeholder="选择日期"></el-date-picker>
                   </el-form-item>
                   <el-form-item label="余结金额">
@@ -482,6 +502,9 @@
                     <img v-if="form3.imageUrl" :src="form3.imageUrl" class="avatar" />
                     <i v-else class="el-icon-upload avatar-uploader-icon"></i>
                   </el-upload>
+                  <el-form-item prop="imageUrl">
+                    <el-input v-model="form3.imageUrl" v-if="false"></el-input>
+                  </el-form-item>
                   <div style="width:200px;margin:0 auto">
                     <el-button @click="innerVisible = false">取消</el-button>
                     <el-button @click="partBack()">确定</el-button>
@@ -496,11 +519,11 @@
                 append-to-body
                 center
               >
-                <el-form ref="form4" :model="form4" label-width="80px">
-                  <el-form-item label="延迟时间">
+                <el-form ref="form4" :rules="rules3" :model="form4" label-width="80px">
+                  <el-form-item prop="date" label="延迟时间">
                     <el-date-picker v-model="form4.date" type="date" placeholder="选择日期"></el-date-picker>
                   </el-form-item>
-                  <el-form-item label="原因">
+                  <el-form-item prop="reason" label="原因">
                     <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="form4.reason"></el-input>
                   </el-form-item>
                   <div style="width:200px;margin:0 auto">
@@ -971,6 +994,94 @@ import {
 export default {
   data() {
     return {
+      // 下单信息验证
+      rules: {
+        companyname: [
+          { required: true, message: "选择客户", trigger: "change" }
+        ],
+        date: [
+          {
+            required: true,
+            message: "请选择日期",
+            trigger: "change"
+          }
+        ],
+        sum: [{ required: true, message: "请输入数量", trigger: "blur" }],
+
+        size_name: [
+          {
+            type: "array",
+            required: true,
+            message: "请至少选择一个尺码",
+            trigger: "change"
+          }
+        ]
+      },
+      ratios: {
+        ratio: [
+          {
+            required: true,
+            message: "请输入比例",
+            trigger: "blur"
+          }
+        ]
+      },
+      // 采购
+      rules1: {
+        imageUrl: [
+          {
+            required: true,
+            message: "请上传凭证图片",
+            trigger: "change"
+          }
+        ]
+      },
+      rules2: {
+        number: [
+          {
+            required: true,
+            message: "请输入回料数量",
+            trigger: "blur"
+          }
+        ],
+        money: [
+          {
+            required: true,
+            message: "请输入结账金额",
+            trigger: "blur"
+          }
+        ],
+        date: [
+          {
+            required: true,
+            message: "请选择回料时间",
+            trigger: "change"
+          }
+        ],
+        imageUrl: [
+          {
+            required: true,
+            message: "请选择回料凭证",
+            trigger: "change"
+          }
+        ]
+      },
+      rules3: {
+        date: [
+          {
+            required: true,
+            message: "请选择时间",
+            trigger: "change"
+          }
+        ],
+        reason: [
+          {
+            required: true,
+            message: "请输入原因",
+            trigger: "blur"
+          }
+        ]
+      },
       chang_color: "",
       cardList_materials: "",
       materials_color_id: "",
@@ -1384,6 +1495,7 @@ export default {
     async switchingStyle(item, index) {
       this.active = index;
       // console.log(this.ob[index].produce_no);
+
       this.table_data = false;
       this.show = false;
       this.show9 = true;
@@ -1405,6 +1517,9 @@ export default {
       this.ratio = [[], [], [], [], [], [], [], [], [], []];
       this.size_name = [[], [], [], [], [], [], [], [], [], [], [], []];
       this.init(); // 下单初始化
+      if (this.form_i.color == "") {
+        this.king = false;
+      }
       this.int_i(); // 采购初始化
       this.init_r(); // 生产排单初始化
       this.init_t(); // 裁剪初始化
@@ -1755,106 +1870,110 @@ export default {
       let style_id = Number(this.$route.query.id);
       let arr = [];
       let arr1 = [[], [], [], [], [], [], [], [], [], [], []];
-      this.$confirm("请你确定下单！", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(async () => {
-          //取得form数据
+      if (this.form_i.color != "") {
+        this.$refs["form_i"].validate(valid => {
+          if (!valid) return;
 
-          if (this.show9) {
-            this.form.unshift(this.form_i);
-            // this.show9 = false;
-          }
-          this.form.map((v, i) => {
-            v.companyname = this.form_i.companyname;
-            v.customer_id = this.form_i.customer_id;
-            v.date = this.form_i.date;
-          });
+          this.$confirm("请你确定下单！", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          })
+            .then(async () => {
+              //取得form数据
 
-          for (let i = 0; i < this.form.length; i++) {
-            arr1[i] = [];
-            this.form[i].size_name.map((e, a) => {
-              if (this.table_data) {
-                arr1[i].push({
-                  style_id: style_id,
-                  produce_no: this.ob[this.active].produce_no,
-                  style_color_name: this.form[i].color,
-                  size: this.form[i].size_name[a],
-                  quantity: Number(this.form[i].quantity[a]),
-                  ratio: Number(this.form[i].ratio[a]),
-                  id: Number(this.form[i].ids[a]) //修改部分
+              if (this.show9) {
+                this.form.unshift(this.form_i);
+                // this.show9 = false;
+              }
+              this.form.map((v, i) => {
+                v.companyname = this.form_i.companyname;
+                v.customer_id = this.form_i.customer_id;
+                v.date = this.form_i.date;
+              });
+
+              for (let i = 0; i < this.form.length; i++) {
+                arr1[i] = [];
+                this.form[i].size_name.map((e, a) => {
+                  if (this.table_data) {
+                    arr1[i].push({
+                      style_id: style_id,
+                      produce_no: this.ob[this.active].produce_no,
+                      style_color_name: this.form[i].color,
+                      size: this.form[i].size_name[a],
+                      quantity: Number(this.form[i].quantity[a]),
+                      ratio: Number(this.form[i].ratio[a]),
+                      id: Number(this.form[i].ids[a]) //修改部分
+                    });
+                  } else {
+                    arr1[i].push({
+                      style_id: style_id,
+                      produce_no: this.ob[this.active].produce_no,
+                      style_color_name: this.form[i].color,
+                      size: this.form[i].size_name[a],
+                      quantity: Number(this.form[i].quantity[a]),
+                      ratio: Number(this.form[i].ratio[a])
+                    });
+                  }
+                  // console.log(this.form[i].size_name[a]);
+                  // console.log(arr1[i]);
                 });
-              } else {
-                arr1[i].push({
+                if (arr1[i].length == 1) {
+                  arr1[i][0].ratio = 1;
+                }
+                arr.push({
                   style_id: style_id,
                   produce_no: this.ob[this.active].produce_no,
                   style_color_name: this.form[i].color,
-                  size: this.form[i].size_name[a],
-                  quantity: Number(this.form[i].quantity[a]),
-                  ratio: Number(this.form[i].ratio[a])
+                  id: this.form[i].id,
+                  total: Number(this.form[i].sum),
+                  customer_id: this.form[i].customer_id,
+                  expect_date: this.form[i].date,
+                  produce_order_size: arr1[i]
                 });
               }
-              // console.log(this.form[i].size_name[a]);
-              // console.log(arr1[i]);
-            });
-            if (arr1[i].length == 1) {
-              arr1[i][0].ratio = 1;
-            }
-            arr.push({
-              style_id: style_id,
-              produce_no: this.ob[this.active].produce_no,
-              style_color_name: this.form[i].color,
-              id: this.form[i].id,
-              total: Number(this.form[i].sum),
-              customer_id: this.form[i].customer_id,
-              expect_date: this.form[i].date,
-              produce_order_size: arr1[i]
-            });
-          }
-          console.log(arr);
+              console.log(arr);
 
-          //将form数据传入接口
-          if (this.show2) {
-            //编辑接口
-            let resn = await produceOrderEdit({
-              style_id: style_id,
-              produce_no: this.ob[this.active].produce_no,
-              produce_order: arr
+              //将form数据传入接口
+              if (this.show2) {
+                //编辑接口
+                let resn = await produceOrderEdit({
+                  style_id: style_id,
+                  produce_no: this.ob[this.active].produce_no,
+                  produce_order: arr
+                });
+                console.log(resn);
+              } else {
+                //增加接口
+                let res = await produceOrderAdd({ produce_order: arr });
+                console.log(res);
+              }
+              this.show = true;
+              this.show1 = false;
+              this.form = [];
+              this.quantity = [[], [], [], [], [], [], [], [], [], []];
+              this.ratio = [[], [], [], [], [], [], [], [], [], []];
+              this.size_name = [[], [], [], [], [], [], [], [], [], [], [], []];
+              this.init();
+              this.int_i(); //采购初始化
+
+              this.$message({
+                type: "success",
+                message: "下单成功!"
+              });
+            })
+            .catch(err => {
+              console.log(err);
+
+              this.$message({
+                type: "success",
+                message: "取消下单"
+              });
             });
-            console.log(resn);
-          } else {
-            //增加接口
-            let res = await produceOrderAdd({ produce_order: arr });
-            console.log(res);
-          }
-          this.show = true;
-          this.show1 = false;
-          this.form = [];
-          this.quantity = [[], [], [], [], [], [], [], [], [], []];
-          this.ratio = [[], [], [], [], [], [], [], [], [], []];
-          this.size_name = [[], [], [], [], [], [], [], [], [], [], [], []];
-          this.init();
-          this.int_i(); //采购初始化
-
-          this.$message({
-            type: "success",
-            message: "下单成功!"
-          });
-        })
-        .catch(err => {
-          console.log(err);
-
-          this.$message({
-            type: "success",
-            message: "取消下单"
-          });
         });
-      // } else {
-      //   this.$message.error("请填写完整数据！！！");
-      //   console.log(this.form_i, this.form);
-      // }
+      } else {
+        this.$message.error("请填写完整数据！！！");
+      }
     },
 
     // 切换采购订单颜色
@@ -1897,54 +2016,63 @@ export default {
     },
     // 全部回料
     async allMaterial() {
-      this.innerVisibled1 = false;
+      this.$refs["form2"].validate(async valid => {
+        if (!valid) return;
 
-      let res = await produceOrderProcureLogAdd({
-        produce_order_procure_id: this.produce_order_procure_id, //生产采购单id
-        logname: "全部回料", //日志名称
-        returntime: "", //预计回料时间/部分回料时间/延迟时间
-        state: "3", //回料状态 1部份回料 2延时回料 3全部回料
-        picurl: this.form2.imageUrl, //凭证图片
-        quantity: 0, //回料数量
-        amount: 0, //结算金额
-        remarks: "" //原因备注
+        this.innerVisibled1 = false;
+        let res = await produceOrderProcureLogAdd({
+          produce_order_procure_id: this.produce_order_procure_id, //生产采购单id
+          logname: "全部回料", //日志名称
+          returntime: "", //预计回料时间/部分回料时间/延迟时间
+          state: "3", //回料状态 1部份回料 2延时回料 3全部回料
+          picurl: this.form2.imageUrl, //凭证图片
+          quantity: 0, //回料数量
+          amount: 0, //结算金额
+          remarks: "" //原因备注
+        });
       });
       this.int_i();
       console.log(res);
     },
     // 部分回料
     async partBack() {
-      this.innerVisible = false;
-      this.form3.date = moment(this.form3.date).format("YYYY-MM-DD");
-      let res = await produceOrderProcureLogAdd({
-        produce_order_procure_id: this.produce_order_procure_id, //生产采购单id
-        logname: "部分回料", //日志名称
-        returntime: this.form3.date, //预计回料时间/部分回料时间/延迟时间
-        state: "1", //回料状态 1部份回料 2延时回料 3全部回料
-        picurl: this.form3.imageUrl, //凭证图片
-        quantity: Number(this.form3.number), //回料数量
-        amount: Number(this.form3.money), //结算金额
-        remarks: "" //原因备注
+      this.$refs["form3"].validate(async valid => {
+        if (!valid) return;
+        this.innerVisible = false;
+        this.form3.date = moment(this.form3.date).format("YYYY-MM-DD");
+        let res = await produceOrderProcureLogAdd({
+          produce_order_procure_id: this.produce_order_procure_id, //生产采购单id
+          logname: "部分回料", //日志名称
+          returntime: this.form3.date, //预计回料时间/部分回料时间/延迟时间
+          state: "1", //回料状态 1部份回料 2延时回料 3全部回料
+          picurl: this.form3.imageUrl, //凭证图片
+          quantity: Number(this.form3.number), //回料数量
+          amount: Number(this.form3.money), //结算金额
+          remarks: "" //原因备注
+        });
+        this.int_i();
+        console.log(res);
       });
-      this.int_i();
-      console.log(res);
     },
     // 延迟回料
     async delayBack() {
-      this.innerVisibled = false;
-      this.form4.date = moment(this.form4.date).format("YYYY-MM-DD");
-      let res = await produceOrderProcureLogAdd({
-        produce_order_procure_id: this.produce_order_procure_id, //生产采购单id
-        logname: "延迟回料", //日志名称
-        returntime: this.form4.date, //预计回料时间/部分回料时间/延迟时间
-        state: "2", //回料状态 1部份回料 2延时回料 3全部回料
-        picurl: this.form4.imageUrl, //凭证图片
-        quantity: 0, //回料数量
-        amount: 0, //结算金额
-        remarks: this.form4.reason //原因备注
+      this.$refs["form4"].validate(async valid => {
+        if (!valid) return;
+        this.innerVisibled = false;
+        this.form4.date = moment(this.form4.date).format("YYYY-MM-DD");
+        let res = await produceOrderProcureLogAdd({
+          produce_order_procure_id: this.produce_order_procure_id, //生产采购单id
+          logname: "延迟回料", //日志名称
+          returntime: this.form4.date, //预计回料时间/部分回料时间/延迟时间
+          state: "2", //回料状态 1部份回料 2延时回料 3全部回料
+          picurl: this.form4.imageUrl, //凭证图片
+          quantity: 0, //回料数量
+          amount: 0, //结算金额
+          remarks: this.form4.reason //原因备注
+        });
+        this.int_i();
+        console.log(res);
       });
-      this.int_i();
-      console.log(res);
     },
     // 点击增加物料
     async handleMaterialsCard() {
@@ -1990,7 +2118,7 @@ export default {
       });
       let { data } = res1.data;
       let newArr = [];
-      console.log(this.isCheckList);
+      // console.log(this.isCheckList);
 
       this.isCheckList.map(async (v, i) => {
         newArr.push({
@@ -2104,8 +2232,8 @@ export default {
           produce_no: data[this.active].produce_no
         });
         let data3 = res2.data.data;
-        console.log(data3);
-        
+        // console.log(data3);
+
         let all1 = [[], [], [], [], [], [], [], [], [], []];
         data3.map((v, i) => {
           this.chang_color.map((f, g) => {
@@ -3021,6 +3149,11 @@ export default {
 </script>
 <style lang="less" scoped>
 .productionStyle {
+  /deep/.el-form-item__content {
+    .rat {
+      float: left;
+    }
+  }
   .main {
     .info {
       display: flex;
@@ -3548,7 +3681,7 @@ export default {
     .avatar-uploader {
       position: absolute;
       top: 0px;
-      right: 3%;
+      right: 1%;
     }
     .avatar-uploader1 {
       position: relative;

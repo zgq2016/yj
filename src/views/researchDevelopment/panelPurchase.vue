@@ -227,27 +227,27 @@ export default {
       // 表单规则
       rules: {
         dosage: [
-          { required: true, message: "请输入项目名称", trigger: "blur" }
+          { required: true, message: "请输入用量", trigger: "blur" }
         ],
         amountPurchased: [
-          { required: true, message: "请输入项目类型", trigger: "blur" }
+          { required: true, message: "请输入采购量", trigger: "blur" }
         ],
         purchasePrice: [
-          { required: true, message: "请输入客户", trigger: "blur" }
+          { required: true, message: "请输入采购单价", trigger: "blur" }
         ],
-        money: [{ required: true, message: "请输入年份", trigger: "blur" }],
+        money: [{ required: true, message: "请输入金额", trigger: "blur" }],
         payManneItem: [
-          { required: true, message: "请输入季节", trigger: "blur" }
+          { required: true, message: "请选择支付方式", trigger: "blur" }
         ],
         payment: [{ required: true, message: "请输入元素", trigger: "blur" }],
         finishTime: [
-          { required: true, message: "请输入颜色", trigger: "blur" }
+          { type:"date",required: true, message: "请输入时间", trigger: "blur" }
         ],
         deposit: [
-          { required: true, message: "请输入完成时间", trigger: "blur" }
+          { required: true, message: "请输入定金", trigger: "blur" }
         ],
         fullPayout: [
-          { required: true, message: "请输入要求数量", trigger: "blur" }
+          { required: true, message: "请输入全部金额", trigger: "blur" }
         ],
         remark: [{ required: true, message: "请输入详细要求", trigger: "blur" }]
       }
