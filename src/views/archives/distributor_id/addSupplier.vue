@@ -214,6 +214,7 @@ export default {
           { required: true, message: "请填写商品数量", trigger: "blur" }
         ],
         tax: [{ required: true, message: "请填写商品数量", trigger: "blur" }],
+        isbill: [{ required: true, message: "请填写商品数量", trigger: "blur" }],
         remarks: [
           { required: true, message: "请填写商品数量", trigger: "blur" }
         ]
