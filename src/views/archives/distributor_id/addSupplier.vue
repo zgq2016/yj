@@ -38,9 +38,9 @@
           <el-input v-model="form.companyname" style="width:200px" placeholder="请填写名称"></el-input>
         </el-form-item>
 
-        <el-form-item prop="classDataName" style="display:inline-block" label="分类">
+        <el-form-item prop="classData" style="display:inline-block" label="分类">
           <el-select
-            v-model="form.classDataName"
+            v-model="form.classData"
             placeholder="请选择"
             @change="handleClassDatasId($event)"
           >
@@ -68,10 +68,10 @@
           </el-select>
         </el-form-item>
 
-          <!-- prop="contacts" -->
+        <!-- prop="contacts" -->
         <el-form-item
           class="member_user_item"
-          v-for="(item,index) in contact"
+          v-for="(item,index) in form.contact"
           :key="item.key"
           :label="`联系人${index+1}`"
         >
@@ -84,6 +84,14 @@
               ></el-input>
             </el-col>
             <el-col :span="6">
+              <!-- </el-form-item>
+
+        <el-form-item
+          class="member_user_item"
+          prop="phone"
+          v-for="(item,index) in contact"
+          :key="item.key"
+              >-->
               <el-input
                 v-model="form.contact[index].phone"
                 style="width:200px"
@@ -96,17 +104,17 @@
         <el-form-item>
           <span @click="handleAddUsers" style="cursor: pointer;">增加联系人</span>
         </el-form-item>
-          <!-- prop="banks" -->
+        <!-- prop="banks" -->
         <el-form-item
           class="member_account_item"
-          v-for="(item,index) in banks"
+          v-for="(item,index) in form.banks"
           :key="item.key"
           :label="`账号信息${index+1}`"
         >
           <el-row>
             <el-col :span="6">
               <div></div>
-              <el-select v-model="banks[index].bank" placeholder="类别">
+              <el-select v-model="form.banks[index].bank" placeholder="类别">
                 <el-option
                   v-for="item in options"
                   :key="item.id"
@@ -131,8 +139,8 @@
         <el-form-item prop="address" label="地址">
           <el-input v-model="form.address" style="width:600px" placeholder="详细地址"></el-input>
         </el-form-item>
-        <el-form-item prop="radio" label="是否开发票">
-          <el-radio-group v-model="form.radio">
+        <el-form-item prop="isbill" label="是否开发票">
+          <el-radio-group v-model="form.isbill">
             <el-radio :label="0">不开</el-radio>
             <el-radio :label="1">开</el-radio>
           </el-radio-group>
@@ -172,7 +180,7 @@ export default {
         address: "",
         remarks: "",
         tax: "",
-        classDataName: "",
+        classData: "",
         class_data_name: "",
         contact: [{ contacts: "", phone: "", id: "" }],
         banks: [
@@ -216,7 +224,7 @@ export default {
           { required: true, message: "请输入公司名称", trigger: "blur" }
           // { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
         ],
-        classDataName: [
+        classData: [
           { required: true, message: "请选择分类", trigger: "change" }
         ],
         class_data_name: [
@@ -227,6 +235,20 @@ export default {
             type: "array",
             required: true,
             message: "请至少填写一个联系人信息",
+            trigger: "blur"
+          }
+        ],
+        phone: [
+          {
+            type: "array",
+            required: true,
+            message: "请至少填写一个联系人信息",
+            trigger: "blur"
+          },
+          {
+            min: 11,
+            max: 12,
+            message: "长度在 11 到 12 个字符",
             trigger: "blur"
           }
         ],
@@ -242,7 +264,7 @@ export default {
         radio: [
           { required: true, message: "请选择是否开发票", trigger: "change" }
         ],
-        tax: [{ required: true, message: "税点", trigger: "blur" }]
+        tax: [{ required: true, message: "请输入税点", trigger: "blur" }]
       }
     };
   },
@@ -267,34 +289,30 @@ export default {
     },
     // 新增联系人
     handleAddUsers() {
-      this.contact.push({
+      this.form.contact.push({
         contacts: "",
         phone: "",
         id: ""
         // key: Date.now()
       });
-      this.form.contact = this.contact;
     },
     // 新增账号
     handleAddAccount() {
-      this.banks.push({
+      this.form.banks.push({
         bank: "",
         name: "",
         bankid: "",
         id: ""
         // key: Date.now()
       });
-      this.form.banks = this.banks;
     },
     // 删除联系人
     handleDeleteUser(index) {
-      this.contact.splice(index, 1);
-      this.form.contact = this.contact;
+      this.form.contact.splice(index, 1);
     },
     // 删除账号
     handleDeleteAccount(index) {
-      this.bank.splice(index, 1);
-      this.form.bank = this.bank;
+      this.form.bank.splice(index, 1);
     },
     handleAvatarSuccessCard(res, file) {
       console.log(res);
@@ -369,9 +387,9 @@ export default {
     }
   }
   .form {
-    .form_l{
-      /deep/.el-form-item__content{
-        margin-left:12px !important;
+    .form_l {
+      /deep/.el-form-item__content {
+        margin-left: 12px !important;
       }
     }
     .member_user_item {
