@@ -33,18 +33,18 @@
     </div>
     <!-- form -->
     <div class="form">
-      <el-form label-width="100px">
-        <el-form-item label="公司名称">
+      <el-form :model="obj" ref="obj" :rules="rules" label-width="100px">
+        <el-form-item label="公司名称" prop="companyname">
           <el-input v-model="obj.companyname" style="width:200px" placeholder="请填写名称"></el-input>
         </el-form-item>
-
-        <el-form-item label="分类">
-          <div>
-            <el-col :span="6">
+        <div style="display:flex;">
+          <el-col :span="6">
+            <el-form-item label="分类" prop="mainclass">
               <el-select
                 v-model="obj.mainclass"
                 placeholder="请选择"
                 @change="handleClassDatasId($event)"
+                style="width:200px"
               >
                 <el-option
                   v-for="item in classData"
@@ -53,81 +53,100 @@
                   :value="item.id"
                 ></el-option>
               </el-select>
-            </el-col>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
             <div @click.capture="get_class_data">
-              <el-select
-                v-model="obj.materials_class_name"
-                placeholder="料属性"
-                @change="handle_class_datas_id($event)"
-              >
-                <el-option
-                  v-for="item in class_datas.class_data"
-                  :key="item.id"
-                  :label="item.classname"
-                  :value="item.id"
-                ></el-option>
-              </el-select>
+              <el-form-item prop="materials_class_name">
+                <el-select
+                  v-model="obj.materials_class_name"
+                  placeholder="请选择"
+                  @change="handleClassDatasIds($event)"
+                  style="width:200px"
+                >
+                  <el-option
+                    v-for="item in class_datas.class_data"
+                    :key="item.id"
+                    :label="item.classname"
+                    :value="item.id"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
             </div>
-          </div>
-        </el-form-item>
-
+          </el-col>
+        </div>
+      
         <div v-for="(item,index) in obj.contact_data" :key="item.key" class="member_user_item">
-          <el-form-item :label="`联系人${index+1}`">
-            <el-row>
-              <el-col :span="6">
-                <el-input v-model="item.contacts" style="width:200px" placeholder="请填写联系人"></el-input>
-              </el-col>
-              <el-col :span="6">
-                <el-input v-model="item.phone" style="width:200px" placeholder="请填写联系电话"></el-input>
-              </el-col>
-            </el-row>
-          </el-form-item>
+          <el-col :span="6">
+            <el-form-item
+              :label="`联系人${index+1}`"
+              :prop="'contact_data.'+index+'.contacts'"
+              :rules="contact_dataRules.contact_data_contacts"
+            >
+              <el-input v-model="item.contacts" style="width:200px" placeholder="请填写联系人"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item
+              :prop="'contact_data.'+index+'.phone'"
+              :rules="contact_dataRules.contact_data_phone"
+            >
+              <el-input v-model="item.phone" style="width:200px" placeholder="请填写联系电话"></el-input>
+            </el-form-item>
+          </el-col>
           <span v-if="index>0" class="deleteUser" @click="handleDeleteUser(index)">-</span>
         </div>
         <el-form-item>
           <span style="cursor: pointer;" @click="handleAddUsers">增加联系人</span>
         </el-form-item>
         <div v-for="(item,index) in obj.bank_data" :key="item.key" class="member_account_item">
-          <el-form-item :label="`账号信息${index+1}`">
-            <el-row>
-              <el-col :span="6">
-                <div>
-                  <el-select v-model="item.bank" placeholder="类别">
-                    <el-option
-                      v-for="item in options"
-                      :key="item.id"
-                      :label="item.name"
-                      :value="item.name"
-                    ></el-option>
-                  </el-select>
-                </div>
-              </el-col>
-              <el-col :span="6">
-                <el-input v-model="item.name" style="width:200px" placeholder="收款人姓名"></el-input>
-              </el-col>
-              <el-col :span="6">
-                <el-input v-model="item.bankid" style="width:200px" placeholder="银行卡卡号"></el-input>
-              </el-col>
-            </el-row>
-          </el-form-item>
+          <el-col :span="6">
+            <el-form-item
+              :label="`账号信息${index+1}`"
+              :prop="'bank_data.'+index+'.bank'"
+              :rules="bank_dataRules.bank_data_bank"
+            >
+              <el-select v-model="item.bank" placeholder="类别" style="width:200px">
+                <el-option
+                  v-for="item in options"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.name"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item :prop="'bank_data.'+index+'.name'" :rules="bank_dataRules.bank_data_name">
+              <el-input v-model="item.name" style="width:200px" placeholder="收款人姓名"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item
+              :prop="'bank_data.'+index+'.bankid'"
+              :rules="bank_dataRules.bank_data_bankid"
+            >
+              <el-input v-model="item.bankid" style="width:200px" placeholder="银行卡卡号"></el-input>
+            </el-form-item>
+          </el-col>
           <span v-if="index>0" class="deleteAccount" @click="handleDeleteAccount(index)">-</span>
         </div>
         <el-form-item label>
           <span style="cursor: pointer;" @click="handleAddAccount">增加账号信息</span>
         </el-form-item>
-        <el-form-item label="地址">
+        <el-form-item label="地址" prop="address">
           <el-input v-model="obj.address" style="width:600px" placeholder="详细地址"></el-input>
         </el-form-item>
-        <el-form-item label="是否开发票">
-          <el-radio-group v-model="radio">
+        <el-form-item label="是否开发票" prop="isbill">
+          <el-radio-group v-model="obj.isbill">
             <el-radio :label="'0'">不开</el-radio>
             <el-radio :label="'1'">开</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="税点">
-          <el-input style="width:200px" v-model="obj.tax"></el-input>%
+        <el-form-item label="税点" prop="tax">
+          <el-input style="width:200px" v-model="obj.tax" @input="handleInput"></el-input>%
         </el-form-item>
-        <el-form-item label="备注">
+        <el-form-item label="备注" prop="remarks">
           <el-input type="textarea" v-model="obj.remarks" placeholder="请输入内容" clearable></el-input>
         </el-form-item>
         <el-form-item>
@@ -153,15 +172,59 @@ export default {
     return {
       obj: {},
       options: [],
-      radio: "",
       classData: [],
       classDataName: "",
       class_datas: [],
       class_data_name: "",
-      classDatasId: ""
+      classDatasId: "",
+      // 表单规则
+      rules: {
+        companyname: [
+          { required: true, message: "请填写商品数量", trigger: "blur" }
+        ],
+        mainclass: [
+          { required: true, message: "请填写商品数量", trigger: "blur" }
+        ],
+        materials_class_name: [
+          { required: true, message: "请填写商品数量", trigger: "blur" }
+        ],
+        address: [
+          { required: true, message: "请填写商品数量", trigger: "blur" }
+        ],
+        tax: [{ required: true, message: "请填写商品数量", trigger: "blur" }],
+        remarks: [
+          { required: true, message: "请填写商品数量", trigger: "blur" }
+        ]
+      },
+      contact_dataRules: {
+        contact_data_contacts: [
+          { required: true, message: "请填写商品数量", trigger: "blur" }
+        ],
+        contact_data_phone: [
+          { required: true, message: "请填写优惠价格", trigger: "blur" }
+        ]
+      },
+      bank_dataRules: {
+        bank_data_bank: [
+          { required: true, message: "请填写商品数量", trigger: "blur" }
+        ],
+        bank_data_name: [
+          { required: true, message: "请填写优惠价格", trigger: "blur" }
+        ],
+        bank_data_bankid: [
+          { required: true, message: "请填写优惠价格", trigger: "blur" }
+        ]
+      }
     };
   },
   methods: {
+    handleInput(e) {
+      this.obj.tax = this.obj.tax
+        .replace(/[^\d^\.]+/g, "")
+        .replace(".", "$#$")
+        .replace(/\./g, "")
+        .replace("$#$", ".");
+    },
     async handleDel() {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
@@ -185,12 +248,32 @@ export default {
         });
     },
     async handleEdit() {
-      this.obj["isbill"] = this.radio;
-      console.log(this.obj);
+      this.$refs["obj"].validate(async valid => {
+        if (!valid) return;
+        // 调用actions的登录方法
 
-      let res = await supplierEdit(this.obj);
-      console.log(res);
-      this.$router.go(-1);
+        console.log(this.obj);
+        /* 
+address: "000"
+bank_data: [{…}]
+cardpicurl: "https://yj.ppp-pay.top/upload/20200630/20200630111149.jpg"
+companyname: "阿斯顿0"
+compicurl: "https://yj.ppp-pay.top/upload/20200630/20200630111152.jpg"
+contact_data: (2) [{…}, {…}]
+ctime: "2020-06-30 11:12:24"
+id: 164
+isbill: "0"
+mainclass: "物料"
+mainclass_id: "51"
+materials_class_id: "63"
+materials_class_name: "物料小分类6"
+remarks: "0"
+tax: "0.2"
+*/
+        let res = await supplierEdit(this.obj);
+        console.log(res);
+        this.$router.go(-1);
+      });
     },
     // 新增联系人
     handleAddUsers() {
@@ -245,28 +328,26 @@ export default {
       return isJPG && isLt2M;
     },
 
-    async get_class_data() {
-      console.log(this.classDatasId);
-      let res = await getMaterialsClassInfo({ id: this.classDatasId });
+    async get_class_data() {},
+    async handleClassDatasId(e) {
+      this.classDatasId = e;
+      let res = await getMaterialsClassInfo({
+        id: this.classDatasId || this.obj.mainclass_id
+      });
       console.log(res);
       let { data } = res.data;
       this.class_datas = data;
+      this.obj.materials_class_name = this.class_datas.class_data[0].classname;
+      this.obj.materials_class_id = this.class_datas.class_data[0].id;
     },
-    handleClassDatasId(e) {
-      console.log(e);
-      this.classDatasId = e;
-    },
-    handle_class_datas_id(e) {
-      // console.log(e);
+    handleClassDatasIds(e) {
       this.obj.materials_class_id = e;
     }
   },
   async mounted() {
     let { id } = this.$route.query;
-    console.log(id);
     let res = await getSupplierInfo({ id });
     this.obj = res.data.data;
-    this.radio = this.obj.isbill;
     console.log(this.obj);
     this.getBankName();
     let res1 = await getMaterialsClass();
@@ -300,6 +381,8 @@ export default {
     .member_user_item {
       border-bottom: 1px #eee dashed;
       position: relative;
+      display: flex;
+
       .deleteUser {
         display: block;
         background: #ddd;
@@ -317,6 +400,7 @@ export default {
       }
     }
     .member_account_item {
+      display: flex;
       border-bottom: 1px #eee dashed;
       position: relative;
       .deleteAccount {
@@ -331,7 +415,7 @@ export default {
         cursor: pointer;
         border-radius: 50px;
         position: absolute;
-        left: 80%;
+        left: 85%;
         top: 20%;
       }
     }
