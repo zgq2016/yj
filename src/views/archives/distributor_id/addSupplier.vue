@@ -81,22 +81,27 @@
                 v-model="form.contact[index].contacts"
                 style="width:200px"
                 placeholder="请填写联系人"
+               
+                id="contacts"
               ></el-input>
             </el-col>
             <el-col :span="6">
-              <!-- </el-form-item>
-
-        <el-form-item
-          class="member_user_item"
-          prop="phone"
-          v-for="(item,index) in contact"
-          :key="item.key"
-              >-->
               <el-input
                 v-model="form.contact[index].phone"
-                style="width:200px"
+                style="width:200px; border-radius:4px;"
                 placeholder="请填写联系电话"
+              
+                id="phone"
               ></el-input>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="6">
+              <em v-if="bl1" style="font-size:10px;color: #F56C6C;">请填写联系人</em>
+              <span v-if="!bl1" style="width:100%;display:block;height:40px;"></span>
+            </el-col>
+            <el-col :span="6">
+              <em v-if="bl2" style="font-size:10px;color: #F56C6C;">请输入正确电话号码</em>
             </el-col>
           </el-row>
           <span v-if="index>0" class="deleteUser" @click="handleDeleteUser(index)">-</span>
@@ -104,7 +109,7 @@
         <el-form-item>
           <span @click="handleAddUsers" style="cursor: pointer;">增加联系人</span>
         </el-form-item>
-        <!-- prop="banks" -->
+
         <el-form-item
           class="member_account_item"
           v-for="(item,index) in form.banks"
@@ -219,6 +224,9 @@ export default {
       class_datas: [],
       class_data_name: "",
       classDatasId: "",
+      bl: false,
+      bl1: false,
+      bl2: false,
       rules: {
         companyname: [
           { required: true, message: "请输入公司名称", trigger: "blur" }
@@ -261,7 +269,7 @@ export default {
           }
         ],
         address: [{ required: true, message: "请输入地址", trigger: "blur" }],
-        radio: [
+        isbill: [
           { required: true, message: "请选择是否开发票", trigger: "change" }
         ],
         tax: [{ required: true, message: "请输入税点", trigger: "blur" }]
@@ -272,21 +280,48 @@ export default {
     // 点击保存
     onSubmit() {
       // let { id } = this.$route.query;
+      // let contacts = document.getElementById("contacts");
+      // let phone = document.getElementById("phone");
+
       this.$refs["form"].validate(async valid => {
+        // this.form.contact.map((v, i) => {
+        //   if (v.contacts == "") {
+        //     this.bl = true;
+        //     this.bl1 = true;
+        //     contacts.style.border = "1px solid #F56C6C";
+        //   }
+        //   if (v.phone == "") {
+        //     this.bl = true;
+        //     this.bl2 = true;
+        //     phone.style.border = "1px solid #F56C6C";
+
+        //   } else if (!(/^1[3|4|5|8][0-9]\d{4,8}$/.test(v.phone))) {
+        //     this.bl = true;
+        //     this.bl2 = true;
+        //     phone.style.border = "1px solid #F56C6C";
+        //   }
+        // });
         if (!valid) return;
+
+        // if (!this.bl) {
+        contacts.style.border = "1px solid #DCDFE6";
+        phone.style.border = "1px solid #DCDFE6";
         let obj = this.form;
         obj["materials_class_id"] = this.materials_class_id;
         obj["cardpicurl"] = this.cardpicurl;
         obj["compicurl"] = this.compicurl;
-        // obj["contact"] = this.contact;
-        // obj["bank"] = this.banks;
-        // obj["isbill"] = this.radio;
-        // obj["tax"] = this.tax;
         let res = await supplierAdd(obj);
         console.log(res);
         this.$router.go(-1);
+        // }
       });
     },
+    // contactBlur1(){
+    //   let contacts = document.getElementById("contacts");
+    // },
+    // contactBlur2(){
+    //   let phone = document.getElementById("phone");
+    // },
     // 新增联系人
     handleAddUsers() {
       this.form.contact.push({

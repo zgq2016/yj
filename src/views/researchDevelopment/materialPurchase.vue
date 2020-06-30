@@ -138,7 +138,15 @@ export default {
       page: 1,
       page_size: 9,
       count: 0,
-      stylist: ""
+      stylist: "",
+      state:'',
+    //   states:[
+    //     {未下单},
+    //     {已下单},
+    //     {部份回料},
+    //     {延时回料},
+    //     {全部回料},
+    //   ]
     };
   },
   methods: {
