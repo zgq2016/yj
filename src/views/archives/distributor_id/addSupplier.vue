@@ -250,6 +250,23 @@ export default {
 
     async handleEdit() {
       this.$refs["form"].validate(async valid => {
+        // this.form.contact.map((v, i) => {
+        //   if (v.contacts == "") {
+        //     this.bl = true;
+        //     this.bl1 = true;
+        //     contacts.style.border = "1px solid #F56C6C";
+        //   }
+        //   if (v.phone == "") {
+        //     this.bl = true;
+        //     this.bl2 = true;
+        //     phone.style.border = "1px solid #F56C6C";
+
+        //   } else if (!(/^1[3|4|5|8][0-9]\d{4,8}$/.test(v.phone))) {
+        //     this.bl = true;
+        //     this.bl2 = true;
+        //     phone.style.border = "1px solid #F56C6C";
+        //   }
+        // });
         if (!valid) return;
         // 调用actions的登录方法
 
@@ -257,8 +274,15 @@ export default {
         let res = await supplierAdd(this.form);
         console.log(res);
         this.$router.go(-1);
+        // }
       });
     },
+    // contactBlur1(){
+    //   let contacts = document.getElementById("contacts");
+    // },
+    // contactBlur2(){
+    //   let phone = document.getElementById("phone");
+    // },
     // 新增联系人
     handleAddUsers() {
       this.form.contact.push({
