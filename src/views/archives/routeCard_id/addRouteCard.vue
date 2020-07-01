@@ -10,18 +10,18 @@
         :on-success="handleAvatarSuccessPanels"
         :before-upload="beforeAvatarUpload"
       >
-        <img v-if="picurl" :src="picurl" class="avatar" />
+        <img v-if="form.picurl" :src="form.picurl" class="avatar" />
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
     </div>
     <!-- form -->
     <el-col class="form" style="margin-top:20px">
-      <el-form ref="form" :model="form" label-width="100px">
+      <el-form :model="form" ref="form" :rules="rules" label-width="100px">
         <el-form-item label="供应商">
           <el-col :span="8">
             <el-autocomplete
               class="inline-input"
-              v-model="name"
+              v-model="supplier_companyname"
               :fetch-suggestions="querySearch"
               placeholder="供应商"
               @select="handleSelect"
@@ -32,19 +32,20 @@
             <router-link to="/addSupplier?id=0">新增供应商</router-link>
           </el-col>
         </el-form-item>
-        <el-form-item label="编号">
+        <el-form-item label="编号" prop="materialsno">
           <el-input v-model="form.materialsno" style="width:200px;" placeholder="编号"></el-input>
         </el-form-item>
-        <el-form-item label="面料名称">
+        <el-form-item label="面料名称" prop="materialsname">
           <el-input v-model="form.materialsname" style="width:200px;" placeholder="面料名称"></el-input>
         </el-form-item>
-        <el-form-item label="分类">
-          <div>
-            <el-col :span="6">
+        <div style="display:flex;">
+          <el-col :span="6">
+            <el-form-item label="分类" prop="materials_mainclass_name">
               <el-select
-                v-model="classDataName"
+                v-model="form.materials_mainclass_name"
                 placeholder="请选择"
                 @change="handleClassDatasId($event)"
+                style="width:200px"
               >
                 <el-option
                   v-for="item in classData"
@@ -53,44 +54,52 @@
                   :value="item.id"
                 ></el-option>
               </el-select>
-            </el-col>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
             <div @click.capture="get_class_data">
-              <el-select
-                v-model="class_data_name"
-                placeholder="料属性"
-                @change="handle_class_datas_id($event)"
-              >
-                <el-option
-                  v-for="item in class_datas.class_data"
-                  :key="item.id"
-                  :label="item.classname"
-                  :value="item.id"
-                ></el-option>
-              </el-select>
-            </div>
-          </div>
-        </el-form-item>
-        <div v-for="(item,index) in tableData" :key="item.key" class="member_user_item">
-          <el-form-item :label="`面料成分${index+1}`">
-            <el-row>
-              <el-col :span="6">
-                <el-input v-model="tableData[index].content" style="width:200px" placeholder="面料"></el-input>
-              </el-col>
-              <el-col :span="6">
-                <el-input
-                  v-model="tableData[index].material_name"
+              <el-form-item prop="materials_class_name">
+                <el-select
+                  v-model="form.materials_class_name"
+                  placeholder="请选择"
+                  @change="handleClassDatasIds($event)"
                   style="width:200px"
-                  placeholder="%"
-                ></el-input>
-              </el-col>
-            </el-row>
-          </el-form-item>
+                >
+                  <el-option
+                    v-for="item in class_datas.class_data"
+                    :key="item.id"
+                    :label="item.classname"
+                    :value="item.id"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+          </el-col>
+        </div>
+        <div v-for="(item,index) in form.material_data" :key="item.key" class="member_user_item">
+          <el-col :span="6">
+            <el-form-item
+              :label="`面料成分${index+1}`"
+              :prop="'material_data.'+index+'.material_name'"
+              :rules="material_dataRules.material_data_material_name"
+            >
+              <el-input v-model="item.material_name" style="width:200px" placeholder="面料"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item
+              :prop="'material_data.'+index+'.content'"
+              :rules="material_dataRules.material_data_content"
+            >
+              <el-input v-model="item.content" style="width:200px" placeholder="%"></el-input>
+            </el-form-item>
+          </el-col>
           <span v-if="index>0" class="deleteUser" @click="handleDeleteUser(index)">-</span>
         </div>
         <el-form-item>
           <span style="cursor: pointer;" @click="handleIngredient">添加面料成分</span>
         </el-form-item>
-        <el-form-item label="计量单位">
+        <el-form-item label="计量单位" prop="unit">
           <span>
             <el-select v-model="form.unit" placeholder="请选择">
               <el-option
@@ -102,52 +111,63 @@
             </el-select>
           </span>
         </el-form-item>
-        <el-form-item label="大货量单价">
+        <el-form-item label="大货量单价" prop="wsale_price">
           <el-input v-model="form.wsale_price" style="width:200px;" placeholder="大货量单价"></el-input>
         </el-form-item>
-        <div v-for="(item,index) in colorValue" :key="item.key" class="member_user_item">
-          <el-form-item :label="`颜色${index+1}`">
-            <el-row>
-              <el-col :span="6">
-                <el-select v-model="colorValue[index].color" placeholder="请选择">
-                  <el-option
-                    v-for="item in colors"
-                    :key="item.id"
-                    :label="item.color_name"
-                    :value="item.color_name"
-                  ></el-option>
-                </el-select>
-              </el-col>
-              <el-col :span="11">
-                <el-input v-model="colorValue[index].color_no" style="width:200px;"></el-input>
-              </el-col>
-              <el-col :span="11">
-                <div class="upload" @click="handleImg(item)">
-                  <img v-if="item.picurl" :src="item.picurl" />
-                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                </div>
-              </el-col>
-            </el-row>
-          </el-form-item>
+        <div v-for="(item,index) in form.color_data" :key="item.key" class="color_user_item">
+          <el-col :span="6">
+            <el-form-item
+              :label="`颜色${index+1}`"
+              :prop="'color_data.'+index+'.color'"
+              :rules="color_dataRules.color_data_color"
+            >
+              <el-select v-model="item.color" placeholder="请选择" style="width:200px">
+                <el-option
+                  v-for="item in colors"
+                  :key="item.id"
+                  :label="item.color_name"
+                  :value="item.color_name"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item
+              :prop="'color_data.'+index+'.color_no'"
+              :rules="color_dataRules.color_data_color_no"
+            >
+              <el-input v-model="item.color_no" style="width:200px;"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="11">
+            <el-form-item>
+              <div class="upload" @click="handleImg(item)">
+                <img v-if="item.picurl" :src="item.picurl" />
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </div>
+            </el-form-item>
+          </el-col>
+
           <span v-if="index>0" class="deleteUser" @click="handleDeleteColor(index)">-</span>
         </div>
         <el-form-item>
           <span style="cursor: pointer;" @click="handleColor">添加颜色</span>
         </el-form-item>
-        <el-form-item label="是否有货">
-          <el-radio-group v-model="radio">
+        <el-form-item label="是否有货" prop="instock">
+          <el-radio-group v-model="form.instock">
             <el-radio :label="'0'">是</el-radio>
             <el-radio :label="'1'">否</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="到货时间">
+        <el-form-item label="到货时间" prop="arrival_time">
           <el-date-picker v-model="form.arrival_time" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
-        <el-form-item label="备注">
+        <el-form-item label="备注" prop="remarks">
           <el-input type="textarea" v-model="form.remarks" placeholder="备注"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">保存</el-button>
+          <el-button @click="handleEdit" style="padding:10px 50px;border-radius: 10px;">保存</el-button>
+          <!-- <el-button @click="handleDel" style="padding:10px 50px;border-radius: 10px;">删除</el-button> -->
         </el-form-item>
       </el-form>
     </el-col>
@@ -219,7 +239,10 @@ import {
   getColorSelect,
   getMaterialsClass,
   materialsAdd,
-  getMaterialsClassInfo
+  getMaterialsClassInfo,
+  getMaterialsInfo,
+  materialsDel,
+  materialsEdit
 } from "@/api/archives";
 import { VueCropper } from "vue-cropper";
 import { Api } from "@/js/api.js"; //接口url配置文件
@@ -254,12 +277,34 @@ export default {
       picurl: "", //物料图片
       name: "",
       form: {
-        materialsname: "", //物料名称
-        materialsno: "", //编号
-        unit: "", //计量单位
-        wsale_price: "", //大货量单价
-        arrival_time: "", //到货时间
-        remarks: "" //备注
+        arrival_time: "",
+        color_data: [
+          {
+            color: "",
+            color_no: "",
+            picurl: "",
+            id: ""
+          }
+        ],
+        instock: "",
+        material_data: [
+          {
+            content: "",
+            material_name: "",
+            id: ""
+          }
+        ],
+        materials_class_id: "",
+        materials_class_name: "",
+        materials_mainclass_id: "",
+        materials_mainclass_name: "",
+        materials_supplier_id: "",
+        materialsname: "",
+        materialsno: "",
+        picurl: "",
+        remarks: "",
+        unit: "",
+        wsale_price: ""
       },
       classDataName: "",
       class_data_name: "",
@@ -288,7 +333,55 @@ export default {
       class_datas_id: "",
       classDatasId: "",
       materials_class_id: "",
-      item: ""
+      item: "",
+      supplier_companyname: "",
+      materials_supplier_id: "",
+      rules: {
+        // supplier_companyname: [
+        //   { required: true, message: "请填写商品数量", trigger: "blur" }
+        // ],
+        materialsno: [
+          { required: true, message: "请填写商品数量", trigger: "blur" }
+        ],
+        materialsname: [
+          { required: true, message: "请填写商品数量", trigger: "blur" }
+        ],
+        materials_mainclass_name: [
+          { required: true, message: "请填写商品数量", trigger: "blur" }
+        ],
+        materials_class_name: [
+          { required: true, message: "请填写商品数量", trigger: "blur" }
+        ],
+        unit: [{ required: true, message: "请填写商品数量", trigger: "blur" }],
+        wsale_price: [
+          { required: true, message: "请填写商品数量", trigger: "blur" }
+        ],
+        instock: [
+          { required: true, message: "请填写商品数量", trigger: "blur" }
+        ],
+        arrival_time: [
+          { required: true, message: "请填写商品数量", trigger: "blur" }
+        ],
+        remarks: [
+          { required: true, message: "请填写商品数量", trigger: "blur" }
+        ]
+      },
+      material_dataRules: {
+        material_data_material_name: [
+          { required: true, message: "请填写商品数量", trigger: "blur" }
+        ],
+        material_data_content: [
+          { required: true, message: "请填写优惠价格", trigger: "blur" }
+        ]
+      },
+      color_dataRules: {
+        color_data_color: [
+          { required: true, message: "请填写商品数量", trigger: "blur" }
+        ],
+        color_data_color_no: [
+          { required: true, message: "请填写优惠价格", trigger: "blur" }
+        ]
+      }
     };
   },
   methods: {
@@ -408,14 +501,14 @@ export default {
       this.centerDialogVisible = true;
     },
     handleIngredient() {
-      this.tableData.push({
+      this.form.material_data.push({
         content: "",
         material_name: "",
         id: ""
       });
     },
     handleColor() {
-      this.colorValue.push({
+      this.form.color_data.push({
         color: "",
         color_no: "",
         picurl: "",
@@ -436,34 +529,25 @@ export default {
       cb(data);
     },
     handleSelect(item) {
-      console.log(item);
-      this.materialsname = item.value;
-      this.class_datas_id = item.address;
+      this.form.supplier_companyname = item.value;
+      this.form.materials_supplier_id = item.address;
     },
-    handle_class_datas_id(e) {
-      // console.log(e);
-      this.materials_class_id = e;
-    },
-    handleClassDatasId(e) {
-      console.log(e);
+    async handleClassDatasId(e) {
       this.classDatasId = e;
-    },
-    async onSubmit() {
-      let obj = { ...this.form };
-      obj["picurl"] = this.picurl;
-      obj["materials_class_id"] = this.materials_class_id;
-      obj["materials_supplier_id"] = this.class_datas_id;
-      obj["instock"] = this.radio;
-      obj["color_data"] = this.colorValue;
-      obj["material_data"] = this.tableData;
-      obj["arrival_time"] = moment(this.form.arrival_time).format("YYYY-MM-DD");
-      // material_name,content
-      let res = await materialsAdd(obj);
+      let res = await getMaterialsClassInfo({
+        id: this.classDatasId || this.form.mainclass_id
+      });
       console.log(res);
-      this.$router.go(-1);
+      let { data } = res.data;
+      this.class_datas = data;
+      this.form.materials_class_name = this.class_datas.class_data[0].classname;
+      this.form.materials_class_id = this.class_datas.class_data[0].id;
+    },
+    handleClassDatasIds(e) {
+      this.form.materials_class_id = e;
     },
     handleAvatarSuccessPanels(res, file) {
-      this.picurl = res.data.pic_file_url;
+      this.form.picurl = res.data.pic_file_url;
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
@@ -500,6 +584,46 @@ export default {
       let res = await getColorSelect();
       let { data } = res.data;
       this.colors = data;
+    },
+    async handleDel() {
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          let { id } = this.$route.query;
+          let res = await materialsDel({ id });
+          this.$router.push({ path: "/routeCard_list" });
+          this.$message({
+            type: "success",
+            message: "删除成功!"
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    async handleEdit() {
+      this.$refs["form"].validate(async valid => {
+        if (!valid) return;
+        // 调用actions的登录方法
+
+        delete this.form["supplier_id"];
+        delete this.form["supplier_companyname"];
+        delete this.form["materials_supplier_data"];
+
+        this.form["arrival_time"] = moment(this.form.arrival_time).format(
+          "YYYY-MM-DD"
+        );
+        console.log(this.form);
+        let res = await materialsAdd(this.form);
+        console.log(res);
+        this.$router.go(-1);
+      });
     }
   },
   async mounted() {
@@ -520,6 +644,8 @@ export default {
   .member_user_item {
     border-bottom: 1px #eee dashed;
     position: relative;
+    display: flex;
+
     .deleteUser {
       display: block;
       background: #ddd;
@@ -535,12 +661,31 @@ export default {
       left: 60%;
       top: 20%;
     }
+  }
+  .color_user_item {
+    border-bottom: 1px #eee dashed;
+    position: relative;
+    display: flex;
+    .deleteUser {
+      display: block;
+      background: #ddd;
+      width: 16px;
+      height: 16px;
+      font-size: 14px;
+      text-align: center;
+      line-height: 16px;
+      color: #fff;
+      cursor: pointer;
+      border-radius: 50px;
+      position: absolute;
+      left: 85%;
+      top: 20%;
+    }
     .upload {
       width: 178px;
       height: 178px;
       border-radius: 10px;
       overflow: hidden;
-      margin: 10px 0;
       i {
         border: 1px solid #ccc;
       }

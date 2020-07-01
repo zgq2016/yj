@@ -314,6 +314,7 @@ export default {
       item: "",
       obj: {},
       supplier_companyname: "",
+      materials_supplier_id: "",
       rules: {
         // supplier_companyname: [
         //   { required: true, message: "请填写商品数量", trigger: "blur" }
@@ -508,8 +509,8 @@ export default {
     },
     handleSelect(item) {
       console.log(item);
-      this.supplier_companyname = item.value;
-      this.materials_class_id = item.address;
+      this.obj.supplier_companyname = item.value;
+      this.obj.materials_supplier_id = item.address;
     },
     async handleClassDatasId(e) {
       this.classDatasId = e;
@@ -590,16 +591,7 @@ export default {
       this.$refs["obj"].validate(async valid => {
         if (!valid) return;
         // 调用actions的登录方法
-        /* 
-id: 104
-materials_class_id: "53"
-materials_class_name: "物料小分类1"
-materials_mainclass_id: "51"
-materials_mainclass_name: "物料"
-materials_supplier_data: [{…}]
-supplier_companyname: "00"
-supplier_id: "100"
-*/
+
         delete this.obj["supplier_id"];
         delete this.obj["supplier_companyname"];
         delete this.obj["materials_supplier_data"];
@@ -609,6 +601,24 @@ supplier_id: "100"
         this.$router.go(-1);
       });
     }
+/* 
+arrival_time: "2020-07-01"
+color_data: (2) [{…}, {…}]
+id: 106
+instock: "1"
+material_data: [{…}]
+materials_class_id: "60"
+materials_class_name: "物料小分类3"
+materials_mainclass_id: "51"
+materials_mainclass_name: "物料"
+materials_supplier_id: "159"
+materialsname: "000"
+materialsno: "000"
+picurl: "https://yj.ppp-pay.top/upload/20200630/20200630165547.jpg"
+remarks: "000"
+unit: "百件"
+wsale_price: "0"
+*/
   },
   async mounted() {
     let { id } = this.$route.query;
@@ -617,36 +627,12 @@ supplier_id: "100"
     console.log(this.obj);
     if (this.obj.materials_supplier_data.length > 0) {
       this.supplier_companyname = this.obj.materials_supplier_data[0].supplier_companyname;
-      // this.obj.supplier_id = this.obj.materials_supplier_data[0].supplier_id;
+      this.obj.materials_supplier_id = this.obj.materials_supplier_data[0].supplier_id;
     }
-    // this.obj["supplier_companyname"] = "";
-    // this.obj[
-    //   "supplier_companyname"
-    // ] = this.obj.materials_supplier_data[0].supplier_companyname;
-    // this.obj["supplier_id"] = this.obj.materials_supplier_data[0].supplier_id;
     console.log(this.obj);
     this.getClassData();
     this.getUnit();
     this.getColor();
-    /* 
-arrival_time: "2020-07-01"
-color_data: Array(1)
-id: 106
-instock: "0"
-material_data: Array(1)
-materials_class_id: "56"
-materials_class_name: "里料小分类2"
-materials_mainclass_id: "52"
-materials_mainclass_name: "里料"
-materials_supplier_data: Array(1)
-materialsname: "00"
-materialsno: "00"
-picurl: "https://yj.ppp-pay.top/upload/20200630/20200630165547.jpg"
-remarks: "00"
-supplier_companyname: "炒粉有限公司"
-unit: "百件"
-wsale_price: "0"
-*/
   }
 };
 </script>
