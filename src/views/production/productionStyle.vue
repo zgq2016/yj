@@ -158,7 +158,7 @@
                   </el-popover>
                 </el-form-item>
 
-                <el-form-item label="比例">
+                <el-form-item  :rules="ratios.ratio" label="比例">
                   <el-form-item
                     v-for="(itemScale,indexScale) in form_i.ratio"
                     :key="indexScale"
@@ -193,74 +193,78 @@
               </el-form>
 
               <!-- 循环出来的表单 -->
-              <el-form
-                ref="form"
-                v-for="(item,index) in form"
-                :key="index"
-                style="position: relative;"
-                label-width="80px"
-              >
-                <el-form-item label="颜色">
-                  <!-- <el-input v-model="form.name" style="width:200px"></el-input> -->
-                  <span style="margin-left:20px;">{{item.color}}</span>
-                </el-form-item>
-                <el-form-item label="总量">
-                  <el-input
-                    v-model="item.sum"
-                    @input="inputChange(index,index)"
-                    style="width:200px"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item label="尺码">
-                  <div
-                    style="width:100px;margin:0 10px;float:left;  display: inline-block;text-align: center;overflow: hidden;"
-                    v-for="(itemSize,indexSize) in item.size_name"
-                    :key="indexSize"
+              <el-form ref="formgg" :model="formgg" label-width="80px">
+                <div v-for="(item,index) in formgg.child" :key="index" style="position: relative;">
+                  <el-form-item label="颜色">
+                    <span style="margin-left:20px;">{{item.color}}</span>
+                  </el-form-item>
+                  <el-form-item :prop="'child.'+index+'.sum'" :rules="inspection.sum" label="总量">
+                    <el-input
+                      v-model="item.sum"
+                      @input="inputChange(index,index)"
+                      style="width:200px"
+                    ></el-input>
+                  </el-form-item>
+                  <el-form-item
+                    :prop="'child.'+index+'.size_name'"
+                    :rules="inspection.size_name"
+                    label="尺码"
                   >
-                    <span style="width:80px;float:left; text-align: center;">{{itemSize}}</span>
-                  </div>
-                  <el-popover placement="bottom" title="请选择尺码" width="450" trigger="click">
-                    <div style="margin: 15px 0;"></div>
-                    <el-checkbox-group
-                      v-model="form[index].size_name"
-                      @change="checked => handleCheckedCitiesChange(checked,index)"
+                    <div
+                      style="width:100px;margin:0 10px;float:left;  display: inline-block;text-align: center;overflow: hidden;"
+                      v-for="(itemSize,indexSize) in item.size_name"
+                      :key="indexSize"
                     >
-                      <el-checkbox
-                        v-for="(itemc,indexc) in sizes"
-                        :label="itemc.size_name"
-                        :key="indexc"
-                      >{{itemc.size_name}}</el-checkbox>
-                    </el-checkbox-group>
-                    <el-button slot="reference">选择尺码</el-button>
-                  </el-popover>
-                </el-form-item>
+                      <span style="width:80px;float:left; text-align: center;">{{itemSize}}</span>
+                    </div>
+                    <el-popover placement="bottom" title="请选择尺码" width="450" trigger="click">
+                      <div style="margin: 15px 0;"></div>
+                      <el-checkbox-group
+                        v-model="item.size_name"
+                        @change="checked => handleCheckedCitiesChange(checked,index)"
+                      >
+                        <el-checkbox
+                          v-for="(itemc,indexc) in sizes"
+                          :label="itemc.size_name"
+                          :key="indexc"
+                        >{{itemc.size_name}}</el-checkbox>
+                      </el-checkbox-group>
+                      <el-button slot="reference">选择尺码</el-button>
+                    </el-popover>
+                  </el-form-item>
+                  <el-form-item :rules="inspection.ratio" label="比例">
+                    <el-form-item
+                      :prop="'child.'+index+'.ratio.'+indexScale"
+                      v-for="(itemScale,indexScale) in item.size_name"
+                      :key="indexScale"
+                      :rules="inspection.ratio"
+                      class="rat"
+                    >
+                      <el-input
+                        @input="inputChange(index,index)"
+                        v-model="item.ratio[indexScale]"
+                        style="display: inline-block;width:100px;margin:0 10px;"
+                      ></el-input>
+                    </el-form-item>
+                  </el-form-item>
 
-                <el-form-item label="比例">
-                  <el-input
-                    @input="inputChange(index,index)"
-                    v-for="(itemScale,indexScale) in item.size_name"
-                    :key="indexScale"
-                    v-model="ratio[index][indexScale]"
-                    style="display: inline-block;width:100px;margin:0 10px;"
-                  ></el-input>
-                </el-form-item>
-
-                <el-form-item label="数量">
-                  <el-input
-                    disabled
-                    v-for="(itemNum,indexNum) in item.size_name"
-                    :key="indexNum"
-                    v-model="quantity[index][indexNum]"
-                    style="width:100px;margin:0 10px;"
-                  ></el-input>
-                </el-form-item>
-                <el-button
-                  type="danger"
-                  style="width:100px;position:absolute;right:100px;top:20px;"
-                  @click="omit(index)"
-                  round
-                >删除</el-button>
-                <hr style="border:1px dashed #999999" />
+                  <el-form-item label="数量">
+                    <el-input
+                      disabled
+                      v-for="(itemNum,indexNum) in item.size_name"
+                      :key="indexNum"
+                      v-model="quantity[index][indexNum]"
+                      style="width:100px;margin:0 10px;"
+                    ></el-input>
+                  </el-form-item>
+                  <el-button
+                    type="danger"
+                    style="width:100px;position:absolute;right:100px;top:20px;"
+                    @click="omit(index)"
+                    round
+                  >删除</el-button>
+                  <hr style="border:1px dashed #999999" />
+                </div>
               </el-form>
             </div>
             <!-- 确定订单和新增颜色 -->
@@ -546,53 +550,71 @@
           <div v-if="!vb" class="productionArranged">
             <el-form
               :inline="true"
-              v-for="(item,index) in formInline"
-              :key="index"
               class="demo-form-inline"
+              :model="formg"
+              ref="formg"
               style="margin-bottom:10px;position: relative;"
             >
-            <div></div>
-              <el-form-item label="指派工厂：">
-                <el-input v-model="regions1[index]" placeholder="指派工厂" disabled style="width:150px"></el-input>
-              </el-form-item>
-              <el-form-item label="指派方式：">
-                <el-select
-                  v-model="mode[index]"
-                  @change="select_l(index)"
-                  placeholder="指派方式"
-                  style="width:150px"
+              <div v-for="(item,index) in formg.child" :key="index">
+                <el-form-item label="指派工厂：">
+                  <el-input
+                    v-model="regions1[index]"
+                    placeholder="指派工厂"
+                    disabled
+                    style="width:150px"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item
+                  :prop="'child.'+index+'.mode[0].name'"
+                  :rules="contactRules.name"
+                  label="指派方式："
                 >
-                  <el-option
-                    v-for="item_l in modes"
-                    :key="item_l.id"
-                    :label="item_l.name"
-                    :value="item_l.name"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item
-                label="指派数量："
-                :prop="'formInline.'+index+'.quantity'"
-                :rules="[{ required: true, message: '请输入邮箱地址', trigger: 'blur' }]"
-              >
-                <el-input v-model="item.quantity" placeholder="请填入指派数量" style="width:150px"></el-input>
-              </el-form-item>
-              <el-form-item label="加工价格：">
-                <el-input v-model="item.price" placeholder="请填入加工价格" style="width:150px"></el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-button>加工费对比</el-button>
-              </el-form-item>
-              <el-form-item label="备注：">
-                <el-input type="textarea" v-model="item.remarks" style="width:50vw"></el-input>
-              </el-form-item>
-              <el-button
-                style="position: absolute;right:5px;bottom:5px;"
-                type="danger"
-                @click="factoryDel(item.id,index)"
-                round
-              >删除</el-button>
-              <hr style="border:1px dashed #999999" />
+                  <el-select
+                    v-model="item.mode[0].name"
+                    @change="select_l(index)"
+                    placeholder="指派方式"
+                    style="width:150px"
+                  >
+                    <el-option
+                      v-for="item_l in modes"
+                      :key="item_l.id"
+                      :label="item_l.name"
+                      :value="item_l.name"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item
+                  :prop="'child.'+index+'.quantity'"
+                  :rules="contactRules.quantity"
+                  label="指派数量："
+                >
+                  <el-input v-model="item.quantity" placeholder="请填入指派数量" style="width:150px"></el-input>
+                </el-form-item>
+                <el-form-item
+                  :prop="'child.'+index+'.price'"
+                  :rules="contactRules.price"
+                  label="加工价格："
+                >
+                  <el-input v-model="item.price" placeholder="请填入加工价格" style="width:150px"></el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button>加工费对比</el-button>
+                </el-form-item>
+                <el-form-item
+                  :prop="'child.'+index+'.remarks'"
+                  :rules="contactRules.remarks"
+                  label="备注："
+                >
+                  <el-input type="textarea" v-model="item.remarks" style="width:50vw"></el-input>
+                </el-form-item>
+                <el-button
+                  style="position: absolute;right:5px;bottom:5px;"
+                  type="danger"
+                  @click="factoryDel(item.id,index)"
+                  round
+                >删除</el-button>
+                <hr style="border:1px dashed #999999" />
+              </div>
             </el-form>
 
             <!-- 新增指派工厂与确定排单 -->
@@ -1243,44 +1265,42 @@ export default {
       edit2: false, //出货编辑接口触发
       //********出货*******/
       complete: [],
-      rules: {
-        companyname: [
-          { required: true, message: "请输入公司名称", trigger: "blur" }
-        ],
-        mainclass: [
-          { required: true, message: "请选择分类", trigger: "change" }
-        ],
-        materials_class_name: [
-          { required: true, message: "请选择二级分类", trigger: "change" }
-        ],
-        address: [
-          { required: true, message: "请填写详细地址", trigger: "blur" }
-        ],
-        tax: [{ required: true, message: "请填写税点", trigger: "blur" }],
-        isbill: [
-          { required: true, message: "请选择是否发票", trigger: "change" }
-        ],
-        remarks: [{ required: true, message: "请输入备注", trigger: "blur" }]
-      },
+      // 裁剪
+
       contactRules: {
-        contact_contacts: [
-          { required: true, message: "请填写联系人名称", trigger: "blur" }
+        name: [
+          { required: true, message: "请填写联系人名称", trigger: "change" }
         ],
-        contact_phone: [
+        quantity: [
+          { required: true, message: "请填写联系人号码", trigger: "blur" }
+        ],
+        price: [
+          { required: true, message: "请填写联系人号码", trigger: "blur" }
+        ],
+        remarks: [
           { required: true, message: "请填写联系人号码", trigger: "blur" }
         ]
       },
-      bankRules: {
-        bank_bank: [
-          { required: true, message: "请选择银行", trigger: "change" }
+      inspection: {
+        sum: [{ required: true, message: "请输入总数", trigger: "blur" }],
+        size_name: [
+          {
+            type: "array",
+            required: true,
+            message: "选择至少一个尺码",
+            trigger: "change"
+          }
         ],
-        bank_name: [
-          { required: true, message: "请填写卡号名称", trigger: "blur" }
-        ],
-        bank_bankid: [
-          { required: true, message: "请填写银行卡号", trigger: "blur" }
+        ratio: [
+          {
+            required: true,
+            message: "请填写完整比例",
+            trigger: "blur"
+          }
         ]
-      }
+      },
+      formg: {},
+      formgg: {}
     };
   },
   methods: {
@@ -1445,7 +1465,9 @@ export default {
           date: this.form_i.date,
           customer_id: this.form_i.customer_id,
           companyname: this.form_i.companyname,
-          size_name: []
+          size_name: [],
+          ratio:[],
+          sum:''
         });
       }
       this.color = "";
@@ -1835,6 +1857,8 @@ export default {
           this.last.push(this.ratio[0]);
 
           this.form_i = this.form.shift();
+
+          this.formgg.child = this.form;
           this.quantity.splice(0, 1);
           this.ratio.splice(0, 1);
           this.size_name.splice(0, 1);
@@ -1915,104 +1939,120 @@ export default {
       let arr1 = [[], [], [], [], [], [], [], [], [], [], []];
       if (this.form_i.color != "") {
         this.$refs["form_i"].validate(valid => {
-          if (!valid) return;
+          this.$refs["formgg"].validate(valid1 => {
+            if (!valid) return;
+            if (!valid1) return;
 
-          this.$confirm("请你确定下单！", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning"
-          })
-            .then(async () => {
-              //取得form数据
-
-              if (this.show9) {
-                this.form.unshift(this.form_i);
-                // this.show9 = false;
-              }
-              this.form.map((v, i) => {
-                v.companyname = this.form_i.companyname;
-                v.customer_id = this.form_i.customer_id;
-                v.date = this.form_i.date;
-              });
-
-              for (let i = 0; i < this.form.length; i++) {
-                arr1[i] = [];
-                this.form[i].size_name.map((e, a) => {
-                  if (this.table_data) {
-                    arr1[i].push({
-                      style_id: style_id,
-                      produce_no: this.ob[this.active].produce_no,
-                      style_color_name: this.form[i].color,
-                      size: this.form[i].size_name[a],
-                      quantity: Number(this.form[i].quantity[a]),
-                      ratio: Number(this.form[i].ratio[a]),
-                      id: Number(this.form[i].ids[a]) //修改部分
-                    });
-                  } else {
-                    arr1[i].push({
-                      style_id: style_id,
-                      produce_no: this.ob[this.active].produce_no,
-                      style_color_name: this.form[i].color,
-                      size: this.form[i].size_name[a],
-                      quantity: Number(this.form[i].quantity[a]),
-                      ratio: Number(this.form[i].ratio[a])
-                    });
-                  }
-                  // console.log(this.form[i].size_name[a]);
-                  // console.log(arr1[i]);
-                });
-                if (arr1[i].length == 1) {
-                  arr1[i][0].ratio = 1;
-                }
-                arr.push({
-                  style_id: style_id,
-                  produce_no: this.ob[this.active].produce_no,
-                  style_color_name: this.form[i].color,
-                  id: this.form[i].id,
-                  total: Number(this.form[i].sum),
-                  customer_id: this.form[i].customer_id,
-                  expect_date: this.form[i].date,
-                  produce_order_size: arr1[i]
-                });
-              }
-              console.log(arr);
-
-              //将form数据传入接口
-              if (this.show2) {
-                //编辑接口
-                let resn = await produceOrderEdit({
-                  style_id: style_id,
-                  produce_no: this.ob[this.active].produce_no,
-                  produce_order: arr
-                });
-                console.log(resn);
-              } else {
-                //增加接口
-                let res = await produceOrderAdd({ produce_order: arr });
-                console.log(res);
-              }
-              this.show = true;
-              this.show1 = false;
-              this.form = [];
-              this.quantity = [[], [], [], [], [], [], [], [], [], []];
-              this.ratio = [[], [], [], [], [], [], [], [], [], []];
-              this.size_name = [[], [], [], [], [], [], [], [], [], [], [], []];
-              this.init();
-              this.int_i(); //采购初始化
-
-              this.$message({
-                type: "success",
-                message: "下单成功!"
-              });
+            this.$confirm("请你确定下单！", "提示", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning"
             })
-            .catch(err => {
-              console.log(err);
+              .then(async () => {
+                //取得form数据
 
-              this.$message({
-                type: "success",
-                message: "取消下单"
+                if (this.show9) {
+                  this.form.unshift(this.form_i);
+                  // this.show9 = false;
+                }
+                this.form.map((v, i) => {
+                  v.companyname = this.form_i.companyname;
+                  v.customer_id = this.form_i.customer_id;
+                  v.date = this.form_i.date;
+                });
+
+                for (let i = 0; i < this.form.length; i++) {
+                  arr1[i] = [];
+                  this.form[i].size_name.map((e, a) => {
+                    if (this.table_data) {
+                      arr1[i].push({
+                        style_id: style_id,
+                        produce_no: this.ob[this.active].produce_no,
+                        style_color_name: this.form[i].color,
+                        size: this.form[i].size_name[a],
+                        quantity: Number(this.form[i].quantity[a]),
+                        ratio: Number(this.form[i].ratio[a]),
+                        id: Number(this.form[i].ids[a]) //修改部分
+                      });
+                    } else {
+                      arr1[i].push({
+                        style_id: style_id,
+                        produce_no: this.ob[this.active].produce_no,
+                        style_color_name: this.form[i].color,
+                        size: this.form[i].size_name[a],
+                        quantity: Number(this.form[i].quantity[a]),
+                        ratio: Number(this.form[i].ratio[a])
+                      });
+                    }
+                    // console.log(this.form[i].size_name[a]);
+                    // console.log(arr1[i]);
+                  });
+                  if (arr1[i].length == 1) {
+                    arr1[i][0].ratio = 1;
+                  }
+                  arr.push({
+                    style_id: style_id,
+                    produce_no: this.ob[this.active].produce_no,
+                    style_color_name: this.form[i].color,
+                    id: this.form[i].id,
+                    total: Number(this.form[i].sum),
+                    customer_id: this.form[i].customer_id,
+                    expect_date: this.form[i].date,
+                    produce_order_size: arr1[i]
+                  });
+                }
+                console.log(arr);
+
+                //将form数据传入接口
+                if (this.show2) {
+                  //编辑接口
+                  let resn = await produceOrderEdit({
+                    style_id: style_id,
+                    produce_no: this.ob[this.active].produce_no,
+                    produce_order: arr
+                  });
+                  console.log(resn);
+                } else {
+                  //增加接口
+                  let res = await produceOrderAdd({ produce_order: arr });
+                  console.log(res);
+                }
+                this.show = true;
+                this.show1 = false;
+                this.form = [];
+                this.quantity = [[], [], [], [], [], [], [], [], [], []];
+                this.ratio = [[], [], [], [], [], [], [], [], [], []];
+                this.size_name = [
+                  [],
+                  [],
+                  [],
+                  [],
+                  [],
+                  [],
+                  [],
+                  [],
+                  [],
+                  [],
+                  [],
+                  []
+                ];
+                this.init();
+                this.int_i(); //采购初始化
+
+                this.$message({
+                  type: "success",
+                  message: "下单成功!"
+                });
+              })
+              .catch(err => {
+                console.log(err);
+
+                this.$message({
+                  type: "success",
+                  message: "取消下单"
+                });
               });
-            });
+          });
         });
       } else {
         this.$message.error("请填写完整数据！！！");
@@ -2339,13 +2379,15 @@ export default {
             style_id: Number(id),
             produce_no: data[this.active].produce_no,
             factory_id: f_id,
+            mode: [{ id: 0, name: "" }],
             id: 0
           });
         } else {
           this.formInline.push({
             style_id: Number(id),
             produce_no: data[this.active].produce_no,
-            factory_id: f_id
+            factory_id: f_id,
+            mode: [{ id: 0, name: "" }]
           });
         }
         this.region = "";
@@ -2355,58 +2397,76 @@ export default {
     // 选择指派方式
     select_l(index) {
       this.modes.map((v, i) => {
-        if (this.mode[index] == v.name) {
-          this.formInline[index].mode = v.id;
+        if (this.formInline[index].mode[0].name == v.name) {
+          this.formInline[index].mode = [{ id: v.id, name: v.name }];
         }
       });
     },
     // 提交新增指派单
     async arranged() {
-      this.$confirm("提交指派单, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(async () => {
-          let { id } = this.$route.query;
-          let res1 = await produceInfo({
-            //批次
-            style_id: id
-          });
-          let { data } = res1.data; /*  */
-          console.log(this.formInline);
-          if (!this.factory_bl) {
-            let res = await produceFactoryOrderAdd({
-              //新增排单
-              style_id: Number(id),
-              produce_no: data[this.active].produce_no,
-              produce_factory_order: this.formInline
-            });
-            console.log(res);
-          } else {
-            let res2 = await produceFactoryOrderEdit({
-              //编辑
-              style_id: Number(id),
-              produce_no: data[this.active].produce_no,
-              produce_factory_order: this.formInline
-            });
-            console.log(res2);
-          }
+      this.$refs["formg"].validate(async valid => {
+        if (!valid) return;
 
-          this.init_r();
-          this.$message({
-            type: "success",
-            message: "新增成功!"
-          });
+        this.$confirm("提交指派单, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
         })
-        .catch(err => {
-          console.log(err);
+          .then(async () => {
+            let { id } = this.$route.query;
+            let res1 = await produceInfo({
+              //批次
+              style_id: id
+            });
 
-          this.$message({
-            type: "info",
-            message: "已取消新增"
+            let { data } = res1.data; /*  */
+            let obj1 = [];
+            this.formInline.map((j, k) => {
+              obj1.push({
+                style_id: j.style_id,
+                produce_no: j.produce_no,
+                factory_id: j.factory_id,
+                mode: j.mode[0].id,
+                price: j.price,
+                quantity: j.quantity,
+                remarks: j.remarks,
+                id: j.id
+              });
+            });
+
+            if (!this.factory_bl) {
+              let res = await produceFactoryOrderAdd({
+                //新增排单
+                style_id: Number(id),
+                produce_no: data[this.active].produce_no,
+                produce_factory_order: obj1
+              });
+              console.log(res);
+            } else {
+              let res2 = await produceFactoryOrderEdit({
+                //编辑
+                style_id: Number(id),
+                produce_no: data[this.active].produce_no,
+                produce_factory_order: obj1
+              });
+              console.log(res2);
+            }
+
+            this.init_r();
+            this.$message({
+              type: "success",
+              message: "新增成功!"
+            });
+          })
+          .catch(err => {
+            console.log(err);
+
+            this.$message({
+              type: "info",
+              message: "已取消新增"
+            });
           });
-        });
+      });
     },
     // 修改生产排单
     async factoryEidt() {
@@ -2482,13 +2542,14 @@ export default {
             style_id: id,
             produce_no: data[this.active].produce_no,
             factory_id: v.factory_id,
-            mode: v.mode,
+            mode: [{ id: v.mode, name: this.mode[i] }],
             price: v.price,
             quantity: v.quantity,
             remarks: v.remarks,
             id: v.id
           });
         });
+        this.formg = { child: this.formInline };
       }
     },
 
