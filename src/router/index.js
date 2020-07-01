@@ -37,6 +37,7 @@ import MeasurementManagement from "@/views/setting/measurementManagement.vue";
 import MaterialManagement from "@/views/setting/materialManagement.vue";
 import TimeManagement from "@/views/setting/timeManagement.vue";
 import UnitManagement from "@/views/setting/unitManagement.vue";
+import ListAccounts from "@/views/setting/listAccounts.vue";
 import Pattern from "@/views/researchDevelopment/pattern.vue";
 import Platemaking from "@/views/researchDevelopment/platemaking.vue";
 import StockInquiry from "@/views/warehouse/stockInquiry.vue";
@@ -136,6 +137,11 @@ const routes = [
         path: "/unitManagement",
         name: "UnitManagement",
         component: UnitManagement,
+      },
+      {
+        path: "/listAccounts",
+        name: "ListAccounts",
+        component: ListAccounts,
       },
      
       { path: "/stockInquiry", name: "StockInquiry", component: StockInquiry },

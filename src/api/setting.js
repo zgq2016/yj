@@ -217,6 +217,23 @@ export const unitDel = data => {
   });
 };
 
+// 用户list接口
+export const userList = data => {
+  return axios({
+    url: "?g=user_list",
+    method: "post",
+    data: data
+  });
+};
+// 用户密码更新接口
+export const userPassEdit = data => {
+  return axios({
+    url: "?g=user_pass_edit",
+    method: "post",
+    data: data
+  });
+};
+
 
 
 
