@@ -37,8 +37,8 @@ import MeasurementManagement from "@/views/setting/measurementManagement.vue";
 import MaterialManagement from "@/views/setting/materialManagement.vue";
 import TimeManagement from "@/views/setting/timeManagement.vue";
 import UnitManagement from "@/views/setting/unitManagement.vue";
-import Pattern from "@/views/boardRoom/pattern.vue";
-import Platemaking from "@/views/boardRoom/platemaking.vue";
+import Pattern from "@/views/researchDevelopment/pattern.vue";
+import Platemaking from "@/views/researchDevelopment/platemaking.vue";
 import StockInquiry from "@/views/warehouse/stockInquiry.vue";
 import ProductStorehouse from "@/views/warehouse/productStorehouse.vue";
 import Purchase from "@/views/production/purchase.vue";
@@ -93,6 +93,8 @@ const routes = [
         name: "MaterialPurchase",
         component: MaterialPurchase,
       },
+      { path: "/pattern", name: "Pattern", component: Pattern },
+      { path: "/platemaking", name: "Platemaking", component: Platemaking },
       { path: "/editTheStyle", name: "EditTheStyle", component: EditTheStyle },
 
       {
@@ -135,8 +137,7 @@ const routes = [
         name: "UnitManagement",
         component: UnitManagement,
       },
-      { path: "/pattern", name: "Pattern", component: Pattern },
-      { path: "/platemaking", name: "Platemaking", component: Platemaking },
+     
       { path: "/stockInquiry", name: "StockInquiry", component: StockInquiry },
       {
         path: "/productStorehouse",
