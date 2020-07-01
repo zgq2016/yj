@@ -233,6 +233,14 @@ export const userPassEdit = data => {
     data: data
   });
 };
+// 角色列表接口
+export const roleList = data => {
+  return axios({
+    url: "?g=role_list",
+    method: "post",
+    data: data
+  });
+};
 
 
 

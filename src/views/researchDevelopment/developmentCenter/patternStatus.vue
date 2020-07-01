@@ -183,12 +183,15 @@ export default {
         picurl,
         uid: file.name
       });
+      this.init();
     },
     // 移除
     async handleRemove(file, fileList) {
       let id = file.id;
       let res = await stylePaperpatternDel({ id });
-      this.PaperpatternDelInit();
+      console.log(res);
+      this.init();
+      // this.PaperpatternDelInit();
     },
     // 预览
     handlePictureCardPreview(file) {
@@ -203,8 +206,8 @@ export default {
       this.img_list = res1.data.data.map(v => {
         return { url: v.picurl, id: v.id, name: v.uid };
       });
-      this.MaterialsInit();
       this.PaperpatternDelInit();
+      this.MaterialsInit();
     },
     async PaperpatternDelInit() {
       let res = await stylePaperpatternDelList({ style_id: this.obj.id });

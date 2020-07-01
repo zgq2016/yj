@@ -73,7 +73,7 @@
             <el-submenu index="9-3">
               <template slot="title">账户管理</template>
               <el-menu-item index="/listAccounts">账户列表</el-menu-item>
-              <el-menu-item index="2-4-2">权限管理</el-menu-item>
+              <el-menu-item index="authorityManagement">权限管理</el-menu-item>
             </el-submenu>
             <el-menu-item index="/3">退出系统</el-menu-item>
           </el-submenu>

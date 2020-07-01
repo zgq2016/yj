@@ -38,6 +38,7 @@ import MaterialManagement from "@/views/setting/materialManagement.vue";
 import TimeManagement from "@/views/setting/timeManagement.vue";
 import UnitManagement from "@/views/setting/unitManagement.vue";
 import ListAccounts from "@/views/setting/listAccounts.vue";
+import AuthorityManagement from "@/views/setting/authorityManagement.vue";
 import Pattern from "@/views/researchDevelopment/pattern.vue";
 import Platemaking from "@/views/researchDevelopment/platemaking.vue";
 import StockInquiry from "@/views/warehouse/stockInquiry.vue";
@@ -143,7 +144,12 @@ const routes = [
         name: "ListAccounts",
         component: ListAccounts,
       },
-     
+      {
+        path: "/authorityManagement",
+        name: "AuthorityManagement",
+        component: AuthorityManagement,
+      },
+
       { path: "/stockInquiry", name: "StockInquiry", component: StockInquiry },
       {
         path: "/productStorehouse",
@@ -211,7 +217,6 @@ const routes = [
             name: "SampleDress",
             component: SampleDress,
           },
-
         ],
       },
       {
@@ -268,17 +273,19 @@ const routes = [
             name: "EditrouteCard",
             component: EditrouteCard,
           },
-
-
         ],
       },
       {
         path: "/designFile",
         name: "DesignFile",
-        component: DesignFile
+        component: DesignFile,
       },
       // 财务路由开始
-      { path: "/accountFlowAndBookkeeping", name: "AccountFlowAndBookkeeping", component: AccountFlowAndBookkeeping },
+      {
+        path: "/accountFlowAndBookkeeping",
+        name: "AccountFlowAndBookkeeping",
+        component: AccountFlowAndBookkeeping,
+      },
       {
         path: "/customerReconciliationAndCollection",
         name: "CustomerReconciliationAndCollection",
@@ -294,13 +301,21 @@ const routes = [
             path: "/customerStatement",
             name: "CustomerStatement",
             component: CustomerStatement,
-          }
-        ]
+          },
+        ],
       },
-      { path: "/supplierReconciliationAndPayment", name: "SupplierReconciliationAndPayment", component: SupplierReconciliationAndPayment },
+      {
+        path: "/supplierReconciliationAndPayment",
+        name: "SupplierReconciliationAndPayment",
+        component: SupplierReconciliationAndPayment,
+      },
       { path: "/accounter", name: "Accounter", component: Accounter },
       { path: "/accountType", name: "AccountType", component: AccountType },
-      { path: "/paymentReimbursement", name: "PaymentReimbursement", component: PaymentReimbursement },
+      {
+        path: "/paymentReimbursement",
+        name: "PaymentReimbursement",
+        component: PaymentReimbursement,
+      },
       // 财务路由结束
     ],
   },
