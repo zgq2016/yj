@@ -551,6 +551,7 @@
               class="demo-form-inline"
               style="margin-bottom:10px;position: relative;"
             >
+            <div></div>
               <el-form-item label="指派工厂：">
                 <el-input v-model="regions1[index]" placeholder="指派工厂" disabled style="width:150px"></el-input>
               </el-form-item>
@@ -569,7 +570,11 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="指派数量：">
+              <el-form-item
+                label="指派数量："
+                :prop="'formInline.'+index+'.quantity'"
+                :rules="[{ required: true, message: '请输入邮箱地址', trigger: 'blur' }]"
+              >
                 <el-input v-model="item.quantity" placeholder="请填入指派数量" style="width:150px"></el-input>
               </el-form-item>
               <el-form-item label="加工价格：">
@@ -608,9 +613,9 @@
                     ></el-option>
                   </el-select>
                 </el-form-item>
-                <el-button @click="arranged" style="float:right;margin-bottom:15px;">确认排单</el-button>
               </el-form>
             </div>
+            <el-button @click="arranged" style="float:right;margin-bottom:15px;">确认排单</el-button>
           </div>
           <!-- 有数据 -->
           <div style="position: relative;" v-if="vb">
@@ -1237,7 +1242,45 @@ export default {
       edit1: false, //裁剪编辑接口触发
       edit2: false, //出货编辑接口触发
       //********出货*******/
-      complete: []
+      complete: [],
+      rules: {
+        companyname: [
+          { required: true, message: "请输入公司名称", trigger: "blur" }
+        ],
+        mainclass: [
+          { required: true, message: "请选择分类", trigger: "change" }
+        ],
+        materials_class_name: [
+          { required: true, message: "请选择二级分类", trigger: "change" }
+        ],
+        address: [
+          { required: true, message: "请填写详细地址", trigger: "blur" }
+        ],
+        tax: [{ required: true, message: "请填写税点", trigger: "blur" }],
+        isbill: [
+          { required: true, message: "请选择是否发票", trigger: "change" }
+        ],
+        remarks: [{ required: true, message: "请输入备注", trigger: "blur" }]
+      },
+      contactRules: {
+        contact_contacts: [
+          { required: true, message: "请填写联系人名称", trigger: "blur" }
+        ],
+        contact_phone: [
+          { required: true, message: "请填写联系人号码", trigger: "blur" }
+        ]
+      },
+      bankRules: {
+        bank_bank: [
+          { required: true, message: "请选择银行", trigger: "change" }
+        ],
+        bank_name: [
+          { required: true, message: "请填写卡号名称", trigger: "blur" }
+        ],
+        bank_bankid: [
+          { required: true, message: "请填写银行卡号", trigger: "blur" }
+        ]
+      }
     };
   },
   methods: {
