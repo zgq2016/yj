@@ -254,23 +254,6 @@ export default {
         // 调用actions的登录方法
 
         console.log(this.obj);
-        /* 
-address: "000"
-bank_data: [{…}]
-cardpicurl: "https://yj.ppp-pay.top/upload/20200630/20200630111149.jpg"
-companyname: "阿斯顿0"
-compicurl: "https://yj.ppp-pay.top/upload/20200630/20200630111152.jpg"
-contact_data: (2) [{…}, {…}]
-ctime: "2020-06-30 11:12:24"
-id: 164
-isbill: "0"
-mainclass: "物料"
-mainclass_id: "51"
-materials_class_id: "63"
-materials_class_name: "物料小分类6"
-remarks: "0"
-tax: "0.2"
-*/
         let res = await supplierEdit(this.obj);
         console.log(res);
         this.$router.go(-1);

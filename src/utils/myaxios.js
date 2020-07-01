@@ -41,7 +41,7 @@ function hideLoading() {
 var toHideLoading = _.debounce(() => {
   loading.close();
   loading = null;
-}, 300);
+}, 100);
 
 //添加请求拦截器
 myaxios.interceptors.request.use(
@@ -75,7 +75,7 @@ myaxios.interceptors.response.use(
     //判断当前请求是否设置了不显示Loading（不显示自然无需隐藏）
     if (error.config.headers.showLoading !== false) {
       hideLoading();
-    } 
+    }
     if (error.response && error.response.data && error.response.data.message) {
       // var jsonObj = JSON.parse(error.response.data.message);
       Message.error("网络出错！");

@@ -260,7 +260,7 @@ export default {
         obj["year"] = this.defaultData.year;
         obj["season"] = this.defaultData.season;
         obj["user_id"] = this.defaultData.user_id;
-        obj["id"] = this.defaultData.id;
+        obj["project_id"] = this.defaultData.id;
         let res = await projectStyleAdd(obj);
         console.log(res);
         this.$router.go(-1);
@@ -286,12 +286,12 @@ export default {
         obj["style_color"] = this.obj.style_color_name;
         let res = await projectStyleAdd(obj);
         console.log(res);
-        // this.$router.go(-1);
+        this.$router.go(-1);
       });
     },
     handleStyleNumberSuccess(res, file) {
       if (this.$route.query.oldId) {
-        this.style_pic_url = res.data.pic_file_url;
+        this.obj.style_pic_url = res.data.pic_file_url;
       }
       if (!this.$route.query.oldId) {
         this.form.style_pic_url = res.data.pic_file_url;
@@ -357,15 +357,15 @@ export default {
         this.defaultData = res.data.data;
       }
       if (oldId !== undefined) {
-        let res1 = await getProject({ id });
-        console.log(res1);
-        this.obj = res.data.data;
-        this.form.year = res1.data.data.year;
-        this.form.season = res1.data.data.season;
-        this.user_name = res1.data.data.user_name;
-        this.user_id = res1.data.data.user_id;
+        let res1 = await getStyle({ id });
+        console.log(res1.data.data);
+        this.obj = res1.data.data;
+        // this.form.year = res1.data.data.year;
+        // this.form.season = res1.data.data.season;
+        // this.user_name = res1.data.data.user_name;
+        // this.user_id = res1.data.data.user_id;
+        // console.log(res1.data.data);
       }
-      // console.log(res1.data.data);
     },
     async getStylenoData() {
       let res = await getStyleno();

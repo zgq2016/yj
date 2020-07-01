@@ -300,10 +300,10 @@ export default {
         });
     },
     handleStyleNumberSuccess(res, file) {
-      this.form.style_pic_url = res.data.pic_file_url;
+      this.obj.style_pic_url = res.data.pic_file_url;
     },
     handleColorSuccess(res, file) {
-      this.form.style_color_pic_url = res.data.pic_file_url;
+      this.obj.style_color_pic_url = res.data.pic_file_url;
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
