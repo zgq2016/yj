@@ -14,7 +14,7 @@
               <div class="logoName">衣家 YIJIA</div>
             </div>
           </el-menu-item>
-          <el-menu-item index="/2">首页</el-menu-item>
+          <el-menu-item index="/homepage">首页</el-menu-item>
           <el-submenu index="2" style="width:100px;overflow:hidden">
             <template slot="title">研发部</template>
             <el-menu-item index="/itemDesign">设计项目</el-menu-item>
@@ -75,7 +75,7 @@
               <el-menu-item index="/listAccounts">账户列表</el-menu-item>
               <el-menu-item index="authorityManagement">权限管理</el-menu-item>
             </el-submenu>
-            <el-menu-item index="/3">退出系统</el-menu-item>
+            <el-menu-item index="/logout">退出系统</el-menu-item>
           </el-submenu>
         </el-menu>
       </el-header>

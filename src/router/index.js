@@ -38,6 +38,7 @@ import MaterialManagement from "@/views/setting/materialManagement.vue";
 import TimeManagement from "@/views/setting/timeManagement.vue";
 import UnitManagement from "@/views/setting/unitManagement.vue";
 import ListAccounts from "@/views/setting/listAccounts.vue";
+import Logout from "@/views/setting/logout.vue";
 import AuthorityManagement from "@/views/setting/authorityManagement.vue";
 import Pattern from "@/views/researchDevelopment/pattern.vue";
 import Platemaking from "@/views/researchDevelopment/platemaking.vue";
@@ -50,6 +51,7 @@ import Tailor from "@/views/production/tailor.vue";
 import Shipment from "@/views/production/shipment.vue";
 import ProductionStyle from "@/views/production/productionStyle.vue";
 import SalesOrder from "@/views/sell/salesOrder.vue";
+import Homepage from "@/views/homepage.vue";
 
 // 财务
 import AccountFlowAndBookkeeping from "@/views/finance/accountFlowAndBookkeeping.vue";
@@ -82,6 +84,7 @@ const routes = [
     component: Index,
     redirect: { name: "ItemDesign" },
     children: [
+      { path: "/homepage", name: "Homepage", component: Homepage },
       { path: "/itemDesign", name: "ItemDesign", component: ItemDesign },
       { path: "/addProject", name: "AddProject", component: AddProject },
       {
@@ -143,6 +146,11 @@ const routes = [
         path: "/listAccounts",
         name: "ListAccounts",
         component: ListAccounts,
+      },
+      {
+        path: "/logout",
+        name: "Logout",
+        component: Logout,
       },
       {
         path: "/authorityManagement",
