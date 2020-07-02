@@ -241,6 +241,14 @@ export const roleList = data => {
     data: data
   });
 };
+// 角色列表接口
+export const roleAdd = data => {
+  return axios({
+    url: "?g=role_add",
+    method: "post",
+    data: data
+  });
+};
 
 
 

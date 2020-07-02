@@ -74,12 +74,7 @@
                 </div>
               </div>
             </div>
-            <el-button
-              class="cardBtn"
-              size="mini"
-              round
-              @click="handleMaterialsCard(item)"
-            >新增{{item.materialsCard}}</el-button>
+            <el-button class="cardBtn" size="mini" round @click="handleMaterialsCard(item)">添加主料卡</el-button>
           </div>
           <el-divider content-position="right">{{item.materials}}</el-divider>
         </div>
@@ -199,7 +194,13 @@
       </span>
     </el-dialog>
     <!-- 新增物料 -->
-    <el-dialog title="新增物料" :visible.sync="centerDialogVisible1" width="60%" center class="dialog1">
+    <el-dialog
+      title="新增主料卡"
+      :visible.sync="centerDialogVisible1"
+      width="60%"
+      center
+      class="dialog1"
+    >
       <el-input
         v-model="searchInput"
         @input="handleSearchInput"
@@ -470,10 +471,18 @@ export default {
       this.MaterialsList = data;
       this.total = count;
     },
-    handleMaterialsCard(item) {
+    async handleMaterialsCard(item) {
       this.searchInput = "";
       this.materials = item.materials;
       this.centerDialogVisible1 = true;
+      let res = await getMaterialsList({
+        keyword: "",
+        page: this.pageIndex,
+        page_size: this.pageSize
+      });
+      let { data, count } = res.data;
+      this.MaterialsList = data;
+      this.total = count;
     },
     async styleColorDel(item) {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {

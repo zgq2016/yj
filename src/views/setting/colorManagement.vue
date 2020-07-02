@@ -23,7 +23,7 @@
       <el-table-column align="right" label="操作">
         <template slot-scope="scope">
           <div class="el-icon-edit btn" @click="handleEdit(scope.$index, scope.row)"></div>
-          <div class="el-icon-delete btn" @click="handleDelete(scope.$index, scope.row)"></div>
+          <div class="el-icon-delete btn" @click="handl2eDelete(scope.$index, scope.row)"></div>
         </template>
       </el-table-column>
     </el-table>
