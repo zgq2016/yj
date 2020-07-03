@@ -18,6 +18,7 @@ import DevelopmentStatus from "@/views/researchDevelopment/developmentStatus.vue
 import Development from "@/views/researchDevelopment/developmentCenter/development.vue";
 import DesignNote from "@/views/researchDevelopment/developmentCenter/designNote.vue";
 import MaterialProcess from "@/views/researchDevelopment/developmentCenter/materialProcess.vue";
+import MerchandiseNews from "@/views/researchDevelopment/developmentCenter/merchandiseNews.vue";
 import MaterialPurchasing from "@/views/researchDevelopment/developmentCenter/materialPurchasing.vue";
 import PatternStatus from "@/views/researchDevelopment/developmentCenter/patternStatus.vue";
 import SampleDress from "@/views/researchDevelopment/developmentCenter/sampleDress.vue";
@@ -209,6 +210,11 @@ const routes = [
             path: "/materialProcess",
             name: "MaterialProcess",
             component: MaterialProcess,
+          },
+          {
+            path: "/merchandiseNews",
+            name: "MerchandiseNews",
+            component: MerchandiseNews,
           },
           {
             path: "/materialPurchasing",

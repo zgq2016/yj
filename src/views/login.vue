@@ -39,17 +39,16 @@ export default {
   methods: {
     async login() {
       let res = await userlogin(this.loginForm);
-      let myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
-      if(!myreg.test(this.loginForm.username)){
+      let myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
+      if (!myreg.test(this.loginForm.username)) {
         this.$message.error("请输入正确的账号！");
-      }else{
+      } else {
         if (res.data.error_code === 0) {
-          this.$message.success(res.data.msg);
+          this.$message.success({ message: res.data.msg, showClose: true });
           this.$router.push({ name: "Index" });
         } else {
           this.$message.error(res.data.msg);
         }
-
       }
     }
   }
@@ -98,7 +97,6 @@ export default {
           background-color: blue;
         }
       }
-     
     }
   }
   /deep/ .el-form-item__content {
@@ -107,6 +105,5 @@ export default {
     justify-content: center;
     align-items: center;
   }
- 
 }
 </style>

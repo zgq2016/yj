@@ -39,7 +39,7 @@
             <el-tab-pane label="纸样" name="/patternStatus"></el-tab-pane>
             <el-tab-pane label="样衣" name="/sampleDress"></el-tab-pane>
             <el-tab-pane label="生产信息" name="/ProductionStyle"></el-tab-pane>
-            <el-tab-pane label="商品信息" name="8"></el-tab-pane>
+            <el-tab-pane label="商品信息" name="/merchandiseNews"></el-tab-pane>
           </el-tabs>
         </el-header>
         <el-main>

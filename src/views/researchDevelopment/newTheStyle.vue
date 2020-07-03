@@ -357,7 +357,8 @@ export default {
         this.defaultData = res.data.data;
       }
       if (oldId !== undefined) {
-        let res1 = await getStyle({ id });
+        let res1 = await getStyle({ id: oldId });
+        console.log(res1);
         console.log(res1.data.data);
         this.obj = res1.data.data;
         // this.form.year = res1.data.data.year;

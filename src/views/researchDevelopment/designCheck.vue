@@ -124,6 +124,7 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(async () => {
+        console.log(item)
         this.$router.push({
           path: `/newTheStyle?id=${this.$route.query.id}&oldId=${item.id}`
         });
