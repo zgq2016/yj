@@ -48,8 +48,8 @@ export default {
           { required: true, message: "请输入电话", trigger: "blur" },
           {
             min: 11,
-            max: 12,
-            message: "长度在 11 到 12 个字符",
+            max: 11,
+            message: "请输入长度为11位的电话号码",
             trigger: "blur"
           }
         ]
