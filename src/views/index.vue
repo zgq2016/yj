@@ -16,7 +16,7 @@
           </el-menu-item>
           <el-menu-item index="/homepage">首页</el-menu-item>
           <el-submenu index="2" style="width:100px;overflow:hidden">
-            <template slot="title">研发部</template>
+            <template slot="title">研发</template>
             <el-menu-item index="/itemDesign">设计项目</el-menu-item>
             <el-menu-item index="/materialPurchase">版料采购</el-menu-item>
             <el-menu-item index="/pattern">纸样</el-menu-item>

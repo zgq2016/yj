@@ -9,7 +9,7 @@
     </el-breadcrumb>
     <!-- 添加分类 -->
     <div class="addClassify">
-      <el-button type="primary" @click="addClassify()">添加分类</el-button>
+      <el-button type="primary" @click="addClassify">添加分类</el-button>
     </div>
     <el-table
       :data="tableData"
@@ -29,17 +29,17 @@
       </el-table-column>
     </el-table>
     <!-- 添加分类 -->
-    <el-dialog title="添加分类" :visible.sync="centerDialogVisible" width="30%" center>
-      <el-form ref="form" :model="form" label-width="80px" resetFields>
-        <el-form-item label="分类名称">
+    <el-dialog title="添加分类" :visible.sync="centerDialogVisible" width="600" center>
+      <el-form ref="form" :model="form" label-width="80px">
+        <el-form-item label="分类名称" prop="goods_category_name">
           <el-input v-model="form.goods_category_name" style="width:400px;"></el-input>
         </el-form-item>
-        <el-form-item label="上级分类">
+        <el-form-item label="上级分类" prop="region">
           <el-select
-            v-model="region"
-            @change="get_goods_category_id($event)"
+            v-model="form.region"
             placeholder="可选/可不选"
             style="width:400px;"
+            @change="get_goods_category_id($event)"
           >
             <el-option
               v-for="item in options"
@@ -49,23 +49,27 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="分类描述">
+        <el-form-item label="分类描述" prop="describe">
           <el-input type="textarea" v-model="form.describe"></el-input>
         </el-form-item>
-        <el-form-item label="排序">
+        <el-form-item label="排序" prop="sort">
           <el-input v-model="form.sort" style="width:400px;"></el-input>
         </el-form-item>
+        <el-form-item>
+          <el-button @click="resetForm('form')">取 消</el-button>
+          <el-button type="primary" @click="handleNewList('form')">确 定</el-button>
+        </el-form-item>
+        <!-- <span slot="footer" class="dialog-footer">
+          <el-button @click="centerDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="handleNewList">确 定</el-button>
+        </span>-->
       </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="centerDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleNewList">确 定</el-button>
-      </span>
     </el-dialog>
     <!-- 编辑分类 -->
-    <el-dialog title="编辑分类" :visible.sync="centerDialogVisible1" width="30%" center>
-      <el-form ref="form" :model="form" label-width="80px" resetFields>
-        <el-form-item label="分类名称">
-          <el-input v-model="form.goods_category_name" style="width:400px;"></el-input>
+    <el-dialog title="编辑分类" :visible.sync="centerDialogVisible1" width="600" center>
+      <el-form ref="obj" :model="obj" label-width="80px" resetFields>
+        <el-form-item label="分类名称" prop="goods_category_name">
+          <el-input v-model="obj.goods_category_name" style="width:400px;"></el-input>
         </el-form-item>
         <el-form-item label="上级分类" v-if="rowLevel==='1'">
           <el-select v-model="region" @change="get_goods_category_id($event)" style="width:400px;">
@@ -77,15 +81,15 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="分类描述">
-          <el-input type="textarea" v-model="form.describe"></el-input>
+        <el-form-item label="分类描述" prop="describe">
+          <el-input type="textarea" v-model="obj.describe"></el-input>
         </el-form-item>
-        <el-form-item label="排序">
-          <el-input v-model="form.sort" style="width:400px;"></el-input>
+        <el-form-item label="排序" prop="sort">
+          <el-input v-model="obj.sort" style="width:400px;"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="centerDialogVisible1 = false">取 消</el-button>
+        <el-button @click="resetForm1('obj')">取 消</el-button>
         <el-button type="primary" @click="handleEditList">确 定</el-button>
       </span>
     </el-dialog>
@@ -116,12 +120,16 @@ export default {
       tableData: [],
       centerDialogVisible: false, //添加分类
       centerDialogVisible1: false, //编辑分类
-      region: "",
       form: {
+        region: "",
+        goods_category_id: 0,
         goods_category_name: "",
         describe: "",
-        sort: ""
+        sort: "",
+        level: 0
       },
+      region: "",
+      obj: {},
       options: [],
       pageIndex: 1,
       pageSize: 10,
@@ -131,50 +139,40 @@ export default {
     };
   },
   methods: {
-    get_goods_category_id(e) {
-      this.goods_category_id = e;
-    },
-    async handleNewList() {
-      this.form["goods_category_id"] = this.goods_category_id || 0;
-      let res = await goodsCategoryAdd(this.form);
-      this.form.goods_category_name = "";
-      this.form.describe = "";
-      this.form.sort = "";
-      this.region = "";
-      this.init();
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+      this.form.goods_category_id = 0;
+      console.log(this.form);
       this.centerDialogVisible = false;
     },
-    async handleEditList() {
-      delete this.form["goods_category_data"];
-      let res = await goodsCategoryEdit(this.form);
-      // let res1 = await goodsCategoryAdd(this.form);
-      console.log(res);
-      // console.log(res1);
-      this.form.goods_category_name = "";
-      this.form.describe = "";
-      this.form.sort = "";
-      this.region = "";
-      this.init();
+    resetForm1(formName) {
+      this.$refs[formName].resetFields();
+      this.form.goods_category_id = 0;
+      console.log(this.form);
       this.centerDialogVisible1 = false;
     },
-    async addClassify() {
-      this.form.goods_category_name = "";
-      this.form.describe = "";
-      this.form.sort = "";
-      this.region = "";
-      let res = await goodsCategoryInfo();
-      let { data } = res.data;
-      this.options = data;
-      this.centerDialogVisible = true;
+    async handleEditList() {
+      delete this.obj.goods_category_data;
+      delete this.obj.region;
+      console.log(this.obj);
+      let res = await goodsCategoryEdit(this.obj);
+      console.log(res);
+      this.$refs["obj"].resetFields();
+      this.obj.goods_category_id = 0;
+      this.centerDialogVisible1 = false;
+      this.init();
     },
     async handleEdit(index, row) {
-      this.rowLevel = row.level;
       let res = await goodsCategoryInfo({ id: row.goods_category_id });
-      this.form = row;
+      console.log(res);
       this.region = res.data.data[0].goods_category_name;
+      console.log(row);
+      this.rowLevel = row.level;
       let res1 = await goodsCategoryInfo();
       let { data } = res1.data;
       this.options = data;
+      this.obj = row;
+
       this.centerDialogVisible1 = true;
     },
     async handleDelete(index, row) {
@@ -198,13 +196,37 @@ export default {
           });
         });
     },
-    handleSizeChange(val) {
-      this.pageSize = val;
-      this.init();
+    get_goods_category_id(e) {
+      this.form.goods_category_id = e;
+      this.obj.goods_category_id = e;
     },
-    handleCurrentChange(val) {
-      this.pageIndex = val;
-      this.init();
+    async addClassify() {
+      if (this.tableData.length === 0) {
+        this.centerDialogVisible = true;
+      }
+      if (this.tableData.length > 0) {
+        let res = await goodsCategoryInfo();
+        let { data } = res.data;
+        this.options = data;
+        this.centerDialogVisible = true;
+      }
+    },
+    async handleNewList() {
+      delete this.form.region;
+      if (this.tableData.length === 0) {
+        let res = await goodsCategoryAdd(this.form);
+        this.$refs["form"].resetFields();
+        this.form.goods_category_id = 0;
+        this.centerDialogVisible = false;
+        this.init();
+      }
+      if (this.tableData.length > 0) {
+        let res = await goodsCategoryAdd(this.form);
+        this.$refs["form"].resetFields();
+        this.form.goods_category_id = 0;
+        this.centerDialogVisible = false;
+        this.init();
+      }
     },
     async init() {
       let res = await goodsCategoryList({
@@ -215,6 +237,14 @@ export default {
       let { data, count } = res.data;
       this.tableData = data;
       this.total = count;
+    },
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.init();
+    },
+    handleCurrentChange(val) {
+      this.pageIndex = val;
+      this.init();
     }
   },
   mounted() {
@@ -246,4 +276,4 @@ export default {
   }
 }
 // materialManagement
-</style>
+</style> 

@@ -21,7 +21,7 @@
       </el-table-column>
     </el-table>
     <!-- 材质分类 -->
-    <el-dialog title="材质分类" :visible.sync="centerDialogVisible" width="30%" center>
+    <el-dialog title="材质分类" :visible.sync="centerDialogVisible"  width="600" center>
       <el-form ref="form" :model="form" label-width="80px" resetFields>
         <el-form-item label="材质名称">
           <el-input v-model="form.material_name" style="width:400px;"></el-input>
@@ -33,7 +33,7 @@
       </span>
     </el-dialog>
     <!-- 编辑材质 -->
-    <el-dialog title="编辑材质" :visible.sync="centerDialogVisible1" width="30%" center>
+    <el-dialog title="编辑材质" :visible.sync="centerDialogVisible1"  width="600" center>
       <el-form ref="form" :model="form" label-width="80px" resetFields>
         <el-form-item label="材质名称">
           <el-input v-model="form.material_name" style="width:400px;"></el-input>
