@@ -33,9 +33,9 @@
         <el-form-item label="颜色名称" prop="color_name">
           <el-input v-model="form.color_name" style="width:400px;"></el-input>
         </el-form-item>
-        <el-form-item label="上级分类" prop="region">
+        <el-form-item label="上级分类">
           <el-select
-            v-model="form.region"
+            v-model="region"
             placeholder="可选/可不选"
             style="width:400px;"
             @change="get_goods_category_id($event)"
@@ -114,7 +114,7 @@ export default {
       centerDialogVisible: false, //添加分类
       centerDialogVisible1: false, //编辑分类
       form: {
-        region: "",
+        // region: "",
         level: 0,
         color_name: "",
         color_id: 0,
@@ -134,12 +134,14 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
       this.form.color_id = 0;
+      this.region = "";
       console.log(this.form);
       this.centerDialogVisible = false;
     },
     resetForm1(formName) {
       this.$refs[formName].resetFields();
       this.form.color_id = 0;
+      this.region = "";
       console.log(this.form);
       this.centerDialogVisible1 = false;
     },
@@ -151,6 +153,7 @@ export default {
       console.log(res);
       this.$refs["obj"].resetFields();
       this.obj.color_id = 0;
+      this.region = "";
       this.centerDialogVisible1 = false;
       this.init();
     },
@@ -211,16 +214,18 @@ export default {
         let res = await colorAdd(this.form);
         this.$refs["form"].resetFields();
         this.form.color_id = 0;
+        this.region = "";
         this.centerDialogVisible = false;
-        this.init();
+        // this.init();
       }
       if (this.tableData.length > 0) {
         let res = await colorAdd(this.form);
         this.$refs["form"].resetFields();
         this.form.color_id = 0;
+        this.region = "";
         this.centerDialogVisible = false;
-        this.init();
       }
+      this.init();
     },
     async init() {
       let res = await colorList({

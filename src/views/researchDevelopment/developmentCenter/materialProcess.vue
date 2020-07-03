@@ -208,7 +208,7 @@
           placeholder="请输入内容"
           style="width:300px"
         ></el-input>
-        <router-link to="/addSupplier?id=0" style="margin-left:30px">增加物料</router-link>
+        <router-link to="/addRouteCard?id=0" style="margin-left:30px">增加物料</router-link>
       </div>
       <div class="searchCard">
         <div class="card" v-for="(item, index) in MaterialsList" :key="index">
