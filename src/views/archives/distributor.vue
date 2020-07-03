@@ -66,9 +66,9 @@
       </el-main>
     </el-container>
     <!-- 弹出框1 -->
-    <el-dialog title="提示" :visible.sync="centerDialogVisible" width="50%" center>
-      <el-input v-if="level===0" v-model="value" placeholder="添加level0" style="width:300px"></el-input>
-      <el-input v-if="level===1" v-model="value" placeholder="添加level1" style="width:300px"></el-input>
+    <el-dialog title="增加分类" :visible.sync="centerDialogVisible" width="30%" center>
+      <el-input v-if="level===0" v-model="value" placeholder="请输入供应商分类名称" style="width:300px"></el-input>
+      <el-input v-if="level===1" v-model="value" placeholder="请输入供应商分类名称" style="width:300px"></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addLevel">确 定</el-button>

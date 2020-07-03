@@ -1063,7 +1063,7 @@ export default {
           {
             required: true,
             message: "请上传凭证图片",
-            trigger: "change"
+            trigger: "blur"
           }
         ]
       },
@@ -1093,7 +1093,7 @@ export default {
           {
             required: true,
             message: "请选择回料凭证",
-            trigger: "change"
+            trigger: "blur"
           }
         ]
       },
@@ -2124,7 +2124,6 @@ export default {
         });
       });
       this.int_i();
-      console.log(res);
     },
     // 部分回料
     async partBack() {
