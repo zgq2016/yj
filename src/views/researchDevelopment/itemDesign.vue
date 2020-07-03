@@ -162,7 +162,7 @@ export default {
           id: 1
         }
       ],
-      obj:{}
+      obj: {}
     };
   },
   methods: {
@@ -249,7 +249,7 @@ export default {
     },
     async init(object) {
       console.log(object);
-      
+      // if(object===undefined){}
       let res = await getDataList({
         page: this.pageIndex,
         page_size: this.pageSize,
@@ -258,16 +258,16 @@ export default {
       let { data, count } = res.data;
       this.data = data;
       console.log(res);
-      
+
       // console.log( this.data);
-      for(let i=0;i<this.data.length;i++){
-          if(this.data[i].projecttype === "0"){
-              this.data[i].projecttype = '意向订单';
-          }else if(this.data[i].projecttype === "1"){
-              this.data[i].projecttype = '阶段工作';
-          }else if(this.data[i].projecttype === "2"){
-              this.data[i].projecttype = '企划系列';
-          }
+      for (let i = 0; i < this.data.length; i++) {
+        if (this.data[i].projecttype === "0") {
+          this.data[i].projecttype = "意向订单";
+        } else if (this.data[i].projecttype === "1") {
+          this.data[i].projecttype = "阶段工作";
+        } else if (this.data[i].projecttype === "2") {
+          this.data[i].projecttype = "企划系列";
+        }
       }
       this.total = count;
       this.ctime_start = moment(this.date[0]).format("YYYY-MM-DD");
@@ -379,7 +379,7 @@ export default {
         .detailed {
           width: 11em;
           overflow: hidden;
-          text-overflow:ellipsis;
+          text-overflow: ellipsis;
           white-space: nowrap;
         }
         div {

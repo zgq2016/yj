@@ -1,5 +1,5 @@
 <template>
-  <div class="colorManagement">
+  <div class="goodsCategory">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
@@ -18,7 +18,7 @@
       border
       :tree-props="{children: 'size_data' , hasChildren: 'hasChildren'}"
     >
-      <el-table-column prop="size_name" label="尺码名称" width="200"></el-table-column>
+      <el-table-column prop="size_name" label="分类名称" width="200"></el-table-column>
       <el-table-column prop="sort" label="排序" width="200"></el-table-column>
       <el-table-column align="right" label="操作">
         <template slot-scope="scope">
@@ -28,57 +28,61 @@
       </el-table-column>
     </el-table>
     <!-- 尺码分类 -->
-    <el-dialog title="尺码分类" :visible.sync="centerDialogVisible" width="30%" center>
-      <el-form ref="form" :model="form" label-width="80px" resetFields>
-        <el-form-item label="尺码名称">
+    <el-dialog title="尺码分类" :visible.sync="centerDialogVisible" width="600" center>
+      <el-form ref="form" :model="form" label-width="80px">
+        <el-form-item label="尺码名称" prop="size_name">
           <el-input v-model="form.size_name" style="width:400px;"></el-input>
         </el-form-item>
-        <el-form-item label="尺码分组">
+        <el-form-item label="上级分类" prop="region">
           <el-select
-            v-model="region"
-            @change="get_goods_category_id($event)"
+            v-model="form.region"
             placeholder="可选/可不选"
             style="width:400px;"
+            @change="get_goods_category_id($event)"
           >
             <el-option
               v-for="item in options"
               :key="item.value"
-              :label="item.size_name "
+              :label="item.size_name"
               :value="item.id"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="排序">
+        <el-form-item label="排序" prop="sort">
           <el-input v-model="form.sort" style="width:400px;"></el-input>
         </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="centerDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleNewList">确 定</el-button>
-      </span>
-    </el-dialog>
-    <!-- 编辑尺码 -->
-    <el-dialog title="编辑尺码" :visible.sync="centerDialogVisible1" width="30%" center>
-      <el-form ref="form" :model="form" label-width="80px" resetFields>
-        <el-form-item label="尺码名称">
-          <el-input v-model="form.size_name" style="width:400px;"></el-input>
+        <el-form-item>
+          <el-button @click="resetForm('form')">取 消</el-button>
+          <el-button type="primary" @click="handleNewList('form')">确 定</el-button>
         </el-form-item>
-        <el-form-item label="尺码分组" v-if="rowLevel==='1'">
+        <!-- <span slot="footer" class="dialog-footer">
+          <el-button @click="centerDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="handleNewList">确 定</el-button>
+        </span>-->
+      </el-form>
+    </el-dialog>
+    <!-- 编辑分类 -->
+    <el-dialog title="编辑尺码" :visible.sync="centerDialogVisible1" width="600" center>
+      <el-form ref="obj" :model="obj" label-width="80px" resetFields>
+        <el-form-item label="尺码名称" prop="size_name">
+          <el-input v-model="obj.size_name" style="width:400px;"></el-input>
+        </el-form-item>
+        <el-form-item label="上级分类" v-if="rowLevel==='1'">
           <el-select v-model="region" @change="get_goods_category_id($event)" style="width:400px;">
             <el-option
               v-for="item in options"
               :key="item.value"
-              :label="item.size_name "
+              :label="item.size_name"
               :value="item.id"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="排序">
-          <el-input v-model="form.sort" style="width:400px;"></el-input>
+        <el-form-item label="排序" prop="sort">
+          <el-input v-model="obj.sort" style="width:400px;"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="centerDialogVisible1 = false">取 消</el-button>
+        <el-button @click="resetForm1('obj')">取 消</el-button>
         <el-button type="primary" @click="handleEditList">确 定</el-button>
       </span>
     </el-dialog>
@@ -103,65 +107,64 @@ import {
   sizeEdit,
   sizeDel
 } from "@/api/setting.js";
-//  sizeList,
-//  sizeInfo,
-//  sizeAdd,
-//  sizeDel,
-//  sizeEdit
 export default {
   data() {
     return {
       tableData: [],
-      centerDialogVisible: false, //添加尺码
-      centerDialogVisible1: false, //编辑尺码
-      region: "",
+      centerDialogVisible: false, //添加分类
+      centerDialogVisible1: false, //编辑分类
       form: {
+        region: "",
+        level: 0,
         size_name: "",
+        size_id: 0,
         sort: ""
       },
+      region: "",
+      obj: {},
       options: [],
       pageIndex: 1,
       pageSize: 10,
       total: 0,
-      size_id: "",
+      goods_category_id: "",
       rowLevel: ""
     };
   },
   methods: {
-    get_goods_category_id(e) {
-      this.size_id = e;
-    },
-    async handleNewList() {
-      this.form["size_id"] = this.size_id || 0;
-      let res = await sizeAdd(this.form);
-      this.init();
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+      this.form.size_id = 0;
+      console.log(this.form);
       this.centerDialogVisible = false;
     },
-    async handleEditList() {
-      delete this.form["size_data"];
-      let res = await sizeEdit(this.form);
-      console.log(res);
-
-      this.init();
+    resetForm1(formName) {
+      this.$refs[formName].resetFields();
+      this.form.size_id = 0;
+      console.log(this.form);
       this.centerDialogVisible1 = false;
     },
-    async addClassify() {
-      this.form.size_name = "";
-      this.form.sort = "";
-      this.region = "";
-      let res = await sizeInfo();
-      let { data } = res.data;
-      this.options = data;
-      this.centerDialogVisible = true;
+    async handleEditList() {
+      delete this.obj.goods_category_data;
+      delete this.obj.region;
+      console.log(this.obj);
+      let res = await sizeEdit(this.obj);
+      console.log(res);
+      this.$refs["obj"].resetFields();
+      this.obj.size_id = 0;
+      this.centerDialogVisible1 = false;
+      this.init();
     },
     async handleEdit(index, row) {
-      this.rowLevel = row.level;
       let res = await sizeInfo({ id: row.size_id });
-      this.form = row;
+      console.log(res);
       this.region = res.data.data[0].size_name;
+      console.log(row);
+      this.rowLevel = row.level;
       let res1 = await sizeInfo();
       let { data } = res1.data;
       this.options = data;
+      this.obj = row;
+
       this.centerDialogVisible1 = true;
     },
     async handleDelete(index, row) {
@@ -185,13 +188,39 @@ export default {
           });
         });
     },
-    handleSizeChange(val) {
-      this.pageSize = val;
-      this.init();
+    get_goods_category_id(e) {
+      this.form.size_id = e;
+      this.obj.size_id = e;
     },
-    handleCurrentChange(val) {
-      this.pageIndex = val;
-      this.init();
+    async addClassify() {
+      if (this.tableData.length === 0) {
+        this.centerDialogVisible = true;
+      }
+      if (this.tableData.length > 0) {
+        let res = await sizeInfo();
+        console.log(res);
+        let { data } = res.data;
+        this.options = data;
+        this.centerDialogVisible = true;
+      }
+    },
+    async handleNewList() {
+      delete this.form.region;
+      console.log(this.form);
+      if (this.tableData.length === 0) {
+        let res = await sizeAdd(this.form);
+        this.$refs["form"].resetFields();
+        this.form.size_id = 0;
+        this.centerDialogVisible = false;
+        this.init();
+      }
+      if (this.tableData.length > 0) {
+        let res = await sizeAdd(this.form);
+        this.$refs["form"].resetFields();
+        this.form.size_id = 0;
+        this.centerDialogVisible = false;
+        this.init();
+      }
     },
     async init() {
       let res = await sizeList({
@@ -202,6 +231,14 @@ export default {
       let { data, count } = res.data;
       this.tableData = data;
       this.total = count;
+    },
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.init();
+    },
+    handleCurrentChange(val) {
+      this.pageIndex = val;
+      this.init();
     }
   },
   mounted() {
@@ -211,7 +248,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.colorManagement {
+.goodsCategory {
   .addClassify {
     button {
       margin: 30px;
@@ -233,5 +270,4 @@ export default {
   }
 }
 // materialManagement
-</style>
-
+</style> 
