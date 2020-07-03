@@ -65,6 +65,7 @@
           :data="tableData"
           size="small"
           highlight-current-row
+          @cell-click="cellClick"
           style="width: 100%"
         >
           <el-table-column type="index" width="50" label="序号"></el-table-column>
@@ -137,7 +138,7 @@ export default {
         year: "",
         season: "",
         user_id: "",
-        style_type: "",
+        style_type: ""
       },
       years: [],
       seasons: [],
@@ -169,9 +170,18 @@ export default {
     };
   },
   methods: {
+    cellClick(row, column, cell, event) {
+      // console.log(row, column, cell, event);
+      if(column.label == "图片" || column.label == "名称" || column.label == "款号"){
+        this.$router.push({
+        path:
+          "/development?id=" + row.style_id
+      });
+      }
+    },
     // 查看
     handleEdit(index, row) {
-      console.log(row);
+      // console.log(row);
       // console.log(index);
       this.$router.push({
         path: "/productionStyle?id=" + row.style_id + "&activeNames=1"
@@ -231,7 +241,7 @@ export default {
         page_size: this.page_size,
         ...obj
       });
-      console.log(res);
+      // console.log(res);
       this.count = res.data.count;
       let { data } = res.data;
       this.tableData = data;
@@ -243,8 +253,8 @@ export default {
         });
       });
     },
-    async handleUser_id(e){
-      this.formInline.user_id = e
+    async handleUser_id(e) {
+      this.formInline.user_id = e;
     },
     handleSizeChange(val) {
       this.page_size = val;
@@ -275,6 +285,9 @@ export default {
         width: 40px;
         height: 40px;
       }
+    }
+    /deep/.el-table__body-wrapper:hover{
+      cursor: pointer;
     }
   }
 }

@@ -158,7 +158,7 @@
                   </el-popover>
                 </el-form-item>
 
-                <el-form-item  :rules="ratios.ratio" label="比例">
+                <el-form-item :rules="ratios.ratio" label="比例">
                   <el-form-item
                     v-for="(itemScale,indexScale) in form_i.ratio"
                     :key="indexScale"
@@ -284,7 +284,7 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item style=" float:right;">
+              <el-form-item v-if="ascertain1" style=" float:right;">
                 <el-button @click="clickOrders()">确认下单</el-button>
               </el-form-item>
             </el-form>
@@ -555,7 +555,7 @@
               ref="formg"
               style="margin-bottom:10px;position: relative;"
             >
-              <div v-for="(item,index) in formg.child" :key="index">
+              <div v-for="(item,index) in formg.child" :key="index" style="position: relative;">
                 <el-form-item label="指派工厂：">
                   <el-input
                     v-model="regions1[index]"
@@ -637,7 +637,7 @@
                 </el-form-item>
               </el-form>
             </div>
-            <el-button @click="arranged" style="float:right;margin-bottom:15px;">确认排单</el-button>
+            <el-button @click="arranged" v-if="ascertain2" style="float:right;margin-bottom:15px;">确认排单</el-button>
           </div>
           <!-- 有数据 -->
           <div style="position: relative;" v-if="vb">
@@ -754,7 +754,7 @@
             </div>
             <div class="add" v-if="!vb1">
               <el-button size="mini" @click="tailoradd" round>+ 增加床次</el-button>
-              <el-button @click="tailored" round>确定</el-button>
+              <el-button @click="tailored" v-if="ascertain3" round>确定</el-button>
             </div>
             <!-- </div> -->
           </div>
@@ -904,7 +904,7 @@
             </div>
             <div class="add" v-if="!vb2">
               <el-button @click="goDownAdd" round>+增加出货批次</el-button>
-              <el-button @click="goDownlist" round>确定</el-button>
+              <el-button @click="goDownlist" v-if="ascertain4" round>确定</el-button>
             </div>
           </div>
         </el-collapse-item>
@@ -929,8 +929,12 @@
                             <div>{{item2.mainclass}}</div>
                           </div>
                           <div>{{item2.color}}</div>
-                          <div>内部编号:{{item2.materials_data[0].materialsno}}</div>
-                          <div>{{item2.style_materials_supplier_data[0].companyname}}</div>
+                          <div
+                            v-if="item2.materials_data.lengyh>0"
+                          >内部编号:{{item2.materials_data[0].materialsno}}</div>
+                          <div
+                            v-if="item2.style_materials_supplier_data.length>0"
+                          >{{item2.style_materials_supplier_data[0].companyname}}</div>
                         </div>
                       </div>
                       <div class="cardStyle_right" @mouseleave="visible1 = false">
@@ -1269,17 +1273,13 @@ export default {
 
       contactRules: {
         name: [
-          { required: true, message: "请填写联系人名称", trigger: "change" }
+          { required: true, message: "请选择指派方式", trigger: "change" }
         ],
         quantity: [
-          { required: true, message: "请填写联系人号码", trigger: "blur" }
+          { required: true, message: "请输入指派数量", trigger: "blur" }
         ],
-        price: [
-          { required: true, message: "请填写联系人号码", trigger: "blur" }
-        ],
-        remarks: [
-          { required: true, message: "请填写联系人号码", trigger: "blur" }
-        ]
+        price: [{ required: true, message: "请输入加工费", trigger: "blur" }],
+        remarks: [{ required: true, message: "请填写备注", trigger: "blur" }]
       },
       inspection: {
         sum: [{ required: true, message: "请输入总数", trigger: "blur" }],
@@ -1300,7 +1300,14 @@ export default {
         ]
       },
       formg: {},
-      formgg: {}
+      formgg: {},
+
+
+
+      ascertain1:false,
+      ascertain2:false,
+      ascertain3:false,
+      ascertain4:false,
     };
   },
   methods: {
@@ -1338,7 +1345,7 @@ export default {
       return isJPG && isLt2M;
     },
     // 下单信息删除按钮
-    async omit(index) {
+    omit(index) {
       // this.show = false;
       this.$confirm("确定删除吗？", "提示", {
         confirmButtonText: "确定",
@@ -1354,6 +1361,7 @@ export default {
             this.size_name.splice(index, 1);
             this.quantity.splice(index, 1);
             this.ratio.splice(index, 1);
+            this.formgg = { child: this.form };
           } else {
             let res = await produceOrderDel({
               id: this.form_i.id
@@ -1381,7 +1389,6 @@ export default {
               this.ratio.push(this.ratio.shift());
             }
           }
-
           this.$message({
             type: "success",
             message: "删除成功!"
@@ -1455,6 +1462,7 @@ export default {
     },
     // 选择颜色
     async changed() {
+      this.ascertain1 = true
       if (this.form_i.color == "") {
         this.form_i.color = this.color;
         this.king = true;
@@ -1466,8 +1474,8 @@ export default {
           customer_id: this.form_i.customer_id,
           companyname: this.form_i.companyname,
           size_name: [],
-          ratio:[],
-          sum:''
+          ratio: [],
+          sum: ""
         });
       }
       this.color = "";
@@ -1796,9 +1804,10 @@ export default {
         if (data1.length == 0) {
           // console.log(data1.length);
           this.form = [];
-
           this.show1 = true;
+          this.ascertain1 = false
         } else {
+          this.ascertain1 = true
           // this.show1 = true;
           data1.map((v, i) => {
             let obj_list = {};
@@ -2218,7 +2227,7 @@ export default {
       let res = await produceOrderProcureAdd({
         produce_order_procure_materials: newArr
       });
-      console.log(res);
+      // console.log(res);
       this.int_i(this.active1);
       this.centerDialogVisible1 = false;
     },
@@ -2359,7 +2368,8 @@ export default {
     //新增指派工厂
     async regionadd(value) {
       // console.log(value,this.regions);
-
+     
+      this.ascertain2 = true
       let { id } = this.$route.query;
       let res1 = await produceInfo({
         //批次
@@ -2525,6 +2535,9 @@ export default {
         if (data2.length > 0) {
           this.vb = true;
           this.factory_bl = true;
+          this.ascertain2 = true
+        }else{
+          this.ascertain2 = false;
         }
         this.mode = [];
         data2.map((v, i) => {
@@ -2556,6 +2569,7 @@ export default {
     // 裁剪
     // 增加床次
     async tailoradd() {
+      this.ascertain3 = true
       let tals = [];
       this.tal.map((v, i) => {
         let sz = [];
@@ -2778,6 +2792,9 @@ export default {
           if (data1.length > 0) {
             this.vb1 = true;
             this.edit1 = true;
+            this.ascertain3 = true
+          }else{
+            this.ascertain3 = false
           }
           // console.log(data1);
 
@@ -2845,6 +2862,7 @@ export default {
     // 出货
     // 增加出货次数
     async goDownAdd() {
+      this.ascertain4 = true
       let newArr1 = [];
       let newArr2 = [];
 
@@ -3109,119 +3127,124 @@ export default {
           let data1 = res1.data.data;
           // console.log(this.t_size);
           // console.log(this.complete);
-          data1.produce_complete_data.map((v, i) => {
-            // 成品
-            let arrColor_a = []; //颜色
-            let arrObj_a = []; //颜色对应的对象
-            let arrInput_a = []; //颜色对应的对象
-            let arr_a = []; //颜色对应的对象
-            let id_a = []; //颜色对应尺码的id
-            // 次品
-            let arrColor_b = []; //颜色
-            let arrObj_b = []; //颜色对应的对象
-            let arrInput_b = []; //颜色对应的对象
-            let arr_b = []; //颜色对应的对象
-            let id_b = []; //颜色对应尺码的id
-            v.produce_complete_size_a_data.map((j, k) => {
-              arrColor_a.push(j.style_color_name);
-              arrObj_a.push({
-                style_color_name: j.style_color_name,
-                size: j.size,
-                quantity: j.quantity,
-                id: j.id
-              });
-              if (v.produce_complete_size_b_data.length == 0) {
-                arrColor_b.push(j.style_color_name);
-              }
-            });
-            v.produce_complete_size_b_data.map((j, k) => {
-              arrColor_b.push(j.style_color_name);
-              arrObj_b.push({
-                style_color_name: j.style_color_name,
-                size: j.size,
-                quantity: j.quantity,
-                id: j.id
-              });
-              if (v.produce_complete_size_a_data.length == 0) {
+          if (this.t_size.length != 0) {
+            this.ascertain4 = true
+            data1.produce_complete_data.map((v, i) => {
+              // 成品
+              let arrColor_a = []; //颜色
+              let arrObj_a = []; //颜色对应的对象
+              let arrInput_a = []; //颜色对应的对象
+              let arr_a = []; //颜色对应的对象
+              let id_a = []; //颜色对应尺码的id
+              // 次品
+              let arrColor_b = []; //颜色
+              let arrObj_b = []; //颜色对应的对象
+              let arrInput_b = []; //颜色对应的对象
+              let arr_b = []; //颜色对应的对象
+              let id_b = []; //颜色对应尺码的id
+              v.produce_complete_size_a_data.map((j, k) => {
                 arrColor_a.push(j.style_color_name);
-              }
-            });
-
-            arrColor_a = [...new Set(arrColor_a)];
-            arrColor_b = [...new Set(arrColor_b)];
-
-            arrColor_a.map((f, g) => {
-              arrInput_a = [];
-              id_a = [];
-              this.t_size.map((f, g) => {
-                arrInput_a.push(0);
-                id_a.push(0);
-              });
-              arrObj_a.map((j, k) => {
-                if (j.style_color_name == f) {
-                  this.t_size.map((n, m) => {
-                    if (j.size == n) {
-                      arrInput_a[m] = j.quantity;
-                      id_a[m] = j.id;
-                    }
-                  });
+                arrObj_a.push({
+                  style_color_name: j.style_color_name,
+                  size: j.size,
+                  quantity: j.quantity,
+                  id: j.id
+                });
+                if (v.produce_complete_size_b_data.length == 0) {
+                  arrColor_b.push(j.style_color_name);
                 }
               });
-              let sum = arrInput_a.reduce((prev, cur) => {
-                return Number(prev) + Number(cur);
-              });
-              arr_a.push({
-                color: f,
-                sizeNum: sum,
-                size_input: arrInput_a,
-                id: id_a
-              });
-            });
-            arrColor_b.map((f, g) => {
-              arrInput_b = [];
-              id_b = [];
-              this.t_size.map((f, g) => {
-                arrInput_b.push(0);
-                id_b.push(0);
-              });
-              arrObj_b.map((j, k) => {
-                if (j.style_color_name == f) {
-                  this.t_size.map((n, m) => {
-                    if (j.size == n) {
-                      arrInput_b[m] = j.quantity;
-                      id_b[m] = j.id;
-                    }
-                  });
+              v.produce_complete_size_b_data.map((j, k) => {
+                arrColor_b.push(j.style_color_name);
+                arrObj_b.push({
+                  style_color_name: j.style_color_name,
+                  size: j.size,
+                  quantity: j.quantity,
+                  id: j.id
+                });
+                if (v.produce_complete_size_a_data.length == 0) {
+                  arrColor_a.push(j.style_color_name);
                 }
               });
-              let sum = arrInput_b.reduce((prev, cur) => {
-                return Number(prev) + Number(cur);
+
+              arrColor_a = [...new Set(arrColor_a)];
+              arrColor_b = [...new Set(arrColor_b)];
+
+              arrColor_a.map((f, g) => {
+                arrInput_a = [];
+                id_a = [];
+                this.t_size.map((f, g) => {
+                  arrInput_a.push(0);
+                  id_a.push(0);
+                });
+                arrObj_a.map((j, k) => {
+                  if (j.style_color_name == f) {
+                    this.t_size.map((n, m) => {
+                      if (j.size == n) {
+                        arrInput_a[m] = j.quantity;
+                        id_a[m] = j.id;
+                      }
+                    });
+                  }
+                });
+                let sum = arrInput_a.reduce((prev, cur) => {
+                  return Number(prev) + Number(cur);
+                });
+                arr_a.push({
+                  color: f,
+                  sizeNum: sum,
+                  size_input: arrInput_a,
+                  id: id_a
+                });
               });
-              arr_b.push({
-                color: f,
-                sizeNum: sum,
-                size_input: arrInput_b,
-                id: id_b
+              arrColor_b.map((f, g) => {
+                arrInput_b = [];
+                id_b = [];
+                this.t_size.map((f, g) => {
+                  arrInput_b.push(0);
+                  id_b.push(0);
+                });
+                arrObj_b.map((j, k) => {
+                  if (j.style_color_name == f) {
+                    this.t_size.map((n, m) => {
+                      if (j.size == n) {
+                        arrInput_b[m] = j.quantity;
+                        id_b[m] = j.id;
+                      }
+                    });
+                  }
+                });
+                let sum = arrInput_b.reduce((prev, cur) => {
+                  return Number(prev) + Number(cur);
+                });
+                arr_b.push({
+                  color: f,
+                  sizeNum: sum,
+                  size_input: arrInput_b,
+                  id: id_b
+                });
+              });
+              let total_aa = 0;
+              let total_bb = 0;
+              arr_a.map((j, k) => {
+                total_aa += j.sizeNum;
+              });
+              arr_b.map((j, k) => {
+                total_bb += j.sizeNum;
+              });
+              // 往表内加数据
+              this.complete.push({
+                total_a: total_aa,
+                total_b: total_bb,
+                t_size: this.t_size,
+                id_c: v.id,
+                produce_complete_size_a_data: arr_a,
+                produce_complete_size_b_data: arr_b
               });
             });
-            let total_aa = 0;
-            let total_bb = 0;
-            arr_a.map((j, k) => {
-              total_aa += j.sizeNum;
-            });
-            arr_b.map((j, k) => {
-              total_bb += j.sizeNum;
-            });
-            // 往表内加数据
-            this.complete.push({
-              total_a: total_aa,
-              total_b: total_bb,
-              t_size: this.t_size,
-              id_c: v.id,
-              produce_complete_size_a_data: arr_a,
-              produce_complete_size_b_data: arr_b
-            });
-          });
+          }else{
+            this.ascertain4 = false
+          }
           // console.log(data1);
           if (data1.produce_complete_data.length > 0) {
             this.vb2 = true;
