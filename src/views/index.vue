@@ -23,11 +23,6 @@
             <el-menu-item index="/platemaking">制版</el-menu-item>
           </el-submenu>
           <el-submenu index="3">
-            <template slot="title">销售</template>
-            <el-menu-item index="/clientManagement">客户管理</el-menu-item>
-            <el-menu-item index="/salesOrder">订单</el-menu-item>
-          </el-submenu>
-          <el-submenu index="4">
             <template slot="title">生产</template>
             <el-menu-item index="/productionOrders">生产下单</el-menu-item>
             <el-menu-item index="/purchase">采购</el-menu-item>
@@ -35,13 +30,18 @@
             <el-menu-item index="/tailor">裁剪</el-menu-item>
             <el-menu-item index="/shipment">生产出货</el-menu-item>
           </el-submenu>
-          <el-submenu index="5">
+          <el-submenu index="4">
             <template slot="title">仓库</template>
             <el-menu-item index="/productStorehouse">产品库存查询</el-menu-item>
             <el-menu-item index="/stockInquiry">产品入库</el-menu-item>
             <el-menu-item index="/stockInquiry">物料库存查询</el-menu-item>
             <el-menu-item index="/stockInquiry">物料入库</el-menu-item>
             <el-menu-item index="/stockInquiry">仓库设置</el-menu-item>
+          </el-submenu>
+          <el-submenu index="5">
+            <template slot="title">销售</template>
+            <el-menu-item index="/clientManagement">客户管理</el-menu-item>
+            <el-menu-item index="/salesOrder">订单</el-menu-item>
           </el-submenu>
           <el-submenu index="6">
             <template slot="title">档案库</template>

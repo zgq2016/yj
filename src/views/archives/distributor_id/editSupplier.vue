@@ -75,7 +75,7 @@
             </div>
           </el-col>
         </div>
-      
+
         <div v-for="(item,index) in obj.contact_data" :key="item.key" class="member_user_item">
           <el-col :span="6">
             <el-form-item
@@ -180,40 +180,40 @@ export default {
       // 表单规则
       rules: {
         companyname: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+          { required: true, message: "请输入公司名称", trigger: "blur" }
         ],
         mainclass: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+          { required: true, message: "请选择分类", trigger: "change" }
         ],
         materials_class_name: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+          { required: true, message: "请选择二级分类", trigger: "change" }
         ],
         address: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+          { required: true, message: "请填写详细地址", trigger: "blur" }
         ],
-        tax: [{ required: true, message: "请填写商品数量", trigger: "blur" }],
-        isbill: [{ required: true, message: "请填写商品数量", trigger: "blur" }],
-        remarks: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+        tax: [{ required: true, message: "请填写税点", trigger: "blur" }],
+        isbill: [
+          { required: true, message: "请选择是否发票", trigger: "change" }
+        ],
+        remarks: [{ required: true, message: "请输入备注", trigger: "blur" }]
+      },
+      contactRules: {
+        contact_contacts: [
+          { required: true, message: "请填写联系人名称", trigger: "blur" }
+        ],
+        contact_phone: [
+          { required: true, message: "请填写联系人号码", trigger: "blur" }
         ]
       },
-      contact_dataRules: {
-        contact_data_contacts: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+      bankRules: {
+        bank_bank: [
+          { required: true, message: "请选择银行", trigger: "change" }
         ],
-        contact_data_phone: [
-          { required: true, message: "请填写优惠价格", trigger: "blur" }
-        ]
-      },
-      bank_dataRules: {
-        bank_data_bank: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+        bank_name: [
+          { required: true, message: "请填写卡号名称", trigger: "blur" }
         ],
-        bank_data_name: [
-          { required: true, message: "请填写优惠价格", trigger: "blur" }
-        ],
-        bank_data_bankid: [
-          { required: true, message: "请填写优惠价格", trigger: "blur" }
+        bank_bankid: [
+          { required: true, message: "请填写银行卡号", trigger: "blur" }
         ]
       }
     };
@@ -321,8 +321,12 @@ export default {
       console.log(res);
       let { data } = res.data;
       this.class_datas = data;
-      this.obj.materials_class_name = this.class_datas.class_data[0].classname;
-      this.obj.materials_class_id = this.class_datas.class_data[0].id;
+      this.obj.materials_class_id = "";
+      this.obj.materials_class_name = "";
+      if (data.class_data.length > 0) {
+        this.obj.materials_class_name = this.class_datas.class_data[0].classname;
+        this.obj.materials_class_id = this.class_datas.class_data[0].id;
+      }
     },
     handleClassDatasIds(e) {
       this.obj.materials_class_id = e;

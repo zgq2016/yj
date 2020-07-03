@@ -341,45 +341,45 @@ export default {
         //   { required: true, message: "请填写商品数量", trigger: "blur" }
         // ],
         materialsno: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+          { required: true, message: "请输入编号", trigger: "blur" }
         ],
         materialsname: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+          { required: true, message: "请输入面料名称", trigger: "blur" }
         ],
         materials_mainclass_name: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+          { required: true, message: "请选择分类", trigger: "change" }
         ],
         materials_class_name: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+          { required: true, message: "请选择二级分类", trigger: "change" }
         ],
-        unit: [{ required: true, message: "请填写商品数量", trigger: "blur" }],
+        unit: [{ required: true, message: "请选择计算单位", trigger: "change" }],
         wsale_price: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+          { required: true, message: "请输入大货单价", trigger: "blur" }
         ],
         instock: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+          { required: true, message: "请选择是否发货", trigger: "change" }
         ],
         arrival_time: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+          { required: true, message: "请选择时间", trigger: "change" }
         ],
         remarks: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+          { required: true, message: "请输入备注", trigger: "blur" }
         ]
       },
       material_dataRules: {
         material_data_material_name: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+          { required: true, message: "请输入面料成分", trigger: "change" }
         ],
         material_data_content: [
-          { required: true, message: "请填写优惠价格", trigger: "blur" }
+          { required: true, message: "请输入面料比例", trigger: "blur" }
         ]
       },
       color_dataRules: {
         color_data_color: [
-          { required: true, message: "请填写商品数量", trigger: "blur" }
+          { required: true, message: "请选择颜色", trigger: "blur" }
         ],
         color_data_color_no: [
-          { required: true, message: "请填写优惠价格", trigger: "blur" }
+          { required: true, message: "请输入颜色编号", trigger: "blur" }
         ]
       }
     };
@@ -540,8 +540,12 @@ export default {
       console.log(res);
       let { data } = res.data;
       this.class_datas = data;
-      this.form.materials_class_name = this.class_datas.class_data[0].classname;
-      this.form.materials_class_id = this.class_datas.class_data[0].id;
+      this.form.materials_class_name = "";
+      this.form.materials_class_id = "";
+      if (data.class_data.length > 0) {
+        this.form.materials_class_name = this.class_datas.class_data[0].classname;
+        this.form.materials_class_id = this.class_datas.class_data[0].id;
+      }
     },
     handleClassDatasIds(e) {
       this.form.materials_class_id = e;

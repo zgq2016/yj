@@ -87,10 +87,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item
-              :prop="'contact.'+index+'.phone'"
-              :rules="contactRules.contact_phone"
-            >
+            <el-form-item :prop="'contact.'+index+'.phone'" :rules="contactRules.contact_phone">
               <el-input v-model="item.phone" style="width:200px" placeholder="请填写联系电话"></el-input>
             </el-form-item>
           </el-col>
@@ -122,10 +119,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item
-              :prop="'bank.'+index+'.bankid'"
-              :rules="bankRules.bank_bankid"
-            >
+            <el-form-item :prop="'bank.'+index+'.bankid'" :rules="bankRules.bank_bankid">
               <el-input v-model="item.bankid" style="width:200px" placeholder="银行卡卡号"></el-input>
             </el-form-item>
           </el-col>
@@ -214,10 +208,10 @@ export default {
           { required: true, message: "请填写详细地址", trigger: "blur" }
         ],
         tax: [{ required: true, message: "请填写税点", trigger: "blur" }],
-        isbill: [{ required: true, message: "请选择是否发票", trigger: "change" }],
-        remarks: [
-          { required: true, message: "请输入备注", trigger: "blur" }
-        ]
+        isbill: [
+          { required: true, message: "请选择是否发票", trigger: "change" }
+        ],
+        remarks: [{ required: true, message: "请输入备注", trigger: "blur" }]
       },
       contactRules: {
         contact_contacts: [
@@ -251,7 +245,6 @@ export default {
 
     async handleEdit() {
       this.$refs["form"].validate(async valid => {
-       
         if (!valid) return;
         // 调用actions的登录方法
 
@@ -262,7 +255,7 @@ export default {
         // }
       });
     },
-  
+
     // 新增联系人
     handleAddUsers() {
       this.form.contact.push({
@@ -323,8 +316,12 @@ export default {
       console.log(res);
       let { data } = res.data;
       this.class_datas = data;
-      this.form.materials_class_name = this.class_datas.class_data[0].classname;
-      this.form.materials_class_id = this.class_datas.class_data[0].id;
+      this.form.materials_class_id = "";
+      this.form.materials_class_name = "";
+      if (data.class_data.length > 0) {
+        this.form.materials_class_name = this.class_datas.class_data[0].classname;
+        this.form.materials_class_id = this.class_datas.class_data[0].id;
+      }
     },
     handleClassDatasIds(e) {
       this.form.materials_class_id = e;
