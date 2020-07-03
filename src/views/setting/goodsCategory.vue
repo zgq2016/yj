@@ -204,9 +204,11 @@ export default {
     },
     async addClassify() {
       if (this.tableData.length === 0) {
+        this.region = "";
         this.centerDialogVisible = true;
       }
       if (this.tableData.length > 0) {
+        this.region = "";
         let res = await goodsCategoryInfo();
         let { data } = res.data;
         this.options = data;

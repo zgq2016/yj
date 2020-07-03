@@ -197,9 +197,11 @@ export default {
     },
     async addClassify() {
       if (this.tableData.length === 0) {
+        this.region = "";
         this.centerDialogVisible = true;
       }
       if (this.tableData.length > 0) {
+        this.region = "";
         let res = await colorInfo();
         console.log(res);
         let { data } = res.data;
