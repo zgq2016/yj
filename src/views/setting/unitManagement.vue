@@ -29,7 +29,11 @@
       :before-close="handleClose"
     >
       <el-form ref="form" :model="form" label-width="80px" resetFields>
-        <el-form-item label="单位名称">
+        <el-form-item
+          label="单位名称"
+          prop="unit_name"
+          :rules="[ { required: true, message: '请输入单位名称', trigger: 'blur' },]"
+        >
           <el-input v-model="form.unit_name" style="width:80%"></el-input>
         </el-form-item>
       </el-form>
@@ -47,7 +51,11 @@
       :before-close="handleClose1"
     >
       <el-form ref="form" :model="form" label-width="80px" resetFields>
-        <el-form-item label="单位名称">
+        <el-form-item
+          label="单位名称"
+          prop="unit_name"
+          :rules="[ { required: true, message: '请输入单位名称', trigger: 'blur' },]"
+        >
           <el-input v-model="form.unit_name" style="width:80%"></el-input>
         </el-form-item>
       </el-form>
@@ -100,19 +108,29 @@ export default {
       this.init();
     },
     async handleNewList() {
-      let res = await unitAdd(this.form);
-      console.log(res);
-      this.form.unit_name = "";
-      this.init();
-      this.centerDialogVisible = false;
+      this.$refs["form"].validate(async valid => {
+        if (!valid) return;
+        // 调用actions的登录方法
+
+        let res = await unitAdd(this.form);
+        console.log(res);
+        this.form.unit_name = "";
+        this.init();
+        this.centerDialogVisible = false;
+      });
     },
     async handleEditList() {
-      let res = await unitEdit(this.form);
-      console.log(res);
-      this.form.unit_name = "";
-      this.form.id = "";
-      this.init();
-      this.centerDialogVisible1 = false;
+      this.$refs["form"].validate(async valid => {
+        if (!valid) return;
+        // 调用actions的登录方法
+
+        let res = await unitEdit(this.form);
+        console.log(res);
+        this.form.unit_name = "";
+        this.form.id = "";
+        this.init();
+        this.centerDialogVisible1 = false;
+      });
     },
     addClassify() {
       this.centerDialogVisible = true;

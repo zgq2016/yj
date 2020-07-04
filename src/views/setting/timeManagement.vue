@@ -29,7 +29,11 @@
       :before-close="handleClose"
     >
       <el-form ref="form" :model="form" label-width="80px" resetFields>
-        <el-form-item label="季节名称">
+        <el-form-item
+          label="季节名称"
+          prop="season_name"
+          :rules="[ { required: true, message: '请输入季节名称', trigger: 'blur' },]"
+        >
           <el-input v-model="form.season_name" style="width:80%;"></el-input>
         </el-form-item>
       </el-form>
@@ -47,7 +51,11 @@
       :before-close="handleClose1"
     >
       <el-form ref="form" :model="form" label-width="80px" resetFields>
-        <el-form-item label="季节名称">
+        <el-form-item
+          label="季节名称"
+          prop="season_name"
+          :rules="[ { required: true, message: '请输入季节名称', trigger: 'blur' },]"
+        >
           <el-input v-model="form.season_name" style="width:80%;"></el-input>
         </el-form-item>
       </el-form>
@@ -100,19 +108,29 @@ export default {
       this.init();
     },
     async handleNewList() {
-      let res = await seasonAdd(this.form);
-      console.log(res);
-      this.form.season_name = "";
-      this.init();
-      this.centerDialogVisible = false;
+      this.$refs["form"].validate(async valid => {
+        if (!valid) return;
+        // 调用actions的登录方法
+
+        let res = await seasonAdd(this.form);
+        console.log(res);
+        this.form.season_name = "";
+        this.init();
+        this.centerDialogVisible = false;
+      });
     },
     async handleEditList() {
-      let res = await seasonEdit(this.form);
-      console.log(res);
-      this.form.season_name = "";
-      this.form.id = "";
-      this.init();
-      this.centerDialogVisible1 = false;
+      this.$refs["form"].validate(async valid => {
+        if (!valid) return;
+        // 调用actions的登录方法
+
+        let res = await seasonEdit(this.form);
+        console.log(res);
+        this.form.season_name = "";
+        this.form.id = "";
+        this.init();
+        this.centerDialogVisible1 = false;
+      });
     },
     addClassify() {
       this.centerDialogVisible = true;
