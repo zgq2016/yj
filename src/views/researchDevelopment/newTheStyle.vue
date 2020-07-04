@@ -38,24 +38,30 @@
                 <el-input v-model="form.stylename" style="width:200px"></el-input>
               </el-form-item>
               <el-form-item label="品类" prop="style_type">
-                <el-select v-model="form.style_type" placeholder="品类">
-                  <el-option
-                    v-for="item in categorys"
-                    :key="item.id"
-                    :label="item.style_type"
-                    :value="item.style_type"
-                  ></el-option>
-                </el-select>
+                <div style="display:flex">
+                  <el-select v-model="form.style_type" placeholder="品类">
+                    <el-option
+                      v-for="item in categorys"
+                      :key="item.id"
+                      :label="item.style_type"
+                      :value="item.style_type"
+                    ></el-option>
+                  </el-select>
+                  <router-link to="/goodsCategory" style="margin-left:30px">新增品类</router-link>
+                </div>
               </el-form-item>
               <el-form-item label="颜色" prop="style_color">
-                <el-select v-model="form.style_color">
-                  <el-option
-                    v-for="item in colors"
-                    :key="item.id"
-                    :label="item.color_name"
-                    :value="item.color_name"
-                  ></el-option>
-                </el-select>
+                <div style="display:flex">
+                  <el-select v-model="form.style_color">
+                    <el-option
+                      v-for="item in colors"
+                      :key="item.id"
+                      :label="item.color_name"
+                      :value="item.color_name"
+                    ></el-option>
+                  </el-select>
+                  <router-link to="/colorManagement" style="margin-left:30px">新增颜色</router-link>
+                </div>
               </el-form-item>
             </el-form>
           </div>
@@ -77,6 +83,7 @@
         <div class="form"></div>
       </div>
       <el-button round style="margin:30px 300px" @click="handleClick">保存</el-button>
+      <el-button round style="margin:30px 300px" @click="handleClickEdit">保存并新增设计备注</el-button>
     </div>
     <!-- 有数据 -->
     <div class="main" v-if="this.$route.query.oldId">
@@ -244,6 +251,28 @@ export default {
     };
   },
   methods: {
+    async handleClickEdit() {
+      this.$refs["form"].validate(async valid => {
+        if (!valid) return;
+        // 调用actions的登录方法
+        console.log(this.form);
+        console.log(this.defaultData);
+        let obj = {};
+        obj["style_type"] = this.form.style_type;
+        obj["stylename"] = this.form.stylename;
+        obj["styleno"] = this.form.styleno;
+        obj["style_color"] = this.form.style_color;
+        obj["style_color_pic_url"] = this.form.style_color_pic_url;
+        obj["style_pic_url"] = this.form.style_pic_url;
+        obj["year"] = this.defaultData.year;
+        obj["season"] = this.defaultData.season;
+        obj["user_id"] = this.defaultData.user_id;
+        obj["project_id"] = this.defaultData.id;
+        let res = await projectStyleAdd(obj);
+        console.log(res);
+        // this.$router.go(-1);
+      });
+    },
     async handleClick() {
       this.$refs["form"].validate(async valid => {
         if (!valid) return;
