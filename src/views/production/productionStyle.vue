@@ -637,7 +637,11 @@
                 </el-form-item>
               </el-form>
             </div>
-            <el-button @click="arranged" v-if="ascertain2" style="float:right;margin-bottom:15px;">确认排单</el-button>
+            <el-button
+              @click="arranged"
+              v-if="ascertain2"
+              style="float:right;margin-bottom:15px;"
+            >确认排单</el-button>
           </div>
           <!-- 有数据 -->
           <div style="position: relative;" v-if="vb">
@@ -1302,12 +1306,10 @@ export default {
       formg: {},
       formgg: {},
 
-
-
-      ascertain1:false,
-      ascertain2:false,
-      ascertain3:false,
-      ascertain4:false,
+      ascertain1: false,
+      ascertain2: false,
+      ascertain3: false,
+      ascertain4: false
     };
   },
   methods: {
@@ -1379,6 +1381,7 @@ export default {
                 ratio: [],
                 quantity: []
               };
+              this.king = false
             } else {
               this.form_i = this.form.shift();
               this.size_name[0] = [];
@@ -1462,7 +1465,7 @@ export default {
     },
     // 选择颜色
     async changed() {
-      this.ascertain1 = true
+      this.ascertain1 = true;
       if (this.form_i.color == "") {
         this.form_i.color = this.color;
         this.king = true;
@@ -1805,9 +1808,9 @@ export default {
           // console.log(data1.length);
           this.form = [];
           this.show1 = true;
-          this.ascertain1 = false
+          this.ascertain1 = false;
         } else {
-          this.ascertain1 = true
+          this.ascertain1 = true;
           // this.show1 = true;
           data1.map((v, i) => {
             let obj_list = {};
@@ -2367,8 +2370,8 @@ export default {
     //新增指派工厂
     async regionadd(value) {
       // console.log(value,this.regions);
-     
-      this.ascertain2 = true
+
+      this.ascertain2 = true;
       let { id } = this.$route.query;
       let res1 = await produceInfo({
         //批次
@@ -2534,8 +2537,8 @@ export default {
         if (data2.length > 0) {
           this.vb = true;
           this.factory_bl = true;
-          this.ascertain2 = true
-        }else{
+          this.ascertain2 = true;
+        } else {
           this.ascertain2 = false;
         }
         this.mode = [];
@@ -2568,7 +2571,7 @@ export default {
     // 裁剪
     // 增加床次
     async tailoradd() {
-      this.ascertain3 = true
+      this.ascertain3 = true;
       let tals = [];
       this.tal.map((v, i) => {
         let sz = [];
@@ -2638,101 +2641,111 @@ export default {
     },
     // 提交裁剪床次
     async tailored() {
-      this.$confirm("提交裁剪订单, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      let blo = true
+      this.tailorList.map((v,i) => {
+        if(v.total == 0){
+          blo = false
+        }
       })
-        .then(async () => {
-          console.log(this.tailorList);
-          let { id } = this.$route.query;
-          let res = await produceInfo({
-            //批次
-            style_id: id
-          });
-          let { data } = res.data;
-          let arr1 = [];
-          // 上传数据
-
-          // console.log(arr1);
-          if (!this.edit1) {
-            //新增
-            this.tailorList.map((v, i) => {
-              let arr2 = [];
-              v.category.map((j, k) => {
-                j.size_input.map((f, g) => {
-                  if (f != "" || f != undefined || f !== 0) {
-                    arr2.push({
-                      style_id: id,
-                      produce_no: data[this.active].produce_no,
-                      style_color_name: j.color,
-                      size: v.t_size[g],
-                      quantity: f
-                    });
-                  }
-                });
-              });
-              arr1.push({
-                style_id: id,
-                produce_no: data[this.active].produce_no,
-                picurl: v.imageUrl,
-                produce_cut_order_size: arr2
-              });
-            });
-            let res1 = await produceCutOrderAdd({
-              style_id: id,
-              produce_no: data[this.active].produce_no,
-              produce_cut_order: arr1
-            });
-            console.log(res1);
-          } else {
-            //编辑
-            this.tailorList.map((v, i) => {
-              let arr2 = [];
-              v.category.map((j, k) => {
-                j.size_input.map((f, g) => {
-                  if (f != "" || f === 0) {
-                    arr2.push({
-                      style_id: id,
-                      produce_no: data[this.active].produce_no,
-                      style_color_name: j.color,
-                      size: v.t_size[g],
-                      quantity: f,
-                      id: j.id[g]
-                    });
-                  }
-                });
-              });
-              arr1.push({
-                style_id: id,
-                produce_no: data[this.active].produce_no,
-                picurl: v.imageUrl,
-                id: v.id,
-                produce_cut_order_size: arr2
-              });
-            });
-            let res1 = await produceCutOrderEdit({
-              style_id: id,
-              produce_no: data[this.active].produce_no,
-              produce_cut_order: arr1
-            });
-            console.log(res1);
-          }
-          this.init_t();
-
-          this.$message({
-            type: "success",
-            message: "新增成功!"
-          });
+      if (blo) {
+        this.$confirm("提交裁剪订单, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
         })
-        .catch(err => {
-          console.log(err);
+          .then(async () => {
+            console.log(this.tailorList);
+            let { id } = this.$route.query;
+            let res = await produceInfo({
+              //批次
+              style_id: id
+            });
+            let { data } = res.data;
+            let arr1 = [];
+            // 上传数据
 
-          this.$message({
-            type: "info",
-            message: "已取消新增"
+            // console.log(arr1);
+            if (!this.edit1) {
+              //新增
+              this.tailorList.map((v, i) => {
+                let arr2 = [];
+                v.category.map((j, k) => {
+                  j.size_input.map((f, g) => {
+                    if (f != "" || f != undefined || f !== 0) {
+                      arr2.push({
+                        style_id: id,
+                        produce_no: data[this.active].produce_no,
+                        style_color_name: j.color,
+                        size: v.t_size[g],
+                        quantity: f
+                      });
+                    }
+                  });
+                });
+                arr1.push({
+                  style_id: id,
+                  produce_no: data[this.active].produce_no,
+                  picurl: v.imageUrl,
+                  produce_cut_order_size: arr2
+                });
+              });
+              let res1 = await produceCutOrderAdd({
+                style_id: id,
+                produce_no: data[this.active].produce_no,
+                produce_cut_order: arr1
+              });
+              console.log(res1);
+            } else {
+              //编辑
+              this.tailorList.map((v, i) => {
+                let arr2 = [];
+                v.category.map((j, k) => {
+                  j.size_input.map((f, g) => {
+                    if (f != "" || f === 0) {
+                      arr2.push({
+                        style_id: id,
+                        produce_no: data[this.active].produce_no,
+                        style_color_name: j.color,
+                        size: v.t_size[g],
+                        quantity: f,
+                        id: j.id[g]
+                      });
+                    }
+                  });
+                });
+                arr1.push({
+                  style_id: id,
+                  produce_no: data[this.active].produce_no,
+                  picurl: v.imageUrl,
+                  id: v.id,
+                  produce_cut_order_size: arr2
+                });
+              });
+              let res1 = await produceCutOrderEdit({
+                style_id: id,
+                produce_no: data[this.active].produce_no,
+                produce_cut_order: arr1
+              });
+              console.log(res1);
+            }
+            this.init_t();
+
+            this.$message({
+              type: "success",
+              message: "新增成功!"
+            });
+          })
+          .catch(err => {
+            console.log(err);
+
+            this.$message({
+              type: "info",
+              message: "已取消新增"
+            });
           });
-        });
+      }else{
+        this.$message.error("请输入尺码数量");
+      }
     },
     // 裁剪删除
     async tailorDel(tailorDel_id, index) {
@@ -2791,9 +2804,9 @@ export default {
           if (data1.length > 0) {
             this.vb1 = true;
             this.edit1 = true;
-            this.ascertain3 = true
-          }else{
-            this.ascertain3 = false
+            this.ascertain3 = true;
+          } else {
+            this.ascertain3 = false;
           }
           // console.log(data1);
 
@@ -2861,7 +2874,7 @@ export default {
     // 出货
     // 增加出货次数
     async goDownAdd() {
-      this.ascertain4 = true
+      this.ascertain4 = true;
       let newArr1 = [];
       let newArr2 = [];
 
@@ -2954,13 +2967,20 @@ export default {
     },
     // 提交出货
     async goDownlist() {
+      console.log(this.complete);
+      let blo = true
+      this.complete.map((v,i) => {
+        if(v.total_a == 0 && v.total_b == 0){
+          blo = false
+        }
+      })
+      if(blo){
       this.$confirm("提交出货订单, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(async () => {
-          // console.log(this.complete);
           let { id } = this.$route.query;
           let res = await produceInfo({
             //批次
@@ -3074,6 +3094,9 @@ export default {
             message: "已取消提交"
           });
         });
+        }else{
+            this.$message.error("请输入尺码数量");
+        }
     },
     // 删除
     async completeDel(id_c, index) {
@@ -3127,7 +3150,7 @@ export default {
           // console.log(this.t_size);
           // console.log(this.complete);
           if (this.t_size.length != 0) {
-            this.ascertain4 = true
+            this.ascertain4 = true;
             data1.produce_complete_data.map((v, i) => {
               // 成品
               let arrColor_a = []; //颜色
@@ -3241,8 +3264,8 @@ export default {
                 produce_complete_size_b_data: arr_b
               });
             });
-          }else{
-            this.ascertain4 = false
+          } else {
+            this.ascertain4 = false;
           }
           // console.log(data1);
           if (data1.produce_complete_data.length > 0) {
@@ -3293,6 +3316,7 @@ export default {
           display: flex;
           img {
             width: 200px;
+            height: 200px;
             margin-right: 20px;
           }
         }
