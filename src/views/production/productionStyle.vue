@@ -52,7 +52,7 @@
           </div>
         </div>
         <!-- <div class="placeAnOrderBatch">下单批次：2</div> -->
-        <div class="placeAnOrderBatch increase" @click.stop="increaseBatch">+ 增加批次</div>
+        <!-- <div class="placeAnOrderBatch increase" @click.stop="increaseBatch">+ 增加批次</div> -->
       </div>
       <!-- 增加批次窗 -->
       <el-dialog title="增加批次" :visible.sync="centerDialogVisible" width="30%" center>
@@ -1381,7 +1381,7 @@ export default {
                 ratio: [],
                 quantity: []
               };
-              this.king = false
+              this.king = false;
             } else {
               this.form_i = this.form.shift();
               this.size_name[0] = [];
@@ -1483,7 +1483,7 @@ export default {
       }
       this.color = "";
       // this.color = v;
-
+      this.formgg.child = this.form;
       // console.log(this.form);
     },
     // 选择客户
@@ -1585,13 +1585,28 @@ export default {
       this.vb = false;
       this.factory_bl = false;
       // this.date = [];
-      // this.form_i = {};
+      this.form_i = {
+        customer_id: 0,
+        id: 0,
+        date: "",
+        companyname: "",
+        color: "",
+        sum: "",
+        size_name: [],
+        size: "",
+        ratio: [],
+        quantity: []
+      };
       // this.form_i.ratio = [];
       // this.form_i.size_name = [];
+
       this.form = [];
       this.quantity = [[], [], [], [], [], [], [], [], [], []];
       this.ratio = [[], [], [], [], [], [], [], [], [], []];
       this.size_name = [[], [], [], [], [], [], [], [], [], [], [], []];
+      this.formInline = [];
+      this.formgg.child = this.form;
+      this.formg.child = this.formInline;
       this.init(); // 下单初始化
       if (this.form_i.color == "") {
         this.king = false;
@@ -2404,7 +2419,7 @@ export default {
         }
         this.region = "";
         // console.log(this.formInline);
-        this.formg.child = this.formInline
+        this.formg.child = this.formInline;
       }
     },
     // 选择指派方式
@@ -2642,12 +2657,12 @@ export default {
     },
     // 提交裁剪床次
     async tailored() {
-      let blo = true
-      this.tailorList.map((v,i) => {
-        if(v.total == 0){
-          blo = false
+      let blo = true;
+      this.tailorList.map((v, i) => {
+        if (v.total == 0) {
+          blo = false;
         }
-      })
+      });
       if (blo) {
         this.$confirm("提交裁剪订单, 是否继续?", "提示", {
           confirmButtonText: "确定",
@@ -2744,7 +2759,7 @@ export default {
               message: "已取消新增"
             });
           });
-      }else{
+      } else {
         this.$message.error("请输入尺码数量");
       }
     },
@@ -2969,135 +2984,135 @@ export default {
     // 提交出货
     async goDownlist() {
       console.log(this.complete);
-      let blo = true
-      this.complete.map((v,i) => {
-        if(v.total_a == 0 && v.total_b == 0){
-          blo = false
+      let blo = true;
+      this.complete.map((v, i) => {
+        if (v.total_a == 0 && v.total_b == 0) {
+          blo = false;
         }
-      })
-      if(blo){
-      this.$confirm("提交出货订单, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(async () => {
-          let { id } = this.$route.query;
-          let res = await produceInfo({
-            //批次
-            style_id: id
-          });
-          let { data } = res.data;
-          let arrNew = [];
-          if (!this.edit2) {
-            //新增
-            this.complete.map((v, i) => {
-              let arr = [];
-              v.produce_complete_size_a_data.map((j, k) => {
-                j.size_input.map((f, g) => {
-                  if (f != "" || undefined || 0) {
-                    arr.push({
-                      style_id: id,
-                      produce_no: data[this.active].produce_no,
-                      style_color_name: j.color,
-                      size: v.t_size[g],
-                      quantity: f,
-                      isproduct: 1
-                    });
-                  }
-                });
-              });
-              v.produce_complete_size_b_data.map((j, k) => {
-                j.size_input.map((f, g) => {
-                  if (f != "" || undefined || 0) {
-                    arr.push({
-                      style_id: id,
-                      produce_no: data[this.active].produce_no,
-                      style_color_name: j.color,
-                      size: v.t_size[g],
-                      quantity: f,
-                      isproduct: 0
-                    });
-                  }
-                });
-              });
-              arrNew.push({
-                style_id: id,
-                produce_no: data[this.active].produce_no,
-                produce_complete_size: arr
-              });
-            });
-            let res1 = await produceCompleteAdd({
-              style_id: id,
-              produce_no: data[this.active].produce_no,
-              produce_complete: arrNew
-            });
-            console.log(res1);
-          } else {
-            //编辑
-            let obj = {};
-            this.complete.map((v, i) => {
-              let arr = [];
-              v.produce_complete_size_a_data.map((j, k) => {
-                j.size_input.map((f, g) => {
-                  if (f != "" || f != undefined || f === 0) {
-                    arr.push({
-                      style_id: id,
-                      produce_no: data[this.active].produce_no,
-                      style_color_name: j.color,
-                      size: v.t_size[g],
-                      quantity: f,
-                      isproduct: 1,
-                      id: j.id[g]
-                    });
-                  }
-                });
-              });
-              v.produce_complete_size_b_data.map((j, k) => {
-                j.size_input.map((f, g) => {
-                  if (f != "" || f != undefined || f === 0) {
-                    arr.push({
-                      style_id: id,
-                      produce_no: data[this.active].produce_no,
-                      style_color_name: j.color,
-                      size: v.t_size[g],
-                      quantity: f,
-                      isproduct: 0,
-                      id: j.id[g]
-                    });
-                  }
-                });
-              });
-              arrNew.push({
-                style_id: id,
-                produce_no: data[this.active].produce_no,
-                id: v.id_c,
-                produce_complete_size: arr
-              });
-            });
-            let res1 = await produceCompleteEdit({
-              style_id: id,
-              produce_no: data[this.active].produce_no,
-              produce_complete: arrNew
-            });
-            console.log(res1);
-          }
-          this.init_c();
-          this.$message({
-            type: "success",
-            message: "出货订单提交成功!"
-          });
+      });
+      if (blo) {
+        this.$confirm("提交出货订单, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
         })
-        .catch(err => {
-          console.log(err);
-          this.$message({
-            type: "info",
-            message: "已取消提交"
+          .then(async () => {
+            let { id } = this.$route.query;
+            let res = await produceInfo({
+              //批次
+              style_id: id
+            });
+            let { data } = res.data;
+            let arrNew = [];
+            if (!this.edit2) {
+              //新增
+              this.complete.map((v, i) => {
+                let arr = [];
+                v.produce_complete_size_a_data.map((j, k) => {
+                  j.size_input.map((f, g) => {
+                    if (f != "" || undefined || 0) {
+                      arr.push({
+                        style_id: id,
+                        produce_no: data[this.active].produce_no,
+                        style_color_name: j.color,
+                        size: v.t_size[g],
+                        quantity: f,
+                        isproduct: 1
+                      });
+                    }
+                  });
+                });
+                v.produce_complete_size_b_data.map((j, k) => {
+                  j.size_input.map((f, g) => {
+                    if (f != "" || undefined || 0) {
+                      arr.push({
+                        style_id: id,
+                        produce_no: data[this.active].produce_no,
+                        style_color_name: j.color,
+                        size: v.t_size[g],
+                        quantity: f,
+                        isproduct: 0
+                      });
+                    }
+                  });
+                });
+                arrNew.push({
+                  style_id: id,
+                  produce_no: data[this.active].produce_no,
+                  produce_complete_size: arr
+                });
+              });
+              let res1 = await produceCompleteAdd({
+                style_id: id,
+                produce_no: data[this.active].produce_no,
+                produce_complete: arrNew
+              });
+              console.log(res1);
+            } else {
+              //编辑
+              let obj = {};
+              this.complete.map((v, i) => {
+                let arr = [];
+                v.produce_complete_size_a_data.map((j, k) => {
+                  j.size_input.map((f, g) => {
+                    if (f != "" || f != undefined || f === 0) {
+                      arr.push({
+                        style_id: id,
+                        produce_no: data[this.active].produce_no,
+                        style_color_name: j.color,
+                        size: v.t_size[g],
+                        quantity: f,
+                        isproduct: 1,
+                        id: j.id[g]
+                      });
+                    }
+                  });
+                });
+                v.produce_complete_size_b_data.map((j, k) => {
+                  j.size_input.map((f, g) => {
+                    if (f != "" || f != undefined || f === 0) {
+                      arr.push({
+                        style_id: id,
+                        produce_no: data[this.active].produce_no,
+                        style_color_name: j.color,
+                        size: v.t_size[g],
+                        quantity: f,
+                        isproduct: 0,
+                        id: j.id[g]
+                      });
+                    }
+                  });
+                });
+                arrNew.push({
+                  style_id: id,
+                  produce_no: data[this.active].produce_no,
+                  id: v.id_c,
+                  produce_complete_size: arr
+                });
+              });
+              let res1 = await produceCompleteEdit({
+                style_id: id,
+                produce_no: data[this.active].produce_no,
+                produce_complete: arrNew
+              });
+              console.log(res1);
+            }
+            this.init_c();
+            this.$message({
+              type: "success",
+              message: "出货订单提交成功!"
+            });
+          })
+          .catch(err => {
+            console.log(err);
+            this.$message({
+              type: "info",
+              message: "已取消提交"
+            });
           });
-        });
-        }else{
-            this.$message.error("请输入尺码数量");
-        }
+      } else {
+        this.$message.error("请输入尺码数量");
+      }
     },
     // 删除
     async completeDel(id_c, index) {
@@ -3282,6 +3297,17 @@ export default {
     let { id } = this.$route.query;
     let res = await getStyle({ id });
     this.obj = res.data.data;
+    // 批次
+    let res1 = await produceInfo({ style_id: Number(id) });
+    let { data } = res1.data;
+    console.log(data);
+    this.ob = [];
+    data.map((v, i) => {
+      this.ob.push({
+        num: i,
+        produce_no: v.produce_no
+      });
+    });
     // console.log(this.obj);
     // console.log(this.obj.style_materials_color_data)
     // this.activities_endlong = res.data.data.style_log;

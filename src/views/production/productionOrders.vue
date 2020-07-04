@@ -82,18 +82,18 @@
           <el-table-column align="center" property="season" label="季节"></el-table-column>
           <el-table-column align="center" property="stylist" label="设计师"></el-table-column>
           <!-- <el-table-column width="80" align="center" property="state" label="状态"></el-table-column> -->
-          <el-table-column align="center" label="操作">
+          <el-table-column align="center"  width="150" label="操作">
             <template slot-scope="scope">
               <el-button
                 class="elbtn"
                 size="mini"
                 @click="handleEdit(scope.$index, scope.row)"
               >{{"查看"}}</el-button>
-              <!-- <el-button
+              <el-button
                 class="elbtn"
                 size="mini"
                 @click="handleAdd(scope.$index, scope.row)"
-              >{{"下单"}}</el-button>-->
+              >{{"下单"}}</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -130,6 +130,9 @@ import {
   getWestList,
   getProduceOrderList
 } from "@/api/researchDevelopment";
+import{
+  produceAdd
+}from "@/api/production"
 export default {
   data() {
     return {
@@ -188,7 +191,10 @@ export default {
       });
     },
     // 下单
-    handleAdd(index, row) {
+    async handleAdd(index, row) {
+      let res = await produceAdd({style_id: row.style_id})
+      console.log(res);
+      
       this.$router.push({
         path: "/productionStyle?id=" + row.style_id + "&activeNames=1"
       });
