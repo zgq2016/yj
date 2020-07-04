@@ -2403,7 +2403,8 @@ export default {
           });
         }
         this.region = "";
-        console.log(this.formInline);
+        // console.log(this.formInline);
+        this.formg.child = this.formInline
       }
     },
     // 选择指派方式
