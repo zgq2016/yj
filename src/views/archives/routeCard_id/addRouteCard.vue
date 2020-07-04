@@ -516,10 +516,10 @@ export default {
       });
     },
     handleDeleteUser(index) {
-      this.tableData.splice(index, 1);
+      this.form.material_data.splice(index, 1);
     },
     handleDeleteColor(index) {
-      this.colorValue.splice(index, 1);
+      this.form.color_data.splice(index, 1);
     },
     async querySearch(value, cb) {
       let res = await getSupplierSelect({

@@ -21,10 +21,10 @@
       </el-table-column>
     </el-table>
     <!-- 单位分类 -->
-    <el-dialog title="单位分类" :visible.sync="centerDialogVisible" width="600" center>
+    <el-dialog title="单位分类" :visible.sync="centerDialogVisible" width="30%" center>
       <el-form ref="form" :model="form" label-width="80px" resetFields>
         <el-form-item label="单位名称">
-          <el-input v-model="form.unit_name" style="width:400px;"></el-input>
+          <el-input v-model="form.unit_name" style="width:80%"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -33,10 +33,10 @@
       </span>
     </el-dialog>
     <!-- 编辑单位 -->
-    <el-dialog title="编辑单位" :visible.sync="centerDialogVisible1" width="600" center>
+    <el-dialog title="编辑单位" :visible.sync="centerDialogVisible1" width="30%" center>
       <el-form ref="form" :model="form" label-width="80px" resetFields>
         <el-form-item label="单位名称">
-          <el-input v-model="form.unit_name" style="width:400px;"></el-input>
+          <el-input v-model="form.unit_name" style="width:80%"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -160,7 +160,7 @@ export default {
     font-size: 16px;
   }
   /deep/textarea {
-    width: 400px;
+    width: 80%;
     height: 150px;
     resize: none !important;
   }

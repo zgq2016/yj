@@ -315,7 +315,7 @@ export default {
       obj: {},
       supplier_companyname: "",
       materials_supplier_id: "",
-     rules: {
+      rules: {
         // supplier_companyname: [
         //   { required: true, message: "请填写商品数量", trigger: "blur" }
         // ],
@@ -331,7 +331,9 @@ export default {
         materials_class_name: [
           { required: true, message: "请选择二级分类", trigger: "change" }
         ],
-        unit: [{ required: true, message: "请选择计算单位", trigger: "change" }],
+        unit: [
+          { required: true, message: "请选择计算单位", trigger: "change" }
+        ],
         wsale_price: [
           { required: true, message: "请输入大货单价", trigger: "blur" }
         ],
@@ -341,9 +343,7 @@ export default {
         arrival_time: [
           { required: true, message: "请选择时间", trigger: "change" }
         ],
-        remarks: [
-          { required: true, message: "请输入备注", trigger: "blur" }
-        ]
+        remarks: [{ required: true, message: "请输入备注", trigger: "blur" }]
       },
       material_dataRules: {
         material_data_material_name: [
@@ -495,10 +495,10 @@ export default {
       });
     },
     handleDeleteUser(index) {
-      this.tableData.splice(index, 1);
+      this.obj.material_data.splice(index, 1);
     },
     handleDeleteColor(index) {
-      this.colorValue.splice(index, 1);
+      this.obj.color_data.splice(index, 1);
     },
     async querySearch(value, cb) {
       let res = await getSupplierSelect({
@@ -520,11 +520,11 @@ export default {
       console.log(res);
       let { data } = res.data;
       this.class_datas = data;
-       this.obj.materials_class_name = "";
+      this.obj.materials_class_name = "";
       this.obj.materials_class_id = "";
       if (data.class_data.length > 0) {
-      this.obj.materials_class_name = this.class_datas.class_data[0].classname;
-      this.obj.materials_class_id = this.class_datas.class_data[0].id;
+        this.obj.materials_class_name = this.class_datas.class_data[0].classname;
+        this.obj.materials_class_id = this.class_datas.class_data[0].id;
       }
     },
     handleClassDatasIds(e) {
@@ -605,7 +605,7 @@ export default {
         this.$router.go(-1);
       });
     }
-/* 
+    /* 
 arrival_time: "2020-07-01"
 color_data: (2) [{…}, {…}]
 id: 106

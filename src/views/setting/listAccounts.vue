@@ -17,7 +17,7 @@
       </el-table-column>
     </el-table>
     <!-- 编辑分类 -->
-    <el-dialog title="修改密码" :visible.sync="centerDialogVisible1"  width="600" center>
+    <el-dialog title="修改密码" :visible.sync="centerDialogVisible1"  width="30%" center>
       <el-form ref="form" :rules="rules" :model="form" label-width="100px" resetFields>
         <el-form-item label="用户名:">
           <span>{{form.name}}</span>

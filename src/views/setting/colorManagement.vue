@@ -28,16 +28,16 @@
       </el-table-column>
     </el-table>
     <!-- 颜色分类 -->
-    <el-dialog title="颜色分类" :visible.sync="centerDialogVisible" width="600" center>
+    <el-dialog title="颜色分类" :visible.sync="centerDialogVisible" width="30%" center>
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="颜色名称" prop="color_name">
-          <el-input v-model="form.color_name" style="width:400px;"></el-input>
+          <el-input v-model="form.color_name" style="width:80%;"></el-input>
         </el-form-item>
         <el-form-item label="上级分类">
           <el-select
             v-model="region"
             placeholder="可选/可不选"
-            style="width:400px;"
+            style="width:80%;"
             @change="get_goods_category_id($event)"
           >
             <el-option
@@ -49,7 +49,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="排序" prop="sort">
-          <el-input v-model="form.sort" style="width:400px;"></el-input>
+          <el-input v-model="form.sort" style="width:80%;"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button @click="resetForm('form')">取 消</el-button>
@@ -62,13 +62,13 @@
       </el-form>
     </el-dialog>
     <!-- 编辑分类 -->
-    <el-dialog title="编辑颜色" :visible.sync="centerDialogVisible1" width="600" center>
+    <el-dialog title="编辑颜色" :visible.sync="centerDialogVisible1" width="30%" center>
       <el-form ref="obj" :model="obj" label-width="80px" resetFields>
         <el-form-item label="颜色名称" prop="color_name">
-          <el-input v-model="obj.color_name" style="width:400px;"></el-input>
+          <el-input v-model="obj.color_name" style="width:80%;"></el-input>
         </el-form-item>
         <el-form-item label="上级分类" v-if="rowLevel==='1'">
-          <el-select v-model="region" @change="get_goods_category_id($event)" style="width:400px;">
+          <el-select v-model="region" @change="get_goods_category_id($event)" style="width:80%;">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -78,7 +78,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="排序" prop="sort">
-          <el-input v-model="obj.sort" style="width:400px;"></el-input>
+          <el-input v-model="obj.sort" style="width:80%;"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -267,7 +267,7 @@ export default {
     font-size: 16px;
   }
   /deep/textarea {
-    width: 400px;
+    width: 80%;
     height: 150px;
     resize: none !important;
   }
