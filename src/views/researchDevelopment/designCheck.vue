@@ -4,8 +4,8 @@
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>研发部</el-breadcrumb-item>
-      <el-breadcrumb-item>设计项目</el-breadcrumb-item>
-      <el-breadcrumb-item>设计项目查看</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/itemDesign' }">设计项目</el-breadcrumb-item>
+      <el-breadcrumb-item>款式设计</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 详情 -->
     <div class="detail">

@@ -74,7 +74,12 @@
                 </div>
               </div>
             </div>
-            <el-button class="cardBtn" size="mini" round @click="handleMaterialsCard(item)">添加主料卡</el-button>
+            <el-button
+              class="cardBtn"
+              size="mini"
+              round
+              @click="handleMaterialsCard(item)"
+            >添加{{item.materialsCard}}</el-button>
           </div>
           <el-divider content-position="right">{{item.materials}}</el-divider>
         </div>

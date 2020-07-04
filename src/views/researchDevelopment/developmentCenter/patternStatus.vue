@@ -56,13 +56,6 @@
                 v-for="(item1, index1) in item.materials_data"
                 :key="index1"
               >
-                <!-- colorno: null
-                id: 76
-                mainclass: "里料小分类2"
-                materialsname: "里料"
-                materialsno: "a1111"
-                picurl: "https://yj.ppp-pay.top/upload/20200507/20200507165001.jpg"
-                supplier_data: Array(1)-->
                 <div class="cardStyle_left_img">
                   <img :src="item1.picurl" alt />
                 </div>
@@ -85,6 +78,7 @@
                       v-model="item.maxusage"
                       placeholder="请输入内容"
                       style="width:100px"
+                      :disabled="antistopActive"
                     ></el-input>
                   </div>
                   <div class="antistop">
@@ -94,13 +88,32 @@
                       v-model="item.loss"
                       placeholder="请输入内容"
                       style="width:100px"
+                      :disabled="antistopActive"
                     ></el-input>
                   </div>
                 </div>
+                <!-- <div v-if="antistopActive===true">
+                  <div class="antistop">
+                    <div style="margin:10px">大货用量</div>
+                    <div style="width:100px"></div>
+                  </div>
+                  <div class="antistop">
+                    <div style="margin:10px">损耗</div>
+                    <div style="width:100px"></div>
+                  </div>
+                </div>-->
               </div>
             </div>
           </div>
         </div>
+        <div v-if="antistopActive==true">
+          <el-button @click="antistopActive=false" type="primary">修改</el-button>
+        </div>
+        <div v-if="antistopActive==false">
+          <el-button @click="antistopActive=true" type="primary">确认</el-button>
+        </div>
+        <!-- <button @click="antistopActive=false">修改</button>
+        <button @click="antistopActive=true">确认</button>-->
       </div>
       <!-- 删除历史 -->
       <div class="delHistory">
@@ -149,12 +162,19 @@ export default {
       dialogVisible: false,
 
       MaterialsList: [],
-      DelList: []
+      DelList: [],
+
+      antistopActive: false
     };
   },
   methods: {
     async handleInputMaxusage(e) {
-      e.maxusage = e.maxusage.replace(/[^0-9-]+/, "");
+      if (e.maxusage === "") {
+        e.maxusage = "0";
+      }
+      if (e.maxusage !== "0") {
+        e.maxusage = e.maxusage.replace(/[^0-9-]+/, "");
+      }
       console.log(e);
       let res = await styleMaterialsUseEdit({
         id: e.id,
@@ -164,7 +184,12 @@ export default {
       this.MaterialsInit();
     },
     async handleInputLoss(e) {
-      e.loss = e.loss.replace(/[^0-9-]+/, "");
+      if (e.loss === "") {
+        e.loss = "0";
+      }
+      if (e.loss !== "0") {
+        e.loss = e.loss.replace(/[^0-9-]+/, "");
+      }
       console.log(e);
       let res = await styleMaterialsUseEdit({
         id: e.id,

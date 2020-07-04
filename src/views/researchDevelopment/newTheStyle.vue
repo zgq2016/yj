@@ -4,6 +4,7 @@
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>研发部</el-breadcrumb-item>
+      <el-breadcrumb-item>项目设计</el-breadcrumb-item>
       <el-breadcrumb-item>款式设计</el-breadcrumb-item>
       <el-breadcrumb-item>新增款式</el-breadcrumb-item>
     </el-breadcrumb>

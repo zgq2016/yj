@@ -4,7 +4,9 @@
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>研发部</el-breadcrumb-item>
-      <el-breadcrumb-item>设计项目</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/itemDesign' }">设计项目
+        <!-- <router-link to="/itemDesign"></router-link> -->
+      </el-breadcrumb-item>
       <el-breadcrumb-item v-if="this.$route.query.id==='a'">新增意向订单</el-breadcrumb-item>
       <el-breadcrumb-item v-if="this.$route.query.id==='b'">新增阶段工作</el-breadcrumb-item>
       <el-breadcrumb-item v-if="this.$route.query.id==='c'">新增企划系列</el-breadcrumb-item>
