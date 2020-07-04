@@ -35,7 +35,7 @@
       center
       :before-close="handleClose"
     >
-      <el-form ref="form" :model="form" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="颜色名称" prop="color_name">
           <el-input v-model="form.color_name" style="width:80%;"></el-input>
         </el-form-item>
@@ -70,7 +70,7 @@
       center
       :before-close="handleClose1"
     >
-      <el-form ref="obj" :model="obj" label-width="80px" resetFields>
+      <el-form ref="obj" :model="obj" :rules="rules1" label-width="80px" resetFields>
         <el-form-item label="颜色名称" prop="color_name">
           <el-input v-model="obj.color_name" style="width:80%;"></el-input>
         </el-form-item>
@@ -116,6 +116,32 @@ import {
 export default {
   data() {
     return {
+      rules: {
+        color_name: [
+          { required: true, message: "请输入颜色名称", trigger: "blur" }
+        ],
+
+        sort: [
+          {
+            required: true,
+            message: "请输入排序",
+            trigger: "blur"
+          }
+        ]
+      },
+      rules1: {
+        color_name: [
+          { required: true, message: "请输入颜色名称", trigger: "blur" }
+        ],
+
+        sort: [
+          {
+            required: true,
+            message: "请输入排序",
+            trigger: "blur"
+          }
+        ]
+      },
       tableData: [],
       centerDialogVisible: false, //添加分类
       centerDialogVisible1: false, //编辑分类
@@ -151,16 +177,19 @@ export default {
       this.init();
     },
     async handleEditList() {
-      delete this.obj.goods_category_data;
-      delete this.obj.region;
-      console.log(this.obj);
-      let res = await colorEdit(this.obj);
-      console.log(res);
-      this.$refs["obj"].resetFields();
-      this.obj.color_id = 0;
-      this.region = "";
-      this.centerDialogVisible1 = false;
-      this.init();
+      this.$refs["obj"].validate(async valid => {
+        if (!valid) return;
+        delete this.obj.goods_category_data;
+        delete this.obj.region;
+        console.log(this.obj);
+        let res = await colorEdit(this.obj);
+        console.log(res);
+        this.$refs["obj"].resetFields();
+        this.obj.color_id = 0;
+        this.region = "";
+        this.centerDialogVisible1 = false;
+        this.init();
+      });
     },
     async handleEdit(index, row) {
       let res = await colorInfo({ id: row.color_id });
@@ -215,24 +244,27 @@ export default {
       }
     },
     async handleNewList() {
-      delete this.form.region;
-      console.log(this.form);
-      if (this.tableData.length === 0) {
-        let res = await colorAdd(this.form);
-        this.$refs["form"].resetFields();
-        this.form.color_id = 0;
-        this.region = "";
-        this.centerDialogVisible = false;
-        // this.init();
-      }
-      if (this.tableData.length > 0) {
-        let res = await colorAdd(this.form);
-        this.$refs["form"].resetFields();
-        this.form.color_id = 0;
-        this.region = "";
-        this.centerDialogVisible = false;
-      }
-      this.init();
+      this.$refs["form"].validate(async valid => {
+        if (!valid) return;
+        delete this.form.region;
+        console.log(this.form);
+        if (this.tableData.length === 0) {
+          let res = await colorAdd(this.form);
+          this.$refs["form"].resetFields();
+          this.form.color_id = 0;
+          this.region = "";
+          this.centerDialogVisible = false;
+          // this.init();
+        }
+        if (this.tableData.length > 0) {
+          let res = await colorAdd(this.form);
+          this.$refs["form"].resetFields();
+          this.form.color_id = 0;
+          this.region = "";
+          this.centerDialogVisible = false;
+        }
+        this.init();
+      });
     },
     async init() {
       let res = await colorList({

@@ -35,7 +35,7 @@
       center
       :before-close="handleClose"
     >
-      <el-form ref="form" :model="form" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules1" label-width="80px">
         <el-form-item label="尺码名称" prop="size_name">
           <el-input v-model="form.size_name" style="width:80%;"></el-input>
         </el-form-item>
@@ -70,7 +70,7 @@
       center
       :before-close="handleClose1"
     >
-      <el-form ref="obj" :model="obj" label-width="80px" resetFields>
+      <el-form ref="obj" :model="obj" :rules="rules1" label-width="80px" resetFields>
         <el-form-item label="尺码名称" prop="size_name">
           <el-input v-model="obj.size_name" style="width:80%;"></el-input>
         </el-form-item>
@@ -116,6 +116,32 @@ import {
 export default {
   data() {
     return {
+       rules: {
+        size_name: [
+          { required: true, message: "请输入尺码名称", trigger: "blur" }
+        ],
+
+        sort: [
+          {
+            required: true,
+            message: "请输入排序",
+            trigger: "blur"
+          }
+        ]
+      },
+       rules1: {
+        size_name: [
+          { required: true, message: "请输入尺码名称", trigger: "blur" }
+        ],
+
+        sort: [
+          {
+            required: true,
+            message: "请输入排序",
+            trigger: "blur"
+          }
+        ]
+      },
       tableData: [],
       centerDialogVisible: false, //添加分类
       centerDialogVisible1: false, //编辑分类
@@ -150,6 +176,8 @@ export default {
       this.init();
     },
     async handleEditList() {
+      this.$refs["obj"].validate(async valid => {
+        if (!valid) return;
       delete this.obj.goods_category_data;
       delete this.obj.region;
       console.log(this.obj);
@@ -160,6 +188,7 @@ export default {
       this.region = "";
       this.centerDialogVisible1 = false;
       this.init();
+      })
     },
     async handleEdit(index, row) {
       let res = await sizeInfo({ id: row.size_id });
@@ -214,6 +243,8 @@ export default {
       }
     },
     async handleNewList() {
+      this.$refs["form"].validate(async valid => {
+        if (!valid) return;
       delete this.form.region;
       console.log(this.form);
       if (this.tableData.length === 0) {
@@ -231,7 +262,9 @@ export default {
         this.region = "";
         this.centerDialogVisible = false;
         this.init();
+      
       }
+      })
     },
     async init() {
       let res = await sizeList({
