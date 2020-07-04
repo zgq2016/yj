@@ -29,7 +29,13 @@
       </el-table-column>
     </el-table>
     <!-- 添加分类 -->
-    <el-dialog title="添加分类" :visible.sync="centerDialogVisible" width="30%" center>
+    <el-dialog
+      title="添加分类"
+      :visible.sync="centerDialogVisible"
+      width="30%"
+      center
+      :before-close="handleClose"
+    >
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="分类名称" prop="goods_category_name">
           <el-input v-model="form.goods_category_name" style="width:80%;"></el-input>
@@ -55,18 +61,19 @@
         <el-form-item label="排序" prop="sort">
           <el-input v-model="form.sort" style="width:80%;"></el-input>
         </el-form-item>
-        <el-form-item>
-          <el-button @click="resetForm('form')">取 消</el-button>
-          <el-button type="primary" @click="handleNewList('form')">确 定</el-button>
-        </el-form-item>
-        <!-- <span slot="footer" class="dialog-footer">
-          <el-button @click="centerDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="handleNewList">确 定</el-button>
-        </span>-->
       </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleNewList">确 定</el-button>
+      </span>
     </el-dialog>
     <!-- 编辑分类 -->
-    <el-dialog title="编辑分类" :visible.sync="centerDialogVisible1" width="30%" center>
+    <el-dialog
+      title="编辑分类"
+      :visible.sync="centerDialogVisible1"
+      width="30%"
+      center
+      :before-close="handleClose1"
+    >
       <el-form ref="obj" :model="obj" label-width="80px" resetFields>
         <el-form-item label="分类名称" prop="goods_category_name">
           <el-input v-model="obj.goods_category_name" style="width:80%;"></el-input>
@@ -89,7 +96,6 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="resetForm1('obj')">取 消</el-button>
         <el-button type="primary" @click="handleEditList">确 定</el-button>
       </span>
     </el-dialog>
@@ -138,19 +144,19 @@ export default {
     };
   },
   methods: {
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
+    handleClose() {
       this.form.goods_category_id = 0;
+      this.form.goods_category_name = "";
+      this.form.describe = "";
+      this.form.sort = "";
+      this.form.level = 0;
       this.region = "";
-      console.log(this.form);
       this.centerDialogVisible = false;
+      this.init();
     },
-    resetForm1(formName) {
-      this.$refs[formName].resetFields();
-      this.form.goods_category_id = 0;
-      this.region = "";
-      console.log(this.form);
+    handleClose1() {
       this.centerDialogVisible1 = false;
+      this.init();
     },
     async handleEditList() {
       delete this.obj.goods_category_data;

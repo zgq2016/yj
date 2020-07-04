@@ -21,26 +21,38 @@
       </el-table-column>
     </el-table>
     <!-- 单位分类 -->
-    <el-dialog title="单位分类" :visible.sync="centerDialogVisible" width="30%" center>
+    <el-dialog
+      title="单位分类"
+      :visible.sync="centerDialogVisible"
+      width="30%"
+      center
+      :before-close="handleClose"
+    >
       <el-form ref="form" :model="form" label-width="80px" resetFields>
         <el-form-item label="单位名称">
           <el-input v-model="form.unit_name" style="width:80%"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="centerDialogVisible = false">取 消</el-button>
+        <!-- <el-button @click="centerDialogVisible = false">取 消</el-button> -->
         <el-button type="primary" @click="handleNewList">确 定</el-button>
       </span>
     </el-dialog>
     <!-- 编辑单位 -->
-    <el-dialog title="编辑单位" :visible.sync="centerDialogVisible1" width="30%" center>
+    <el-dialog
+      title="编辑单位"
+      :visible.sync="centerDialogVisible1"
+      width="30%"
+      center
+      :before-close="handleClose1"
+    >
       <el-form ref="form" :model="form" label-width="80px" resetFields>
         <el-form-item label="单位名称">
           <el-input v-model="form.unit_name" style="width:80%"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="centerDialogVisible1 = false">取 消</el-button>
+        <!-- <el-button @click="centerDialogVisible1 = false">取 消</el-button> -->
         <el-button type="primary" @click="handleEditList">确 定</el-button>
       </span>
     </el-dialog>
@@ -77,6 +89,16 @@ export default {
     };
   },
   methods: {
+    handleClose() {
+      this.form.unit_name = "";
+      this.centerDialogVisible = false;
+      this.init();
+    },
+    handleClose1() {
+      this.form.unit_name = "";
+      this.centerDialogVisible1 = false;
+      this.init();
+    },
     async handleNewList() {
       let res = await unitAdd(this.form);
       console.log(res);
