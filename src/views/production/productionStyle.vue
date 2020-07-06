@@ -640,6 +640,7 @@
             </div>
             <el-button
               @click="arranged"
+              round
               v-if="ascertain2"
               style="float:right;margin-bottom:15px;"
             >确认排单</el-button>

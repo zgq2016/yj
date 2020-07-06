@@ -26,10 +26,10 @@
           <span>{{form.username}}</span>
         </el-form-item>
         <el-form-item prop="pwd" label="原密码:">
-          <el-input v-model="form.pwd" placeholder="请输入原密码" show-password id="pwd" @blur="pwdblur" style="width:400px;"></el-input>
+          <el-input v-model="form.pwd" placeholder="请输入原密码" show-password id="pwd" @blur="pwdblur" style="width:80%"></el-input>
         </el-form-item>
         <el-form-item prop="passworded" label="修改后密码:">
-          <el-input v-model="form.passworded" placeholder="请输入修改后密码" show-password style="width:400px;"></el-input>
+          <el-input v-model="form.passworded" placeholder="请输入修改后密码" show-password style="width:80%"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
