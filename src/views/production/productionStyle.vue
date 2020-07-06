@@ -84,6 +84,7 @@
       <el-collapse v-model="activeNames" @change="handleChange">
         <el-collapse-item title="下单信息" name="1">
           <div class="orderInformation">
+            <!-- <div style="margin-left:50px;">请先增加批次</div> -->
             <!-- 没数据或者修改 -->
             <div v-if="!show" style="margin:0 0 10px 0;">
               <!-- 第一个表单 -->
@@ -618,7 +619,7 @@
             </el-form>
 
             <!-- 新增指派工厂与确定排单 -->
-            <div>
+            <div v-if="regionVB">
               <el-form>
                 <el-form-item label="新增指派工厂：">
                   <el-select
@@ -675,12 +676,12 @@
         <el-collapse-item title="裁剪" name="4">
           <div class="tailor">
             <div>
-              <el-row style="margin-left:10%;">
-                <el-col :span="3">录入裁床数量：</el-col>
-              </el-row>
               <!-- <div v-if="tailorList.category>0"> -->
               <!-- 没数据 -->
               <div v-if="!vb1">
+                <el-row  v-if="tailorVB" style="margin-left:5%;">
+                  <el-col :span="3">录入裁床数量：</el-col>
+                </el-row>
                 <div class="tailor_table" v-for="(item,index) in tailorList" :key="index">
                   <div class="tailor_nav">
                     <span>颜色</span>
@@ -725,6 +726,9 @@
               </div>
               <!-- 有数据 -->
               <div v-if="vb1" style="position:relative">
+                <el-row  v-if="tailorVB" style="margin-left:5%;">
+                  <el-col :span="3">录入裁床数量：</el-col>
+                </el-row>
                 <div class="tailor_table" v-for="(item,index) in tailorList" :key="index">
                   <div class="tailor_nav">
                     <span>颜色</span>
@@ -757,7 +761,7 @@
               </div>
             </div>
             <div class="add" v-if="!vb1">
-              <el-button size="mini" @click="tailoradd" round>+ 增加床次</el-button>
+              <el-button size="mini" v-if="tailorVB" @click="tailoradd" round>+ 增加床次</el-button>
               <el-button @click="tailored" v-if="ascertain3" round>确定</el-button>
             </div>
             <!-- </div> -->
@@ -766,11 +770,11 @@
         <el-collapse-item title="出货" name="5">
           <div class="shipment">
             <div class="shipmentList">
-              <el-row>
-                <el-col :span="3">出货数量：</el-col>
-              </el-row>
               <!-- 无数据 -->
               <div v-if="!vb2">
+                <el-row style="margin-left:5%;" v-if="shipmentVB">
+                  <el-col :span="3">出货数量：</el-col>
+                </el-row>
                 <el-form style="position:relative" v-for="(item,index) in complete" :key="index">
                   <!-- 成品 -->
                   <div>
@@ -843,6 +847,9 @@
               </div>
               <!-- 有数据 -->
               <div v-if="vb2" style="position:relative;">
+                <el-row style="margin-left:5%;" v-if="shipmentVB">
+                  <el-col :span="3">出货数量：</el-col>
+                </el-row>
                 <div style="position:relative" v-for="(item,index) in complete" :key="index">
                   <!-- 成品 -->
                   <div>
@@ -907,7 +914,7 @@
               </div>
             </div>
             <div class="add" v-if="!vb2">
-              <el-button @click="goDownAdd" round>+增加出货批次</el-button>
+              <el-button @click="goDownAdd" v-if="shipmentVB" round>+增加出货批次</el-button>
               <el-button @click="goDownlist" v-if="ascertain4" round>确定</el-button>
             </div>
           </div>
@@ -1215,6 +1222,9 @@ export default {
       sum: 0,
       show: false,
       show1: false,
+      regionVB: true, //排单（没有批次隐藏）
+      tailorVB: true, //裁剪（没有批次隐藏）
+      shipmentVB: true, //出货（没有批次隐藏）
       show2: false,
       show9: true,
       outerVisible: false,
@@ -1620,7 +1630,7 @@ export default {
     async styleColorDel(item, index) {
       // console.log(item,index)
 
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该批次, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -1632,13 +1642,20 @@ export default {
             produce_no: item.produce_no
           });
           // console.log(res);
-
+          this.ob.splice(index, 1);
           this.active = 0;
           this.form = [];
           this.quantity = [[], [], [], [], [], [], [], [], [], []];
           this.ratio = [[], [], [], [], [], [], [], [], [], []];
           this.size_name = [[], [], [], [], [], [], [], [], [], [], [], []];
           this.init();
+          console.log(this.ob);
+          if (this.ob.length == 0) {
+            this.show1 = false;
+            this.regionVB = false;
+            this.tailorVB = false;
+            this.shipmentVB = false;
+          }
           this.$message({
             type: "success",
             message: "删除成功!"
@@ -1824,7 +1841,11 @@ export default {
           this.form = [];
           this.show1 = true;
           this.ascertain1 = false;
+          this.tailorVB = false;
+          this.shipmentVB = false;
         } else {
+           this.tailorVB = true;
+          this.shipmentVB = true;
           this.ascertain1 = true;
           // this.show1 = true;
           data1.map((v, i) => {
@@ -3166,7 +3187,6 @@ export default {
           // console.log(this.t_size);
           // console.log(this.complete);
           if (this.t_size.length != 0) {
-            this.ascertain4 = true;
             data1.produce_complete_data.map((v, i) => {
               // 成品
               let arrColor_a = []; //颜色
@@ -3280,13 +3300,14 @@ export default {
                 produce_complete_size_b_data: arr_b
               });
             });
-          } else {
-            this.ascertain4 = false;
           }
           // console.log(data1);
           if (data1.produce_complete_data.length > 0) {
+            this.ascertain4 = true;
             this.vb2 = true;
             this.edit2 = true;
+          } else {
+            this.ascertain4 = false;
           }
           // console.log(this.complete);
         }
@@ -3300,7 +3321,8 @@ export default {
     // 批次
     let res1 = await produceInfo({ style_id: Number(id) });
     let { data } = res1.data;
-    console.log(data);
+
+    // console.log(data);
     this.ob = [];
     data.map((v, i) => {
       this.ob.push({
