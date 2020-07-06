@@ -3,8 +3,9 @@
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
-      <el-breadcrumb-item>研发部</el-breadcrumb-item>
-      <el-breadcrumb-item>设计项目</el-breadcrumb-item>
+      <el-breadcrumb-item>研发</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/itemDesign' }">设计项目</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: `/designCheck?id=${obj.id}` }">项目详细</el-breadcrumb-item>/
       <el-breadcrumb-item>编辑{{obj.projecttype}}订单</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main">

@@ -4,8 +4,8 @@
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>研发部</el-breadcrumb-item>
-      <el-breadcrumb-item>项目设计</el-breadcrumb-item>
-      <el-breadcrumb-item>款式设计</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/itemDesign' }">项目设计</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: `/designCheck?id=${this.$route.query.id}` }">项目详细</el-breadcrumb-item>
       <el-breadcrumb-item>新增款式</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 没有数据 -->
@@ -20,6 +20,7 @@
             :on-success="handleStyleNumberSuccess"
             :before-upload="beforeAvatarUpload"
           >
+            <!-- :before-upload="beforeUpload" -->
             <img v-if="form.style_pic_url" :src="form.style_pic_url" class="avatar" />
             <i v-else class="el-icon-upload avatar-uploader-icon"></i>
           </el-upload>
@@ -271,7 +272,9 @@ export default {
         obj["project_id"] = this.defaultData.id;
         let res = await projectStyleAdd(obj);
         console.log(res);
-        // this.$router.go(-1);
+        this.$router.push({
+          path: `/designNote?id=${res.data.data[0].id}&designRemark=${0}`
+        });
       });
     },
     async handleClick() {
@@ -337,15 +340,7 @@ export default {
       }
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
-      if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
-      }
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
-      }
-      return isJPG && isLt2M;
+      return this.$elUploadBeforeUpload(file);
     },
     handleUser_id(e) {
       this.user_id = e;

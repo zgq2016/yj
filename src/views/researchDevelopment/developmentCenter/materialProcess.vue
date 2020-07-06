@@ -200,7 +200,7 @@
     </el-dialog>
     <!-- 新增物料 -->
     <el-dialog
-      title="新增主料卡"
+      title="添加物料"
       :visible.sync="centerDialogVisible1"
       width="60%"
       center
@@ -210,10 +210,10 @@
         <el-input
           v-model="searchInput"
           @input="handleSearchInput"
-          placeholder="请输入内容"
+          placeholder="查找"
           style="width:300px"
         ></el-input>
-        <router-link to="/addRouteCard?id=0" style="margin-left:30px">增加物料</router-link>
+        <router-link to="/addRouteCard?id=0" style="margin-left:30px">新增主料卡</router-link>
       </div>
       <div class="searchCard">
         <div class="card" v-for="(item, index) in MaterialsList" :key="index">

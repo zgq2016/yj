@@ -4,7 +4,7 @@
     包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
-      <el-breadcrumb-item>研发部</el-breadcrumb-item>
+      <el-breadcrumb-item>研发</el-breadcrumb-item>
       <el-breadcrumb-item>版料采购</el-breadcrumb-item>
     </el-breadcrumb>
      <div class="main">
@@ -165,7 +165,7 @@ export default {
     },
     handleEdit(index, row) {
       // console.log(index, row);
-      this.$router.push({ path: `/materialPurchasing?id=${row.id}` });
+      this.$router.push({ path: `/materialPurchasing?id=${row.id}&TL=${1}` });
     },
     handleUser_id(e) {
       this.formInline.user_id = e

@@ -3,9 +3,9 @@
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
-      <el-breadcrumb-item>研发部</el-breadcrumb-item>
+      <el-breadcrumb-item>研发</el-breadcrumb-item>
       <el-breadcrumb-item :to="{ path: '/itemDesign' }">设计项目</el-breadcrumb-item>
-      <el-breadcrumb-item>款式设计</el-breadcrumb-item>
+      <el-breadcrumb-item>项目详细</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 详情 -->
     <div class="detail">
@@ -124,7 +124,7 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(async () => {
-        console.log(item)
+        console.log(item);
         this.$router.push({
           path: `/newTheStyle?id=${this.$route.query.id}&oldId=${item.id}`
         });
@@ -150,7 +150,7 @@ export default {
     },
     handleEdit(e) {
       let { id } = e;
-      this.$router.push({ path: `/development?id=${id}` });
+      this.$router.push({ path: `/development?id=${id}&TL=${0}` });
     },
     editOutline() {
       let { id } = this.$route.query;

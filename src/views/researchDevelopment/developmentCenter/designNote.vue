@@ -10,6 +10,7 @@
         :on-remove="handleRemove"
         :on-success="handleSuccess"
         :file-list="img_list"
+        :before-upload="beforeUpload"
       >
         <i class="el-icon-plus"></i>
       </el-upload>
@@ -22,7 +23,9 @@
       <div style="width:100%;">
         <div style="margin:30px 0">
           <div style="font-size:16px;margin: 0px 20px 30px 0;">备注</div>
-          <div style="font-size:14px;width:80%;margin: 10px 60px; word-wrap: break-word;  word-break: break-all; overflow: hidden;">{{obj.designidea}}</div>
+          <div
+            style="font-size:14px;width:80%;margin: 10px 60px; word-wrap: break-word;  word-break: break-all; overflow: hidden;"
+          >{{obj.designidea}}</div>
         </div>
         <div>
           <div style="font-size:16px;margin: 10px 20px;">图纸</div>
@@ -83,6 +86,9 @@ export default {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
+    beforeUpload(file) {
+      return this.$elUploadBeforeUpload(file);
+    },
     async init() {
       let { id } = this.$route.query;
       let res = await getStyle({ id });
@@ -93,6 +99,11 @@ export default {
     }
   },
   mounted() {
+    // console.log(this.$route.query);
+
+    if (this.$route.query.designRemark - 0 === 0) {
+      this.designRemark = this.$route.query.designRemark - 0;
+    }
     this.init();
   }
 };

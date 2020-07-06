@@ -13,6 +13,7 @@
             :on-success="handleSuccess"
             :file-list="img_list"
             list-type="picture"
+            :before-upload="beforeUpload"
           >
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -62,7 +63,7 @@
                 <div class="cardStyle_left_content">
                   <div class="cardStyle_left_content_name">
                     <div>({{item1.mainclass}})</div>
-                    <div class="el-icon-close"></div>
+                    <!-- <div class="el-icon-close"></div> -->
                   </div>
                   <div>{{item1.materialsname}}</div>
                   <div>内部编号:{{item1.materialsno}}</div>
@@ -74,7 +75,7 @@
                   <div class="antistop">
                     <label for style="margin:10px">大货用量</label>
                     <el-input
-                      @input="handleInputMaxusage(item)"
+                      @input="handleInputMaxusage(item,index)"
                       v-model="item.maxusage"
                       placeholder="请输入内容"
                       style="width:100px"
@@ -84,7 +85,7 @@
                   <div class="antistop">
                     <label for style="margin:10px">损耗</label>
                     <el-input
-                      @input="handleInputLoss(item)"
+                      @input="handleInputLoss(item,index)"
                       v-model="item.loss"
                       placeholder="请输入内容"
                       style="width:100px"
@@ -107,10 +108,10 @@
           </div>
         </div>
         <div v-if="antistopActive==true">
-          <el-button @click="antistopActive=false" type="primary">修改</el-button>
+          <el-button @click="modification" type="primary">修改</el-button>
         </div>
         <div v-if="antistopActive==false">
-          <el-button @click="antistopActive=true" type="primary">确认</el-button>
+          <el-button @click="affirm" type="primary">确认</el-button>
         </div>
         <!-- <button @click="antistopActive=false">修改</button>
         <button @click="antistopActive=true">确认</button>-->
@@ -133,12 +134,6 @@
     </div>
   </div>
 </template>
-/* id: "16"
-isdel: "1"
-picurl: ""
-style_id: "154"
-uid: "3.jpg" */
-
 <script>
 import {
   stylePaperpatternList,
@@ -168,39 +163,54 @@ export default {
     };
   },
   methods: {
-    async handleInputMaxusage(e) {
-      if (e.maxusage === "") {
-        e.maxusage = "0";
-      }
-      if (e.maxusage !== "0") {
-        e.maxusage = e.maxusage.replace(/[^0-9-]+/, "");
-      }
-      console.log(e);
-      let res = await styleMaterialsUseEdit({
-        id: e.id,
-        maxusage: e.maxusage
-      });
-      console.log(res);
-      this.MaterialsInit();
+    modification() {
+      this.antistopActive = false;
     },
-    async handleInputLoss(e) {
-      if (e.loss === "") {
-        e.loss = "0";
-      }
-      if (e.loss !== "0") {
-        e.loss = e.loss.replace(/[^0-9-]+/, "");
-      }
-      console.log(e);
-      let res = await styleMaterialsUseEdit({
-        id: e.id,
-        loss: e.loss
+    affirm() {
+      this.antistopActive = true;
+    },
+    async handleInputMaxusage(e, index) {
+      // if (e.maxusage === "") {
+      //   e.maxusage = "0";
+      // }
+      // if (e.maxusage !== "0") {
+      //   e.maxusage = e.maxusage.replace(/[^0-9-]+/, "");
+      // }
+      this.MaterialsList.map((v, i) => {
+        console.log(v);
+        if (index === i) {
+          v.maxusage = e.maxusage.replace(/[^0-9-]+/, "");
+        }
       });
-      console.log(res);
-      this.MaterialsInit();
+      console.log(this.MaterialsList);
+      // let res = await styleMaterialsUseEdit({
+      //   id: e.id,
+      //   maxusage: e.maxusage
+      // });
+      // this.MaterialsInit();
+    },
+    async handleInputLoss(e, index) {
+      // if (e.loss === "") {
+      //   e.loss = "0";
+      // }
+      // if (e.loss !== "0") {
+      //   e.loss = e.loss.replace(/[^0-9-]+/, "");
+      // }
+      this.MaterialsList.map((v, i) => {
+        console.log(v);
+        if (index === i) {
+          v.loss = e.loss.replace(/[^0-9-]+/, "");
+        }
+      });
+      console.log(this.MaterialsList);
+      // let res = await styleMaterialsUseEdit({
+      //   id: e.id,
+      //   loss: e.loss
+      // });
+      // this.MaterialsInit();
     },
     // 成功
     async handleSuccess(response, file, fileList) {
-      console.log(file);
       let { pic_file_url } = response.data;
       let picurl = pic_file_url;
       let res = await stylePaperpatternAdd({
@@ -214,7 +224,6 @@ export default {
     async handleRemove(file, fileList) {
       let id = file.id;
       let res = await stylePaperpatternDel({ id });
-      console.log(res);
       this.init();
       // this.PaperpatternDelInit();
     },
@@ -222,6 +231,9 @@ export default {
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
+    },
+    beforeUpload(file) {
+      return this.$elUploadBeforeUpload(file);
     },
     async init() {
       let { id } = this.$route.query;
@@ -236,22 +248,29 @@ export default {
     },
     async PaperpatternDelInit() {
       let res = await stylePaperpatternDelList({ style_id: this.obj.id });
-      console.log(res);
       this.DelList = res.data.data;
     },
     async MaterialsInit() {
       let res = await styleMaterialsUseList({ style_id: this.obj.id });
-      console.log(res);
+      res.data.data.map((v, i) => {
+        if (v.maxusage === "0") {
+          v.maxusage = "";
+        }
+        if (v.loss === "0") {
+          v.loss = "";
+        }
+      });
       this.MaterialsList = res.data.data;
+      console.log(this.MaterialsList);
     },
     async Resume(e) {
       let res = await stylePaperpatternResume({ id: e.id });
-      console.log(res);
       this.init();
     }
   },
   mounted() {
     this.init();
+    this.antistopActive = true;
   }
 };
 </script>
@@ -310,6 +329,7 @@ export default {
               display: flex;
               background-color: #f2f2f2;
               border-radius: 10px;
+              overflow: hidden;
               .cardStyle_left_img {
                 img {
                   width: 100px;

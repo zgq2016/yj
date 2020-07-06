@@ -4,8 +4,12 @@
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>研发部</el-breadcrumb-item>
-      <el-breadcrumb-item>设计项目</el-breadcrumb-item>
-      <el-breadcrumb-item>设计项目查看</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===0" :to="{ path: '/itemDesign' }">设计项目</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===0" :to="{ path: `/designCheck?id=${obj.project_id}` }">项目详细</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===1" :to="{ path: `/materialPurchase` }">版料采购</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===2" :to="{ path: `/pattern` }">纸样</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===3" :to="{ path: `/platemaking` }">制版</el-breadcrumb-item>
+      <el-breadcrumb-item>项目详细</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main">
       <div class="basicInfo">基本信息</div>
@@ -56,7 +60,8 @@ export default {
   data() {
     return {
       obj: {},
-      activeName: ""
+      activeName: "",
+      TL: ""
     };
   },
   methods: {
@@ -78,10 +83,9 @@ export default {
     }
   },
   mounted() {
-    // console.log(this.$route.path);
-
     this.init();
     let { id } = this.$route.query;
+    this.TL = this.$route.query.TL - 0;
     // this.$router.push({ path: `/materialPurchasing?id=${id}` });
   },
   watch: {
