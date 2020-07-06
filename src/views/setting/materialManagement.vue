@@ -4,7 +4,6 @@
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>设置</el-breadcrumb-item>
-      <el-breadcrumb-item>商品</el-breadcrumb-item>
       <el-breadcrumb-item>材质管理</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 添加材质 -->

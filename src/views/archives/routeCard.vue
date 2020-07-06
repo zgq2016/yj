@@ -4,7 +4,12 @@
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>档案库</el-breadcrumb-item>
-      <el-breadcrumb-item>物料工艺卡</el-breadcrumb-item>
+      <!-- <el-breadcrumb-item>物料工艺卡</el-breadcrumb-item> -->
+      <el-breadcrumb-item :to="{ path: '/routeCard_list' }">物料工艺卡</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===0">新增物料工艺卡</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===1">物料工艺卡详情</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===2" :to="{ path: `/routeCardDeital?id=${id}&TL=1` }">物料工艺卡详情</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===2">物料工艺卡编辑</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 左右侧边栏 -->
     <el-container>
@@ -131,13 +136,15 @@ export default {
       value: "",
       obj: {},
       item_id: {},
-      id: 5,
+      id: "",
       active: "",
       active1: "",
       level: "",
       edit_id: "",
       item: {},
-      getMaterialsClassInfoObj: {}
+      getMaterialsClassInfoObj: {},
+
+      TL: ""
     };
   },
   methods: {
@@ -237,6 +244,9 @@ export default {
       let res = await getMaterialsClass();
       let { data } = res.data;
       this.menuList = data;
+
+      this.TL = this.$route.query.TL - 0;
+      this.id = this.$route.query.id - 0;
     }
   },
   mounted() {
@@ -244,6 +254,9 @@ export default {
   },
   watch: {
     itemList() {
+      this.init();
+    },
+    $route() {
       this.init();
     }
   }

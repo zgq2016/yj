@@ -4,7 +4,12 @@
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>生产</el-breadcrumb-item>
-      <el-breadcrumb-item>生产款式档案</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===0" :to="{ path: '/productionOrders' }">生产下单</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===1" :to="{ path: '/purchase' }">采购列表</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===2" :to="{ path: '/productionScheduling' }">生产排期</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===3" :to="{ path: '/tailor' }">裁剪</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===4" :to="{ path: '/shipment' }">生产出货</el-breadcrumb-item>
+      <el-breadcrumb-item>生产档案</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main">
       <div class="info">
@@ -680,7 +685,7 @@
               <!-- <div v-if="tailorList.category>0"> -->
               <!-- 没数据 -->
               <div v-if="!vb1">
-                <el-row  v-if="tailorVB" style="margin-left:5%;">
+                <el-row v-if="tailorVB" style="margin-left:5%;">
                   <el-col :span="3">录入裁床数量：</el-col>
                 </el-row>
                 <div class="tailor_table" v-for="(item,index) in tailorList" :key="index">
@@ -727,7 +732,7 @@
               </div>
               <!-- 有数据 -->
               <div v-if="vb1" style="position:relative">
-                <el-row  v-if="tailorVB" style="margin-left:5%;">
+                <el-row v-if="tailorVB" style="margin-left:5%;">
                   <el-col :span="3">录入裁床数量：</el-col>
                 </el-row>
                 <div class="tailor_table" v-for="(item,index) in tailorList" :key="index">
@@ -1320,7 +1325,8 @@ export default {
       ascertain1: false,
       ascertain2: false,
       ascertain3: false,
-      ascertain4: false
+      ascertain4: false,
+      TL: ""
     };
   },
   methods: {
@@ -1845,7 +1851,7 @@ export default {
           this.tailorVB = false;
           this.shipmentVB = false;
         } else {
-           this.tailorVB = true;
+          this.tailorVB = true;
           this.shipmentVB = true;
           this.ascertain1 = true;
           // this.show1 = true;
@@ -3343,6 +3349,7 @@ export default {
     this.westList();
     this.styleColorSelect();
     this.ProcureList();
+    this.TL = this.$route.query.TL - 0;
   }
 };
 </script>

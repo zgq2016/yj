@@ -24,7 +24,10 @@
             <img :src="item.picurl" alt />
           </div>
           <div class="list_content">
-            <div style="font-weight: 600;font-size: 14px;">{{item.materials_mainclass_name}}<em v-if="item.materials_class_name">({{item.materials_class_name}})</em></div>
+            <div style="font-weight: 600;font-size: 14px;">
+              {{item.materials_mainclass_name}}
+              <em v-if="item.materials_class_name">({{item.materials_class_name}})</em>
+            </div>
             <div>{{item.materialsname}}</div>
             <div>内部编号:{{item.materialsno}}</div>
             <div v-if="item.supplier_data.length>0">{{item.supplier_data[0].supplier_companyname}}</div>
@@ -66,10 +69,10 @@ export default {
   },
   methods: {
     routeCardDeital(item) {
-      this.$router.push({ path: `/routeCardDeital?id=${item.id}` });
+      this.$router.push({ path: `/routeCardDeital?id=${item.id}&TL=1` });
     },
     addRouteCard() {
-      this.$router.push({ path: `/addRouteCard?id=${this.data.id || 0}` });
+      this.$router.push({ path: `/addRouteCard?id=${this.data.id || 0}&TL=0` });
     },
     async init() {
       let res = await getMaterialsList({

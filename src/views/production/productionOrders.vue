@@ -82,13 +82,13 @@
           <el-table-column align="center" property="season" label="季节"></el-table-column>
           <el-table-column align="center" property="stylist" label="设计师"></el-table-column>
           <el-table-column width="80" align="center" property="state" label="状态"></el-table-column>
-          <el-table-column align="center"  width="80" label="操作">
+          <el-table-column align="center" width="80" label="操作">
             <template slot-scope="scope">
               <!-- <el-button
                 class="elbtn"
                 size="mini"
                 @click="handleEdit(scope.$index, scope.row)"
-              >{{"查看"}}</el-button> -->
+              >{{"查看"}}</el-button>-->
               <el-button
                 class="elbtn"
                 size="mini"
@@ -130,9 +130,7 @@ import {
   getWestList,
   getProduceOrderList
 } from "@/api/researchDevelopment";
-import{
-  produceAdd
-}from "@/api/production"
+import { produceAdd } from "@/api/production";
 export default {
   data() {
     return {
@@ -175,11 +173,14 @@ export default {
   methods: {
     cellClick(row, column, cell, event) {
       // console.log(row, column, cell, event);
-      if(column.label == "图片" || column.label == "名称" || column.label == "款号"){
+      if (
+        column.label == "图片" ||
+        column.label == "名称" ||
+        column.label == "款号"
+      ) {
         this.$router.push({
-        path:
-          "/development?id=" + row.style_id
-      });
+          path: "/development?id=" + row.style_id
+        });
       }
     },
     // 查看
@@ -187,16 +188,20 @@ export default {
       // console.log(row);
       // console.log(index);
       this.$router.push({
-        path: "/productionStyle?id=" + row.style_id + "&activeNames=1"
+        path: `/productionStyle?id=${row.style_id}&activeNames=${
+          row.style_id
+        }&TL=${0}`
       });
     },
     // 下单
     async handleAdd(index, row) {
       // let res = await produceAdd({style_id: row.style_id})
       // console.log(res);
-      
+
       this.$router.push({
-        path: "/productionStyle?id=" + row.style_id + "&activeNames=1"
+        path: `/productionStyle?id=${row.style_id}&activeNames=${
+          row.style_id
+        }&TL=${0}`
       });
     },
     // 查询
@@ -210,7 +215,7 @@ export default {
     },
     //  增加下单
     addOrders() {
-      this.$router.push({ path: "/designFile" });
+      this.$router.push({ path: `/designFile?TL=${1}` });
     },
     // 更新状态
     handelState(e) {
@@ -292,7 +297,7 @@ export default {
         height: 40px;
       }
     }
-    /deep/.el-table__body-wrapper:hover{
+    /deep/.el-table__body-wrapper:hover {
       cursor: pointer;
     }
   }

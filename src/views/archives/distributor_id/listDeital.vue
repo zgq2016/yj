@@ -44,7 +44,7 @@
           </div>
         </div>
       </div>
-      <router-link :to="`/editSupplier?id=${obj.id}`" :data="obj">
+      <router-link :to="`/editSupplier?id=${obj.id}&TL=2`" :data="obj">
         <span class="el-icon-edit" style="font-size: 30px;cursor: pointer;"></span>
       </router-link>
     </div>
@@ -79,7 +79,6 @@ export default {
 
 <style lang="less" scoped>
 .ListDeital {
-  
   .main {
     display: flex;
     justify-content: space-between;
@@ -96,7 +95,7 @@ export default {
         }
       }
       .main_left_deital {
-        .bz{
+        .bz {
           width: 43em;
           word-wrap: break-word;
           word-break: break-all;

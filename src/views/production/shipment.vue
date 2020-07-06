@@ -4,7 +4,7 @@
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>生产</el-breadcrumb-item>
-      <el-breadcrumb-item>生产排期</el-breadcrumb-item>
+      <el-breadcrumb-item>生产出货</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
@@ -160,8 +160,11 @@ export default {
       console.log(row);
       console.log(index);
 
+      // this.$router.push({
+      //   path: "/productionStyle?id=" + row.style_id + "&activeNames=5"
+      // });
       this.$router.push({
-        path: "/productionStyle?id=" + row.style_id + "&activeNames=5"
+        path: `/productionStyle?id=${row.style_id}&activeNames=${5}&TL=${4}`
       });
     },
     onSubmit() {

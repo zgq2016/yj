@@ -9,7 +9,10 @@
       <el-breadcrumb-item v-if="TL===1" :to="{ path: `/materialPurchase` }">版料采购</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===2" :to="{ path: `/pattern` }">纸样</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===3" :to="{ path: `/platemaking` }">制版</el-breadcrumb-item>
-      <el-breadcrumb-item>项目详细</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===20" :to="{ path: `/productionOrders` }">生产下单</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===20" :to="{ path: `/designFile?TL=1` }">款式档案</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===21" :to="{ path: `/designFile` }">款式档案</el-breadcrumb-item>
+      <el-breadcrumb-item>款式详细</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main">
       <div class="basicInfo">基本信息</div>
@@ -61,7 +64,8 @@ export default {
     return {
       obj: {},
       activeName: "",
-      TL: ""
+      TL: "",
+      TL1: ""
     };
   },
   methods: {
@@ -86,6 +90,7 @@ export default {
     this.init();
     let { id } = this.$route.query;
     this.TL = this.$route.query.TL - 0;
+    this.TL1 = this.$route.query.TL1 - 0;
     // this.$router.push({ path: `/materialPurchasing?id=${id}` });
   },
   watch: {

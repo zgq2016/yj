@@ -4,7 +4,11 @@
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>档案库</el-breadcrumb-item>
-      <el-breadcrumb-item>供应商</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/distributor_list' }">供应商</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===0">新增供应商</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===1">供应商详情</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===2" :to="{ path: `/listDeital?id=${id}&TL=1` }">供应商详情</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===2">供应商编辑</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 左右侧边栏 -->
     <el-container>
@@ -131,13 +135,14 @@ export default {
       value: "",
       obj: {},
       item_id: {},
-      id: 5,
+      id: "",
       active: "",
       active1: "",
       level: "",
       edit_id: "",
       item: {},
-      getMaterialsClassInfoObj: {}
+      getMaterialsClassInfoObj: {},
+      TL: ""
     };
   },
   methods: {
@@ -237,6 +242,8 @@ export default {
       let res = await getMaterialsClass();
       let { data } = res.data;
       this.menuList = data;
+      this.TL = this.$route.query.TL - 0;
+      this.id = this.$route.query.id - 0;
     }
   },
   mounted() {
@@ -244,6 +251,9 @@ export default {
   },
   watch: {
     itemList() {
+      this.init();
+    },
+    $route() {
       this.init();
     }
   }

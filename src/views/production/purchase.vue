@@ -123,7 +123,7 @@ export default {
         year: "",
         season: "",
         user_id: "",
-        style_type: "",
+        style_type: ""
       },
       years: [],
       seasons: [],
@@ -159,13 +159,15 @@ export default {
       console.log(row);
       console.log(index);
 
+      // this.$router.push({
+      //   path: "/productionStyle?id=" + row.style_id + "&activeNames=2"
+      // });
       this.$router.push({
-        path:
-          "/productionStyle?id=" + row.style_id + "&activeNames=2"
+        path: `/productionStyle?id=${row.style_id}&activeNames=${2}&TL=${1}`
       });
     },
     onSubmit() {
-      this.init(this.formInline)
+      this.init(this.formInline);
     }, // 获取customer_id
     handleCustomer_id(e) {
       this.customer_id = e;
@@ -223,8 +225,8 @@ export default {
         });
       });
     },
-    async handleUser_id(e){
-      this.formInline.user_id = e
+    async handleUser_id(e) {
+      this.formInline.user_id = e;
     },
     handleSizeChange(val) {
       // console.log(val)

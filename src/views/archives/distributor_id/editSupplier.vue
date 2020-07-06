@@ -197,7 +197,7 @@ export default {
         ],
         remarks: [{ required: true, message: "请输入备注", trigger: "blur" }]
       },
-      contactRules: {
+      contact_dataRules: {
         contact_contacts: [
           { required: true, message: "请填写联系人名称", trigger: "blur" }
         ],
@@ -205,7 +205,7 @@ export default {
           { required: true, message: "请填写联系人号码", trigger: "blur" }
         ]
       },
-      bankRules: {
+      bank_dataRules: {
         bank_bank: [
           { required: true, message: "请选择银行", trigger: "change" }
         ],

@@ -166,7 +166,25 @@ export default {
     modification() {
       this.antistopActive = false;
     },
-    affirm() {
+    async affirm() {
+      this.MaterialsList.map((v, i) => {
+        if (v.maxusage === "") {
+          v.maxusage = 0;
+        }
+        if (v.loss === "") {
+          v.loss = 0;
+        }
+        // v.maxusage == "" ? 0 : v.maxusage;
+        // v.loss == "" ? 0 : v.loss;
+        delete v.materials_data;
+        delete v.materials_id;
+        delete v.style_id;
+      });
+      let res = await styleMaterialsUseEdit({
+        style_materials_data: this.MaterialsList
+      });
+      console.log(res);
+      this.init();
       this.antistopActive = true;
     },
     async handleInputMaxusage(e, index) {
@@ -177,12 +195,10 @@ export default {
       //   e.maxusage = e.maxusage.replace(/[^0-9-]+/, "");
       // }
       this.MaterialsList.map((v, i) => {
-        console.log(v);
         if (index === i) {
           v.maxusage = e.maxusage.replace(/[^0-9-]+/, "");
         }
       });
-      console.log(this.MaterialsList);
       // let res = await styleMaterialsUseEdit({
       //   id: e.id,
       //   maxusage: e.maxusage
@@ -197,12 +213,10 @@ export default {
       //   e.loss = e.loss.replace(/[^0-9-]+/, "");
       // }
       this.MaterialsList.map((v, i) => {
-        console.log(v);
         if (index === i) {
           v.loss = e.loss.replace(/[^0-9-]+/, "");
         }
       });
-      console.log(this.MaterialsList);
       // let res = await styleMaterialsUseEdit({
       //   id: e.id,
       //   loss: e.loss

@@ -34,7 +34,7 @@
             </div>
           </div>
         </div>
-        <router-link :to="`/editrouteCard?id=${upData.id}`" :data="upData">
+        <router-link :to="`/editrouteCard?id=${upData.id}&TL=2`" :data="upData">
           <span class="el-icon-edit" style="font-size: 30px;cursor: pointer;"></span>
         </router-link>
       </div>
@@ -131,7 +131,7 @@ export default {
         }
       }
     }
-    .bz{
+    .bz {
       width: 30em;
       word-wrap: break-word;
       word-break: break-all;

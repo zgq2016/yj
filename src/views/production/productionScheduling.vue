@@ -49,7 +49,6 @@
         <el-form-item>
           <el-button type="primary" @click="onSubmit">查询</el-button>
         </el-form-item>
-        
       </el-form>
       <div class="table">
         <el-table
@@ -161,12 +160,15 @@ export default {
       console.log(row);
       console.log(index);
 
+      // this.$router.push({
+      //   path: "/productionStyle?id=" + row.style_id + "&activeNames=3"
+      // });
       this.$router.push({
-        path: "/productionStyle?id=" + row.style_id + "&activeNames=3"
+        path: `/productionStyle?id=${row.style_id}&activeNames=${3}&TL=${2}`
       });
     },
     onSubmit() {
-      this.init(this.formInline)
+      this.init(this.formInline);
     }, // 获取customer_id
     handleCustomer_id(e) {
       this.customer_id = e;
@@ -221,8 +223,8 @@ export default {
         });
       });
     },
-    async handleUser_id(e){
-      this.formInline.user_id = e
+    async handleUser_id(e) {
+      this.formInline.user_id = e;
     },
     handleSizeChange(val) {
       // console.log(val)

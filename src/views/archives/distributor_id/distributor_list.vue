@@ -28,8 +28,15 @@
           <div class="list_content">
             <div class="list_content_left">
               <div class="list_content_left_name">{{item.companyname}}</div>
-              <div>{{item.mainclass}}<em v-if="item.materials_class_name">({{item.materials_class_name}})</em></div>
-              <div v-if="item.supplier_contact_data.length>0" >{{item.supplier_contact_data[0].contacts}}:{{item.supplier_contact_data[0].phone}}</div>
+              <div>
+                {{item.mainclass}}
+                <em
+                  v-if="item.materials_class_name"
+                >({{item.materials_class_name}})</em>
+              </div>
+              <div
+                v-if="item.supplier_contact_data.length>0"
+              >{{item.supplier_contact_data[0].contacts}}:{{item.supplier_contact_data[0].phone}}</div>
             </div>
             <!-- <div class="list_content_right">101</div> -->
           </div>
@@ -80,10 +87,10 @@ export default {
     },
     addSupplier() {
       // console.log(this.data.id || 0);
-      this.$router.push({ path: `/addSupplier?id=${this.data.id || 0}` });
+      this.$router.push({ path: `/addSupplier?id=${this.data.id || 0}&TL=0` });
     },
     listDeital(item) {
-      this.$router.push({ path: `/listDeital?id=${item.id}` });
+      this.$router.push({ path: `/listDeital?id=${item.id}&TL=1` });
     },
     async init() {
       let res = await getSupplierList({

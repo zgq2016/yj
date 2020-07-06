@@ -4,7 +4,7 @@
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>生产</el-breadcrumb-item>
-      <el-breadcrumb-item>生产排期</el-breadcrumb-item>
+      <el-breadcrumb-item>裁剪</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
@@ -160,19 +160,22 @@ export default {
       console.log(row);
       console.log(index);
 
+      // this.$router.push({
+      //   path: "/productionStyle?id=" + row.style_id + "&activeNames=4"
+      // });
       this.$router.push({
-        path: "/productionStyle?id=" + row.style_id + "&activeNames=4"
+        path: `/productionStyle?id=${row.style_id}&activeNames=${4}&TL=${3}`
       });
     },
     onSubmit() {
       console.log("submit!");
-      this.init(this.formInline)
+      this.init(this.formInline);
     }, // 获取customer_id
     handleCustomer_id(e) {
       this.customer_id = e;
     },
-    async handleUser_id(e){
-      this.formInline.user_id = e
+    async handleUser_id(e) {
+      this.formInline.user_id = e;
     },
     async getYear() {
       let res = await getYearList();
@@ -204,7 +207,7 @@ export default {
       // console.log(data);
       this.wests = data;
     },
-  
+
     async init(obj) {
       let res = await getProduceOrderList({
         page: this.page,

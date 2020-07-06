@@ -4,6 +4,7 @@
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>档案库</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===1" :to="{ path: '/productionOrders' }">生产下单</el-breadcrumb-item>
       <el-breadcrumb-item>款式档案</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main">
@@ -53,7 +54,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button  type="primary" @click="onSubmit">查询</el-button>
+          <el-button type="primary" @click="onSubmit">查询</el-button>
         </el-form-item>
       </el-form>
       <div class="table">
@@ -80,8 +81,8 @@
           <el-table-column align="center" property="year" label="年份"></el-table-column>
           <el-table-column align="center" property="season" label="季节"></el-table-column>
           <el-table-column align="center" property="stylist" label="设计师"></el-table-column>
-          <el-table-column align="center" width="70"  label="操作">
-            <template  slot-scope="scope">
+          <el-table-column align="center" width="70" label="操作">
+            <template slot-scope="scope">
               <el-button
                 size="mini"
                 style="float:left;"
@@ -129,12 +130,13 @@ import {
 export default {
   data() {
     return {
+      TL: "",
       formInline: {
-        styleno:'',
-        year:'',
-        season:'',
-        user_id:'',
-        style_type:'',
+        styleno: "",
+        year: "",
+        season: "",
+        user_id: "",
+        style_type: ""
       },
       years: [],
       seasons: [],
@@ -160,19 +162,22 @@ export default {
     handleEdit(index, row) {
       // console.log(row);
       // console.log(index);
-
-      this.$router.push({
-        path:
-          "/development?id=" + row.id
-      });
+      if (this.TL === 1) {
+        this.$router.push({
+          // path: "/development?id=" + row.id
+          path: `/development?id=${row.id}&TL=${20}`
+        });
+      } else {
+        this.$router.push({
+          path: `/development?id=${row.id}&TL=${21}`
+        });
+      }
     },
     async onSubmit() {
-    
-      this.init(this.formInline)
-    }, 
-    handleUser_id(v){
-      this.formInline.user_id = e
-      
+      this.init(this.formInline);
+    },
+    handleUser_id(v) {
+      this.formInline.user_id = e;
     },
     async getYear() {
       let res = await getYearList();
@@ -219,6 +224,7 @@ export default {
           }
         });
       });
+      this.TL = this.$route.query.TL - 0;
     },
     handleSizeChange(val) {
       // console.log(val)
@@ -278,6 +284,11 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
+  },
+  watch: {
+    $route() {
+      this.init();
+    }
   }
 };
 </script>
