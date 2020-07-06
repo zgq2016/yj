@@ -84,8 +84,14 @@
         </div>
         <div class="form"></div>
       </div>
-      <el-button round style="margin:30px 300px" @click="handleClick">保存</el-button>
-      <el-button round style="margin:30px 300px" @click="handleClickEdit">保存并新增设计备注</el-button>
+      <div style="margin:150px 300px; height:50px;">
+        <el-button round style="float:left" @click="handleClick">保存</el-button>
+        <el-button
+          round
+          style="float:left"
+          @click="handleClickEdit"
+        >保存并编辑设计版单</el-button>
+      </div>
     </div>
     <!-- 有数据 -->
     <div class="main" v-if="this.$route.query.oldId">
