@@ -11,7 +11,7 @@
       <el-breadcrumb-item v-if="TL===4" :to="{ path: '/shipment' }">生产出货</el-breadcrumb-item>
       <el-breadcrumb-item>生产档案</el-breadcrumb-item>
     </el-breadcrumb>
-    <div class="main">
+    <div class="main" v-if="!home">
       <div class="info">
         <div class="basicsInfo">
           <div class="basicsInfoName">款式基础信息</div>
@@ -87,7 +87,7 @@
       </el-steps>
       <!-- 信息部分 -->
       <el-collapse v-model="activeNames" @change="handleChange">
-        <el-collapse-item title="下单信息" name="1">
+        <el-collapse-item v-if="showhide1" title="下单信息" name="1">
           <div class="orderInformation">
             <!-- <div style="margin-left:50px;">请先增加批次</div> -->
             <!-- 没数据或者修改 -->
@@ -274,7 +274,7 @@
               </el-form>
             </div>
             <!-- 确定订单和新增颜色 -->
-            <el-form v-if="show1" :ref="form1" :v-if="lot.length == 0" style="width:100%;">
+            <el-form v-if="show1" :ref="form1" style="width:100%;">
               <el-form-item style="width:300px; float:left;" label="增加颜色">
                 <el-select
                   v-model="color"
@@ -322,7 +322,7 @@
             </div>
           </div>
         </el-collapse-item>
-        <el-collapse-item title="采购" name="2">
+        <el-collapse-item v-if="showhide2" title="采购" name="2">
           <div class="purchase" v-if="king1">
             <div class="color">
               <span
@@ -551,7 +551,7 @@
             <el-button size="mini" @click="handleMaterialsCard" round>+ 增加物料</el-button>
           </div>
         </el-collapse-item>
-        <el-collapse-item title="生产排单" name="3">
+        <el-collapse-item v-if="showhide3" title="生产排单" name="3">
           <!-- 无数据 -->
           <div v-if="!vb" class="productionArranged">
             <el-form
@@ -679,7 +679,7 @@
             </div>
           </div>
         </el-collapse-item>
-        <el-collapse-item title="裁剪" name="4">
+        <el-collapse-item v-if="showhide4" title="裁剪" name="4">
           <div class="tailor">
             <div>
               <!-- <div v-if="tailorList.category>0"> -->
@@ -773,7 +773,7 @@
             <!-- </div> -->
           </div>
         </el-collapse-item>
-        <el-collapse-item title="出货" name="5">
+        <el-collapse-item v-if="showhide5" title="出货" name="5">
           <div class="shipment">
             <div class="shipmentList">
               <!-- 无数据 -->
@@ -927,6 +927,10 @@
         </el-collapse-item>
       </el-collapse>
     </div>
+    <div v-if="home">
+      请增加批次！
+
+    </div>
 
     <el-dialog title="新增物料" :visible.sync="centerDialogVisible1" width="30%" center class="dialog">
       <div>
@@ -1042,6 +1046,7 @@ import {
 export default {
   data() {
     return {
+      home:false,
       // 下单信息验证
       rules: {
         companyname: [
@@ -1326,7 +1331,12 @@ export default {
       ascertain2: false,
       ascertain3: false,
       ascertain4: false,
-      TL: ""
+      TL: "",
+      showhide1: true,
+      showhide2: true,
+      showhide3: true,
+      showhide4: true,
+      showhide5: true
     };
   },
   methods: {
@@ -1351,17 +1361,7 @@ export default {
       this.ac = v;
     },
     beforeAvatarUpload(file) {
-      console.log(file);
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error("上传图片只能是 JPG 格式!");
-      }
-      if (!isLt2M) {
-        this.$message.error("上传图片大小不能超过 2MB!");
-      }
-      return isJPG && isLt2M;
+      return this.$elUploadBeforeUpload(file);
     },
     // 下单信息删除按钮
     omit(index) {
@@ -1408,6 +1408,12 @@ export default {
               this.quantity.push(this.quantity.shift());
               this.ratio.push(this.ratio.shift());
             }
+          }
+          if (this.form_i.color == "") {
+            this.showhide2 = false;
+            this.showhide3 = false;
+            this.showhide4 = false;
+            this.showhide5 = false;
           }
           this.$message({
             type: "success",
@@ -1666,6 +1672,11 @@ export default {
             this.regionVB = false;
             this.tailorVB = false;
             this.shipmentVB = false;
+            this.showhide1 = false;
+            this.showhide2 = false;
+            this.showhide3 = false;
+            this.showhide4 = false;
+            this.showhide5 = false;
           }
           this.$message({
             type: "success",
@@ -1837,6 +1848,7 @@ export default {
         quantity: []
       };
       if (this.ob.length != 0) {
+        this.showhide1 = true;
         let res = await produceOrderInfo({
           style_id: Number(id),
           produce_no: this.ob[this.active].produce_no
@@ -1846,18 +1858,21 @@ export default {
         // 显示批次下单信息
         // console.log(res);
         let res2 = await getWestList();
-
         if (data1.length == 0) {
           // console.log(data1.length);
           this.form = [];
-          this.show1 = true;
           this.ascertain1 = false;
           this.tailorVB = false;
           this.shipmentVB = false;
+          this.showhide2 = false;
+          this.showhide3 = false;
+          this.show1 = true;
         } else {
           this.tailorVB = true;
           this.shipmentVB = true;
           this.ascertain1 = true;
+          this.showhide2 = true;
+          this.showhide3 = true;
           // this.show1 = true;
           data1.map((v, i) => {
             let obj_list = {};
@@ -1984,8 +1999,12 @@ export default {
                 }
               }
             });
+          } else {
+            this.show1 = true;
           }
         }
+      } else {
+        this.showhide1 = false;
       }
       this.handleSearchInput();
     },
@@ -2081,20 +2100,7 @@ export default {
                 this.form = [];
                 this.quantity = [[], [], [], [], [], [], [], [], [], []];
                 this.ratio = [[], [], [], [], [], [], [], [], [], []];
-                this.size_name = [
-                  [],
-                  [],
-                  [],
-                  [],
-                  [],
-                  [],
-                  [],
-                  [],
-                  [],
-                  [],
-                  [],
-                  []
-                ];
+                this.size_name = [[], [], [], [], [], [], [], [], [], []];
                 this.init();
                 this.int_i(); //采购初始化
 
@@ -2451,6 +2457,15 @@ export default {
         }
         this.region = "";
         // console.log(this.formInline);
+        this.formInline.map((v, i) => {
+          if (v.mode[0].id == 1) {
+            this.formInline.map((q, w) => {
+              q.mode[0].id = 1;
+              q.mode[0].name = "包工包料";
+            });
+            return;
+          }
+        });
         this.formg.child = this.formInline;
       }
     },
@@ -2547,6 +2562,10 @@ export default {
             console.log(res);
           }
           this.formInline.splice(index, 1);
+          if (this.formInline.length == 0) {
+            this.showhide4 = false;
+            this.showhide5 = false;
+          }
           this.$message({
             type: "success",
             message: "删除成功!"
@@ -2582,15 +2601,24 @@ export default {
         });
         // console.log(res2.data.data);
         let data2 = res2.data.data;
+        // console.log(data2);
+
         if (data2.length > 0) {
           this.vb = true;
           this.factory_bl = true;
           this.ascertain2 = true;
+          this.showhide4 = true;
         } else {
           this.ascertain2 = false;
+          this.showhide4 = false;
         }
         this.mode = [];
         data2.map((v, i) => {
+          // 包工包料 ==> 隐藏裁剪
+          if (v.mode == 1) {
+            this.showhide5 = true;
+            this.showhide4 = false;
+          }
           this.modes.map((j, k) => {
             if (v.mode == j.id) {
               this.mode.push(j.name);
@@ -2669,7 +2697,7 @@ export default {
           id: 0
         });
       }
-      console.log(this.tailorList);
+      // console.log(this.tailorList);
     },
     // 床次input输入计算
     async inputNumber(index, index1) {
@@ -2808,7 +2836,10 @@ export default {
             let res = await produceCutOrderDel({
               id: tailorDel_id
             });
-            console.log(res);
+            // console.log(res);
+          }
+          if (this.tailorList.length == 0) {
+            this.showhide5 = false;
           }
           this.$message({
             type: "success",
@@ -2853,8 +2884,11 @@ export default {
             this.vb1 = true;
             this.edit1 = true;
             this.ascertain3 = true;
+            this.showhide5 = true;
           } else {
+            this.showhide5 = false;
             this.ascertain3 = false;
+            this.tailoradd();
           }
           // console.log(data1);
 
@@ -3319,6 +3353,7 @@ export default {
             this.edit2 = true;
           } else {
             this.ascertain4 = false;
+            this.goDownAdd();
           }
           // console.log(this.complete);
         }
@@ -3327,6 +3362,7 @@ export default {
   },
   async mounted() {
     let { id } = this.$route.query;
+    let pdn = this.$route.query.produce_no;
     let res = await getStyle({ id });
     this.obj = res.data.data;
     // 批次
@@ -3334,13 +3370,22 @@ export default {
     let { data } = res1.data;
 
     // console.log(data);
-    this.ob = [];
-    data.map((v, i) => {
-      this.ob.push({
-        num: i,
-        produce_no: v.produce_no
+    if (data.length > 0) {
+      this.ob = [];
+      data.map((v, i) => {
+        this.ob.push({
+          num: i,
+          produce_no: v.produce_no
+        });
       });
-    });
+      this.ob.map((v, i) => {
+        if (pdn == v.produce_no) {
+          this.active = i;
+        }
+      });
+    } else {
+      this.home = true
+    }
     // console.log(this.obj);
     // console.log(this.obj.style_materials_color_data)
     // this.activities_endlong = res.data.data.style_log;

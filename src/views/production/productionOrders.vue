@@ -13,15 +13,15 @@
         class="demo-form-inline"
         style="position: relative;"
       >
-        <el-form-item label="款号">
+        <el-form-item label="款号:">
           <el-input v-model="formInline.styleno" placeholder="款号"></el-input>
         </el-form-item>
-        <el-form-item label="年份">
+        <el-form-item label="年份:">
           <el-select v-model="formInline.year" placeholder="年份" style="width:120px">
             <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="季节">
+        <el-form-item label="季节:">
           <el-select v-model="formInline.season" placeholder="季节" style="width:120px">
             <el-option
               v-for="item in seasons"
@@ -31,7 +31,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="设计师">
+        <el-form-item label="设计师:">
           <el-select
             v-model="stylist"
             placeholder="设计师"
@@ -41,13 +41,24 @@
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="类别">
+        <el-form-item label="类别:">
           <el-select v-model="formInline.style_type" placeholder="类别" style="width:120px">
             <el-option
               v-for="item in categorys"
               :key="item.id"
               :label="item.style_type"
               :value="item.style_type"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="状态:">
+          <el-select v-model="formInline.state" placeholder="状态" style="width:120px">
+            <el-option
+              v-for="item in states"
+              :key="item.id"
+              :label="item.v"
+              :value="item.id"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -74,9 +85,9 @@
               <img :src="scope.row.style_pic_url" class="img" alt />
             </template>
           </el-table-column>
-          <el-table-column align="center" property="produce_no" label="批号"></el-table-column>
-          <el-table-column align="center" property="stylename" label="名称" width="90"></el-table-column>
           <el-table-column align="center" property="styleno" label="款号"></el-table-column>
+          <el-table-column align="center" property="stylename" label="名称" width="90"></el-table-column>
+          <el-table-column align="center" property="produce_no" label="批号"></el-table-column>
           <el-table-column align="center" property="style_color" label="颜色" width="90"></el-table-column>
           <el-table-column align="center" property="style_type" label="品类" width="90"></el-table-column>
           <el-table-column align="center" property="year" label="年份" width="90"></el-table-column>
@@ -131,7 +142,7 @@ import {
   getWestList,
   getProduceOrderList
 } from "@/api/researchDevelopment";
-import { produceAdd } from "@/api/production";
+import { produceAdd,getProduceList } from "@/api/production";
 export default {
   data() {
     return {
@@ -140,7 +151,8 @@ export default {
         year: "",
         season: "",
         user_id: "",
-        style_type: ""
+        style_type: "",
+        state:""
       },
       years: [],
       seasons: [],
@@ -189,9 +201,7 @@ export default {
       // console.log(row);
       // console.log(index);
       this.$router.push({
-        path: `/productionStyle?id=${row.style_id}&activeNames=${
-          row.style_id
-        }&TL=${0}`
+        path: `/productionStyle?id=${row.style_id}&activeNames=1&TL=${0}&produce_no=${row.produce_no}`
       });
     },
     // 下单
@@ -200,9 +210,7 @@ export default {
       // console.log(res);
 
       this.$router.push({
-        path: `/productionStyle?id=${row.style_id}&activeNames=${
-          row.style_id
-        }&TL=${0}`
+        path: `/productionStyle?id=${row.style_id}&activeNames=1&TL=${0}&produce_no=${row.produce_no}`
       });
     },
     // 查询
@@ -248,12 +256,12 @@ export default {
       this.wests = data;
     },
     async init(obj) {
-      let res = await getProduceOrderList({
+      let res = await getProduceList({
         page: this.page,
         page_size: this.page_size,
         ...obj
       });
-      // console.log(res);
+      console.log(res);
       this.count = res.data.count;
       let { data } = res.data;
       this.tableData = data;

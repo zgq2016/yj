@@ -223,3 +223,12 @@ export const produceCompleteEdit = data => {
       data: data
     });
   };
+// 显示生产下单批次list接口
+export const getProduceList = data => {
+    return axios({
+      url: "?g=get_produce_list",
+      method: "post",
+      data: data
+    });
+  };
+
