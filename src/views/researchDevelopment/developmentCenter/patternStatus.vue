@@ -8,19 +8,16 @@
           <el-upload
             class="upload-demo"
             action="https://yj.ppp-pay.top/uploadpic.php"
-            :on-preview="handlePictureCardPreview"
             :on-remove="handleRemove"
+            :before-remove="beforeRemove"
             :on-success="handleSuccess"
-            :file-list="img_list"
-            list-type="picture"
-            :before-upload="beforeUpload"
+            multiple
+            :limit="1"
+            :file-list="fileList"
+            :on-exceed="handleExceed"
           >
             <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
           </el-upload>
-          <el-dialog :visible.sync="dialogVisible">
-            <img width="100%" :src="dialogImageUrl" alt />
-          </el-dialog>
         </div>
       </div>
       <!-- 放码文件 -->
@@ -41,10 +38,6 @@
             </div>
           </el-upload>
         </div>
-      </div>-->
-      <!-- 尺码表 -->
-      <!-- <div class="sizeSpecification">
-        <div class="sizeSpecificationName">尺码表</div>
       </div>-->
       <!-- 物料用量 -->
       <div class="materialUsage">
@@ -122,10 +115,12 @@
         <div class="delList">
           <div class="list" v-for="(item, index) in DelList" :key="index">
             <div class="list_name">
-              <div class="img">
+              <!-- <div class="img">
                 <img :src="item.picurl" alt />
-              </div>
+              </div>-->
               <div class="name">{{item.uid}}</div>
+              <div style="margin-right:5px">{{item.name}}</div>
+              <div>提交于: {{item.del_time}}</div>
             </div>
             <div class="restore" @click="Resume(item)">还原</div>
           </div>
@@ -148,6 +143,7 @@ import {
 export default {
   data() {
     return {
+      fileList: [],
       dosageCargo: "",
 
       obj: {},
@@ -163,65 +159,20 @@ export default {
     };
   },
   methods: {
-    modification() {
-      this.antistopActive = false;
-    },
-    async affirm() {
-      this.MaterialsList.map((v, i) => {
-        if (v.maxusage === "") {
-          v.maxusage = 0;
-        }
-        if (v.loss === "") {
-          v.loss = 0;
-        }
-        // v.maxusage == "" ? 0 : v.maxusage;
-        // v.loss == "" ? 0 : v.loss;
-        delete v.materials_data;
-        delete v.materials_id;
-        delete v.style_id;
-      });
-      let res = await styleMaterialsUseEdit({
-        style_materials_data: this.MaterialsList
-      });
-      console.log(res);
+    async handleRemove(file, fileList) {
+      let id = file.id;
+      let res = await stylePaperpatternDel({ id });
       this.init();
-      this.antistopActive = true;
     },
-    async handleInputMaxusage(e, index) {
-      // if (e.maxusage === "") {
-      //   e.maxusage = "0";
-      // }
-      // if (e.maxusage !== "0") {
-      //   e.maxusage = e.maxusage.replace(/[^0-9-]+/, "");
-      // }
-      this.MaterialsList.map((v, i) => {
-        if (index === i) {
-          v.maxusage = e.maxusage.replace(/[^0-9-]+/, "");
-        }
-      });
-      // let res = await styleMaterialsUseEdit({
-      //   id: e.id,
-      //   maxusage: e.maxusage
-      // });
-      // this.MaterialsInit();
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`);
     },
-    async handleInputLoss(e, index) {
-      // if (e.loss === "") {
-      //   e.loss = "0";
-      // }
-      // if (e.loss !== "0") {
-      //   e.loss = e.loss.replace(/[^0-9-]+/, "");
-      // }
-      this.MaterialsList.map((v, i) => {
-        if (index === i) {
-          v.loss = e.loss.replace(/[^0-9-]+/, "");
-        }
-      });
-      // let res = await styleMaterialsUseEdit({
-      //   id: e.id,
-      //   loss: e.loss
-      // });
-      // this.MaterialsInit();
+    handleExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择 1 个文件，本次选择了 ${
+          files.length
+        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
+      );
     },
     // 成功
     async handleSuccess(response, file, fileList) {
@@ -234,27 +185,47 @@ export default {
       });
       this.init();
     },
-    // 移除
-    async handleRemove(file, fileList) {
-      let id = file.id;
-      let res = await stylePaperpatternDel({ id });
+    modification() {
+      this.antistopActive = false;
+    },
+    async affirm() {
+      this.MaterialsList.map((v, i) => {
+        if (v.maxusage === "") {
+          v.maxusage = 0;
+        }
+        if (v.loss === "") {
+          v.loss = 0;
+        }
+        delete v.materials_data;
+        delete v.materials_id;
+        delete v.style_id;
+      });
+      let res = await styleMaterialsUseEdit({
+        style_materials_data: this.MaterialsList
+      });
       this.init();
-      // this.PaperpatternDelInit();
+      this.antistopActive = true;
     },
-    // 预览
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
+    async handleInputMaxusage(e, index) {
+      this.MaterialsList.map((v, i) => {
+        if (index === i) {
+          v.maxusage = e.maxusage.replace(/[^0-9-]+/, "");
+        }
+      });
     },
-    beforeUpload(file) {
-      return this.$elUploadBeforeUpload(file);
+    async handleInputLoss(e, index) {
+      this.MaterialsList.map((v, i) => {
+        if (index === i) {
+          v.loss = e.loss.replace(/[^0-9-]+/, "");
+        }
+      });
     },
     async init() {
       let { id } = this.$route.query;
       let res = await getStyle({ id });
       this.obj = res.data.data;
       let res1 = await stylePaperpatternList({ style_id: this.obj.id });
-      this.img_list = res1.data.data.map(v => {
+      this.fileList = res1.data.data.map(v => {
         return { url: v.picurl, id: v.id, name: v.uid };
       });
       this.PaperpatternDelInit();
@@ -262,6 +233,7 @@ export default {
     },
     async PaperpatternDelInit() {
       let res = await stylePaperpatternDelList({ style_id: this.obj.id });
+      console.log(res);
       this.DelList = res.data.data;
     },
     async MaterialsInit() {
@@ -275,7 +247,6 @@ export default {
         }
       });
       this.MaterialsList = res.data.data;
-      console.log(this.MaterialsList);
     },
     async Resume(e) {
       let res = await stylePaperpatternResume({ id: e.id });
@@ -389,25 +360,17 @@ export default {
         padding: 10px 0;
         .list {
           margin: 10px 0;
-          width: 400px;
-          height: 90px;
-          display: flex;
+          width: 500px;
           border: 1px solid #000;
+          display: flex;
+          justify-content: space-between;
           .list_name {
+            height: 50px;
             display: flex;
-            flex: 1;
-            .img {
-              width: 90px;
-              padding: 10px;
-              img {
-                width: 70px;
-                height: 70px;
-              }
-            }
+            align-items: center;
             .name {
               width: 250px;
               height: 16px;
-              margin-top: 35px;
               display: -webkit-box;
               overflow: hidden;
               white-space: normal !important;
