@@ -8,7 +8,19 @@
       <el-breadcrumb-item v-if="TL===1" :to="{ path: '/purchase' }">采购列表</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===2" :to="{ path: '/productionScheduling' }">生产排期</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===3" :to="{ path: '/tailor' }">裁剪</el-breadcrumb-item>
+      <!-- /
+/
+      款式详细-->
       <el-breadcrumb-item v-if="TL===4" :to="{ path: '/shipment' }">生产出货</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===30" :to="{ path: '/itemDesign' }">设计项目</el-breadcrumb-item>
+      <el-breadcrumb-item
+        v-if="TL===30"
+        :to="{ path: `/designCheck?id=${this.$route.query.project_id}` }"
+      >项目详细</el-breadcrumb-item>
+      <el-breadcrumb-item
+        v-if="TL===30"
+        :to="{ path: `/development?id=${this.$route.query.id}&TL=30` }"
+      >款式详细</el-breadcrumb-item>
       <el-breadcrumb-item>生产档案</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main" v-if="!home">

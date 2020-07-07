@@ -4,7 +4,11 @@
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>研发部</el-breadcrumb-item>
-      <el-breadcrumb-item>版料采购</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/itemDesign' }">设计项目</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: `/designCheck?id=${this.$route.query.project_id}` }">项目详细</el-breadcrumb-item>
+      <el-breadcrumb-item
+        :to="{ path: `/materialPurchasing?id=${this.$route.query.style_id}&TL=30&project_id=${this.$route.query.project_id}` }"
+      >款式详细</el-breadcrumb-item>
       <el-breadcrumb-item>版料采购单</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main">
@@ -226,9 +230,7 @@ export default {
       ],
       // 表单规则
       rules: {
-        dosage: [
-          { required: true, message: "请输入用量", trigger: "blur" }
-        ],
+        dosage: [{ required: true, message: "请输入用量", trigger: "blur" }],
         amountPurchased: [
           { required: true, message: "请输入采购量", trigger: "blur" }
         ],
@@ -241,11 +243,14 @@ export default {
         ],
         payment: [{ required: true, message: "请输入元素", trigger: "blur" }],
         finishTime: [
-          { type:"date",required: true, message: "请输入时间", trigger: "blur" }
+          {
+            type: "date",
+            required: true,
+            message: "请输入时间",
+            trigger: "blur"
+          }
         ],
-        deposit: [
-          { required: true, message: "请输入定金", trigger: "blur" }
-        ],
+        deposit: [{ required: true, message: "请输入定金", trigger: "blur" }],
         fullPayout: [
           { required: true, message: "请输入全部金额", trigger: "blur" }
         ],
@@ -331,17 +336,7 @@ export default {
       // console.log(this.picurl);
     },
     beforeAvatarUpload(file) {
-      // console.log(file)
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error("上传图片只能是 JPG 格式!");
-      }
-      if (!isLt2M) {
-        this.$message.error("上传图片大小不能超过 2MB!");
-      }
-      return isJPG && isLt2M;
+      return this.$elUploadBeforeUpload(file);
     },
     async init() {
       // 物料

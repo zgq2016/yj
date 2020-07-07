@@ -324,17 +324,7 @@ export default {
       });
     },
     beforeAvatarUpload(file) {
-      console.log(file);
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error("上传图片只能是 JPG 格式!");
-      }
-      if (!isLt2M) {
-        this.$message.error("上传图片大小不能超过 2MB!");
-      }
-      return isJPG && isLt2M;
+      return this.$elUploadBeforeUpload(file);
     },
     handleAvatarSuccess(res, file) {
       this.form3.imageUrl = res.data.pic_file_url;
@@ -387,7 +377,9 @@ export default {
       this.$router.push({
         path: `/PanelPurchase?materials_id=${
           e.materials_id
-        }&tabName=${"版料采购"}&id=${e.id}&style_id=${e.style_id}`
+        }&tabName=${"版料采购"}&id=${e.id}&style_id=${e.style_id}&project_id=${
+          this.$route.query.project_id
+        }`
       });
     },
     // 更新状态

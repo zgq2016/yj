@@ -6,12 +6,11 @@
       <el-breadcrumb-item>研发部</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===0" :to="{ path: '/itemDesign' }">设计项目</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===0" :to="{ path: `/designCheck?id=${obj.project_id}` }">项目详细</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===30" :to="{ path: '/itemDesign' }">设计项目</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===30" :to="{ path: `/designCheck?id=${obj.project_id}` }">项目详细</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===1" :to="{ path: `/materialPurchase` }">版料采购</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===2" :to="{ path: `/pattern` }">纸样</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===3" :to="{ path: `/platemaking` }">制版</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="TL===20" :to="{ path: `/productionOrders` }">生产下单</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="TL===20" :to="{ path: `/designFile?TL=1` }">款式档案</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="TL===21" :to="{ path: `/designFile` }">款式档案</el-breadcrumb-item>
       <el-breadcrumb-item>款式详细</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main">
@@ -72,7 +71,9 @@ export default {
     handleClick(tab, event) {
       let { id } = this.$route.query;
       // this.activeName = tab.name;
-      this.$router.push({ path: `${tab.name}?id=${id}` });
+      this.$router.push({
+        path: `${tab.name}?id=${id}&project_id=${this.obj.project_id}&TL=30`
+      });
     },
     editTheStyle() {
       let { id } = this.$route.query;

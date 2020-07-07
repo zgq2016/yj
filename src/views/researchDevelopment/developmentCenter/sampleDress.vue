@@ -19,6 +19,7 @@
         :on-remove="handleRemove"
         :on-success="handleSuccess"
         :file-list="img_list"
+        :before-upload="beforeUpload"
       >
         <i class="el-icon-plus">上传样衣图片</i>
       </el-upload>
@@ -44,6 +45,9 @@ export default {
     };
   },
   methods: {
+    beforeUpload(file) {
+      return this.$elUploadBeforeUpload(file);
+    },
     async handleSuccess(response, file, fileList) {
       let style_id = this.$route.query.id - 0;
       let { pic_file_url } = response.data;
