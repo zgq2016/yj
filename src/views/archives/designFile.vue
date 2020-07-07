@@ -127,6 +127,9 @@ import {
   getStyleList,
   produceOrderCreateAdd
 } from "@/api/researchDevelopment";
+import{
+  produceLotAdd
+}from "@/api/production"
 export default {
   data() {
     return {
@@ -252,6 +255,7 @@ export default {
     },
     // 确定下单
     async OrderCreate() {
+      
       this.$confirm("提交已选下单, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -262,7 +266,14 @@ export default {
           let res = await produceOrderCreateAdd({
             style_id_data: this.ids
           });
-          // console.log(res);
+          let sid = []
+          this.ids.map((v,i) => {
+            sid.push({style_id:v.id})
+          })
+          let res1 = await produceLotAdd({
+            style_id_data:sid
+          })
+          console.log(res1);
           this.$router.push({ path: "/productionOrders" });
           this.$message({
             type: "success",

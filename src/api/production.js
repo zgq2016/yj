@@ -7,6 +7,14 @@ export const produceAdd = data => {
       data: data
     });
   };
+// 新增生产批次(数组格式)
+export const produceLotAdd = data => {
+    return axios({
+      url: "?g=produce_lotadd",
+      method: "post",
+      data: data
+    });
+  };
 // 删除生产批次
 export const produceDel = data => {
     return axios({
