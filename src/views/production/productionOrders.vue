@@ -74,12 +74,13 @@
               <img :src="scope.row.style_pic_url" class="img" alt />
             </template>
           </el-table-column>
-          <el-table-column align="center" property="stylename" label="名称"></el-table-column>
+          <el-table-column align="center" property="produce_no" label="批号"></el-table-column>
+          <el-table-column align="center" property="stylename" label="名称" width="90"></el-table-column>
           <el-table-column align="center" property="styleno" label="款号"></el-table-column>
-          <el-table-column align="center" property="style_color" label="颜色"></el-table-column>
-          <el-table-column align="center" property="style_type" label="品类"></el-table-column>
-          <el-table-column align="center" property="year" label="年份"></el-table-column>
-          <el-table-column align="center" property="season" label="季节"></el-table-column>
+          <el-table-column align="center" property="style_color" label="颜色" width="90"></el-table-column>
+          <el-table-column align="center" property="style_type" label="品类" width="90"></el-table-column>
+          <el-table-column align="center" property="year" label="年份" width="90"></el-table-column>
+          <el-table-column align="center" property="season" label="季节" width="90"></el-table-column>
           <el-table-column align="center" property="stylist" label="设计师"></el-table-column>
           <el-table-column width="80" align="center" property="state" label="状态"></el-table-column>
           <el-table-column align="center" width="80" label="操作">

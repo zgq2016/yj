@@ -1668,7 +1668,11 @@ export default {
           this.ratio = [[], [], [], [], [], [], [], [], [], []];
           this.size_name = [[], [], [], [], [], [], [], [], [], [], [], []];
           this.init();
-          console.log(this.ob);
+          this.int_i();
+          this.init_r();
+          this.init_t();
+          this.init_c(); //出
+          // console.log(this.ob);
           if (this.ob.length == 0) {
             this.show1 = false;
             this.regionVB = false;
