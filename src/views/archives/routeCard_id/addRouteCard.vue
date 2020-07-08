@@ -30,8 +30,8 @@
           </el-col>
           <el-col :span="4">
             <router-link
-              v-if="TL===10"
-              :to="`/addSupplier?id=0&id_NO=${this.$route.query.id_NO}&project_id='${this.$route.query.project_id}&TL=10`"
+              v-if="this.$route.query.TL-0===10"
+              :to="`/addSupplier?id=0&id_NO=${this.$route.query.id_NO}&project_id=${this.$route.query.project_id}&TL=10`"
             >新增供应商</router-link>
             <router-link v-else :to="`/addSupplier?id=0&TL=20`">新增供应商</router-link>
           </el-col>

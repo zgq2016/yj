@@ -92,7 +92,14 @@
     <div class="dataList">
       <div class="list" v-for="(item, index) in data" :key="index">
         <router-link :to="`/designCheck?id=${item.id}`">
-          <img :src="item.picurl" alt />
+          <div v-if="item.picurl!==''">
+            <img :src="item.picurl" alt />
+          </div>
+          <div v-if="item.picurl===''">
+            <img v-if="item.projecttype==='意向订单'" src="../../assets/意向.jpg" alt />
+            <img v-if="item.projecttype==='阶段工作'" src="../../assets/阶段.jpg" alt />
+            <img v-if="item.projecttype==='企划系列'" src="../../assets/系列.jpg" alt />
+          </div>
         </router-link>
         <div class="information">
           <div class="projecttype">{{item.projecttype}}</div>

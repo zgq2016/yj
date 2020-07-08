@@ -5,30 +5,18 @@
       <!-- 商标/名片 -->
       <div class="upload_card">
         <div class="upload_name">商标/名片</div>
-        <el-upload
-          class="avatar-uploader"
-          action="https://yj.ppp-pay.top/uploadpic.php"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccessCard"
-          :before-upload="beforeAvatarUpload"
-        >
-          <img v-if="obj.cardpicurl" :src="obj.cardpicurl" class="avatar" />
+        <div class="uploads" @click="handle_cardpicurl">
+          <img v-if="obj.cardpicurl" :src="obj.cardpicurl" alt />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
+        </div>
       </div>
       <!-- 门面照 -->
       <div class="upload_panels">
         <div class="upload_name">门面照</div>
-        <el-upload
-          class="avatar-uploader"
-          action="https://yj.ppp-pay.top/uploadpic.php"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccessPanels"
-          :before-upload="beforeAvatarUpload"
-        >
-          <img v-if="obj.compicurl" :src="obj.compicurl" class="avatar" />
+        <div class="uploads" @click="handle_compicurl">
+          <img v-if="obj.compicurl" :src="obj.compicurl" alt />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
+        </div>
       </div>
     </div>
     <!-- form -->
@@ -155,6 +143,103 @@
         </el-form-item>
       </el-form>
     </div>
+    <el-dialog
+      title="上传图片"
+      :visible.sync="centerDialogVisible"
+      width="40%"
+      center
+      class="dialog"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
+      <div style="display:flex;">
+        <div class="info-item">
+          <div class="upload">
+            <input
+              type="file"
+              id="uploads"
+              :value="imgFile"
+              accept="image/png, image/jpeg, image/gif, image/jpg"
+              @change="uploadImg($event, 1)"
+            />
+            选择文件
+          </div>
+          <div class="line">
+            <div class="cropper-content">
+              <div class="cropper">
+                <vueCropper
+                  ref="cropper"
+                  :img="option.img"
+                  :outputSize="option.size"
+                  :outputType="option.outputType"
+                  :info="true"
+                  :full="option.full"
+                  :canMove="option.canMove"
+                  :canMoveBox="option.canMoveBox"
+                  :original="option.original"
+                  :autoCrop="option.autoCrop"
+                  :autoCropWidth="option.autoCropWidth"
+                  :autoCropHeight="option.autoCropHeight"
+                  :fixedBox="option.fixedBox"
+                  @realTime="realTime"
+                  @imgLoad="imgLoad"
+                ></vueCropper>
+              </div>
+              <div class="show-preview">
+                <div class="preview">
+                  <img :src="previews.url" :style="previews.img" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <input
+            style="width:30px;font-size:20px;margin:0 10px;"
+            type="button"
+            class="oper"
+            value="+"
+            title="放大"
+            @click="changeScale(1)"
+          />
+          <input
+            style="width:30px;font-size:20px;margin:0 10px;"
+            type="button"
+            class="oper"
+            value="-"
+            title="缩小"
+            @click="changeScale(-1)"
+          />
+          <input
+            style="width:30px;font-size:20px;margin:0 10px;"
+            type="button"
+            class="oper"
+            value="↺"
+            title="左旋转"
+            @click="rotateLeft"
+          />
+          <input
+            style="width:30px;font-size:20px;margin:0 10px;"
+            type="button"
+            class="oper"
+            value="↻"
+            title="右旋转"
+            @click="rotateRight"
+          />
+          <input
+            style="width:30px;font-size:20px;margin:0 10px;"
+            type="button"
+            class="oper"
+            value="↓"
+            title="下载"
+            @click="down('blob')"
+          />
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="finish('blob')">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -167,9 +252,38 @@ import {
   getMaterialsClass,
   getMaterialsClassInfo
 } from "@/api/archives";
+
+import { VueCropper } from "vue-cropper";
+import { Api } from "@/js/api.js"; //接口url配置文件
+
 export default {
+  components: {
+    VueCropper
+  },
   data() {
     return {
+      headImg: "",
+      //剪切图片上传
+      crap: false,
+      previews: {},
+      option: {
+        img: "",
+        outputSize: 1, //剪切后的图片质量（0.1-1）
+        full: false, //输出原图比例截图 props名full
+        outputType: "png",
+        canMove: true,
+        original: false,
+        canMoveBox: true,
+        autoCrop: true,
+        autoCropWidth: 150,
+        autoCropHeight: 150,
+        fixedBox: true
+      },
+      fileName: "", //本机文件地址
+      downImg: "#",
+      imgFile: "",
+      uploadImgRelaPath: "", //上传后的图片的地址（不带服务器域名）
+      centerDialogVisible: false,
       obj: {},
       options: [],
       classData: [],
@@ -219,6 +333,127 @@ export default {
     };
   },
   methods: {
+    cancel() {
+      if (this.headImg === "") {
+        this.option.img = "";
+      }
+      this.centerDialogVisible = false;
+    },
+    //放大/缩小
+    changeScale(num) {
+      num = num || 1;
+      this.$refs.cropper.changeScale(num);
+    },
+    //坐旋转
+    rotateLeft() {
+      this.$refs.cropper.rotateLeft();
+    },
+    //右旋转
+    rotateRight() {
+      this.$refs.cropper.rotateRight();
+    },
+    //上传图片（点击上传按钮）
+    finish(type) {
+      console.log(this.status);
+      // let _this = this;
+      let formData = new FormData();
+      // 输出
+      if (type === "blob") {
+        this.$refs.cropper.getCropBlob(data => {
+          let img = window.URL.createObjectURL(data);
+          this.model = true;
+          this.modelSrc = img;
+          formData.append("file", data, this.fileName);
+          Api(formData).then(response => {
+            if (this.status == 1) {
+              this.obj.cardpicurl = response.data.data.pic_file_url;
+              this.imgFile = "";
+            }
+            if (this.status == 2) {
+              this.obj.compicurl = response.data.data.pic_file_url;
+              this.imgFile = "";
+            }
+
+            this.$message({
+              //element-ui的消息Message消息提示组件
+              type: "success",
+              message: "上传成功"
+            });
+          });
+        });
+      } else {
+        this.$refs.cropper.getCropData(data => {
+          this.model = true;
+          this.modelSrc = data;
+        });
+      }
+      // this.status = "";
+      this.centerDialogVisible = false;
+    },
+    // 实时预览函数
+    realTime(data) {
+      this.previews = data;
+    },
+    //下载图片
+    down(type) {
+      var aLink = document.createElement("a");
+      aLink.download = "author-img";
+      if (type === "blob") {
+        this.$refs.cropper.getCropBlob(data => {
+          this.downImg = window.URL.createObjectURL(data);
+          aLink.href = window.URL.createObjectURL(data);
+          aLink.click();
+        });
+      } else {
+        this.$refs.cropper.getCropData(data => {
+          this.downImg = data;
+          aLink.href = data;
+          aLink.click();
+        });
+      }
+    },
+    //选择本地图片
+    uploadImg(e, num) {
+      var _this = this;
+      //上传图片
+      var file = e.target.files[0];
+      _this.fileName = file.name;
+      if (!/\.(gif|jpg|jpeg|png|bmp|GIF|JPG|PNG)$/.test(e.target.value)) {
+        alert("图片类型必须是.gif,jpeg,jpg,png,bmp中的一种");
+        return false;
+      }
+      var reader = new FileReader();
+      reader.onload = e => {
+        let data;
+        if (typeof e.target.result === "object") {
+          // 把Array Buffer转化为blob 如果是base64不需要
+          data = window.URL.createObjectURL(new Blob([e.target.result]));
+        } else {
+          data = e.target.result;
+        }
+        if (num === 1) {
+          _this.option.img = data;
+        } else if (num === 2) {
+          _this.example2.img = data;
+        }
+      };
+      // 转化为base64
+      // reader.readAsDataURL(file)
+      // 转化为blob
+      reader.readAsArrayBuffer(file);
+    },
+    imgLoad(msg) {},
+
+    handle_cardpicurl() {
+      this.option.img = "";
+      this.status = 1;
+      this.centerDialogVisible = true;
+    },
+    handle_compicurl() {
+      this.option.img = "";
+      this.status = 2;
+      this.centerDialogVisible = true;
+    },
     handleInput(e) {
       this.obj.tax = this.obj.tax
         .replace(/[^\d^\.]+/g, "")
@@ -346,6 +581,22 @@ export default {
       .upload_name {
         margin: 0 30px;
       }
+      .uploads {
+        width: 150px;
+        height: 150px;
+        border-radius: 10px;
+        overflow: hidden;
+        .avatar-uploader-icon {
+          border: 1px solid #ccc;
+          font-size: 28px;
+          color: #8c939d;
+          width: 150px;
+          height: 150px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
     }
     .upload_panels {
       display: flex;
@@ -353,6 +604,22 @@ export default {
       height: 200px;
       .upload_name {
         margin: 0 30px;
+      }
+      .uploads {
+        width: 150px;
+        height: 150px;
+        border-radius: 10px;
+        overflow: hidden;
+        .avatar-uploader-icon {
+          border: 1px solid #ccc;
+          font-size: 28px;
+          color: #8c939d;
+          width: 150px;
+          height: 150px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
       }
     }
   }
@@ -403,6 +670,95 @@ export default {
     width: 500px;
     height: 150px;
     resize: none !important;
+  }
+  .dialog {
+    .upload {
+      margin-bottom: 30px;
+      width: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 40px;
+      position: relative;
+      cursor: pointer;
+      color: #888;
+      background: #fafafa;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+      *zoom: 1;
+      #uploads {
+        position: absolute;
+        font-size: 100px;
+        right: 0;
+        top: 0;
+        opacity: 0;
+        filter: alpha(opacity=0);
+        cursor: pointer;
+      }
+    }
+    .info {
+      width: 720px;
+      margin: 0 auto;
+      .oper-dv {
+        height: 20px;
+        text-align: right;
+        margin-right: 100px;
+        a {
+          font-weight: 500;
+          &:last-child {
+            margin-left: 30px;
+          }
+        }
+      }
+      .info-item {
+        margin-top: 15px;
+
+        label {
+          display: inline-block;
+          width: 100px;
+          text-align: right;
+        }
+        .sel-img-dv {
+          position: relative;
+          .sel-file {
+            position: absolute;
+            width: 90px;
+            height: 30px;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 2;
+          }
+          .sel-btn {
+            position: absolute;
+            cursor: pointer;
+            z-index: 1;
+          }
+        }
+      }
+    }
+
+    .cropper-content {
+      display: flex;
+      display: -webkit-flex;
+      justify-content: flex-end;
+      -webkit-justify-content: flex-end;
+      .cropper {
+        width: 260px;
+        height: 260px;
+      }
+      .show-preview {
+        width: 150px;
+        height: 150px;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #ccc;
+        margin-left: 30px;
+      }
+    }
+    .cropper-content .show-preview .preview {
+      margin-left: 0px;
+    }
   }
 }
 </style>

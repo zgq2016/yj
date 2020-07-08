@@ -89,12 +89,10 @@ em,
 i {
   font-style: normal;
 }
-
 /*去掉列表前面的小点*/
 li {
   list-style: none;
 }
-
 /*图片没有边框   去掉图片底侧的空白缝隙*/
 img {
   width: 100%;
@@ -104,45 +102,36 @@ img {
   /*ie6*/
   vertical-align: middle;
 }
-
 /*让button 按钮 变成小手*/
 button {
   cursor: pointer;
 }
-
 /*取消链接的下划线*/
 a {
   color: #666;
   text-decoration: none;
   display: block;
 }
-
 a:hover {
   color: #e33333;
 }
-
 button,
 input {
-  font-family: Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
-    \\5b8b\4f53, sans-serif;
+  font-family: Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB, \\5b8b\4f53, sans-serif;
   border: 0;
   outline: none;
 }
-
 body {
   -webkit-font-smoothing: antialiased;
   background-color: #fff;
-  font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
-    \\5b8b\4f53, sans-serif;
+  font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB, \\5b8b\4f53, sans-serif;
   color: #666;
   width: 100%;
 }
-
 .hide,
 .none {
   display: none;
 }
-
 /*清除浮动*/
 .clearfix:after {
   visibility: hidden;
@@ -151,99 +140,41 @@ body {
   content: ".";
   height: 0;
 }
-
 .clearfix {
   *zoom: 1;
 }
-
 .fl {
   float: left;
   margin-right: 18px;
 }
-
 .fr {
   float: right;
 }
-
 .tal {
   text-align: left;
 }
-
 .tac {
   text-align: center;
 }
-
 .tar {
   text-align: right;
 }
-
 /*版心 居中对齐*/
 .w {
   margin: auto;
   width: 1200px;
 }
-
-// .avatar-uploader .el-upload {
-//   background-color: #ccc;
-//   border-radius: 6px;
-//   cursor: pointer;
-//   position: relative;
-//   overflow: hidden;
-//   border-radius: 15px;
-// }
-// .avatar-uploader .el-upload:hover {
-//   border-color: #409eff;
-// }
-// .avatar-uploader-icons {
-//   font-size: 20px;
-//   color: #8c939d;
-//   width: 148px;
-//   height: 148px;
-//   line-height: 148px;
-//   text-align: center;
-// }
-// .avatar {
-//   width: 150px;
-//   height: 150px;
-//   display: block;
-// }
-
 .breadcrumb {
   padding: 0 40px 10px;
   border-bottom: 1px solid #eee;
   position: relative;
   display: flex;
   align-items: center;
-  .mbxlogo {
-    position: absolute;
-    left: 0px;
-    top: 0;
-    width: 15px;
-    height: 15px;
-  }
 }
-
-// .avatar-uploader .el-upload {
-//   border: 1px dashed #d9d9d9;
-//   border-radius: 6px;
-//   cursor: pointer;
-//   position: relative;
-//   overflow: hidden;
-// }
-// .avatar-uploader .el-upload:hover {
-//   border-color: #409eff;
-// }
-// .avatar-uploader-icon {
-//   font-size: 28px;
-//   color: #8c939d;
-//   width: 150px;
-//   height: 150px;
-//   text-align: center;
-// }
-// .avatar {
-//   width: 150px;
-//   height: 150px;
-//   display: block;
-// }
-// .customClass {
-// }
+.breadcrumb .mbxlogo {
+  position: absolute;
+  left: 0px;
+  top: 0;
+  width: 15px;
+  height: 15px;
+}

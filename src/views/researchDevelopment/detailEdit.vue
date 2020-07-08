@@ -123,7 +123,7 @@
     </div>
 
     <el-dialog
-      title="提示"
+      title="上传图片"
       :visible.sync="centerDialogVisible"
       :show-close="false"
       :close-on-click-modal="false"
@@ -134,14 +134,16 @@
     >
       <div style="display:flex;">
         <div class="info-item">
-          <label class="btn btn-orange" for="uploads">选择图片</label>
-          <input
-            type="file"
-            id="uploads"
-            :value="imgFile"
-            accept="image/png, image/jpeg, image/gif, image/jpg"
-            @change="uploadImg($event, 1)"
-          />
+          <div class="upload">
+            <input
+              type="file"
+              id="uploads"
+              :value="imgFile"
+              accept="image/png, image/jpeg, image/gif, image/jpg"
+              @change="uploadImg($event, 1)"
+            />
+            选择文件
+          </div>
 
           <!-- <input type="button" class="btn btn-blue" value="上传头像" @click="finish('blob')" /> -->
           <div class="line">
@@ -165,14 +167,9 @@
                   @imgLoad="imgLoad"
                 ></vueCropper>
               </div>
-              <div>
-                <div
-                  class="show-preview"
-                  :style="{'width': '150px', 'height':'155px',  'overflow': 'hidden', 'margin': '5px'}"
-                >
-                  <div :style="previews.div" class="preview">
-                    <img :src="previews.url" :style="previews.img" />
-                  </div>
+              <div class="show-preview">
+                <div class="preview">
+                  <img :src="previews.url" :style="previews.img" />
                 </div>
               </div>
             </div>
@@ -419,6 +416,7 @@ export default {
     },
     imgLoad(msg) {},
     handleImg() {
+      this.option.img = "";
       // this.option.img = this.obj.picurl;
       this.centerDialogVisible = true;
     },
@@ -521,12 +519,21 @@ export default {
     display: flex;
     padding: 40px 40px 40px 30px;
     .upload {
-      width: 178px;
-      height: 178px;
+      width: 150px;
+      height: 150px;
       border-radius: 10px;
       overflow: hidden;
       i {
-        border: 1px solid #ccc;
+        .avatar-uploader-icon {
+          border: 1px solid #ccc;
+          font-size: 28px;
+          color: #8c939d;
+          width: 150px;
+          height: 150px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
       }
     }
   }
@@ -539,6 +546,31 @@ export default {
     resize: none !important;
   }
   .dialog {
+    .upload {
+      margin-bottom: 30px;
+      width: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 40px;
+      position: relative;
+      cursor: pointer;
+      color: #888;
+      background: #fafafa;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+      *zoom: 1;
+      #uploads {
+        position: absolute;
+        font-size: 100px;
+        right: 0;
+        top: 0;
+        opacity: 0;
+        filter: alpha(opacity=0);
+        cursor: pointer;
+      }
+    }
     .info {
       width: 720px;
       margin: 0 auto;
@@ -589,19 +621,12 @@ export default {
         height: 260px;
       }
       .show-preview {
-        flex: 1;
-        -webkit-flex: 1;
-        display: flex;
-        display: -webkit-flex;
-        justify-content: center;
-        -webkit-justify-content: center;
-        .preview {
-          overflow: hidden;
-          border-radius: 50%;
-          border: 1px solid #cccccc;
-          background: #cccccc;
-          margin-left: 40px;
-        }
+        width: 150px;
+        height: 150px;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #ccc;
+        margin-left: 30px;
       }
     }
     .cropper-content .show-preview .preview {
