@@ -939,10 +939,7 @@
         </el-collapse-item>
       </el-collapse>
     </div>
-    <div v-if="home">
-      请增加批次！
-
-    </div>
+    <div v-if="home" style="margin:100px auto;font-size:16px; text-align: center;">请增加批次！</div>
 
     <el-dialog title="新增物料" :visible.sync="centerDialogVisible1" width="30%" center class="dialog">
       <div>
@@ -1058,7 +1055,7 @@ import {
 export default {
   data() {
     return {
-      home:false,
+      home: false,
       // 下单信息验证
       rules: {
         companyname: [
@@ -3396,7 +3393,7 @@ export default {
         }
       });
     } else {
-      this.home = true
+      this.home = true;
     }
     // console.log(this.obj);
     // console.log(this.obj.style_materials_color_data)
@@ -3996,6 +3993,7 @@ export default {
     width: 110px;
     height: 110px;
     display: block;
+   
   }
 }
 </style>
