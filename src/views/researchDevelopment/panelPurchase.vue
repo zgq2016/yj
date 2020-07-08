@@ -155,7 +155,7 @@
                   <i v-else class="el-icon-upload avatar-uploader-icon"></i>
                 </el-upload>
               </el-form-item>
-              <el-form-item label="备注" prop="remark">
+              <el-form-item label="备注" >
                 <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="form.remark"></el-input>
               </el-form-item>
               <el-form-item>

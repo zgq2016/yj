@@ -618,11 +618,7 @@
                 <el-form-item>
                   <el-button>加工费对比</el-button>
                 </el-form-item>
-                <el-form-item
-                  :prop="'child.'+index+'.remarks'"
-                  :rules="contactRules.remarks"
-                  label="备注："
-                >
+                <el-form-item label="备注：">
                   <el-input type="textarea" v-model="item.remarks" style="width:50vw"></el-input>
                 </el-form-item>
                 <el-button
@@ -3993,7 +3989,6 @@ export default {
     width: 110px;
     height: 110px;
     display: block;
-   
   }
 }
 </style>

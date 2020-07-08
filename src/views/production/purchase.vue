@@ -8,15 +8,15 @@
     </el-breadcrumb>
     <div class="main">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="款号">
+        <el-form-item label="款号:">
           <el-input v-model="formInline.styleno" placeholder="款号"></el-input>
         </el-form-item>
-        <el-form-item label="年份">
+        <el-form-item label="年份:">
           <el-select v-model="formInline.year" placeholder="年份" style="width:120px">
             <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="季节">
+        <el-form-item label="季节:">
           <el-select v-model="formInline.season" placeholder="季节" style="width:120px">
             <el-option
               v-for="item in seasons"
@@ -26,7 +26,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="设计师">
+        <el-form-item label="设计师:">
           <el-select
             v-model="stylist"
             placeholder="设计师"
@@ -36,7 +36,7 @@
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="类别">
+        <el-form-item label="类别:">
           <el-select v-model="formInline.style_type" placeholder="类别" style="width:120px">
             <el-option
               v-for="item in categorys"
@@ -44,6 +44,11 @@
               :label="item.style_type"
               :value="item.style_type"
             ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="状态:">
+          <el-select v-model="formInline.state" placeholder="状态" style="width:120px">
+            <el-option v-for="item in states" :key="item.id" :label="item.v" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -59,26 +64,35 @@
           highlight-current-row
           style="width: 100%"
         >
-          <el-table-column align="center" type="index" width="50"></el-table-column>
+          <el-table-column type="index" width="50" label="序号"></el-table-column>
           <el-table-column align="center" width="70" label="图片">
-            <template slot-scope="scope" property="style_pic_url">
+            <template align="center" slot-scope="scope" property="style_pic_url">
               <img :src="scope.row.style_pic_url" class="img" alt />
             </template>
           </el-table-column>
-          <el-table-column align="center" property="stylename" label="名称"></el-table-column>
           <el-table-column align="center" property="styleno" label="款号"></el-table-column>
-          <el-table-column align="center" property="style_color" label="颜色"></el-table-column>
-          <el-table-column align="center" property="style_type" label="品类"></el-table-column>
-          <el-table-column align="center" property="year" label="年份"></el-table-column>
-          <el-table-column align="center" property="season" label="季节"></el-table-column>
+          <el-table-column align="center" property="stylename" label="名称" width="90"></el-table-column>
+          <el-table-column align="center" property="produce_no" label="批号"></el-table-column>
+          <el-table-column align="center" property="style_color" label="颜色" width="90"></el-table-column>
+          <el-table-column align="center" property="style_type" label="品类" width="90"></el-table-column>
+          <el-table-column align="center" property="year" label="年份" width="90"></el-table-column>
+          <el-table-column align="center" property="season" label="季节" width="90"></el-table-column>
           <el-table-column align="center" property="stylist" label="设计师"></el-table-column>
-          <el-table-column align="center" label="操作">
+          <el-table-column width="80" align="center" property="state" label="状态"></el-table-column>
+          <el-table-column align="center" width="80" label="操作">
             <template slot-scope="scope">
               <el-button
                 class="elbtn"
                 size="mini"
+                v-if="scope.row.procure_status==1"
                 @click="handleEdit(scope.$index, scope.row)"
               >{{"查看"}}</el-button>
+              <el-button
+                class="elbtn"
+                size="mini"
+                v-if="scope.row.procure_status==0"
+                @click="handleEdit(scope.$index, scope.row)"
+              >{{"采购"}}</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -115,6 +129,7 @@ import {
   getWestList,
   getProduceOrderList
 } from "@/api/researchDevelopment";
+import { getProduceProcureList } from "@/api/production";
 export default {
   data() {
     return {
@@ -143,12 +158,20 @@ export default {
       number: 123,
       states: [
         {
-          v: "未下单",
+          v: "全部",
+          id: 3
+        },
+        {
+          v: "未采购",
           id: 0
         },
         {
-          v: "已下单",
+          v: "采购中",
           id: 1
+        },
+        {
+          v: "已完成",
+          id: 2
         }
       ],
       tableData: []
@@ -156,14 +179,10 @@ export default {
   },
   methods: {
     handleEdit(index, row) {
-      console.log(row);
-      console.log(index);
-
-      // this.$router.push({
-      //   path: "/productionStyle?id=" + row.style_id + "&activeNames=2"
-      // });
       this.$router.push({
-        path: `/productionStyle?id=${row.style_id}&activeNames=${2}&TL=${1}`
+        path: `/productionStyle?id=${
+          row.style_id
+        }&activeNames=${2}&TL=${1}&produce_no=${row.produce_no}`
       });
     },
     onSubmit() {
@@ -207,7 +226,7 @@ export default {
       this.wests = data;
     },
     async init(obj) {
-      let res = await getProduceOrderList({
+      let res = await getProduceProcureList({
         page: this.page,
         page_size: this.page_size,
         ...obj
@@ -216,13 +235,20 @@ export default {
       this.count = res.data.count;
       let { data } = res.data;
       this.tableData = data;
-      console.log(this.tableData);
+      // console.log(this.tableData);
       this.tableData.map((v, i) => {
         this.stylists.map((j, k) => {
           if (v.user_id == j.id) {
             v.stylist = j.name;
           }
         });
+        if(v.procure_status == 0){
+          v.state = '未采购'
+        }else if(v.procure_status == 1){
+          v.state = '采购中'
+        }else if(v.procure_status == 2){
+          v.state = '已采购'
+        }
       });
     },
     async handleUser_id(e) {

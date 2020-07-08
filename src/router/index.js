@@ -44,6 +44,7 @@ import AuthorityManagement from "@/views/setting/authorityManagement.vue";
 import Pattern from "@/views/researchDevelopment/pattern.vue";
 import Platemaking from "@/views/researchDevelopment/platemaking.vue";
 import StockInquiry from "@/views/warehouse/stockInquiry.vue";
+import WarehouseSet from "@/views/warehouse/warehouseSet.vue";
 import ProductStorehouse from "@/views/warehouse/productStorehouse.vue";
 import Purchase from "@/views/production/purchase.vue";
 import ProductionScheduling from "@/views/production/productionScheduling.vue";
@@ -160,6 +161,7 @@ const routes = [
       },
 
       { path: "/stockInquiry", name: "StockInquiry", component: StockInquiry },
+      { path: "/warehouseSet", name: "WarehouseSet", component: WarehouseSet },
       {
         path: "/productStorehouse",
         name: "ProductStorehouse",

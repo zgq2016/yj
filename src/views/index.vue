@@ -36,7 +36,7 @@
             <el-menu-item index="/stockInquiry">产品入库</el-menu-item>
             <el-menu-item index="/stockInquiry">物料库存查询</el-menu-item>
             <el-menu-item index="/stockInquiry">物料入库</el-menu-item>
-            <el-menu-item index="/stockInquiry">仓库设置</el-menu-item>
+            <el-menu-item index="/warehouseSet">仓库设置</el-menu-item>
           </el-submenu>
           <el-submenu index="5">
             <template slot="title">销售</template>
