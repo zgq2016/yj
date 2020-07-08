@@ -66,7 +66,7 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
       title="仓库信息"
-      width="30%"
+      width="50%"
       :visible.sync="dialogFormVisible"
     >
       <el-form ref="form1" :rules="rules1" :model="form1">
@@ -97,7 +97,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="Submit">提交</el-button>
-        <el-button @click="dialogFormVisible = false">放回</el-button>
+        <el-button @click="dialogFormVisible = false">返回</el-button>
       </div>
     </el-dialog>
     <!-- 编辑 -->
@@ -107,7 +107,7 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
       title="仓库信息"
-      width="30%"
+      width="50%"
       :visible.sync="dialogFormVisible1"
     >
       <el-form ref="form2" :rules="rules2" :model="form2">
@@ -138,7 +138,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="Submit1">提交</el-button>
-        <el-button @click="dialogFormVisible1 = false">放回</el-button>
+        <el-button @click="dialogFormVisible1 = false">返回</el-button>
       </div>
     </el-dialog>
   </div>
@@ -146,6 +146,7 @@
 
 <script>
 import { userList } from "@/api/setting.js";
+import { getStylistList } from "@/api/researchDevelopment.js";
 export default {
   data() {
     return {
@@ -202,7 +203,7 @@ export default {
       dialogFormVisible1: false,
       invoke: [
         { name: "启用", id: 1 },
-        { name: "未启用", id: 0 }
+        { name: "关闭", id: 0 }
       ],
       genre: [
         { name: "产品仓库", id: 0 },
@@ -250,14 +251,18 @@ export default {
       // console.log(val)
       this.page = val;
       // this.init(this.form);
-    }
+    },
+    async getStylist() {
+      let res = await getStylistList();
+      let { data } = res.data;
+      // console.log(data);
+      this.user = data;
+      console.log(this.user);
+      
+    },
   },
   async mounted() {
-    let res = await userList({
-      page_size:this.page_size
-    });
-    this.user = res.data.data;
-    console.log(this.user);
+   this.getStylist()
   }
 };
 </script>
