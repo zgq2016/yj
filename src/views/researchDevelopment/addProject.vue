@@ -121,7 +121,16 @@
         </el-form>
       </div>
     </div>
-    <el-dialog title="提示" :visible.sync="centerDialogVisible" width="40%" center class="dialog">
+    <el-dialog
+      title="提示"
+      :visible.sync="centerDialogVisible"
+      width="40%"
+      center
+      class="dialog"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
       <div style="display:flex;">
         <div class="info-item">
           <label class="btn btn-orange" for="uploads">选择图片</label>
@@ -167,17 +176,52 @@
               </div>
             </div>
           </div>
-          <input style="width:30px;font-size:20px;margin:0 10px;" type="button" class="oper" value="+" title="放大" @click="changeScale(1)" />
-          <input style="width:30px;font-size:20px;margin:0 10px;" type="button" class="oper" value="-" title="缩小" @click="changeScale(-1)" />
-          <input style="width:30px;font-size:20px;margin:0 10px;" type="button" class="oper" value="↺" title="左旋转" @click="rotateLeft" />
-          <input style="width:30px;font-size:20px;margin:0 10px;" type="button" class="oper" value="↻" title="右旋转" @click="rotateRight" />
-          <input style="width:30px;font-size:20px;margin:0 10px;" type="button" class="oper" value="↓" title="下载" @click="down('blob')" />
+          <input
+            style="width:30px;font-size:20px;margin:0 10px;"
+            type="button"
+            class="oper"
+            value="+"
+            title="放大"
+            @click="changeScale(1)"
+          />
+          <input
+            style="width:30px;font-size:20px;margin:0 10px;"
+            type="button"
+            class="oper"
+            value="-"
+            title="缩小"
+            @click="changeScale(-1)"
+          />
+          <input
+            style="width:30px;font-size:20px;margin:0 10px;"
+            type="button"
+            class="oper"
+            value="↺"
+            title="左旋转"
+            @click="rotateLeft"
+          />
+          <input
+            style="width:30px;font-size:20px;margin:0 10px;"
+            type="button"
+            class="oper"
+            value="↻"
+            title="右旋转"
+            @click="rotateRight"
+          />
+          <input
+            style="width:30px;font-size:20px;margin:0 10px;"
+            type="button"
+            class="oper"
+            value="↓"
+            title="下载"
+            @click="down('blob')"
+          />
 
           <!-- <el-button class="oper" value="↓" title="下载" @click="down('blob')" circle></el-button> -->
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="centerDialogVisible = false">取 消</el-button>
+        <el-button @click="cancel">取 消</el-button>
         <el-button type="primary" @click="finish('blob')">确 定</el-button>
       </span>
     </el-dialog>
@@ -286,6 +330,12 @@ export default {
     };
   },
   methods: {
+    cancel() {
+      if (this.headImg === "") {
+        this.option.img = "";
+      }
+      this.centerDialogVisible = false;
+    },
     //放大/缩小
     changeScale(num) {
       num = num || 1;

@@ -4,6 +4,18 @@
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>设置</el-breadcrumb-item>
+      <el-breadcrumb-item
+        v-if="this.$route.query.TL-0===1"
+        :to="{ path: `/itemDesign?id=${this.$route.query.id}` }"
+      >项目设计</el-breadcrumb-item>
+      <el-breadcrumb-item
+        v-if="this.$route.query.TL-0===1"
+        :to="{ path: `/designCheck?id=${this.$route.query.id}` }"
+      >项目详细</el-breadcrumb-item>
+      <el-breadcrumb-item
+        v-if="this.$route.query.TL-0===1"
+        :to="{ path: `/newTheStyle?id=${this.$route.query.id}` }"
+      >新增款式</el-breadcrumb-item>
       <el-breadcrumb-item>商品分类</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 添加分类 -->
@@ -33,7 +45,9 @@
       :visible.sync="centerDialogVisible"
       width="30%"
       center
-      :before-close="handleClose"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
     >
       <el-form ref="form" :rules="rules1" :model="form" label-width="80px">
         <el-form-item label="分类名称" prop="goods_category_name">
@@ -62,6 +76,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleClose">取 消</el-button>
         <el-button type="primary" @click="handleNewList">确 定</el-button>
       </span>
     </el-dialog>
@@ -71,7 +86,9 @@
       :visible.sync="centerDialogVisible1"
       width="30%"
       center
-      :before-close="handleClose1"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
     >
       <el-form ref="obj" :model="obj" :rules="rules" label-width="80px" resetFields>
         <el-form-item label="分类名称" prop="goods_category_name">
@@ -95,6 +112,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleClose1">取 消</el-button>
         <el-button type="primary" @click="handleEditList">确 定</el-button>
       </span>
     </el-dialog>

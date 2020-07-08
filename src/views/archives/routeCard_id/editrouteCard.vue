@@ -182,11 +182,11 @@
             accept="image/png, image/jpeg, image/gif, image/jpg"
             @change="uploadImg($event, 1)"
           />
-          <input type="button" class="oper" value="+" title="放大" @click="changeScale(1)" />
+          <!-- <input type="button" class="oper" value="+" title="放大" @click="changeScale(1)" />
           <input type="button" class="oper" value="-" title="缩小" @click="changeScale(-1)" />
           <input type="button" class="oper" value="↺" title="左旋转" @click="rotateLeft" />
           <input type="button" class="oper" value="↻" title="右旋转" @click="rotateRight" />
-          <input type="button" class="oper" value="↓" title="下载" @click="down('blob')" />
+          <input type="button" class="oper" value="↓" title="下载" @click="down('blob')" />-->
           <!-- <input type="button" class="btn btn-blue" value="上传头像" @click="finish('blob')" /> -->
           <div class="line">
             <div class="cropper-content">
@@ -221,6 +221,46 @@
               </div>
             </div>
           </div>
+          <input
+            style="width:30px;font-size:20px;margin:0 10px;"
+            type="button"
+            class="oper"
+            value="+"
+            title="放大"
+            @click="changeScale(1)"
+          />
+          <input
+            style="width:30px;font-size:20px;margin:0 10px;"
+            type="button"
+            class="oper"
+            value="-"
+            title="缩小"
+            @click="changeScale(-1)"
+          />
+          <input
+            style="width:30px;font-size:20px;margin:0 10px;"
+            type="button"
+            class="oper"
+            value="↺"
+            title="左旋转"
+            @click="rotateLeft"
+          />
+          <input
+            style="width:30px;font-size:20px;margin:0 10px;"
+            type="button"
+            class="oper"
+            value="↻"
+            title="右旋转"
+            @click="rotateRight"
+          />
+          <input
+            style="width:30px;font-size:20px;margin:0 10px;"
+            type="button"
+            class="oper"
+            value="↓"
+            title="下载"
+            @click="down('blob')"
+          />
         </div>
       </div>
       <span slot="footer" class="dialog-footer">

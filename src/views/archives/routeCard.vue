@@ -5,10 +5,20 @@
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>档案库</el-breadcrumb-item>
       <!-- <el-breadcrumb-item>物料工艺卡</el-breadcrumb-item> -->
-      <el-breadcrumb-item :to="{ path: '/routeCard_list' }">物料工艺卡</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="TL===0">新增物料工艺卡</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===0||TL===1||TL===2" :to="{ path: '/routeCard_list' }">物料工艺卡</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===10" :to="{ path: `/itemDesign` }">设计项目</el-breadcrumb-item>
+      <el-breadcrumb-item
+        v-if="TL===10"
+        :to="{ path: `/designCheck?id=${this.$route.query.project_id}` }"
+      >项目详细</el-breadcrumb-item>
+      <el-breadcrumb-item
+        v-if="TL===10"
+        :to="{ path: `/materialProcess?id=${this.$route.query.id}&TL=30` }"
+      >款式详细</el-breadcrumb-item>
+
+      <el-breadcrumb-item v-if="TL===0||TL===10">新增物料工艺卡</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===1">物料工艺卡详情</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="TL===2" :to="{ path: `/routeCardDeital?id=${id}&TL=1` }">物料工艺卡详情</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===2" :to="{ path: `/routeCardDeital?id=${id_NO}&TL=1` }">物料工艺卡详情</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===2">物料工艺卡编辑</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 左右侧边栏 -->
@@ -58,11 +68,15 @@
             <el-menu-item @click="handelShow(level=1,item)">
               <template slot="title">
                 <span class="el-icon-plus"></span>
+                <span>新增物料二级分类</span>
               </template>
             </el-menu-item>
           </el-submenu>
           <el-menu-item index @click="handelShow(level=0)">
-            <span slot="title" class="el-icon-plus"></span>
+            <template slot="title">
+              <span class="el-icon-plus"></span>
+              <span>新增物料分类</span>
+            </template>
           </el-menu-item>
         </el-menu>
       </el-aside>
@@ -136,7 +150,8 @@ export default {
       value: "",
       obj: {},
       item_id: {},
-      id: "",
+      id: 0,
+      id_NO: 0,
       active: "",
       active1: "",
       level: "",
@@ -157,6 +172,9 @@ export default {
       let res = await getMaterialsClassEdit(obj);
       console.log(res);
       this.init();
+      this.$router.push({
+        path: "routeCard_list"
+      });
       this.centerDialogVisible1 = false;
     },
     async handleDel() {
@@ -229,6 +247,9 @@ export default {
       console.log(res);
       this.value = "";
       this.init();
+      this.$router.push({
+        path: "routeCard_list"
+      });
       this.centerDialogVisible = false;
     },
     handelShow(level, item_id) {
@@ -246,7 +267,7 @@ export default {
       this.menuList = data;
 
       this.TL = this.$route.query.TL - 0;
-      this.id = this.$route.query.id - 0;
+      this.id_NO = this.$route.query.id - 0;
     }
   },
   mounted() {

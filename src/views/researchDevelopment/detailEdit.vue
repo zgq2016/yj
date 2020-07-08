@@ -9,16 +9,6 @@
       <el-breadcrumb-item>编辑{{obj.projecttype}}订单</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main">
-      <!-- upload -->
-      <!-- <el-upload
-        class="avatar-uploader"
-        action="https://yj.ppp-pay.top/uploadpic.php"
-        :show-file-list="false"
-        :on-success="handleAvatarSuccess"
-        :before-upload="beforeAvatarUpload"
-      >
-        <img :src="obj.picurl" class="avatar" />
-      </el-upload>-->
       <div class="upload" @click="handleImg">
         <img v-if="obj.picurl" :src="obj.picurl" alt />
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -132,7 +122,16 @@
       </div>
     </div>
 
-    <el-dialog title="提示" :visible.sync="centerDialogVisible" width="40%" center class="dialog">
+    <el-dialog
+      title="提示"
+      :visible.sync="centerDialogVisible"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      width="40%"
+      center
+      class="dialog"
+    >
       <div style="display:flex;">
         <div class="info-item">
           <label class="btn btn-orange" for="uploads">选择图片</label>
@@ -250,7 +249,6 @@ export default {
   },
   data() {
     return {
-      headImg: "",
       //剪切图片上传
       crap: false,
       previews: {},
@@ -369,7 +367,6 @@ export default {
     },
     // 实时预览函数
     realTime(data) {
-      console.log(data);
       this.previews = data;
     },
     //下载图片
@@ -422,6 +419,7 @@ export default {
     },
     imgLoad(msg) {},
     handleImg() {
+      // this.option.img = this.obj.picurl;
       this.centerDialogVisible = true;
     },
     handleDel() {
@@ -469,20 +467,6 @@ export default {
       this.obj.projecttype = e;
       console.log(this.obj.projecttype);
     },
-    handleAvatarSuccess(res, file) {
-      this.obj.picurl = res.data.pic_file_url;
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
-      if (!isJPG) {
-        this.$message.error("上传图片只能是 JPG 格式!");
-      }
-      if (!isLt2M) {
-        this.$message.error("上传图片大小不能超过 2MB!");
-      }
-      return isJPG && isLt2M;
-    },
     handleUser_id(e) {
       this.obj.user_id = e;
     },
@@ -510,15 +494,15 @@ export default {
     async getstylist() {
       let res = await getStylistList();
       let { data } = res.data;
-      console.log(data);
+      // console.log(data);
       this.stylists = data;
     }
   },
   async mounted() {
     let { id } = this.$route.query;
     let res = await getProject({ id });
-    console.log(res);
     this.obj = res.data.data;
+    console.log(this.obj);
     if (res.data.data.projecttype === "0") res.data.data.projecttype = "意向";
     if (res.data.data.projecttype === "1") res.data.data.projecttype = "阶段";
     if (res.data.data.projecttype === "2") res.data.data.projecttype = "企划";
@@ -527,7 +511,6 @@ export default {
     this.getYear();
     this.getSeason();
     this.getstylist();
-    this.previews.url = this.obj.picurl;
   }
 };
 </script>

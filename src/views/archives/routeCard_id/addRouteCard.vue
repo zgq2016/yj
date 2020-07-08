@@ -29,7 +29,11 @@
             ></el-autocomplete>
           </el-col>
           <el-col :span="4">
-            <router-link to="/addSupplier?id=0">新增供应商</router-link>
+            <router-link
+              v-if="TL===10"
+              :to="`/addSupplier?id=0&id_NO=${this.$route.query.id_NO}&project_id='${this.$route.query.project_id}&TL=10`"
+            >新增供应商</router-link>
+            <router-link v-else :to="`/addSupplier?id=0&TL=20`">新增供应商</router-link>
           </el-col>
         </el-form-item>
         <el-form-item label="编号" prop="materialsno">
@@ -182,11 +186,11 @@
             accept="image/png, image/jpeg, image/gif, image/jpg"
             @change="uploadImg($event, 1)"
           />
-          <input type="button" class="oper" value="+" title="放大" @click="changeScale(1)" />
+          <!-- <input type="button" class="oper" value="+" title="放大" @click="changeScale(1)" />
           <input type="button" class="oper" value="-" title="缩小" @click="changeScale(-1)" />
           <input type="button" class="oper" value="↺" title="左旋转" @click="rotateLeft" />
           <input type="button" class="oper" value="↻" title="右旋转" @click="rotateRight" />
-          <input type="button" class="oper" value="↓" title="下载" @click="down('blob')" />
+          <input type="button" class="oper" value="↓" title="下载" @click="down('blob')" />-->
           <!-- <input type="button" class="btn btn-blue" value="上传头像" @click="finish('blob')" /> -->
           <div class="line">
             <div class="cropper-content">
@@ -221,6 +225,46 @@
               </div>
             </div>
           </div>
+          <input
+            style="width:30px;font-size:20px;margin:0 10px;"
+            type="button"
+            class="oper"
+            value="+"
+            title="放大"
+            @click="changeScale(1)"
+          />
+          <input
+            style="width:30px;font-size:20px;margin:0 10px;"
+            type="button"
+            class="oper"
+            value="-"
+            title="缩小"
+            @click="changeScale(-1)"
+          />
+          <input
+            style="width:30px;font-size:20px;margin:0 10px;"
+            type="button"
+            class="oper"
+            value="↺"
+            title="左旋转"
+            @click="rotateLeft"
+          />
+          <input
+            style="width:30px;font-size:20px;margin:0 10px;"
+            type="button"
+            class="oper"
+            value="↻"
+            title="右旋转"
+            @click="rotateRight"
+          />
+          <input
+            style="width:30px;font-size:20px;margin:0 10px;"
+            type="button"
+            class="oper"
+            value="↓"
+            title="下载"
+            @click="down('blob')"
+          />
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -352,7 +396,9 @@ export default {
         materials_class_name: [
           { required: true, message: "请选择二级分类", trigger: "change" }
         ],
-        unit: [{ required: true, message: "请选择计算单位", trigger: "change" }],
+        unit: [
+          { required: true, message: "请选择计算单位", trigger: "change" }
+        ],
         wsale_price: [
           { required: true, message: "请输入大货单价", trigger: "blur" }
         ],
@@ -362,9 +408,7 @@ export default {
         arrival_time: [
           { required: true, message: "请选择时间", trigger: "change" }
         ],
-        remarks: [
-          { required: true, message: "请输入备注", trigger: "blur" }
-        ]
+        remarks: [{ required: true, message: "请输入备注", trigger: "blur" }]
       },
       material_dataRules: {
         material_data_material_name: [

@@ -25,7 +25,9 @@
       :visible.sync="centerDialogVisible"
       width="30%"
       center
-      :before-close="handleClose"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
     >
       <el-form ref="form" :model="form" label-width="80px" resetFields>
         <el-form-item
@@ -37,7 +39,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <!-- <el-button @click="centerDialogVisible = false">取 消</el-button> -->
+        <el-button type="primary" @click="handleClose">取 消</el-button>
         <el-button type="primary" @click="handleNewList">确 定</el-button>
       </span>
     </el-dialog>
@@ -47,7 +49,9 @@
       :visible.sync="centerDialogVisible1"
       width="30%"
       center
-      :before-close="handleClose1"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
     >
       <el-form ref="form" :model="form" label-width="80px" resetFields>
         <el-form-item
@@ -59,7 +63,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <!-- <el-button @click="centerDialogVisible1 = false">取 消</el-button> -->
+        <el-button type="primary" @click="handleClose1">取 消</el-button>
         <el-button type="primary" @click="handleEditList">确 定</el-button>
       </span>
     </el-dialog>

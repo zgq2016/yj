@@ -32,7 +32,9 @@
       :visible.sync="centerDialogVisible"
       width="30%"
       center
-      :before-close="handleClose"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
     >
       <el-form ref="form" :model="form" :rules="rules1" label-width="80px">
         <el-form-item label="尺码名称" prop="size_name">
@@ -58,6 +60,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleClose">取 消</el-button>
         <el-button type="primary" @click="handleNewList">确 定</el-button>
       </span>
     </el-dialog>
@@ -67,7 +70,9 @@
       :visible.sync="centerDialogVisible1"
       width="30%"
       center
-      :before-close="handleClose1"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
     >
       <el-form ref="obj" :model="obj" :rules="rules1" label-width="80px" resetFields>
         <el-form-item label="尺码名称" prop="size_name">
@@ -88,6 +93,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleClose1">取 消</el-button>
         <el-button type="primary" @click="handleEditList">确 定</el-button>
       </span>
     </el-dialog>
@@ -115,7 +121,7 @@ import {
 export default {
   data() {
     return {
-       rules: {
+      rules: {
         size_name: [
           { required: true, message: "请输入尺码名称", trigger: "blur" }
         ],
@@ -128,7 +134,7 @@ export default {
           }
         ]
       },
-       rules1: {
+      rules1: {
         size_name: [
           { required: true, message: "请输入尺码名称", trigger: "blur" }
         ],
@@ -177,17 +183,17 @@ export default {
     async handleEditList() {
       this.$refs["obj"].validate(async valid => {
         if (!valid) return;
-      delete this.obj.goods_category_data;
-      delete this.obj.region;
-      console.log(this.obj);
-      let res = await sizeEdit(this.obj);
-      console.log(res);
-      this.$refs["obj"].resetFields();
-      this.obj.size_id = 0;
-      this.region = "";
-      this.centerDialogVisible1 = false;
-      this.init();
-      })
+        delete this.obj.goods_category_data;
+        delete this.obj.region;
+        console.log(this.obj);
+        let res = await sizeEdit(this.obj);
+        console.log(res);
+        this.$refs["obj"].resetFields();
+        this.obj.size_id = 0;
+        this.region = "";
+        this.centerDialogVisible1 = false;
+        this.init();
+      });
     },
     async handleEdit(index, row) {
       let res = await sizeInfo({ id: row.size_id });
@@ -244,26 +250,25 @@ export default {
     async handleNewList() {
       this.$refs["form"].validate(async valid => {
         if (!valid) return;
-      delete this.form.region;
-      console.log(this.form);
-      if (this.tableData.length === 0) {
-        let res = await sizeAdd(this.form);
-        this.$refs["form"].resetFields();
-        this.form.size_id = 0;
-        this.region = "";
-        this.centerDialogVisible = false;
-        this.init();
-      }
-      if (this.tableData.length > 0) {
-        let res = await sizeAdd(this.form);
-        this.$refs["form"].resetFields();
-        this.form.size_id = 0;
-        this.region = "";
-        this.centerDialogVisible = false;
-        this.init();
-      
-      }
-      })
+        delete this.form.region;
+        console.log(this.form);
+        if (this.tableData.length === 0) {
+          let res = await sizeAdd(this.form);
+          this.$refs["form"].resetFields();
+          this.form.size_id = 0;
+          this.region = "";
+          this.centerDialogVisible = false;
+          this.init();
+        }
+        if (this.tableData.length > 0) {
+          let res = await sizeAdd(this.form);
+          this.$refs["form"].resetFields();
+          this.form.size_id = 0;
+          this.region = "";
+          this.centerDialogVisible = false;
+          this.init();
+        }
+      });
     },
     async init() {
       let res = await sizeList({

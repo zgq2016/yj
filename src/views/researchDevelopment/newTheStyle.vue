@@ -49,7 +49,10 @@
                       :value="item.style_type"
                     ></el-option>
                   </el-select>
-                  <router-link to="/goodsCategory" style="margin-left:30px">新增品类</router-link>
+                  <router-link
+                    :to="`/goodsCategory?TL=1&id=${ this.$route.query.id}`"
+                    style="margin-left:30px"
+                  >新增品类</router-link>
                 </div>
               </el-form-item>
               <el-form-item label="颜色" prop="style_color">
@@ -62,7 +65,10 @@
                       :value="item.color_name"
                     ></el-option>
                   </el-select>
-                  <router-link to="/colorManagement" style="margin-left:30px">新增颜色</router-link>
+                  <router-link
+                    :to="`/colorManagement?TL=1&id=${ this.$route.query.id}`"
+                    style="margin-left:30px"
+                  >新增颜色</router-link>
                 </div>
               </el-form-item>
             </el-form>
@@ -86,11 +92,7 @@
       </div>
       <div style="margin:150px 300px; height:50px;">
         <el-button round style="float:left" @click="handleClick">保存</el-button>
-        <el-button
-          round
-          style="float:left"
-          @click="handleClickEdit"
-        >保存并编辑设计版单</el-button>
+        <el-button round style="float:left" @click="handleClickEdit">保存并编辑设计版单</el-button>
       </div>
     </div>
     <!-- 有数据 -->

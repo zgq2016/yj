@@ -249,8 +249,13 @@ export default {
       this.MaterialsList = res.data.data;
     },
     async Resume(e) {
-      let res = await stylePaperpatternResume({ id: e.id });
-      this.init();
+      if (this.fileList.length === 0) {
+        let res = await stylePaperpatternResume({ id: e.id });
+        this.init();
+      } else {
+        this.$message.warning("已有数据,请先删除");
+        return;
+      }
     }
   },
   mounted() {

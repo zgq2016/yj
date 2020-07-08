@@ -4,6 +4,18 @@
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>设置</el-breadcrumb-item>
+      <el-breadcrumb-item
+        v-if="this.$route.query.TL-0===1"
+        :to="{ path: `/itemDesign?id=${this.$route.query.id}` }"
+      >项目设计</el-breadcrumb-item>
+      <el-breadcrumb-item
+        v-if="this.$route.query.TL-0===1"
+        :to="{ path: `/designCheck?id=${this.$route.query.id}` }"
+      >项目详细</el-breadcrumb-item>
+      <el-breadcrumb-item
+        v-if="this.$route.query.TL-0===1"
+        :to="{ path: `/newTheStyle?id=${this.$route.query.id}` }"
+      >新增款式</el-breadcrumb-item>
       <el-breadcrumb-item>颜色管理</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 添加颜色 -->
@@ -29,10 +41,12 @@
     <!-- 颜色分类 -->
     <el-dialog
       title="颜色分类"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
       :visible.sync="centerDialogVisible"
       width="30%"
       center
-      :before-close="handleClose"
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="颜色名称" prop="color_name">
@@ -58,6 +72,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleClose">取 消</el-button>
         <el-button type="primary" @click="handleNewList">确 定</el-button>
       </span>
     </el-dialog>
@@ -67,7 +82,9 @@
       :visible.sync="centerDialogVisible1"
       width="30%"
       center
-      :before-close="handleClose1"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
     >
       <el-form ref="obj" :model="obj" :rules="rules1" label-width="80px" resetFields>
         <el-form-item label="颜色名称" prop="color_name">
@@ -88,6 +105,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleClose1">取 消</el-button>
         <el-button type="primary" @click="handleEditList">确 定</el-button>
       </span>
     </el-dialog>
