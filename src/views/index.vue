@@ -34,7 +34,7 @@
             <template slot="title">仓库</template>
             <el-menu-item index="/productStorehouse">产品库存查询</el-menu-item>
             <el-menu-item index="/stockInquiry">产品入库</el-menu-item>
-            <el-menu-item index="/stockInquiry">物料库存查询</el-menu-item>
+            <el-menu-item index="/material">物料库存查询</el-menu-item>
             <el-menu-item index="/stockInquiry">物料入库</el-menu-item>
             <el-menu-item index="/warehouseSet">仓库设置</el-menu-item>
           </el-submenu>

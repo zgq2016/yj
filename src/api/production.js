@@ -265,4 +265,12 @@ export const getProduceCompleteList = data => {
       data: data
     });
   };
+// // 批次日志
+// export const produceLogData = data => {
+//     return axios({
+//       url: "?g=produce_log_data",
+//       method: "post",
+//       data: data
+//     });
+//   };
 

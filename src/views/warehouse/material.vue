@@ -1,10 +1,10 @@
 <template>
-  <div class="productStorehouse">
+  <div class="material">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>仓库</el-breadcrumb-item>
-      <el-breadcrumb-item>产品库存查询</el-breadcrumb-item>
+      <el-breadcrumb-item>物料库存查询</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main">
       <div class="searchInput">
@@ -131,7 +131,7 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.productStorehouse {
+.material {
   .main {
     margin: 20px;
       /deep/.pagination {
