@@ -77,7 +77,9 @@ export default {
     },
     editTheStyle() {
       let { id } = this.$route.query;
-      this.$router.push({ path: `editTheStyle?id=${id}` });
+      this.$router.push({
+        path: `editTheStyle?id=${id}&project_id=${this.obj.project_id}&TL=30`
+      });
     },
     async init() {
       let { id } = this.$route.query;

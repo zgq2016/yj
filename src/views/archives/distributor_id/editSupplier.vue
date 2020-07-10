@@ -134,7 +134,7 @@
         <el-form-item label="税点" prop="tax">
           <el-input style="width:200px" v-model="obj.tax" @input="handleInput"></el-input>%
         </el-form-item>
-        <el-form-item label="备注" prop="remarks">
+        <el-form-item label="备注">
           <el-input type="textarea" v-model="obj.remarks" placeholder="请输入内容" clearable></el-input>
         </el-form-item>
         <el-form-item>
@@ -308,8 +308,7 @@ export default {
         tax: [{ required: true, message: "请填写税点", trigger: "blur" }],
         isbill: [
           { required: true, message: "请选择是否发票", trigger: "change" }
-        ],
-        remarks: [{ required: true, message: "请输入备注", trigger: "blur" }]
+        ]
       },
       contact_dataRules: {
         contact_contacts: [
@@ -484,6 +483,7 @@ export default {
         });
     },
     async handleEdit() {
+      let data = this.$route.query;
       this.$refs["obj"].validate(async valid => {
         if (!valid) return;
         // 调用actions的登录方法
@@ -492,6 +492,8 @@ export default {
         let res = await supplierEdit(this.obj);
         console.log(res);
         this.$router.go(-1);
+
+        this.$router.push({ path: `/listDeital?id=${data.id}&TL=${data.TL}` });
       });
     },
     // 新增联系人

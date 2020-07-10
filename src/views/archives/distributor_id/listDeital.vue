@@ -4,7 +4,7 @@
       <div class="left">
         <div class="main_left">
           <div class="main_left_img">
-            <img :src="obj.cardpicurl" alt />
+            <img :src="obj.cardpicurl" alt @click="handlePreview" />
           </div>
           <div class="main_left_deital">
             <div class="main_left_deital_name">{{obj.companyname}}</div>
@@ -31,7 +31,7 @@
         </div>
         <div class="main_left">
           <div class="main_left_img">
-            <img :src="obj.compicurl" alt />
+            <img :src="obj.compicurl" alt @click="handlePreview1" />
           </div>
           <div class="main_left_deital">
             <div>是否开发票：{{obj.isbill}}</div>
@@ -48,6 +48,12 @@
         <span class="el-icon-edit" style="font-size: 30px;cursor: pointer;"></span>
       </router-link>
     </div>
+    <el-dialog :visible.sync="dialogVisible">
+      <img width="100%" :src="obj.cardpicurl" alt />
+    </el-dialog>
+    <el-dialog :visible.sync="dialogVisible1">
+      <img width="100%" :src="obj.compicurl" alt />
+    </el-dialog>
   </div>
 </template>
 
@@ -57,8 +63,18 @@ export default {
   data() {
     return {
       id: "",
-      obj: {}
+      obj: {},
+      dialogVisible: false,
+      dialogVisible1: false
     };
+  },
+  methods: {
+    handlePreview() {
+      this.dialogVisible = true;
+    },
+    handlePreview1() {
+      this.dialogVisible1 = true;
+    }
   },
   async mounted() {
     let { id } = this.$route.query;

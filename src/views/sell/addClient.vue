@@ -4,7 +4,7 @@
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>销售</el-breadcrumb-item>
-      <el-breadcrumb-item>客户管理</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/clientManagement' }">客户管理</el-breadcrumb-item>
       <el-breadcrumb-item>新增客户</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- form -->
@@ -20,7 +20,11 @@
           <el-input v-model="form.phone"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary"  @click="onSubmit" style="padding:10px 50px;border-radius: 15px;">保存</el-button>
+          <el-button
+            type="primary"
+            @click="onSubmit"
+            style="padding:10px 50px;border-radius: 15px;"
+          >保存</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -59,12 +63,11 @@ export default {
   methods: {
     onSubmit() {
       this.$refs["form"].validate(async valid => {
-        if (!valid) return
+        if (!valid) return;
 
         let res = await getCustomerAdd(this.form);
-          this.$router.go(-1);
+        this.$router.go(-1);
       });
-
     }
   }
 };

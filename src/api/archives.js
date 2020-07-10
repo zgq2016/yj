@@ -152,3 +152,11 @@ export const materialsEdit = (data) => {
     data: data,
   });
 };
+// 材质select接口
+export const getMaterialSelect = (data) => {
+  return axios({
+    url: "?g=get_material_select",
+    method: "post",
+    data: data,
+  });
+};

@@ -21,10 +21,17 @@
             <el-form :model="form" ref="form" :rules="rules" label-width="80px">
               <el-form-item>
                 <div style="display:flex">
-                  <div style="width:200px">款号: {{form.styleno}}</div>
-                  <div style="width:200px">年份: {{defaultData.year}}</div>
-                  <div style="width:200px">季节: {{defaultData.season}}</div>
-                  <div style="width:200px">设计师: {{defaultData.user_name}}</div>
+                  <div style="width:170px">款号: {{form.styleno}}</div>
+                  <div style="width:170px">年份: {{defaultData.year}}</div>
+                  <div style="width:170px">季节: {{defaultData.season}}</div>
+                  <div style="width:170px">设计师: {{defaultData.user_name}}</div>
+                  <div style="display:flex" v-if="user_id_data_length>0">
+                    <div>设计助理:</div>
+                    <div
+                      v-for="(item, index) in defaultData.user_id_data"
+                      :key="index"
+                    >{{item.name}},</div>
+                  </div>
                 </div>
               </el-form-item>
               <el-form-item label="名称" prop="stylename">
@@ -67,18 +74,6 @@
         </div>
       </div>
       <div class="color">
-        <!-- <div class="upload">
-          <el-upload
-            class="avatar-uploader"
-            action="https://yj.ppp-pay.top/uploadpic.php"
-            :show-file-list="false"
-            :on-success="handleColorSuccess"
-            :before-upload="beforeAvatarUpload"
-          >
-            <img v-if="form.style_color_pic_url" :src="form.style_color_pic_url" class="avatar" />
-            <i v-else class="el-icon-upload avatar-uploader-icon"></i>
-          </el-upload>
-        </div>-->
         <div class="upload" @click="handle_style_color_pic_url">
           <img v-if="form.style_color_pic_url" :src="form.style_color_pic_url" alt />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -150,6 +145,18 @@
                     :value="item.id"
                   ></el-option>
                 </el-select>
+                <el-button
+                  type="primary"
+                  style="margin-left:20px;"
+                  round
+                  @click="handleAssistant"
+                >助理</el-button>
+              </el-form-item>
+              <el-form-item label="指派助理" v-if="Assistant===true||user_id_data_length>0">
+                <div style="display:flex">
+                  <div v-for="(item, index) in obj.user_id_data" :key="index">{{item.name}},</div>
+                  <div @click="handleAddAssistant" style="margin-left:20px">添加助理</div>
+                </div>
               </el-form-item>
               <el-form-item label="颜色" prop="style_color_name">
                 <el-select v-model="obj.style_color_name">
@@ -273,6 +280,24 @@
         <el-button type="primary" @click="finish('blob')">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      title="选择助理"
+      :visible.sync="centerDialogVisible1"
+      width="20%"
+      center
+      class="dialog1"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
+      <div v-for="(item, index) in stylists" :key="index">
+        <el-checkbox v-model="item.checked" @change="isCheckList(item,index)">{{item.name}}</el-checkbox>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="AssistantCancel">取 消</el-button>
+        <el-button type="primary" @click="AssistantFinish">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -320,6 +345,7 @@ export default {
       imgFile: "",
       uploadImgRelaPath: "", //上传后的图片的地址（不带服务器域名）
       centerDialogVisible: false,
+      centerDialogVisible1: false,
       form: {
         style_pic_url: "",
         stylename: "",
@@ -343,6 +369,7 @@ export default {
       obj: {},
       defaultData: {},
       status: "",
+      user_id_data_length: "",
       // 表单规则
       rules: {
         stylename: [{ required: true, message: "请输入名称", trigger: "blur" }],
@@ -366,15 +393,72 @@ export default {
         style_color_name: [
           { required: true, message: "请输入颜色", trigger: "blur" }
         ]
-      }
+      },
+      Assistant: false,
+      checkedList: [],
+      arr: [],
+      user_id_data_length: ""
     };
   },
   methods: {
-    cancel() {
-      if (this.headImg === "") {
-        this.option.img = "";
+    AssistantFinish() {
+      this.obj.user_id_data = [];
+      this.stylists.map((v, i) => {
+        if (v.checked == true) {
+          this.obj.user_id_data.push(v);
+        }
+      });
+      this.centerDialogVisible1 = false;
+    },
+    AssistantCancel() {},
+    isCheckList(e, i) {
+      this.arr = [];
+      if (e.checked == false) {
+        this.stylists.map((v, i) => {
+          if (v.id == e.id) {
+            v.checked = false;
+          }
+        });
       }
-      this.centerDialogVisible = false;
+      if (e.checked == true) {
+        this.stylists.map((v, i) => {
+          if (v.id == e.id) {
+            v.checked = true;
+          }
+        });
+      }
+    },
+    handleAddAssistant() {
+      this.centerDialogVisible1 = true;
+    },
+    handleAssistant() {
+      if (this.Assistant === false) {
+        this.Assistant = true;
+      } else {
+        this.Assistant = !this.Assistant;
+      }
+    },
+    cancel() {
+      let { oldId } = this.$route.query;
+      let { id } = this.$route.query;
+      if (oldId === undefined) {
+        if (this.defaultData.style_pic_url === "") {
+          this.defaultData.style_pic_url = "";
+        }
+        if (this.defaultData.style_color_pic_url === "") {
+          this.defaultData.style_color_pic_url = "";
+        }
+        this.centerDialogVisible = false;
+      }
+      if (oldId !== undefined) {
+        if (this.obj.style_pic_url === "") {
+          this.obj.style_pic_url = "";
+        }
+        if (this.obj.style_color_pic_url === "") {
+          this.obj.style_color_pic_url = "";
+        }
+        this.centerDialogVisible = false;
+      }
     },
     //放大/缩小
     changeScale(num) {
@@ -538,6 +622,10 @@ export default {
         // 调用actions的登录方法
         console.log(this.form);
         console.log(this.defaultData);
+        this.defaultData.user_id_data.map(v => {
+          delete v.id;
+          delete v.name;
+        });
         let obj = {};
         obj["style_type"] = this.form.style_type;
         obj["stylename"] = this.form.stylename;
@@ -549,6 +637,8 @@ export default {
         obj["season"] = this.defaultData.season;
         obj["user_id"] = this.defaultData.user_id;
         obj["project_id"] = this.defaultData.id;
+        obj["user_id_data"] = this.defaultData.user_id_data;
+        console.log(obj);
         let res = await projectStyleAdd(obj);
         console.log(res);
         this.$router.go(-1);
@@ -561,7 +651,16 @@ export default {
         delete this.obj.user_name;
         let { id } = this.$route.query;
         let obj = {};
-        console.log(obj.user_id);
+        this.obj.user_id_data.map(v => {
+          v["user_id"] = v.id;
+          delete v.checked;
+          delete v.ctime;
+          delete v.id;
+          delete v.last_login_time;
+          delete v.name;
+          delete v.role;
+          delete v.username;
+        });
         obj["project_id"] = id;
         obj["user_id"] = this.user_id || this.obj.user_id;
         obj["style_pic_url"] = this.obj.style_pic_url;
@@ -572,6 +671,7 @@ export default {
         obj["style_type"] = this.obj.style_type;
         obj["style_color_pic_url"] = this.style_color_pic_url;
         obj["style_color"] = this.obj.style_color_name;
+        obj["user_id_data"] = this.obj.user_id_data;
         let res = await projectStyleAdd(obj);
         console.log(res);
         this.$router.go(-1);
@@ -599,9 +699,33 @@ export default {
       this.seasons = data;
     },
     async getstylist() {
+      let { oldId } = this.$route.query;
+      let { id } = this.$route.query;
       let res = await getStylistList();
       let { data } = res.data;
-      this.stylists = data;
+      if (oldId === undefined) {
+        this.defaultData.user_id_data.map(v => {
+          data.map((v1, i1) => {
+            if (v.user_id == v1.id) {
+              v["name"] = v1.name;
+            }
+          });
+        });
+        this.stylists = data;
+        this.user_id_data_length = this.defaultData.user_id_data.length;
+      }
+      if (oldId !== undefined) {
+        this.obj.user_id_data.map(v => {
+          data.map((v1, i1) => {
+            if (v.user_id == v1.id) {
+              v["name"] = v1.name;
+              v1["checked"] = true;
+            }
+          });
+        });
+        this.stylists = data;
+        this.user_id_data_length = this.obj.user_id_data.length;
+      }
     },
     async getCategory() {
       let res = await getCategoryList();
@@ -620,9 +744,10 @@ export default {
       if (oldId !== undefined) {
         let res1 = await getStyle({ id: oldId });
         console.log(res1);
-        console.log(res1.data.data);
         this.obj = res1.data.data;
       }
+
+      this.getstylist();
     },
     async getStylenoData() {
       let res = await getStyleno();
@@ -635,7 +760,6 @@ export default {
     this.getYear();
     this.getSeason();
     this.getCategory();
-    this.getstylist();
     this.getColor();
     this.init();
   }

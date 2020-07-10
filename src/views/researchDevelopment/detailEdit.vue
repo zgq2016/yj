@@ -5,7 +5,7 @@
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>研发</el-breadcrumb-item>
       <el-breadcrumb-item :to="{ path: '/itemDesign' }">设计项目</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: `/designCheck?id=${obj.id}` }">项目详细</el-breadcrumb-item>/
+      <el-breadcrumb-item :to="{ path: `/designCheck?id=${obj.id}` }">项目详细</el-breadcrumb-item>
       <el-breadcrumb-item>编辑{{obj.projecttype}}订单</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main">
@@ -16,7 +16,7 @@
       <!-- form -->
       <div class="form">
         <!-- ref="form" :model="form" -->
-        <el-form :model="obj" ref="obj" :rules="rules" label-width="80px">
+        <el-form :model="obj" ref="obj" :rules="rules" label-width="130px">
           <el-form-item label="项目名称" prop="projectname">
             <el-input v-model="obj.projectname"></el-input>
           </el-form-item>
@@ -101,10 +101,10 @@
           <el-form-item label="要求数量" prop="quantity">
             <el-input v-model="obj.quantity" @input="handleInput" placeholder="要求数量"></el-input>
           </el-form-item>
-          <el-form-item label="详细要求" prop="detailed">
+          <el-form-item label="详细要求">
             <el-input type="textarea" v-model="obj.detailed" class="textarea"></el-input>
           </el-form-item>
-          <el-form-item label="指派" prop="user_name">
+          <el-form-item label="指派设计师" prop="user_name">
             <el-select v-model="obj.user_name" placeholder="工作人员名称" @change="handleUser_id($event)">
               <el-option
                 v-for="item in stylists"
@@ -113,6 +113,13 @@
                 :value="item.id"
               ></el-option>
             </el-select>
+            <el-button type="primary" style="margin-left:20px;" round @click="handleAssistant">助理</el-button>
+          </el-form-item>
+          <el-form-item label="指派助理" v-if="Assistant===true||user_id_data_length>0">
+            <div style="display:flex">
+              <div v-for="(item, index) in obj.user_id_data" :key="index">{{item.name}},</div>
+              <div @click="handleAddAssistant" style="margin-left:20px">添加助理</div>
+            </div>
           </el-form-item>
           <el-form-item>
             <el-button @click="handleKeep" style="padding:10px 50px;border-radius: 15px;">保存</el-button>
@@ -219,8 +226,26 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="centerDialogVisible = false">取 消</el-button>
+        <el-button @click="cancel">取 消</el-button>
         <el-button type="primary" @click="finish('blob')">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      title="选择助理"
+      :visible.sync="centerDialogVisible1"
+      width="20%"
+      center
+      class="dialog1"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
+      <div v-for="(item, index) in stylists" :key="index">
+        <el-checkbox v-model="item.checked" @change="isCheckList(item,index)">{{item.name}}</el-checkbox>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="AssistantCancel">取 消</el-button>
+        <el-button type="primary" @click="AssistantFinish">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -267,6 +292,7 @@ export default {
       imgFile: "",
       uploadImgRelaPath: "", //上传后的图片的地址（不带服务器域名）
       centerDialogVisible: false,
+      centerDialogVisible1: false,
       obj: {},
       projecttypes: [
         {
@@ -316,10 +342,58 @@ export default {
         user_name: [
           { required: true, message: "请输入设计师", trigger: "blur" }
         ]
-      }
+      },
+
+      Assistant: false,
+      checkedList: [],
+      arr: [],
+      user_id_data_length: ""
     };
   },
   methods: {
+    AssistantFinish() {
+      this.obj.user_id_data = [];
+      this.stylists.map((v, i) => {
+        if (v.checked == true) {
+          this.obj.user_id_data.push(v);
+        }
+      });
+      this.centerDialogVisible1 = false;
+    },
+    AssistantCancel() {},
+    isCheckList(e, i) {
+      this.arr = [];
+      if (e.checked == false) {
+        this.stylists.map((v, i) => {
+          if (v.id == e.id) {
+            v.checked = false;
+          }
+        });
+      }
+      if (e.checked == true) {
+        this.stylists.map((v, i) => {
+          if (v.id == e.id) {
+            v.checked = true;
+          }
+        });
+      }
+    },
+    handleAddAssistant() {
+      this.centerDialogVisible1 = true;
+    },
+    handleAssistant() {
+      if (this.Assistant === false) {
+        this.Assistant = true;
+      } else {
+        this.Assistant = !this.Assistant;
+      }
+    },
+    cancel() {
+      if (this.obj.picurl === "") {
+        this.obj.picurl = "";
+      }
+      this.centerDialogVisible = false;
+    },
     //放大/缩小
     changeScale(num) {
       num = num || 1;
@@ -454,6 +528,16 @@ export default {
         if (this.obj.projecttype == "阶段") this.obj.projecttype = "1";
         if (this.obj.projecttype == "企划") this.obj.projecttype = "2";
         console.log(this.obj);
+        this.obj.user_id_data.map(v => {
+          v["user_id"] = v.id;
+          delete v.checked;
+          delete v.ctime;
+          delete v.last_login_time;
+          delete v.name;
+          delete v.role;
+          delete v.username;
+          delete v.id;
+        });
 
         let res = await projectEdit(this.obj);
         console.log(res);
@@ -492,15 +576,22 @@ export default {
     async getstylist() {
       let res = await getStylistList();
       let { data } = res.data;
-      // console.log(data);
+      this.obj.user_id_data.map(v => {
+        data.map((v1, i1) => {
+          if (v.user_id == v1.id) {
+            v1["checked"] = true;
+            v["name"] = v1.name;
+          }
+        });
+      });
       this.stylists = data;
+      this.user_id_data_length = this.obj.user_id_data.length;
     }
   },
   async mounted() {
     let { id } = this.$route.query;
     let res = await getProject({ id });
     this.obj = res.data.data;
-    console.log(this.obj);
     if (res.data.data.projecttype === "0") res.data.data.projecttype = "意向";
     if (res.data.data.projecttype === "1") res.data.data.projecttype = "阶段";
     if (res.data.data.projecttype === "2") res.data.data.projecttype = "企划";
@@ -523,17 +614,15 @@ export default {
       height: 150px;
       border-radius: 10px;
       overflow: hidden;
-      i {
-        .avatar-uploader-icon {
-          border: 1px solid #ccc;
-          font-size: 28px;
-          color: #8c939d;
-          width: 150px;
-          height: 150px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
+      .avatar-uploader-icon {
+        border: 1px solid #ccc;
+        font-size: 28px;
+        color: #8c939d;
+        width: 150px;
+        height: 150px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
     }
   }

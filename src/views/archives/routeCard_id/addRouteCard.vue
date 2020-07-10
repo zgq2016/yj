@@ -3,16 +3,10 @@
     <!-- 图片 -->
     <div style="margin:0px 100px;">
       <div style="margin:10px 0px;">物料图片</div>
-      <el-upload
-        class="avatar-uploader"
-        action="https://yj.ppp-pay.top/uploadpic.php"
-        :show-file-list="false"
-        :on-success="handleAvatarSuccessPanels"
-        :before-upload="beforeAvatarUpload"
-      >
-        <img v-if="form.picurl" :src="form.picurl" class="avatar" />
+      <div class="upload" @click="handleFormImg">
+        <img v-if="form.picurl" :src="form.picurl" />
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-      </el-upload>
+      </div>
     </div>
     <!-- form -->
     <el-col class="form" style="margin-top:20px">
@@ -87,7 +81,14 @@
               :prop="'material_data.'+index+'.material_name'"
               :rules="material_dataRules.material_data_material_name"
             >
-              <el-input v-model="item.material_name" style="width:200px" placeholder="面料"></el-input>
+              <el-select v-model="item.material_name" placeholder="请选择" style="width:200px">
+                <el-option
+                  v-for="item in materials"
+                  :key="item.id"
+                  :label="item.material_name"
+                  :value="item.material_name"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -166,12 +167,11 @@
         <el-form-item label="到货时间" prop="arrival_time">
           <el-date-picker v-model="form.arrival_time" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
-        <el-form-item label="备注" prop="remarks">
+        <el-form-item label="备注">
           <el-input type="textarea" v-model="form.remarks" placeholder="备注"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button @click="handleEdit" style="padding:10px 50px;border-radius: 10px;">保存</el-button>
-          <!-- <el-button @click="handleDel" style="padding:10px 50px;border-radius: 10px;">删除</el-button> -->
         </el-form-item>
       </el-form>
     </el-col>
@@ -186,12 +186,6 @@
             accept="image/png, image/jpeg, image/gif, image/jpg"
             @change="uploadImg($event, 1)"
           />
-          <!-- <input type="button" class="oper" value="+" title="放大" @click="changeScale(1)" />
-          <input type="button" class="oper" value="-" title="缩小" @click="changeScale(-1)" />
-          <input type="button" class="oper" value="↺" title="左旋转" @click="rotateLeft" />
-          <input type="button" class="oper" value="↻" title="右旋转" @click="rotateRight" />
-          <input type="button" class="oper" value="↓" title="下载" @click="down('blob')" />-->
-          <!-- <input type="button" class="btn btn-blue" value="上传头像" @click="finish('blob')" /> -->
           <div class="line">
             <div class="cropper-content">
               <div class="cropper">
@@ -286,7 +280,8 @@ import {
   getMaterialsClassInfo,
   getMaterialsInfo,
   materialsDel,
-  materialsEdit
+  materialsEdit,
+  getMaterialSelect
 } from "@/api/archives";
 import { VueCropper } from "vue-cropper";
 import { Api } from "@/js/api.js"; //接口url配置文件
@@ -358,6 +353,7 @@ export default {
       class_datas: [],
       units: [],
       colors: [],
+      materials: [],
       colorValue: [
         {
           color: "",
@@ -407,8 +403,7 @@ export default {
         ],
         arrival_time: [
           { required: true, message: "请选择时间", trigger: "change" }
-        ],
-        remarks: [{ required: true, message: "请输入备注", trigger: "blur" }]
+        ]
       },
       material_dataRules: {
         material_data_material_name: [
@@ -431,23 +426,19 @@ export default {
   methods: {
     //放大/缩小
     changeScale(num) {
-      console.log("changeScale");
       num = num || 1;
       this.$refs.cropper.changeScale(num);
     },
     //坐旋转
     rotateLeft() {
-      console.log("rotateLeft");
       this.$refs.cropper.rotateLeft();
     },
     //右旋转
     rotateRight() {
-      console.log("rotateRight");
       this.$refs.cropper.rotateRight();
     },
     //上传图片（点击上传按钮）
     finish(type) {
-      console.log("finish");
       // let _this = this;
       let formData = new FormData();
       // 输出
@@ -458,12 +449,18 @@ export default {
           this.modelSrc = img;
           formData.append("file", data, this.fileName);
           Api(formData).then(response => {
-            console.log(response);
-
-            for (let i = 0; i < this.colorValue.length; i++) {
-              this.item.picurl = response.data.data.pic_file_url;
+            if (this.status === 1) {
+              console.log(1);
+              for (let i = 0; i < this.colorValue.length; i++) {
+                this.item.picurl = response.data.data.pic_file_url;
+              }
+              this.imgFile = "";
             }
-            this.imgFile = "";
+            if (this.status === 2) {
+              console.log(2);
+              this.form.picurl = response.data.data.pic_file_url;
+              this.imgFile = "";
+            }
             this.$message({
               //element-ui的消息Message消息提示组件
               type: "success",
@@ -481,12 +478,10 @@ export default {
     },
     // 实时预览函数
     realTime(data) {
-      console.log("realTime");
       this.previews = data;
     },
     //下载图片
     down(type) {
-      console.log("down");
       var aLink = document.createElement("a");
       aLink.download = "author-img";
       if (type === "blob") {
@@ -505,7 +500,6 @@ export default {
     },
     //选择本地图片
     uploadImg(e, num) {
-      console.log("uploadImg");
       var _this = this;
       //上传图片
       var file = e.target.files[0];
@@ -534,14 +528,18 @@ export default {
       // 转化为blob
       reader.readAsArrayBuffer(file);
     },
-    imgLoad(msg) {
-      console.log("imgLoad");
-      console.log(msg);
-    },
+    imgLoad(msg) {},
     handleImg(item) {
       this.item = item;
       this.previews.url = "";
       this.option.img = "";
+      this.status = 1;
+      this.centerDialogVisible = true;
+    },
+    handleFormImg() {
+      this.previews.url = "";
+      this.option.img = "";
+      this.status = 2;
       this.centerDialogVisible = true;
     },
     handleIngredient() {
@@ -581,7 +579,6 @@ export default {
       let res = await getMaterialsClassInfo({
         id: this.classDatasId || this.form.mainclass_id
       });
-      console.log(res);
       let { data } = res.data;
       this.class_datas = data;
       this.form.materials_class_name = "";
@@ -602,21 +599,17 @@ export default {
     },
     async getClassData() {
       let res = await getMaterialsClass();
-      console.log(res);
       let { data } = res.data;
       this.classData = data;
     },
     async get_class_data() {
-      console.log(this.classDatasId);
       let res = await getMaterialsClassInfo({ id: this.classDatasId });
-      console.log(res);
       let { data } = res.data;
       this.class_datas = data;
     },
     async getUnit() {
       let res = await getUnitSelect();
       let { data } = res.data;
-      // console.log(res);
       this.units = data;
     },
     async getColor() {
@@ -658,23 +651,44 @@ export default {
         this.form["arrival_time"] = moment(this.form.arrival_time).format(
           "YYYY-MM-DD"
         );
-        console.log(this.form);
         let res = await materialsAdd(this.form);
-        console.log(res);
         this.$router.go(-1);
       });
+    },
+    async getMaterialList() {
+      let res = await getMaterialSelect();
+      console.log(res);
+      let { data } = res.data;
+      this.materials = data;
     }
   },
   async mounted() {
     this.getClassData();
     this.getUnit();
     this.getColor();
+    this.getMaterialList();
   }
 };
 </script>
 
 <style lang="less" scoped>
 .addRouteCard {
+  .upload {
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+    overflow: hidden;
+    .avatar-uploader-icon {
+      border: 1px solid #ccc;
+      font-size: 28px;
+      color: #8c939d;
+      width: 150px;
+      height: 150px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
   /deep/textarea {
     width: 500px;
     height: 150px;
@@ -720,15 +734,15 @@ export default {
       left: 85%;
       top: 20%;
     }
-    .upload {
-      width: 178px;
-      height: 178px;
-      border-radius: 10px;
-      overflow: hidden;
-      i {
-        border: 1px solid #ccc;
-      }
-    }
+    // .upload {
+    //   width: 178px;
+    //   height: 178px;
+    //   border-radius: 10px;
+    //   overflow: hidden;
+    //   i {
+    //     border: 1px solid #ccc;
+    //   }
+    // }
   }
   .dialog {
     .info {

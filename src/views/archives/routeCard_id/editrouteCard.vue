@@ -3,16 +3,10 @@
     <!-- 图片 -->
     <div style="margin:0px 100px;">
       <div style="margin:10px 0px;">物料图片</div>
-      <el-upload
-        class="avatar-uploader"
-        action="https://yj.ppp-pay.top/uploadpic.php"
-        :show-file-list="false"
-        :on-success="handleAvatarSuccessPanels"
-        :before-upload="beforeAvatarUpload"
-      >
-        <img v-if="obj.picurl" :src="obj.picurl" class="avatar" />
+      <div class="upload" @click="handleFormImg">
+        <img v-if="obj.picurl" :src="obj.picurl" />
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-      </el-upload>
+      </div>
     </div>
     <!-- form -->
     <el-col class="form" style="margin-top:20px">
@@ -83,7 +77,14 @@
               :prop="'material_data.'+index+'.material_name'"
               :rules="material_dataRules.material_data_material_name"
             >
-              <el-input v-model="item.material_name" style="width:200px" placeholder="面料"></el-input>
+              <el-select v-model="item.material_name" placeholder="请选择" style="width:200px">
+                <el-option
+                  v-for="item in materials"
+                  :key="item.id"
+                  :label="item.material_name"
+                  :value="item.material_name"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -162,7 +163,7 @@
         <el-form-item label="到货时间" prop="arrival_time">
           <el-date-picker v-model="obj.arrival_time" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
-        <el-form-item label="备注" prop="remarks">
+        <el-form-item label="备注">
           <el-input type="textarea" v-model="obj.remarks" placeholder="备注"></el-input>
         </el-form-item>
         <el-form-item>
@@ -182,12 +183,6 @@
             accept="image/png, image/jpeg, image/gif, image/jpg"
             @change="uploadImg($event, 1)"
           />
-          <!-- <input type="button" class="oper" value="+" title="放大" @click="changeScale(1)" />
-          <input type="button" class="oper" value="-" title="缩小" @click="changeScale(-1)" />
-          <input type="button" class="oper" value="↺" title="左旋转" @click="rotateLeft" />
-          <input type="button" class="oper" value="↻" title="右旋转" @click="rotateRight" />
-          <input type="button" class="oper" value="↓" title="下载" @click="down('blob')" />-->
-          <!-- <input type="button" class="btn btn-blue" value="上传头像" @click="finish('blob')" /> -->
           <div class="line">
             <div class="cropper-content">
               <div class="cropper">
@@ -282,7 +277,8 @@ import {
   getMaterialsClassInfo,
   getMaterialsInfo,
   materialsDel,
-  materialsEdit
+  materialsEdit,
+  getMaterialSelect
 } from "@/api/archives";
 import { VueCropper } from "vue-cropper";
 import { Api } from "@/js/api.js"; //接口url配置文件
@@ -332,6 +328,7 @@ export default {
       class_datas: [],
       units: [],
       colors: [],
+      materials: [],
       colorValue: [
         {
           color: "",
@@ -382,8 +379,7 @@ export default {
         ],
         arrival_time: [
           { required: true, message: "请选择时间", trigger: "change" }
-        ],
-        remarks: [{ required: true, message: "请输入备注", trigger: "blur" }]
+        ]
       },
       material_dataRules: {
         material_data_material_name: [
@@ -435,10 +431,16 @@ export default {
           Api(formData).then(response => {
             console.log(response);
 
-            for (let i = 0; i < this.colorValue.length; i++) {
-              this.item.picurl = response.data.data.pic_file_url;
+            if (this.status === 1) {
+              for (let i = 0; i < this.colorValue.length; i++) {
+                this.item.picurl = response.data.data.pic_file_url;
+              }
+              this.imgFile = "";
             }
-            this.imgFile = "";
+            if (this.status === 2) {
+              this.obj.picurl = response.data.data.pic_file_url;
+              this.imgFile = "";
+            }
             this.$message({
               //element-ui的消息Message消息提示组件
               type: "success",
@@ -513,10 +515,17 @@ export default {
       console.log("imgLoad");
       console.log(msg);
     },
+    handleFormImg() {
+      this.previews.url = "";
+      this.option.img = "";
+      this.status = 2;
+      this.centerDialogVisible = true;
+    },
     handleImg(item) {
       this.item = item;
       this.previews.url = "";
       this.option.img = "";
+      this.status = 1;
       this.centerDialogVisible = true;
     },
     handleIngredient() {
@@ -635,25 +644,13 @@ export default {
         console.log(res);
         this.$router.go(-1);
       });
+    },
+    async getMaterialList() {
+      let res = await getMaterialSelect();
+      console.log(res);
+      let { data } = res.data;
+      this.materials = data;
     }
-    /* 
-arrival_time: "2020-07-01"
-color_data: (2) [{…}, {…}]
-id: 106
-instock: "1"
-material_data: [{…}]
-materials_class_id: "60"
-materials_class_name: "物料小分类3"
-materials_mainclass_id: "51"
-materials_mainclass_name: "物料"
-materials_supplier_id: "159"
-materialsname: "000"
-materialsno: "000"
-picurl: "https://yj.ppp-pay.top/upload/20200630/20200630165547.jpg"
-remarks: "000"
-unit: "百件"
-wsale_price: "0"
-*/
   },
   async mounted() {
     let { id } = this.$route.query;
@@ -668,12 +665,29 @@ wsale_price: "0"
     this.getClassData();
     this.getUnit();
     this.getColor();
+    this.getMaterialList();
   }
 };
 </script>
 
 <style lang="less" scoped>
 .addRouteCard {
+  .upload {
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+    overflow: hidden;
+    .avatar-uploader-icon {
+      border: 1px solid #ccc;
+      font-size: 28px;
+      color: #8c939d;
+      width: 150px;
+      height: 150px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
   /deep/textarea {
     width: 500px;
     height: 150px;
@@ -719,15 +733,15 @@ wsale_price: "0"
       left: 85%;
       top: 20%;
     }
-    .upload {
-      width: 178px;
-      height: 178px;
-      border-radius: 10px;
-      overflow: hidden;
-      i {
-        border: 1px solid #ccc;
-      }
-    }
+    // .upload {
+    //   width: 178px;
+    //   height: 178px;
+    //   border-radius: 10px;
+    //   overflow: hidden;
+    //   i {
+    //     border: 1px solid #ccc;
+    //   }
+    // }
   }
   .dialog {
     .info {

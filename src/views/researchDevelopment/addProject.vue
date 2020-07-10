@@ -19,7 +19,7 @@
       </div>
       <!-- form -->
       <div class="form">
-        <el-form :model="form" ref="form" :rules="rules" label-width="80px">
+        <el-form :model="form" ref="form" :rules="rules" label-width="120px">
           <el-form-item label="项目名称" prop="projectname">
             <el-input v-model="form.projectname"></el-input>
           </el-form-item>
@@ -102,10 +102,10 @@
           <el-form-item label="要求数量" prop="quantity">
             <el-input v-model="form.quantity" @input="handleInput" placeholder="要求数量"></el-input>
           </el-form-item>
-          <el-form-item label="详细要求" prop="detailed">
+          <el-form-item label="详细要求">
             <el-input type="textarea" v-model="form.detailed" class="textarea"></el-input>
           </el-form-item>
-          <el-form-item label="指派" prop="stylist">
+          <el-form-item label="指派设计师">
             <el-select v-model="form.stylist" placeholder="工作人员名称" @change="handleUser_id($event)">
               <el-option
                 v-for="item in stylists"
@@ -114,6 +114,13 @@
                 :value="item.id"
               ></el-option>
             </el-select>
+            <el-button type="primary" style="margin-left:20px;" round @click="handleAssistant">助理</el-button>
+          </el-form-item>
+          <el-form-item label="指派助理" v-if="Assistant===true">
+            <div style="display:flex">
+              <div v-for="(item, index) in arr" :key="index">{{item.name}},</div>
+              <div @click="handleAddAssistant" style="margin-left:20px">添加助理</div>
+            </div>
           </el-form-item>
           <el-form-item>
             <el-button @click="onSubmit" style="padding:10px 50px;border-radius: 15px;">保存</el-button>
@@ -221,6 +228,24 @@
         <el-button type="primary" @click="finish('blob')">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      title="选择助理"
+      :visible.sync="centerDialogVisible1"
+      width="20%"
+      center
+      class="dialog1"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
+      <div v-for="(item, index) in stylists" :key="index">
+        <el-checkbox v-model="item.checked" @change="isCheckList(item,index)">{{item.name}}</el-checkbox>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="AssistantCancel">取 消</el-button>
+        <el-button type="primary" @click="AssistantFinish">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -265,6 +290,7 @@ export default {
       imgFile: "",
       uploadImgRelaPath: "", //上传后的图片的地址（不带服务器域名）
       centerDialogVisible: false,
+      centerDialogVisible1: false,
       projecttypes: [
         {
           v: "意向",
@@ -299,6 +325,8 @@ export default {
         element: "", //元素
         color: "" //色系
       },
+      Assistant: false,
+      checkedList: [],
       // 表单规则
       rules: {
         projectname: [
@@ -317,15 +345,48 @@ export default {
         ],
         quantity: [
           { required: true, message: "请输入要求数量", trigger: "blur" }
-        ],
-        detailed: [
-          { required: true, message: "请输入详细要求", trigger: "blur" }
-        ],
-        stylist: [{ required: true, message: "请输入设计师", trigger: "blur" }]
-      }
+        ]
+      },
+      arr: []
     };
   },
   methods: {
+    AssistantFinish() {
+      this.stylists.map((v, i) => {
+        if (v.checked == true) {
+          this.arr.push(v);
+        }
+      });
+      this.centerDialogVisible1 = false;
+    },
+    AssistantCancel() {},
+    isCheckList(e, i) {
+      this.arr = [];
+      if (e.checked == false) {
+        this.stylists.map((v, i) => {
+          if (v.id == e.id) {
+            v.checked = false;
+          }
+        });
+      }
+      if (e.checked == true) {
+        this.stylists.map((v, i) => {
+          if (v.id == e.id) {
+            v.checked = true;
+          }
+        });
+      }
+    },
+    handleAddAssistant() {
+      this.centerDialogVisible1 = true;
+    },
+    handleAssistant() {
+      if (this.Assistant === false) {
+        this.Assistant = true;
+      } else {
+        this.Assistant = !this.Assistant;
+      }
+    },
     cancel() {
       if (this.headImg === "") {
         this.option.img = "";
@@ -440,7 +501,6 @@ export default {
       this.form.quantity = this.form.quantity.replace(/[^0-9-]+/, "");
     },
     onSubmit() {
-      console.log(this.form);
       this.$refs["form"].validate(async valid => {
         if (!valid) return;
         // 调用actions的登录方法
@@ -452,6 +512,17 @@ export default {
         delete this.form.west;
         delete this.form.stylist;
         let obj = { ...this.form };
+        this.arr.map(v => {
+          v["user_id"] = v.id;
+          delete v.checked;
+          delete v.ctime;
+          delete v.last_login_time;
+          delete v.name;
+          delete v.role;
+          delete v.username;
+          delete v.id;
+        });
+        obj["user_id_data"] = this.arr;
         obj["finishtime"] = moment(this.form.finishtime).format("YYYY-MM-DD");
         obj["picurl"] = this.headImg;
         if (id === "a") {
@@ -503,7 +574,11 @@ export default {
     async getstylist() {
       let res = await getStylistList();
       let { data } = res.data;
+      data.map(v => {
+        v["checked"] = false;
+      });
       this.stylists = data;
+      console.log(this.stylists);
     }
   },
   async mounted() {

@@ -26,7 +26,9 @@
           <div class="list_content">
             <div style="font-weight: 600;font-size: 14px;">
               {{item.materials_mainclass_name}}
-              <em v-if="item.materials_class_name">({{item.materials_class_name}})</em>
+              <em
+                v-if="item.materials_class_name"
+              >({{item.materials_class_name}})</em>
             </div>
             <div>{{item.materialsname}}</div>
             <div>内部编号:{{item.materialsno}}</div>
@@ -134,6 +136,7 @@ export default {
       .list {
         background-color: #f2f2f2;
         border-radius: 10px;
+        overflow: hidden;
         width: 30%;
         display: flex;
         cursor: pointer;
@@ -142,7 +145,6 @@ export default {
           img {
             width: 100px;
             height: 100px;
-            border-radius: 10px;
           }
         }
         .list_content {

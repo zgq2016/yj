@@ -4,7 +4,7 @@
       <div style="display:flex;justify-content: space-between;">
         <div class="up">
           <div class="up_img">
-            <img :src="upData.picurl" alt />
+            <img :src="upData.picurl" alt @click="handlePreview" />
           </div>
           <div class="up_content">
             <div class="up_content_name">{{upData.materialsname}}</div>
@@ -39,34 +39,69 @@
         </router-link>
       </div>
       <div class="supplier">
-        <div class="supplier_img">
-          <img
-            src="https://axure-file.lanhuapp.com/b0e7ed9c-a55b-4903-972b-002bbf42cf81__56421accffad944d3f7a82b4ed0588f2.svg"
-            alt
-          />
-        </div>
-        <div class="supplier_content">
-          <div class="supplier_content_name">某某布行</div>
-          <div>13570383596</div>
-          <div>020 - 89261869</div>
-          <div>某某布行</div>
-          <div>账号信息：</div>
-          <div>广东省广州市海珠区中大九洲广场纬一街北区1020档</div>
+        <div class="main_left">
+          <div class="main_left_img">
+            <img :src="obj.cardpicurl" alt @click="handlePreview1" />
+          </div>
+          <div class="main_left_deital">
+            <div class="main_left_deital_name">{{obj.companyname}}</div>
+            <div>
+              <div>
+                <div v-for="(item, index) in obj.contact_data" :key="index">
+                  <span style="margin:0 10px">{{item.contacts}}:</span>
+                  <span>{{item.phone}}</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              账号信息：
+              <div>
+                <div v-for="(item, index) in obj.bank_data" :key="index">
+                  <span>{{item.bank}}</span>
+                  <span style="margin:0 10px">{{item.bankid}}</span>
+                  <span>{{item.name}}</span>
+                </div>
+              </div>
+            </div>
+            <div>{{obj.address}}</div>
+          </div>
         </div>
       </div>
     </div>
+    <el-dialog :visible.sync="dialogVisible">
+      <img width="100%" :src="upData.picurl" alt />
+    </el-dialog>
+    <el-dialog :visible.sync="dialogVisible1">
+      <img width="100%" :src="obj.cardpicurl" alt />
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getMaterialsInfo } from "@/api/archives";
+import { getMaterialsInfo, getSupplierInfo } from "@/api/archives";
 export default {
   data() {
     return {
-      upData: {}
+      upData: {},
+      obj: {},
+      dialogVisible: false,
+      dialogVisible1: false
     };
   },
-  methods: {},
+  methods: {
+    handlePreview() {
+      this.dialogVisible = true;
+    },
+    handlePreview1() {
+      this.dialogVisible1 = true;
+    },
+    async init() {
+      let res = await getSupplierInfo({
+        id: this.upData.materials_supplier_data[0].supplier_id
+      });
+      this.obj = res.data.data;
+    }
+  },
   async mounted() {
     let { id } = this.$route.query;
     let res = await getMaterialsInfo({ id });
@@ -79,6 +114,7 @@ export default {
     if (this.upData.instock === "1") {
       this.upData.instock = "否";
     }
+    this.init();
   }
 };
 </script>
@@ -114,20 +150,30 @@ export default {
     .supplier {
       display: flex;
       margin-bottom: 50px;
-      .supplier_img {
-        margin-right: 20px;
-        img {
-          width: 200px;
-          height: 200px;
+      .main_left {
+        display: flex;
+        margin-bottom: 50px;
+        .main_left_img {
+          margin-right: 20px;
+          img {
+            width: 200px;
+            height: 200px;
+          }
         }
-      }
-      .supplier_content {
-        .supplier_content_name {
-          font-size: 18px;
-          font-weight: 600;
-        }
-        div {
-          margin: 8px;
+        .main_left_deital {
+          .bz {
+            width: 43em;
+            word-wrap: break-word;
+            word-break: break-all;
+            overflow: hidden;
+          }
+          .main_left_deital_name {
+            font-size: 16px;
+            font-weight: 600;
+          }
+          div {
+            margin: 5px 0px;
+          }
         }
       }
     }

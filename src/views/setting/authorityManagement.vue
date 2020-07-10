@@ -39,7 +39,7 @@
             <el-form-item label="名称" prop="role_name">
               <el-input v-model="form.role_name" placeholder="名称"></el-input>
             </el-form-item>
-            <el-form-item label="备注" prop="remarks">
+            <el-form-item label="备注">
               <el-input v-model="form.remarks" placeholder="备注"></el-input>
             </el-form-item>
           </el-form>
@@ -81,9 +81,6 @@ export default {
       rules: {
         role_name: [
           { required: true, message: "请输入项目名称", trigger: "blur" }
-        ],
-        remarks: [
-          { required: true, message: "请输入项目类型", trigger: "blur" }
         ]
       },
       tableData: [

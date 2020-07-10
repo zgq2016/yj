@@ -4,7 +4,7 @@
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>销售</el-breadcrumb-item>
-      <el-breadcrumb-item>客户管理</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/clientManagement' }">客户管理</el-breadcrumb-item>
       <el-breadcrumb-item>查看</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="form">

@@ -128,7 +128,7 @@
         <el-form-item label="税点" prop="tax">
           <el-input style="width:200px" v-model="form.tax" @input="handleInput"></el-input>%
         </el-form-item>
-        <el-form-item label="备注" prop="remarks">
+        <el-form-item label="备注">
           <el-input type="textarea" v-model="form.remarks" placeholder="请输入内容" clearable></el-input>
         </el-form-item>
         <el-form-item>
@@ -327,8 +327,7 @@ export default {
         tax: [{ required: true, message: "请填写税点", trigger: "blur" }],
         isbill: [
           { required: true, message: "请选择是否发票", trigger: "change" }
-        ],
-        remarks: [{ required: true, message: "请输入备注", trigger: "blur" }]
+        ]
       },
       contactRules: {
         contact_contacts: [

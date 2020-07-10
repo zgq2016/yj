@@ -4,7 +4,15 @@
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>研发部</el-breadcrumb-item>
-      <el-breadcrumb-item>款式设计</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="navc.TL-0===30" :to="{ path: '/itemDesign' }">设计项目</el-breadcrumb-item>
+      <el-breadcrumb-item
+        v-if="navc.TL-0===30"
+        :to="{ path: `/designCheck?id=${navc.project_id}` }"
+      >项目详细</el-breadcrumb-item>
+      <el-breadcrumb-item
+        v-if="navc.TL-0===30"
+        :to="{ path: `/development?id=${navc.id}&project_id=${navc.project_id}&TL=30` }"
+      >款式详细</el-breadcrumb-item>
       <el-breadcrumb-item>编辑款式</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main">
@@ -21,7 +29,7 @@
                 <div>{{obj.styleno}}</div>
               </el-form-item>
               <el-form-item label="名称" prop="stylename">
-                <el-input v-model="obj.stylename"></el-input>
+                <el-input v-model="obj.stylename" style="width:200px"></el-input>
               </el-form-item>
               <el-form-item label="品类" prop="style_type">
                 <el-select v-model="obj.style_type" placeholder="品类">
@@ -66,6 +74,18 @@
                     :value="item.id"
                   ></el-option>
                 </el-select>
+                <el-button
+                  type="primary"
+                  style="margin-left:20px;"
+                  round
+                  @click="handleAssistant"
+                >助理</el-button>
+              </el-form-item>
+              <el-form-item label="指派助理" v-if="Assistant===true||user_id_data_length>0">
+                <div style="display:flex">
+                  <div v-for="(item, index) in obj.user_id_data" :key="index">{{item.name}},</div>
+                  <div @click="handleAddAssistant" style="margin-left:20px">添加助理</div>
+                </div>
               </el-form-item>
               <el-form-item label="颜色" prop="style_color">
                 <el-select v-model="obj.style_color">
@@ -189,6 +209,24 @@
         <el-button type="primary" @click="finish('blob')">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      title="选择助理"
+      :visible.sync="centerDialogVisible1"
+      width="20%"
+      center
+      class="dialog1"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
+      <div v-for="(item, index) in stylists" :key="index">
+        <el-checkbox v-model="item.checked" @change="isCheckList(item,index)">{{item.name}}</el-checkbox>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="AssistantCancel">取 消</el-button>
+        <el-button type="primary" @click="AssistantFinish">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -237,6 +275,7 @@ export default {
       imgFile: "",
       uploadImgRelaPath: "", //上传后的图片的地址（不带服务器域名）
       centerDialogVisible: false,
+      centerDialogVisible1: false,
       form: {
         style_pic_url: "",
         style_color_pic_url: "",
@@ -268,13 +307,58 @@ export default {
         style_color: [
           { required: true, message: "请输入颜色", trigger: "blur" }
         ]
-      }
+      },
+      Assistant: false,
+      checkedList: [],
+      arr: [],
+      user_id_data_length: "",
+      navc: {}
     };
   },
   methods: {
+    AssistantFinish() {
+      this.obj.user_id_data = [];
+      this.stylists.map((v, i) => {
+        if (v.checked == true) {
+          this.obj.user_id_data.push(v);
+        }
+      });
+      this.centerDialogVisible1 = false;
+    },
+    AssistantCancel() {},
+    isCheckList(e, i) {
+      this.arr = [];
+      if (e.checked == false) {
+        this.stylists.map((v, i) => {
+          if (v.id == e.id) {
+            v.checked = false;
+          }
+        });
+      }
+      if (e.checked == true) {
+        this.stylists.map((v, i) => {
+          if (v.id == e.id) {
+            v.checked = true;
+          }
+        });
+      }
+    },
+    handleAddAssistant() {
+      this.centerDialogVisible1 = true;
+    },
+    handleAssistant() {
+      if (this.Assistant === false) {
+        this.Assistant = true;
+      } else {
+        this.Assistant = !this.Assistant;
+      }
+    },
     cancel() {
-      if (this.headImg === "") {
-        this.option.img = "";
+      if (this.obj.style_pic_url === "") {
+        this.obj.style_pic_url = "";
+      }
+      if (this.obj.style_color_pic_url === "") {
+        this.obj.style_color_pic_url = "";
       }
       this.centerDialogVisible = false;
     },
@@ -396,6 +480,16 @@ export default {
         if (!valid) return;
         // 调用actions的登录方法
         let obj = {};
+        this.obj.user_id_data.map(v => {
+          v["user_id"] = v.id;
+          delete v.checked;
+          delete v.ctime;
+          delete v.id;
+          delete v.last_login_time;
+          delete v.name;
+          delete v.role;
+          delete v.username;
+        });
         obj["id"] = this.$route.query.id;
         obj["style_pic_url"] = this.obj.style_pic_url;
         obj["style_color_pic_url"] = this.obj.style_color_pic_url;
@@ -407,6 +501,7 @@ export default {
         obj["style_color"] = this.obj.style_color;
         obj["user_name"] = this.obj.user_name;
         obj["user_id"] = this.obj.user_id;
+        obj["user_id_data"] = this.obj.user_id_data;
         let res = await styleEdit(obj);
         console.log(res);
         this.$router.go(-1);
@@ -459,6 +554,20 @@ export default {
       let { data } = res.data;
       this.stylists = data;
     },
+    async getstylist() {
+      let res = await getStylistList();
+      let { data } = res.data;
+      this.obj.user_id_data.map(v => {
+        data.map((v1, i1) => {
+          if (v.user_id == v1.id) {
+            v1["checked"] = true;
+            v["name"] = v1.name;
+          }
+        });
+      });
+      this.stylists = data;
+      this.user_id_data_length = this.obj.user_id_data.length;
+    },
     async getCategory() {
       let res = await getCategoryList();
       let { data } = res.data;
@@ -470,9 +579,11 @@ export default {
     }
   },
   async mounted() {
-    let { id } = this.$route.query;
-    let res = await getStyle({ id });
-    // console.log(res);
+    console.log(this.$route.query);
+    let navc = this.$route.query;
+    this.navc = navc;
+    let res = await getStyle({ id: navc.id });
+    console.log(res);
     this.obj = res.data.data;
     this.getYear();
     this.getColor();
