@@ -54,12 +54,7 @@
 
         <el-form-item label="状态:">
           <el-select v-model="formInline.state" placeholder="状态" style="width:120px">
-            <el-option
-              v-for="item in states"
-              :key="item.id"
-              :label="item.v"
-              :value="item.id"
-            ></el-option>
+            <el-option v-for="item in states" :key="item.id" :label="item.v" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -96,14 +91,16 @@
           <el-table-column width="80" align="center" property="state" label="状态"></el-table-column>
           <el-table-column align="center" width="80" label="操作">
             <template slot-scope="scope">
-              <!-- <el-button
-                class="elbtn"
-                size="mini"
-                @click="handleEdit(scope.$index, scope.row)"
-              >{{"查看"}}</el-button>-->
               <el-button
                 class="elbtn"
                 size="mini"
+                v-if="scope.row.order_status==1"
+                @click="handleEdit(scope.$index, scope.row)"
+              >{{"查看"}}</el-button>
+              <el-button
+                class="elbtn"
+                size="mini"
+                v-if="scope.row.order_status==0"
                 @click="handleAdd(scope.$index, scope.row)"
               >{{"下单"}}</el-button>
             </template>
@@ -142,7 +139,7 @@ import {
   getWestList,
   getProduceOrderList
 } from "@/api/researchDevelopment";
-import { produceAdd,getProduceList } from "@/api/production";
+import { produceAdd, getProduceList } from "@/api/production";
 export default {
   data() {
     return {
@@ -152,7 +149,7 @@ export default {
         season: "",
         user_id: "",
         style_type: "",
-        state:""
+        state: ""
       },
       years: [],
       seasons: [],
@@ -172,12 +169,20 @@ export default {
       count: 0,
       states: [
         {
+          v: "全部",
+          id: 3
+        },
+        {
           v: "未下单",
           id: 0
         },
         {
           v: "已下单",
           id: 1
+        },
+        {
+          v: "已完成",
+          id: 2
         }
       ],
       tableData: []
@@ -201,7 +206,9 @@ export default {
       // console.log(row);
       // console.log(index);
       this.$router.push({
-        path: `/productionStyle?id=${row.style_id}&activeNames=1&TL=${0}&produce_no=${row.produce_no}`
+        path: `/productionStyle?id=${
+          row.style_id
+        }&activeNames=1&TL=${0}&produce_no=${row.produce_no}`
       });
     },
     // 下单
@@ -210,7 +217,9 @@ export default {
       // console.log(res);
 
       this.$router.push({
-        path: `/productionStyle?id=${row.style_id}&activeNames=1&TL=${0}&produce_no=${row.produce_no}`
+        path: `/productionStyle?id=${
+          row.style_id
+        }&activeNames=1&TL=${0}&produce_no=${row.produce_no}`
       });
     },
     // 查询
@@ -271,6 +280,11 @@ export default {
             v.stylist = j.name;
           }
         });
+        if (v.order_status == 0) {
+          v.state = "未下单";
+        } else if (v.order_status == 1) {
+          v.state = "已下单";
+        }
       });
     },
     async handleUser_id(e) {

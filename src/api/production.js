@@ -223,6 +223,8 @@ export const produceCompleteEdit = data => {
       data: data
     });
   };
+
+
 // 显示生产下单批次list接口
 export const getProduceList = data => {
     return axios({
@@ -231,4 +233,44 @@ export const getProduceList = data => {
       data: data
     });
   };
+// 显示生产采购list接口
+export const getProduceProcureList = data => {
+    return axios({
+      url: "?g=get_produce_procure_list",
+      method: "post",
+      data: data
+    });
+  };
+// 显示生产排单list接口
+export const getProduceFactoryList = data => {
+    return axios({
+      url: "?g=get_produce_factory_list",
+      method: "post",
+      data: data
+    });
+  };
+// 显示生产裁剪list接口
+export const getProduceCutList = data => {
+    return axios({
+      url: "?g=get_produce_cut_list",
+      method: "post",
+      data: data
+    });
+  };
+// 显示生产出货list接口
+export const getProduceCompleteList = data => {
+    return axios({
+      url: "?g=get_produce_complete_list",
+      method: "post",
+      data: data
+    });
+  };
+// // 批次日志
+// export const produceLogData = data => {
+//     return axios({
+//       url: "?g=produce_log_data",
+//       method: "post",
+//       data: data
+//     });
+//   };
 

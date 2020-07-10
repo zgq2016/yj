@@ -80,23 +80,14 @@
         </span>
       </el-dialog>
       <!-- 步骤条 -->
-      <el-steps
-        :space="90"
-        :active="8"
-        align-center
-        process-status="process"
-        finish-status="success "
-      >
-        <el-step icon="el-icon-success" description="02.20 20:30" title="准备下单"></el-step>
-        <el-step icon="el-icon-success" description="02.20 20:30" title="已下单"></el-step>
-        <el-step icon="el-icon-success" description="02.20 20:30" title="主料已下单"></el-step>
-        <el-step icon="el-icon-success" description="02.20 20:30" title="主料回料"></el-step>
-        <el-step icon="el-icon-success" description="02.20 20:30" title="辅料全部回料"></el-step>
-        <el-step icon="el-icon-success" description="02.20 20:30" title="已指派"></el-step>
-        <el-step icon="el-icon-success" description="02.20 20:30" title="已裁剪"></el-step>
-        <el-step icon="el-icon-success" description="02.20 20:30" title="部分出货"></el-step>
-        <el-step icon="el-icon-success" description="02.20 20:30" title="全部出货"></el-step>
-      </el-steps>
+      <div v-if="ob[active]">
+        <el-steps :space="120" :active="ob[active].logDatas.length-1" align-center finish-status="wait">
+          <el-step icon="el-icon-success" v-for="(item,index) in ob[active].logDatas" :key="index">
+            <template v-slot:title>{{item.logname}}</template>
+            <template v-slot:description>{{item.ctime}}</template>
+          </el-step>
+        </el-steps>
+      </div>
       <!-- 信息部分 -->
       <el-collapse v-model="activeNames" @change="handleChange">
         <el-collapse-item v-if="showhide1" title="下单信息" name="1">
@@ -618,11 +609,7 @@
                 <el-form-item>
                   <el-button>加工费对比</el-button>
                 </el-form-item>
-                <el-form-item
-                  :prop="'child.'+index+'.remarks'"
-                  :rules="contactRules.remarks"
-                  label="备注："
-                >
+                <el-form-item label="备注：">
                   <el-input type="textarea" v-model="item.remarks" style="width:50vw"></el-input>
                 </el-form-item>
                 <el-button
@@ -1020,6 +1007,7 @@ import {
   getStyleMaterialsList
 } from "@/api/researchDevelopment";
 import {
+  produceLogData, //批次日志
   produceAdd, // 新增生产批次
   produceDel, // 删除生产批次
   produceInfo, // 生产批次明细
@@ -1582,12 +1570,13 @@ export default {
       let res = await produceAdd({ style_id: Number(id) });
       let res1 = await produceInfo({ style_id: Number(id) });
       let { data } = res1.data;
-      console.log(data);
+      // console.log(data);
       this.ob = [];
       data.map((v, i) => {
         this.ob.push({
           num: i,
-          produce_no: v.produce_no
+          produce_no: v.produce_no,
+          logDatas: v.produce_log_data
         });
       });
       // this.date = [];
@@ -1840,7 +1829,11 @@ export default {
       this.ob = [];
       data.forEach(element => {
         this.num++;
-        this.ob.push({ num: this.num, produce_no: element.produce_no });
+        this.ob.push({
+          num: this.num,
+          produce_no: element.produce_no,
+          logDatas: element.produce_log_data
+        });
       });
 
       // 初始化表单
@@ -2088,7 +2081,7 @@ export default {
                     produce_order_size: arr1[i]
                   });
                 }
-                console.log(arr);
+                // console.log(arr);
 
                 //将form数据传入接口
                 if (this.show2) {
@@ -3368,6 +3361,15 @@ export default {
         }
       }, 500);
     }
+    // 批次日志
+    // async logData() {
+    //   let res = await produceLogData(
+    //     {}
+    //   );
+    //   console.log(res);
+    //   let {data} = res.data;
+    //   this.logDatas = data;
+    // }
   },
   async mounted() {
     let { id } = this.$route.query;
@@ -3378,13 +3380,14 @@ export default {
     let res1 = await produceInfo({ style_id: Number(id) });
     let { data } = res1.data;
 
-    // console.log(data);
+    console.log(data);
     if (data.length > 0) {
       this.ob = [];
       data.map((v, i) => {
         this.ob.push({
           num: i,
-          produce_no: v.produce_no
+          produce_no: v.produce_no,
+          logDatas: v.produce_log_data
         });
       });
       this.ob.map((v, i) => {
@@ -3395,6 +3398,8 @@ export default {
     } else {
       this.home = true;
     }
+    console.log(this.ob);
+
     // console.log(this.obj);
     // console.log(this.obj.style_materials_color_data)
     // this.activities_endlong = res.data.data.style_log;
@@ -3407,6 +3412,7 @@ export default {
     this.westList();
     this.styleColorSelect();
     this.ProcureList();
+    // this.logData();
     this.TL = this.$route.query.TL - 0;
   }
 };
@@ -3993,7 +3999,6 @@ export default {
     width: 110px;
     height: 110px;
     display: block;
-   
   }
 }
 </style>
