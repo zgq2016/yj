@@ -32,8 +32,8 @@
           </el-form-item>
 
           <el-form-item label="数量:">
-            <el-input style="width:110px" v-model="form.beforenumber" placeholder="请输入数量"></el-input>至
-            <el-input style="width:110px" v-model="form.afternumber" placeholder="请输入数量"></el-input>
+            <el-input style="width:100px" v-model="form.beforenumber" placeholder="请输入数量"></el-input>&nbsp;至
+            <el-input style="width:100px" v-model="form.afternumber" placeholder="请输入数量"></el-input>
           </el-form-item>
 
           <el-form-item>
@@ -45,11 +45,11 @@
         </el-form>
         <el-button type="primary">展示统计数据</el-button>
         <el-button type="primary">导出</el-button>
-        <el-button type="primary">打印</el-button>
+        <el-button v-print="'#printTest'" type="primary">打印</el-button>
       </div>
       <hr style="border:1px dashed #ccc" />
       <div class="table">
-        <el-table ref="singleTable" :data="tableData" highlight-current-row style="width: 100%">
+        <el-table id="printTest" ref="singleTable" :data="tableData" highlight-current-row style="width: 100%">
           <el-table-column align="center" type="index" width="50"></el-table-column>
           <el-table-column align="center" property="username" label="名称"></el-table-column>
           <el-table-column align="center"  width="70" label="图片">
