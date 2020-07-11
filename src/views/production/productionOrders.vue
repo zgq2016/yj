@@ -196,9 +196,10 @@ export default {
         column.label == "名称" ||
         column.label == "款号"
       ) {
-        this.$router.push({
-          path: "/development?id=" + row.style_id
-        });
+        // this.$router.push({
+        //   path: "/development?id=" + row.style_id+TL
+        // });
+        this.$router.push({ path: `/development?id=${row.style_id}&TL=20` });
       }
     },
     // 查看

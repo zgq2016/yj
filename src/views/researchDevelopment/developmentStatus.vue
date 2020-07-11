@@ -11,6 +11,8 @@
       <el-breadcrumb-item v-if="TL===1" :to="{ path: `/materialPurchase` }">版料采购</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===2" :to="{ path: `/pattern` }">纸样</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===3" :to="{ path: `/platemaking` }">制版</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===20" :to="{ path: `/productionOrders` }">生产下单</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===21" :to="{ path: `/designFile` }">款式档案</el-breadcrumb-item>
       <el-breadcrumb-item>款式详细</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main">
@@ -44,8 +46,8 @@
             <el-tab-pane label="版料采购" name="/materialPurchasing"></el-tab-pane>
             <el-tab-pane label="纸样" name="/patternStatus"></el-tab-pane>
             <el-tab-pane label="样衣" name="/sampleDress"></el-tab-pane>
-            <el-tab-pane label="生产信息" name="/ProductionStyle"></el-tab-pane>
-            <el-tab-pane label="商品信息" name="/merchandiseNews"></el-tab-pane>
+            <el-tab-pane v-if="TL===21" label="生产信息" name="/ProductionStyle"></el-tab-pane>
+            <el-tab-pane v-if="TL===21" label="商品信息" name="/merchandiseNews"></el-tab-pane>
           </el-tabs>
         </el-header>
         <el-main>
@@ -69,10 +71,10 @@ export default {
   },
   methods: {
     handleClick(tab, event) {
-      let { id } = this.$route.query;
+      let { id, TL } = this.$route.query;
       // this.activeName = tab.name;
       this.$router.push({
-        path: `${tab.name}?id=${id}&project_id=${this.obj.project_id}&TL=30`
+        path: `${tab.name}?id=${id}&project_id=${this.obj.project_id}&TL=${TL}`
       });
     },
     editTheStyle() {
@@ -99,6 +101,8 @@ export default {
   watch: {
     $route() {
       this.init();
+
+      console.log();
     }
   }
 };

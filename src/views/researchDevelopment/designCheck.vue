@@ -10,7 +10,15 @@
     <!-- 详情 -->
     <div class="detail">
       <div class="left_img">
-        <img :src="obj.picurl" style="border-radius: 10px;" alt />
+        <div v-if="obj.picurl!==''">
+          <img :src="obj.picurl" alt />
+        </div>
+        <div v-if="obj.picurl===''">
+          <img v-if="obj.projecttype==='0'" src="../../assets/意向.jpg" alt />
+          <img v-if="obj.projecttype==='1'" src="../../assets/阶段.jpg" alt />
+          <img v-if="obj.projecttype==='2'" src="../../assets/系列.jpg" alt />
+        </div>
+        <!-- <img :src="obj.picurl" style="border-radius: 10px;" alt /> -->
       </div>
       <div class="right_content">
         <div class="name">项目名称：{{obj.projectname}}</div>
@@ -149,8 +157,11 @@ export default {
       this.centerDialogVisible = true;
     },
     handleEdit(e) {
+      console.log(e);
       let { id } = e;
-      this.$router.push({ path: `/development?id=${id}&TL=${0}` });
+      this.$router.push({
+        path: `/development?id=${id}&TL=${30}&project_id=${this.obj.id}`
+      });
     },
     editOutline() {
       let { id } = this.$route.query;
@@ -169,7 +180,7 @@ export default {
       let res = await getProject({ id });
       this.obj = res.data.data;
       this.tableData = res.data.data.style_data;
-      console.log(this.tableData);
+      console.log(this.obj);
     }
   },
   async mounted() {

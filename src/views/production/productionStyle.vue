@@ -12,14 +12,10 @@
 /
       款式详细-->
       <el-breadcrumb-item v-if="TL===4" :to="{ path: '/shipment' }">生产出货</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="TL===30" :to="{ path: '/itemDesign' }">设计项目</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="TL===21" :to="{ path: '/designFile' }">款式档案</el-breadcrumb-item>
       <el-breadcrumb-item
-        v-if="TL===30"
-        :to="{ path: `/designCheck?id=${this.$route.query.project_id}` }"
-      >项目详细</el-breadcrumb-item>
-      <el-breadcrumb-item
-        v-if="TL===30"
-        :to="{ path: `/development?id=${this.$route.query.id}&TL=30` }"
+        v-if="TL===21"
+        :to="{ path: `/development?id=${this.$route.query.id}&TL=21` }"
       >款式详细</el-breadcrumb-item>
       <el-breadcrumb-item>生产档案</el-breadcrumb-item>
     </el-breadcrumb>
@@ -81,7 +77,12 @@
       </el-dialog>
       <!-- 步骤条 -->
       <div v-if="ob[active]">
-        <el-steps :space="120" :active="ob[active].logDatas.length-1" align-center finish-status="wait">
+        <el-steps
+          :space="120"
+          :active="ob[active].logDatas.length-1"
+          align-center
+          finish-status="wait"
+        >
           <el-step icon="el-icon-success" v-for="(item,index) in ob[active].logDatas" :key="index">
             <template v-slot:title>{{item.logname}}</template>
             <template v-slot:description>{{item.ctime}}</template>
