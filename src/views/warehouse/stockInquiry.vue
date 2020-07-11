@@ -1,4 +1,3 @@
-        <el-button size="mini">确认入库</el-button>
 <template>
   <div class="stockInquiry">
     <!-- 面包屑 -->
@@ -50,7 +49,8 @@
             :data="tableData"
             tooltip-effect="dark"
             size="mini"
-            border
+            stripe
+            :header-cell-style="{background:'#eef1f6',color:'#606266'}"
             @cell-click="cellClick"
             @selection-change="handleSelectionChange"
           >
@@ -161,9 +161,90 @@
               </el-form-item>
             </el-form>
           </div>
-          <div class="right_table"></div>
+          <div class="right_table">
+            <el-table
+              :data="weretable"
+              show-summary
+              :summary-method="getSummaries"
+              row-key="id"
+              size="mini"
+              style="cursor: pointer;"
+              :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+            >
+              <el-table-column type="index" width="35"></el-table-column>
+              <el-table-column align="center" width="60" label="操作">
+                <template slot-scope="scope">
+                  <div
+                    style="width:20px;float:left"
+                    class="el-icon-plus btn"
+                    @click="handleAdd(scope.$index, scope.row)"
+                  ></div>
+                  <div
+                    style="width:20px;float:right"
+                    class="el-icon-delete btn"
+                    @click="handleDelete(scope.$index, scope.row)"
+                  ></div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="commodity" width="90" align="center" label="商品">
+                <template slot-scope="scope">
+                  <el-autocomplete
+                    class="inline-input"
+                    size="mini"
+                    :title="scope.row.commodity"
+                    v-model="scope.row.commodity"
+                    :fetch-suggestions="querySearch"
+                    style="font-size:12px"
+                    placeholder="点击选择"
+                    @select="handleSelect($event,scope.$index, scope.row)"
+                  ></el-autocomplete>
+                </template>
+              </el-table-column>
+              <el-table-column prop="item_no" align="center" sum-text label="货号"></el-table-column>
+              <el-table-column prop="bar_code" align="center" label="条码"></el-table-column>
+              <el-table-column prop="color" width="50" align="center" label="颜色"></el-table-column>
+              <el-table-column prop="size" width="50" align="center" label="尺码"></el-table-column>
+              <el-table-column prop="monad" width="50" align="center" label="单位"></el-table-column>
+              <el-table-column prop="quantity" width="60" align="center" label="数量"></el-table-column>
+              <el-table-column prop="univalence" width="60" align="center" label="单价"></el-table-column>
+              <el-table-column prop="discount" align="center" label="折扣(%)"></el-table-column>
+              <el-table-column prop="sum" width="60" align="center" label="金额"></el-table-column>
+              <el-table-column prop="sumed" width="70" align="center" label="折后金额"></el-table-column>
+              <el-table-column prop="remark" width="70" align="center" label="备注"></el-table-column>
+            </el-table>
+          </div>
         </div>
-        <div class="right_footer"></div>
+        <div class="right_footer">
+          <!-- style="position:realtive" -->
+          <el-form :model="ruleForm" inline ref="ruleForm" class="demo-ruleForm">
+            <div style="position: absolute;left:5px;">
+              <el-form-item label="附图:"></el-form-item>
+            </div>
+            <div style="position: absolute;right:-40px;width:540px;">
+              <el-form-item label="其他费用账目类型:">
+                <el-select size="mini" v-model="ruleForm.region" placeholder="请选择">
+                  <el-option label="区域一" value="shanghai"></el-option>
+                  <el-option label="区域二" value="beijing"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="费用金额:">
+                <el-input size="mini" v-model="ruleForm.name" placeholder="请输入金额"></el-input>
+              </el-form-item>
+              <el-form-item label="抹零:">
+                <el-input size="mini" v-model="ruleForm.name" placeholder="请输入金额"></el-input>
+              </el-form-item>
+            <el-form-item label="总合计:">
+              <span>&yen;{{'0.00'}}</span>
+            </el-form-item>
+            </div>
+            <div style="position: absolute;bottom:5px;left:40%;">
+              <el-form-item>
+                <el-button size="mini" type="primary" @click="onSubmit">查询</el-button>
+                <el-button size="mini" type="primary">批量打印</el-button>
+              </el-form-item>
+            </div>
+          </el-form>
+        </div>
       </div>
     </div>
   </div>
@@ -179,13 +260,108 @@ import {
 export default {
   data() {
     return {
+      //选择商品
+
+      restaurants: [
+        { value: "三全鲜食1", item_no: "121356", bar_code: "a121356" },
+        { value: "三全鲜食2", item_no: "121356", bar_code: "b121355" },
+        { value: "三全鲜食3", item_no: "121a36", bar_code: "c121354" },
+        { value: "三全鲜食4", item_no: "121356", bar_code: "d121353" },
+        { value: "三全鲜食4", item_no: "121356", bar_code: "d121353" },
+        { value: "三全鲜食4", item_no: "121356", bar_code: "d121353" },
+      ],
+      // table数据
+      weretable: [
+        {
+          commodity: "",
+          item_no: "",
+          bar_code: "",
+          monad: "",
+          color: "",
+          size: "",
+          quantity: "0",
+          univalence: "0",
+          discount: "100",
+          sum: "0.00",
+          sumed: "0.00",
+          remark: ""
+        },
+        {
+          commodity: "",
+          item_no: "",
+          bar_code: "",
+          monad: "",
+          color: "",
+          size: "",
+          quantity: "0",
+          univalence: "0",
+          discount: "100",
+          sum: "0.00",
+          sumed: "0.00",
+          remark: ""
+        },
+        {
+          commodity: "",
+          item_no: "",
+          bar_code: "",
+          monad: "",
+          color: "",
+          size: "",
+          quantity: "0",
+          univalence: "0",
+          discount: "100",
+          sum: "0.00",
+          sumed: "0.00",
+          remark: ""
+        },
+        {
+          commodity: "",
+          item_no: "",
+          bar_code: "",
+          monad: "",
+          color: "",
+          size: "",
+          quantity: "0",
+          univalence: "0",
+          discount: "100",
+          sum: "0.00",
+          sumed: "0.00",
+          remark: ""
+        },
+        {
+          commodity: "",
+          item_no: "",
+          bar_code: "",
+          monad: "",
+          color: "",
+          size: "",
+          quantity: "0",
+          univalence: "0",
+          discount: "100",
+          sum: "0.00",
+          sumed: "0.00",
+          remark: ""
+        },
+        {
+          commodity: "",
+          item_no: "",
+          bar_code: "",
+          monad: "",
+          color: "",
+          size: "",
+          quantity: "0",
+          univalence: "0",
+          discount: "100",
+          sum: "0.00",
+          sumed: "0.00",
+          remark: ""
+        }
+      ],
       rules: {
         manufacturer: [
-          { required: true, message: "请选择活动区域", trigger: "change" }
+          { required: true, message: "请选择厂商", trigger: "change" }
         ],
-        ware: [
-          { required: true, message: "请选择活动区域", trigger: "change" }
-        ],
+        ware: [{ required: true, message: "请选择仓库", trigger: "change" }],
         date1: [
           {
             type: "date",
@@ -212,7 +388,8 @@ export default {
         manufacturer: "",
         ware: "",
         date1: ""
-      }, //选择表单
+      },
+       //选择表单
       tableData: [
         {
           date: "2016-05-03 18:01",
@@ -253,6 +430,33 @@ export default {
     };
   },
   methods: {
+    // table指定列合计
+    getSummaries(param) {
+      const { columns, data } = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 1) {
+          sums[index] = "总计";
+        } else if (index === 8 || index === 11 || index === 12) {
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0);
+          } else {
+            sums[index] = "N/A";
+          }
+        } else {
+          sums[index] = "-";
+        }
+      });
+      return sums;
+    },
     onSubmit() {
       console.log("submit!");
     },
@@ -290,6 +494,52 @@ export default {
     //单元格被点击
     cellClick(row, column, cell, event) {
       console.log(row, column, cell, event);
+    },
+    handleAdd(index, row) {
+      console.log(index, row);
+      let obj = {
+        commodity: "",
+        item_no: "",
+        bar_code: "",
+        monad: "",
+        color: "",
+        size: "",
+        quantity: "0",
+        univalence: "0",
+        discount: "100",
+        sum: "0.00",
+        sumed: "0.00",
+        remark: ""
+      };
+      this.weretable.splice(index, 0, obj);
+    },
+    handleDelete(index, row) {
+      console.log(index, row);
+      this.weretable.splice(index, 1);
+    },
+
+    querySearch(queryString, cb) {
+      var restaurants = this.restaurants;
+      var results = queryString
+        ? restaurants.filter(this.createFilter(queryString))
+        : restaurants;
+      // 调用 callback 返回建议列表的数据
+      cb(results);
+    },
+    createFilter(queryString) {
+      return restaurant => {
+        return (
+          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) ===
+          0
+        );
+      };
+    },
+    handleSelect(v, idnex, row) {
+      // console.log(v,idnex,row);
+      row.commodity = v.value;
+      row.item_no = v.item_no;
+      row.bar_code = v.bar_code;
+      console.log(row);
     }
   },
   mounted() {
@@ -306,6 +556,7 @@ export default {
   list-style: none;
   .main {
     background: rgb(248, 245, 245);
+
     overflow: hidden;
     .left {
       overflow: hidden;
@@ -354,9 +605,14 @@ export default {
       .left_table {
         cursor: pointer;
       }
+      .tableStyle {
+        background-color: #1989fa !important;
+        color: #fff;
+        font-weight: 400;
+      }
     }
     .right {
-      margin: 10px 1% 10px 0;
+      margin: 10px 1% 50px 0;
       background: #fff;
       width: 75%;
       float: right;
@@ -418,6 +674,42 @@ export default {
                 .el-step__description {
                   padding-top: 20%;
                 }
+              }
+            }
+          }
+        }
+      }
+      .right_footer {
+        .el-form {
+          position: relative;
+          width: 100%;
+          height: 200px;
+          overflow: hidden;
+          /deep/.el-form-item {
+            float: left;
+            margin-bottom: 8px;
+            margin-right: 0;
+            .el-form-item__content {
+              /deep/.el-input {
+                width: 70%;
+              }
+            }
+          }
+          /deep/.el-form-item:nth-child(3) {
+            float: right;
+           
+          }
+          /deep/.el-form-item:nth-child(4) {
+            float: right;
+            width: 100%;
+            text-align: right;
+            margin-right:60px ;
+            .el-form-item__content{
+              span{
+                display: block;
+                width: 100px;
+                color: red;
+                font-size: 16px;
               }
             }
           }
