@@ -90,7 +90,7 @@
           <div class="rh_right">
             <el-button size="mini" type="primary">扫码</el-button>
             <el-button size="mini" type="primary">导入</el-button>
-            <el-button size="mini" type="primary">新增入库单</el-button>
+            <el-button size="mini" @click="addCreateWare" type="primary">新增入库单</el-button>
           </div>
         </div>
         <hr style="border:1px dashed #ccc;margin:0 10px" />
@@ -100,7 +100,7 @@
               <el-form-item style="overflow: hidden;width:100%;">
                 <div style="float:left;padding:10px 0 0 15px;">
                   尚欠供应商款:
-                  <em style="color:red;">&yen;{{'00.00'}}</em>
+                  <em style="color:red;">&yen;{{'0.00'}}</em>
                 </div>
                 <div class="cssa" style="float:right;padding:10px 15px 0 0;width:210px;">
                   <el-steps :space="110" align-center :active="1" finish-status="wait">
@@ -137,7 +137,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item style="display:inline-block;width:26%;margin-left:3%;" label="实付金额:">
-                <el-input size="mini" style="width: 60%;" v-model="form.name"></el-input>
+                <el-input size="mini" placeholder="请输入实付金额" style="width: 60%;" v-model="form.name"></el-input>
               </el-form-item>
               <el-form-item
                 style="display:inline-block;width:30%;margin-left:2%;"
@@ -169,6 +169,7 @@
               row-key="id"
               size="mini"
               style="cursor: pointer;"
+              @cell-click="cellClick1"
               :header-cell-style="{background:'#eef1f6',color:'#606266'}"
             >
               <el-table-column type="index" width="35"></el-table-column>
@@ -191,26 +192,136 @@
                   <el-autocomplete
                     class="inline-input"
                     size="mini"
+                    v-if="scope.row.showHidden1"
                     :title="scope.row.commodity"
                     v-model="scope.row.commodity"
                     :fetch-suggestions="querySearch"
-                    style="font-size:12px"
                     placeholder="点击选择"
-                    @select="handleSelect($event,scope.$index, scope.row)"
+                    @blur="bblur(scope.row,scope.column)"
+                    @select="handleSelect($event,scope.column, scope.row)"
                   ></el-autocomplete>
+                  <span v-else>{{scope.row.commodity || "点击选择"}}</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="item_no" align="center" sum-text label="货号"></el-table-column>
-              <el-table-column prop="bar_code" align="center" label="条码"></el-table-column>
-              <el-table-column prop="color" width="50" align="center" label="颜色"></el-table-column>
-              <el-table-column prop="size" width="50" align="center" label="尺码"></el-table-column>
+              <el-table-column prop="item_no" align="center" width="80" sum-text label="货号"></el-table-column>
+              <el-table-column prop="bar_code" align="center" width="80" label="条码"></el-table-column>
+              <el-table-column prop="color" width="70" align="center" label="颜色">
+                <template slot-scope="scope">
+                  <el-autocomplete
+                    class="inline-input"
+                    size="mini"
+                    v-if="scope.row.showHidden2"
+                    :title="scope.row.color"
+                    v-model="scope.row.color"
+                    :fetch-suggestions="querySearch1"
+                    @blur="bblur(scope.row,scope.column)"
+                    @select="handleSelect($event,scope.$index, scope.row)"
+                  ></el-autocomplete>
+                  <span v-else>{{scope.row.color}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="size" width="70" align="center" label="尺码">
+                <template slot-scope="scope">
+                  <el-autocomplete
+                    class="inline-input"
+                    size="mini"
+                    v-if="scope.row.showHidden3"
+                    :title="scope.row.size"
+                    v-model="scope.row.size"
+                    :fetch-suggestions="querySearch2"
+                    @blur="bblur(scope.row,scope.column)"
+                    @select="handleSelect($event,scope.$index, scope.row)"
+                  ></el-autocomplete>
+                  <span v-else>{{scope.row.size}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="monad" width="50" align="center" label="单位"></el-table-column>
+              <el-table-column prop="quantity" width="60" align="center" label="数量">
+                <template slot-scope="scope">
+                  <input
+                    v-model="scope.row.quantity"
+                    @blur="bblur(scope.row,scope.column,scope.row.quantity)"
+                    v-if="scope.row.showHidden4"
+                    style="border:1px solid #ccc;width:30px;"
+                  />
+                  <span v-else>{{scope.row.quantity}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="univalence" width="60" align="center" label="单价">
+                <template slot-scope="scope">
+                  <input
+                    v-model="scope.row.univalence"
+                    @blur="bblur(scope.row,scope.column,scope.row.univalence)"
+                    v-if="scope.row.showHidden5"
+                    style="border:1px solid #ccc;width:30px;"
+                  />
+                  <span v-else>{{scope.row.univalence}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="discount" align="center" width="65" label="折扣(%)">
+                <template slot-scope="scope">
+                  <input
+                    v-model="scope.row.discount"
+                    @blur="bblur(scope.row,scope.column,scope.row.discount)"
+                    v-if="scope.row.showHidden6"
+                    style="border:1px solid #ccc;width:30px;"
+                  />
+                  <span v-else>{{scope.row.discount}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="discountPrice" align="center" label="折后价">
+                <template slot-scope="scope">
+                  <input
+                    v-model="scope.row.discountPrice"
+                    @blur="bblur(scope.row,scope.column,scope.row.discountPrice)"
+                    v-if="scope.row.showHidden7"
+                    style="border:1px solid #ccc;width:30px;"
+                  />
+                  <span v-else>{{scope.row.discountPrice}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="sum" width="60" align="center" label="金额"></el-table-column>
+              <el-table-column prop="sumed" width="70" align="center" label="折后金额"></el-table-column>
+              <el-table-column prop="remark" width="100" align="center" label="备注">
+                <template slot-scope="scope">
+                  <el-input
+                    type="text"
+                    maxlength="20"
+                    size="mini"
+                    placeholder="最多20字"
+                    v-model="scope.row.remark"
+                    @blur="bblur(scope.row,scope.column,scope.row.remark)"
+                    v-if="scope.row.showHidden8"
+                  ></el-input>
+                  <span v-else>{{scope.row.remark}}</span>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+          <div class="right_table" v-if="false">
+            <el-table
+              :data="weretable"
+              show-summary
+              :summary-method="getSummaries"
+              row-key="id"
+              size="mini"
+              style="cursor: pointer;"
+              :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+            >
+              <el-table-column type="index" width="35"></el-table-column>
+              <el-table-column prop="commodity" width="90" align="center" label="商品"></el-table-column>
+              <el-table-column prop="item_no" align="center" width="80" sum-text label="货号"></el-table-column>
+              <el-table-column prop="bar_code" align="center" width="80" label="条码"></el-table-column>
+              <el-table-column prop="color" width="70" align="center" label="颜色"></el-table-column>
+              <el-table-column prop="size" width="70" align="center" label="尺码"></el-table-column>
               <el-table-column prop="monad" width="50" align="center" label="单位"></el-table-column>
               <el-table-column prop="quantity" width="60" align="center" label="数量"></el-table-column>
               <el-table-column prop="univalence" width="60" align="center" label="单价"></el-table-column>
-              <el-table-column prop="discount" align="center" label="折扣(%)"></el-table-column>
+              <el-table-column prop="discount" align="center" width="65" label="折扣(%)"></el-table-column>
+              <el-table-column prop="discountPrice" align="center" label="折后价"></el-table-column>
               <el-table-column prop="sum" width="60" align="center" label="金额"></el-table-column>
               <el-table-column prop="sumed" width="70" align="center" label="折后金额"></el-table-column>
-              <el-table-column prop="remark" width="70" align="center" label="备注"></el-table-column>
+              <el-table-column prop="remark" width="90" align="center" label="备注"></el-table-column>
             </el-table>
           </div>
         </div>
@@ -233,14 +344,14 @@
               <el-form-item label="抹零:">
                 <el-input size="mini" v-model="ruleForm.name" placeholder="请输入金额"></el-input>
               </el-form-item>
-            <el-form-item label="总合计:">
-              <span>&yen;{{'0.00'}}</span>
-            </el-form-item>
+              <el-form-item label="总合计:">
+                <span>&yen;{{'0.00'}}</span>
+              </el-form-item>
             </div>
             <div style="position: absolute;bottom:5px;left:40%;">
               <el-form-item>
-                <el-button size="mini" type="primary" @click="onSubmit">查询</el-button>
-                <el-button size="mini" type="primary">批量打印</el-button>
+                <el-button size="mini" type="primary" @click="onSubmit">草稿</el-button>
+                <el-button size="mini" type="primary">入库</el-button>
               </el-form-item>
             </div>
           </el-form>
@@ -263,98 +374,50 @@ export default {
       //选择商品
 
       restaurants: [
-        { value: "三全鲜食1", item_no: "121356", bar_code: "a121356" },
+        { value: "三全鲜食1", item_no: "121356", bar_code: "a1213516" },
         { value: "三全鲜食2", item_no: "121356", bar_code: "b121355" },
         { value: "三全鲜食3", item_no: "121a36", bar_code: "c121354" },
         { value: "三全鲜食4", item_no: "121356", bar_code: "d121353" },
         { value: "三全鲜食4", item_no: "121356", bar_code: "d121353" },
-        { value: "三全鲜食4", item_no: "121356", bar_code: "d121353" },
+        { value: "三全鲜食4", item_no: "121356", bar_code: "d121353" }
       ],
+      colors: [
+        { value: "红色" },
+        { value: "白色" },
+        { value: "灰色" },
+        { value: "浅绿色" }
+      ],
+      sizes: [
+        { value: "L" },
+        { value: "XL" },
+        { value: "XXL" },
+        { value: "M" }
+      ],
+
       // table数据
       weretable: [
         {
           commodity: "",
           item_no: "",
           bar_code: "",
-          monad: "",
+          monad: "件",
           color: "",
           size: "",
           quantity: "0",
-          univalence: "0",
+          univalence: "0.00",
           discount: "100",
+          discountPrice: "0.00",
           sum: "0.00",
           sumed: "0.00",
-          remark: ""
-        },
-        {
-          commodity: "",
-          item_no: "",
-          bar_code: "",
-          monad: "",
-          color: "",
-          size: "",
-          quantity: "0",
-          univalence: "0",
-          discount: "100",
-          sum: "0.00",
-          sumed: "0.00",
-          remark: ""
-        },
-        {
-          commodity: "",
-          item_no: "",
-          bar_code: "",
-          monad: "",
-          color: "",
-          size: "",
-          quantity: "0",
-          univalence: "0",
-          discount: "100",
-          sum: "0.00",
-          sumed: "0.00",
-          remark: ""
-        },
-        {
-          commodity: "",
-          item_no: "",
-          bar_code: "",
-          monad: "",
-          color: "",
-          size: "",
-          quantity: "0",
-          univalence: "0",
-          discount: "100",
-          sum: "0.00",
-          sumed: "0.00",
-          remark: ""
-        },
-        {
-          commodity: "",
-          item_no: "",
-          bar_code: "",
-          monad: "",
-          color: "",
-          size: "",
-          quantity: "0",
-          univalence: "0",
-          discount: "100",
-          sum: "0.00",
-          sumed: "0.00",
-          remark: ""
-        },
-        {
-          commodity: "",
-          item_no: "",
-          bar_code: "",
-          monad: "",
-          color: "",
-          size: "",
-          quantity: "0",
-          univalence: "0",
-          discount: "100",
-          sum: "0.00",
-          sumed: "0.00",
-          remark: ""
+          remark: "",
+          showHidden1: false,
+          showHidden2: false,
+          showHidden3: false,
+          showHidden4: false,
+          showHidden5: false,
+          showHidden6: false,
+          showHidden7: false,
+          showHidden8: false
         }
       ],
       rules: {
@@ -389,7 +452,7 @@ export default {
         ware: "",
         date1: ""
       },
-       //选择表单
+      //选择表单
       tableData: [
         {
           date: "2016-05-03 18:01",
@@ -443,6 +506,8 @@ export default {
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr);
               if (!isNaN(value)) {
+                // console.log(prev,curr);
+                // let a = prev.toFixed(2) + curr.toFixed(2);
                 return prev + curr;
               } else {
                 return prev;
@@ -455,6 +520,7 @@ export default {
           sums[index] = "-";
         }
       });
+      // console.log(sums);
       return sums;
     },
     onSubmit() {
@@ -491,35 +557,108 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
-    //单元格被点击
+    //左边单元格被点击
     cellClick(row, column, cell, event) {
       console.log(row, column, cell, event);
     },
+    //右边单元格被点击
+    cellClick1(row, column, cell, event) {
+      // console.log(row, column, cell, event);
+      if (column.label == "商品") {
+        row.showHidden1 = true;
+      } else if (column.label == "颜色") {
+        row.showHidden2 = true;
+      } else if (column.label == "尺码") {
+        row.showHidden3 = true;
+      } else if (column.label == "数量") {
+        row.showHidden4 = true;
+      } else if (column.label == "单价") {
+        row.showHidden5 = true;
+      } else if (column.label == "折扣") {
+        row.showHidden6 = true;
+      } else if (column.label == "折后价") {
+        row.showHidden7 = true;
+      } else if (column.label == "备注") {
+        row.showHidden8 = true;
+      }
+    },
+    bblur(row, v, item) {
+      // console.log(v.label);
+      setTimeout(() => {
+        if (v.label == "商品") {
+          row.showHidden1 = false;
+        } else if (v.label == "颜色") {
+          row.showHidden2 = false;
+        } else if (v.label == "尺码") {
+          row.showHidden3 = false;
+        } else if (v.label == "数量") {
+          row.quantity = Math.round(Number(item));
+          row.showHidden4 = false;
+        } else if (v.label == "单价") {
+          row.univalence = Number(item).toFixed(2);
+          row.showHidden5 = false;
+        } else if (v.label == "折扣") {
+          row.discount = Number(item).toFixed(2);
+          row.showHidden6 = false;
+        } else if (v.label == "折后价") {
+          row.discountPrice = Number(item).toFixed(2);
+          row.showHidden7 = false;
+        } else if (v.label == "备注") {
+          row.showHidden8 = false;
+        }
+      }, 150);
+    },
+    // 右边新增table行
     handleAdd(index, row) {
-      console.log(index, row);
+      // console.log(index, row);
       let obj = {
         commodity: "",
         item_no: "",
         bar_code: "",
-        monad: "",
+        monad: "件",
         color: "",
         size: "",
         quantity: "0",
         univalence: "0",
         discount: "100",
+        discountPrice: "0",
         sum: "0.00",
         sumed: "0.00",
-        remark: ""
+        remark: "",
+        showHidden1: false,
+        showHidden2: false,
+        showHidden3: false,
+        showHidden4: false,
+        showHidden5: false,
+        showHidden6: false,
+        showHidden7: false,
+        showHidden8: false
       };
       this.weretable.splice(index, 0, obj);
     },
     handleDelete(index, row) {
-      console.log(index, row);
+      // console.log(index, row);
       this.weretable.splice(index, 1);
     },
 
     querySearch(queryString, cb) {
       var restaurants = this.restaurants;
+      var results = queryString
+        ? restaurants.filter(this.createFilter(queryString))
+        : restaurants;
+      // 调用 callback 返回建议列表的数据
+      cb(results);
+    },
+    querySearch1(queryString, cb) {
+      var restaurants = this.colors;
+      var results = queryString
+        ? restaurants.filter(this.createFilter(queryString))
+        : restaurants;
+      // 调用 callback 返回建议列表的数据
+      cb(results);
+    },
+    querySearch2(queryString, cb) {
+      var restaurants = this.sizes;
       var results = queryString
         ? restaurants.filter(this.createFilter(queryString))
         : restaurants;
@@ -534,12 +673,52 @@ export default {
         );
       };
     },
-    handleSelect(v, idnex, row) {
+    // 提示选框
+    handleSelect(v, column, row) {
       // console.log(v,idnex,row);
-      row.commodity = v.value;
-      row.item_no = v.item_no;
-      row.bar_code = v.bar_code;
-      console.log(row);
+      // console.log(column.label);
+      if (column.label == "商品") {
+        row.commodity = v.value;
+        row.item_no = v.item_no;
+        row.bar_code = v.bar_code;
+        row.showHidden1 = false;
+      } else if (column.label == "颜色") {
+        row.color = v.value;
+        row.showHidden2 = false;
+      } else if (column.label == "尺码") {
+        row.size = v.value;
+        row.showHidden3 = false;
+      }
+      // console.log(row);
+    },
+    addCreateWare() {
+      this.weretable = [];
+      let obj = {
+        commodity: "",
+        item_no: "",
+        bar_code: "",
+        monad: "件",
+        color: "",
+        size: "",
+        quantity: "0",
+        univalence: "0.00",
+        discount: "100",
+        discountPrice: "0.00",
+        sum: "0.00",
+        sumed: "0.00",
+        remark: "",
+        showHidden1: false,
+        showHidden2: false,
+        showHidden3: false,
+        showHidden4: false,
+        showHidden5: false,
+        showHidden6: false,
+        showHidden7: false,
+        showHidden8: false
+      };
+      for (let i = 0; i < 6; i++) {
+        this.weretable.push(obj);
+      }
     }
   },
   mounted() {
@@ -678,6 +857,11 @@ export default {
             }
           }
         }
+        .right_table {
+          // /deep/.el-input__inner {
+          //   padding: 0 6px !important;
+          // }
+        }
       }
       .right_footer {
         .el-form {
@@ -697,15 +881,14 @@ export default {
           }
           /deep/.el-form-item:nth-child(3) {
             float: right;
-           
           }
           /deep/.el-form-item:nth-child(4) {
             float: right;
             width: 100%;
             text-align: right;
-            margin-right:60px ;
-            .el-form-item__content{
-              span{
+            margin-right: 60px;
+            .el-form-item__content {
+              span {
                 display: block;
                 width: 100px;
                 color: red;
