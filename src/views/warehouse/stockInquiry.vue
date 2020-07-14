@@ -63,7 +63,7 @@
               align="center"
               prop="address"
               width="81"
-              label="供应商名称"
+              label="厂商名称"
               show-overflow-tooltip
             ></el-table-column>
           </el-table>
@@ -77,7 +77,7 @@
             :page-sizes="[10, 20, 30, 40]"
             :page-size="pageSize"
             layout="prev, pager, next"
-            :total="1000"
+            :total="total"
           ></el-pagination>
         </div>
       </div>
@@ -99,7 +99,7 @@
             <el-form :model="form" :rules="rules" ref="form">
               <el-form-item style="overflow: hidden;width:100%;">
                 <div style="float:left;padding:10px 0 0 15px;">
-                  尚欠供应商款:
+                  尚欠厂商款:
                   <em style="color:red;">&yen;{{'0.00'}}</em>
                 </div>
                 <div class="cssa" style="float:right;padding:10px 15px 0 0;width:210px;">
@@ -358,6 +358,25 @@
         </div>
       </div>
     </div>
+    <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
+      <el-form :model="form1">
+        <div>
+          <div class="table_nav">
+            <span></span>
+            <span v-for="(item_t,index_t) in sizes" :key="index_t">{{item_t.value}}</span>
+          </div>
+          <br>
+          <div v-for="(item_c,index_c) in colors" :key="index_c" class="table_list">
+            <span>{{item_c.value}}</span>
+            <el-input size="mini" v-for="(item_t,index_t) in sizes" v-model="item_c.quantitys[index_t]" :key="index_t"></el-input>
+          </div>
+        </div>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -371,6 +390,11 @@ import {
 export default {
   data() {
     return {
+      form1: {
+        quantitys:[],
+      },
+      
+      dialogFormVisible: false,
       //选择商品
 
       restaurants: [
@@ -382,15 +406,13 @@ export default {
         { value: "三全鲜食4", item_no: "121356", bar_code: "d121353" }
       ],
       colors: [
-        { value: "红色" },
-        { value: "白色" },
-        { value: "灰色" },
-        { value: "浅绿色" }
+        { value: "红色",quantitys:[] },
+        { value: "白色",quantitys:[] },
+        { value: "浅绿色",quantitys:[] }
       ],
       sizes: [
         { value: "L" },
         { value: "XL" },
-        { value: "XXL" },
         { value: "M" }
       ],
 
@@ -533,7 +555,7 @@ export default {
           showHidden6: false,
           showHidden7: false,
           showHidden8: false
-        },
+        }
       ],
       rules: {
         manufacturer: [
@@ -797,6 +819,7 @@ export default {
         row.item_no = v.item_no;
         row.bar_code = v.bar_code;
         row.showHidden1 = false;
+        this.dialogFormVisible = true;
       } else if (column.label == "颜色") {
         row.color = v.value;
         row.showHidden2 = false;
@@ -1016,7 +1039,47 @@ export default {
       }
     }
   }
-
+  .el-dialog__wrapper {
+    .el-dialog {
+      .el-dialog__body {
+        .el-form {
+          overflow: hidden;
+          div{overflow: hidden;}
+          /deep/.table_nav {
+            span {
+              display: block;
+              float: left;
+              width: 19.5%;
+              height: 30px;
+              line-height: 30px;
+              text-align: center;
+            }
+          }
+          /deep/.table_list {
+            span {
+              display: block;
+              float: left;
+              width: 20%;
+              height: 30px;
+              line-height: 30px;
+              text-align: center;
+              margin-bottom: 15px;
+            }
+            .el-input {
+              float: left;
+              width: 19%;
+              height: 30px;
+              line-height: 30px;
+              margin-bottom: 15px;
+              input {
+                text-align: center !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
   .pagination {
     margin: 10px 0;
     text-align: center;

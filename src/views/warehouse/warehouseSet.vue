@@ -83,7 +83,7 @@
             <el-option v-for="item in genre" :key="item.value" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item prop="enable" label="启用：" label-width="25%">
+        <el-form-item prop="enable" label="状态：" label-width="25%">
           <el-select style="width:60%" v-model="form1.enable" placeholder="请选择活动区域">
             <el-option v-for="item in invoke" :key="item.value" :label="item.name" :value="item.id"></el-option>
           </el-select>
@@ -124,7 +124,7 @@
             <el-option v-for="item in genre" :key="item.value" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item prop="enable" label="启用：" label-width="25%">
+        <el-form-item prop="enable" label="状态：" label-width="25%">
           <el-select style="width:60%" v-model="form2.enable" placeholder="请选择活动区域">
             <el-option v-for="item in invoke" :key="item.value" :label="item.name" :value="item.id"></el-option>
           </el-select>
