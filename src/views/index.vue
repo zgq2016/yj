@@ -48,6 +48,7 @@
             <el-menu-item index="/distributor">供应商</el-menu-item>
             <el-menu-item index="/routeCard">物料工艺卡</el-menu-item>
             <el-menu-item index="/designFile">款式档案</el-menu-item>
+            <el-menu-item index="/plant">工厂</el-menu-item>
           </el-submenu>
           <el-submenu index="7">
             <template slot="title">财务</template>
