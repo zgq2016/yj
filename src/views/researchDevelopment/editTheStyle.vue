@@ -103,6 +103,7 @@
       </div>
       <div class="color">
         <div class="upload" @click="handle_obj_style_color_pic_url">
+          <div v-if="obj.color_code" class="uploads" :style="`background-color:${obj.color_code};`"></div>
           <img v-if="obj.style_color_pic_url" :src="obj.style_color_pic_url" alt />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </div>
@@ -113,9 +114,9 @@
       </div>
     </div>
     <el-dialog
-      title="上传图片"
+      title="色卡/颜色"
       :visible.sync="centerDialogVisible"
-      width="40%"
+      width="50%"
       center
       class="dialog"
       :show-close="false"
@@ -124,15 +125,22 @@
     >
       <div style="display:flex;">
         <div class="info-item">
-          <div class="upload">
-            <input
-              type="file"
-              id="uploads"
-              :value="imgFile"
-              accept="image/png, image/jpeg, image/gif, image/jpg"
-              @change="uploadImg($event, 1)"
-            />
-            选择文件
+          <div style="display:flex;">
+            <div class="upload">
+              <input
+                type="file"
+                id="uploads"
+                :value="imgFile"
+                accept="image/png, image/jpeg, image/gif, image/jpg"
+                @change="uploadImg($event, 1)"
+              />
+              上传色卡图片
+            </div>
+            <button
+              v-if="status===2"
+              class="upload"
+              style="margin-left:30px;padding-right: 50px"
+            >选择颜色</button>
           </div>
           <div class="line">
             <div class="cropper-content">
@@ -157,7 +165,11 @@
               </div>
               <div class="show-preview">
                 <div class="preview">
-                  <img :src="previews.url" :style="previews.img" />
+                  <div
+                    v-if="color_code"
+                    :style="`background-color:${color_code};width:150px;height:150px`"
+                  ></div>
+                  <img v-if="previews.url" :src="previews.url" :style="previews.img" />
                 </div>
               </div>
             </div>
@@ -202,6 +214,9 @@
             title="下载"
             @click="down('blob')"
           />
+        </div>
+        <div style="margin:50px auto" v-if="status===2">
+          <el-color-picker v-model="color_code" @change="color_picker"></el-color-picker>
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -312,10 +327,18 @@ export default {
       checkedList: [],
       arr: [],
       user_id_data_length: "",
-      navc: {}
+      navc: {},
+      status: "",
+      color_code: ""
     };
   },
   methods: {
+    color_picker() {
+      this.previews.url = "";
+      this.obj.style_color_pic_url = "";
+      this.obj.style_color_pic_url = "";
+      this.style_color_pic_url = "";
+    },
     AssistantFinish() {
       this.obj.user_id_data = [];
       this.stylists.map((v, i) => {
@@ -377,7 +400,6 @@ export default {
     },
     //上传图片（点击上传按钮）
     finish(type) {
-      // console.log(this.status);
       // let _this = this;
       let formData = new FormData();
       // 输出
@@ -409,7 +431,10 @@ export default {
           this.modelSrc = data;
         });
       }
-      // this.status = "";
+      if (this.status == 2) {
+        this.obj.color_code = this.color_code;
+      }
+      this.color_code = "";
       this.centerDialogVisible = false;
     },
     // 实时预览函数
@@ -502,9 +527,13 @@ export default {
         obj["user_name"] = this.obj.user_name;
         obj["user_id"] = this.obj.user_id;
         obj["user_id_data"] = this.obj.user_id_data;
+        obj["color_code"] = this.obj.color_code;
         let res = await styleEdit(obj);
         console.log(res);
-        this.$router.go(-1);
+        this.$router.push({
+          path: `/development?id=${this.$route.query.id}&TL=30&project_id=${this.$route.query.project_id}`
+        });
+        // development?id=280&TL=30&project_id=139
       });
     },
     async handleDel() {
@@ -539,7 +568,6 @@ export default {
     },
     async getColor() {
       let res = await getColorSelect();
-      // console.log(res);
       let { data } = res.data;
       this.colors = data;
     },
@@ -579,12 +607,12 @@ export default {
     }
   },
   async mounted() {
-    console.log(this.$route.query);
     let navc = this.$route.query;
     this.navc = navc;
     let res = await getStyle({ id: navc.id });
-    console.log(res);
+
     this.obj = res.data.data;
+    // this.obj.color_code = this.color_code;
     this.getYear();
     this.getColor();
     this.getSeason();
@@ -638,10 +666,17 @@ export default {
       align-items: center;
     }
   }
+  .uploads {
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #000;
+  }
   .dialog {
     .upload {
       margin-bottom: 30px;
-      width: 100px;
+      width: 140px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -726,6 +761,21 @@ export default {
     .cropper-content .show-preview .preview {
       margin-left: 0px;
     }
+  }
+  /deep/.el-color-picker__trigger {
+    display: inline-block;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 40px;
+    width: 40px;
+    padding: 4px;
+    border: 1px solid #e6e6e6;
+    border-radius: 4px;
+    font-size: 0;
+    position: relative;
+    left: -390px;
+    top: -50px;
+    cursor: pointer;
   }
 }
 </style>

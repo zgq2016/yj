@@ -328,6 +328,7 @@ export default {
   .pagination {
     margin-top: 10px;
     text-align: right;
+    
   }
 }
 // materialManagement

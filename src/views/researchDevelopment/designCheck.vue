@@ -45,7 +45,17 @@
         </el-table-column>
         <el-table-column>
           <template slot-scope="scope">
-            <img :src="scope.row.style_color_pic_url" class="img" alt />
+            <img
+              v-if="scope.row.style_color_pic_url!==''"
+              :src="scope.row.style_color_pic_url"
+              class="img"
+              alt
+            />
+            <div
+              v-if="scope.row.style_color_pic_url===''"
+              :style="`background-color:${scope.row.color_code};`"
+              class="color"
+            ></div>
           </template>
         </el-table-column>
         <el-table-column property="style_color" label="颜色"></el-table-column>
@@ -180,7 +190,7 @@ export default {
       let res = await getProject({ id });
       this.obj = res.data.data;
       this.tableData = res.data.data.style_data;
-      console.log(this.obj);
+      console.log(res);
     }
   },
   async mounted() {
@@ -288,6 +298,10 @@ export default {
   }
   .table {
     .img {
+      width: 40px;
+      height: 40px;
+    }
+    .color {
       width: 40px;
       height: 40px;
     }

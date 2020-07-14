@@ -75,10 +75,14 @@
       </div>
       <div class="color">
         <div class="upload" @click="handle_style_color_pic_url">
+          <div
+            v-if="form.color_code"
+            class="uploads"
+            :style="`background-color:${form.color_code};`"
+          ></div>
           <img v-if="form.style_color_pic_url" :src="form.style_color_pic_url" alt />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </div>
-        <div class="form"></div>
       </div>
       <div style="margin:150px 300px; height:50px;">
         <el-button round style="float:left" @click="handleClick">保存</el-button>
@@ -100,7 +104,7 @@
                 <div>{{styleno}}</div>
               </el-form-item>
               <el-form-item label="名称" prop="stylename">
-                <el-input v-model="obj.stylename"></el-input>
+                <el-input v-model="obj.stylename" style="width:200px"></el-input>
               </el-form-item>
               <el-form-item label="品类" prop="style_type">
                 <el-select v-model="obj.style_type" placeholder="品类">
@@ -174,16 +178,21 @@
       </div>
       <div class="color">
         <div class="upload" @click="handle_obj_style_color_pic_url">
-          <img v-if="style_color_pic_url" :src="style_color_pic_url" alt />
+          <div
+            v-if="obj.color_code"
+            class="uploads"
+            :style="`background-color:${obj.color_code};`"
+          ></div>
+          <img v-if="obj.style_color_pic_url" :src="obj.style_color_pic_url" alt />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </div>
       </div>
       <el-button round style="margin:30px 300px" @click="handleClick1">保存</el-button>
     </div>
     <el-dialog
-      title="上传图片"
+      title="色卡/颜色"
       :visible.sync="centerDialogVisible"
-      width="40%"
+      width="50%"
       center
       class="dialog"
       :show-close="false"
@@ -192,16 +201,22 @@
     >
       <div style="display:flex;">
         <div class="info-item">
-          <!-- <label class="btn btn-orange" for="uploads">选择图片</label> -->
-          <div class="upload">
-            <input
-              type="file"
-              id="uploads"
-              :value="imgFile"
-              accept="image/png, image/jpeg, image/gif, image/jpg"
-              @change="uploadImg($event, 1)"
-            />
-            选择文件
+          <div style="display:flex;">
+            <div class="upload">
+              <input
+                type="file"
+                id="uploads"
+                :value="imgFile"
+                accept="image/png, image/jpeg, image/gif, image/jpg"
+                @change="uploadImg($event, 1)"
+              />
+              上传色卡图片
+            </div>
+            <button
+              v-if="status===4||status===2"
+              class="upload"
+              style="margin-left:30px;padding-right: 50px"
+            >选择颜色</button>
           </div>
           <div class="line">
             <div class="cropper-content">
@@ -226,7 +241,11 @@
               </div>
               <div class="show-preview">
                 <div class="preview">
-                  <img :src="previews.url" :style="previews.img" />
+                  <div
+                    v-if="color_code"
+                    :style="`background-color:${color_code};width:150px;height:150px`"
+                  ></div>
+                  <img v-if="previews.url" :src="previews.url" :style="previews.img" />
                 </div>
               </div>
             </div>
@@ -271,8 +290,12 @@
             title="下载"
             @click="down('blob')"
           />
-
-          <!-- <el-button class="oper" value="↓" title="下载" @click="down('blob')" circle></el-button> -->
+        </div>
+        <div style="margin:50px auto" v-if="this.$route.query.oldId===undefined&&status===2">
+          <el-color-picker v-model="color_code" @change="color_picker"></el-color-picker>
+        </div>
+        <div style="margin:50px auto" v-if="this.$route.query.oldId!==undefined&&status===4">
+          <el-color-picker v-model="color_code"></el-color-picker>
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -355,7 +378,8 @@ export default {
         style_type: "",
         style_color: "",
         style_color_pic_url: "",
-        user_name: ""
+        user_name: "",
+        color_code: ""
       },
       styleno: "",
       style_color_pic_url: "",
@@ -397,10 +421,17 @@ export default {
       Assistant: false,
       checkedList: [],
       arr: [],
-      user_id_data_length: ""
+      user_id_data_length: "",
+      color_code: ""
     };
   },
   methods: {
+    color_picker() {
+      this.previews.url = "";
+      this.defaultData.style_color_pic_url = "";
+      this.form.style_color_pic_url = "";
+      this.style_color_pic_url = "";
+    },
     AssistantFinish() {
       this.obj.user_id_data = [];
       this.stylists.map((v, i) => {
@@ -475,8 +506,6 @@ export default {
     },
     //上传图片（点击上传按钮）
     finish(type) {
-      // console.log(this.status);
-      // let _this = this;
       let formData = new FormData();
       // 输出
       if (type === "blob") {
@@ -499,7 +528,7 @@ export default {
               this.imgFile = "";
             }
             if (this.status == 4) {
-              this.style_color_pic_url = response.data.data.pic_file_url;
+              this.obj.style_color_pic_url = response.data.data.pic_file_url;
               this.imgFile = "";
             }
             this.$message({
@@ -515,7 +544,13 @@ export default {
           this.modelSrc = data;
         });
       }
-      // this.status = "";
+      if (this.status == 2) {
+        this.form.color_code = this.color_code;
+      }
+      if (this.status == 4) {
+        this.obj.color_code = this.color_code;
+      }
+      this.color_code = "";
       this.centerDialogVisible = false;
     },
     // 实时预览函数
@@ -609,6 +644,7 @@ export default {
         obj["season"] = this.defaultData.season;
         obj["user_id"] = this.defaultData.user_id;
         obj["project_id"] = this.defaultData.id;
+        obj["color_code"] = this.form.color_code;
         let res = await projectStyleAdd(obj);
         console.log(res);
         this.$router.push({
@@ -638,6 +674,7 @@ export default {
         obj["user_id"] = this.defaultData.user_id;
         obj["project_id"] = this.defaultData.id;
         obj["user_id_data"] = this.defaultData.user_id_data;
+        obj["color_code"] = this.form.color_code;
         console.log(obj);
         let res = await projectStyleAdd(obj);
         console.log(res);
@@ -672,6 +709,7 @@ export default {
         obj["style_color_pic_url"] = this.style_color_pic_url;
         obj["style_color"] = this.obj.style_color_name;
         obj["user_id_data"] = this.obj.user_id_data;
+        obj["color_code"] = this.obj.color_code;
         let res = await projectStyleAdd(obj);
         console.log(res);
         this.$router.go(-1);
@@ -793,6 +831,7 @@ export default {
       display: flex;
     }
   }
+
   .upload {
     width: 150px;
     height: 150px;
@@ -808,11 +847,18 @@ export default {
       justify-content: center;
       align-items: center;
     }
+    .uploads {
+      width: 150px;
+      height: 150px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #000;
+    }
   }
   .dialog {
     .upload {
       margin-bottom: 30px;
-      width: 100px;
+      width: 140px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -850,7 +896,9 @@ export default {
         }
       }
       .info-item {
-        margin-top: 15px;
+        // margin-top: 15px;
+        // margin-right: 15px;
+        margin: 15px 15px 0 0;
 
         label {
           display: inline-block;
@@ -897,6 +945,21 @@ export default {
     .cropper-content .show-preview .preview {
       margin-left: 0px;
     }
+  }
+  /deep/.el-color-picker__trigger {
+    display: inline-block;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 40px;
+    width: 40px;
+    padding: 4px;
+    border: 1px solid #e6e6e6;
+    border-radius: 4px;
+    font-size: 0;
+    position: relative;
+    left: -390px;
+    top: -50px;
+    cursor: pointer;
   }
 }
 </style>

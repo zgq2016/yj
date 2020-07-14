@@ -16,11 +16,21 @@
       <el-breadcrumb-item>款式详细</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main">
-      <div class="basicInfo">基本信息</div>
+      <div class="basicInfo">基础信息</div>
       <div style="display: flex;justify-content: space-between;">
         <div class="content">
           <img class="imgSrc" :src="obj.style_pic_url" alt />
-          <img class="imgSrc" :src="obj.style_color_pic_url" alt />
+          <img
+            v-if="obj.style_color_pic_url!==''"
+            class="imgSrc"
+            :src="obj.style_color_pic_url"
+            alt
+          />
+          <div
+            v-if="obj.style_color_pic_url===''"
+            class="imgSrc"
+            :style="`background-color:${obj.color_code};`"
+          ></div>
           <div class="info">
             <div class="name">{{obj.stylename}}</div>
             <div>款号：{{obj.styleno}}</div>
@@ -101,8 +111,6 @@ export default {
   watch: {
     $route() {
       this.init();
-
-      console.log();
     }
   }
 };
