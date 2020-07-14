@@ -160,3 +160,38 @@ export const getMaterialSelect = (data) => {
     data: data,
   });
 };
+
+
+
+// 新增工厂接口
+export const factoryAdd = (data) => {
+  return axios({
+    url: "?g=factory_add",
+    method: "post",
+    data: data,
+  });
+};
+// 编辑工厂接口
+export const factoryEdit = (data) => {
+  return axios({
+    url: "?g=factory_edit",
+    method: "post",
+    data: data,
+  });
+};
+// 删除工厂接口
+export const factoryDel = (data) => {
+  return axios({
+    url: "?g=factory_del",
+    method: "post",
+    data: data,
+  });
+};
+// 工厂list接口
+export const factoryList = (data) => {
+  return axios({
+    url: "?g=factory_list",
+    method: "post",
+    data: data,
+  });
+};

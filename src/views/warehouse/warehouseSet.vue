@@ -38,14 +38,14 @@
             ></div>
           </template>
         </el-table-column>
-        <el-table-column property="name" align="center" label="仓库名称"></el-table-column>
-        <el-table-column property="styleno" align="center" label="负责人"></el-table-column>
-        <el-table-column property="styleno" align="center" label="仓库类型"></el-table-column>
-        <el-table-column property="styleno" align="center" label="备注"></el-table-column>
-        <el-table-column property="styleno" align="center" label="创建时间"></el-table-column>
-        <el-table-column property="styleno" align="center" label="更新时间"></el-table-column>
-        <el-table-column property="styleno" align="center" label="排序"></el-table-column>
-        <el-table-column property="styleno" align="center" label="状态"></el-table-column>
+        <el-table-column property="storehouse_name" align="center" label="仓库名称"></el-table-column>
+        <el-table-column property="contacts" align="center" label="负责人"></el-table-column>
+        <el-table-column property="storehouse_type" align="center" label="仓库类型"></el-table-column>
+        <el-table-column property="remarks" align="center" label="备注"></el-table-column>
+        <el-table-column property="ctime" width="90" align="center" label="创建时间"></el-table-column>
+        <el-table-column property="utime" width="90" align="center" label="更新时间"></el-table-column>
+        <el-table-column property="sort" align="center" label="排序"></el-table-column>
+        <el-table-column property="state" align="center" label="状态"></el-table-column>
       </el-table>
     </div>
     <!-- 分页 -->
@@ -59,40 +59,40 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="count"
     ></el-pagination>
-  <!-- 新建 -->
+    <!-- 新建 -->
     <el-dialog
       center
       :show-close="false"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
-      title="仓库信息"
+      title="新增仓库"
       width="50%"
       :visible.sync="dialogFormVisible"
     >
       <el-form ref="form1" :rules="rules1" :model="form1">
-        <el-form-item prop="name" label="仓库名称：" label-width="25%">
-          <el-input style="width:60%" v-model="form1.name"></el-input>
+        <el-form-item prop="storehouse_name" label="仓库名称：" label-width="25%">
+          <el-input style="width:60%" v-model="form1.storehouse_name"></el-input>
         </el-form-item>
-        <el-form-item prop="man" label="仓库负责人：" label-width="25%">
-          <el-select style="width:60%" v-model="form1.man" placeholder="请选择活动区域">
-           <el-option v-for="item in user" :key="item.value" :label="item.name" :value="item.id"></el-option>
+        <el-form-item prop="contacts" label="仓库负责人：" label-width="25%">
+          <el-select style="width:60%" v-model="form1.contacts" placeholder="请选择活动区域">
+            <el-option v-for="item in user" :key="item.value" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item prop="warehouseType" label="仓库类型：" label-width="25%">
-          <el-select style="width:60%" v-model="form1.warehouseType" placeholder="请选择活动区域">
+        <el-form-item prop="storehouse_type" label="仓库类型：" label-width="25%">
+          <el-select style="width:60%" v-model="form1.storehouse_type" placeholder="请选择活动区域">
             <el-option v-for="item in genre" :key="item.value" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item prop="enable" label="状态：" label-width="25%">
-          <el-select style="width:60%" v-model="form1.enable" placeholder="请选择活动区域">
+        <el-form-item prop="state" label="状态：" label-width="25%">
+          <el-select style="width:60%" v-model="form1.state" placeholder="请选择活动区域">
             <el-option v-for="item in invoke" :key="item.value" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="排序：" label-width="25%">
-          <el-input style="width:60%" v-model="form1.rank"></el-input>
+          <el-input style="width:60%" v-model="form1.sort"></el-input>
         </el-form-item>
         <el-form-item label="备注：" label-width="25%">
-          <el-input style="width:60%" type="textarea" :rows="3" v-model="form1.remark"></el-input>
+          <el-input style="width:60%" type="textarea" :rows="3" v-model="form1.remarks"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -111,29 +111,29 @@
       :visible.sync="dialogFormVisible1"
     >
       <el-form ref="form2" :rules="rules2" :model="form2">
-        <el-form-item prop="name" label="仓库名称：" label-width="25%">
-          <el-input style="width:60%" v-model="form2.name"></el-input>
+        <el-form-item prop="storehouse_name" label="仓库名称：" label-width="25%">
+          <el-input style="width:60%" v-model="form2.storehouse_name"></el-input>
         </el-form-item>
-        <el-form-item prop="man" label="仓库负责人：" label-width="25%">
-          <el-select style="width:60%" v-model="form2.man" placeholder="请选择活动区域">
-           <el-option v-for="item in user" :key="item.value" :label="item.name" :value="item.id"></el-option>
+        <el-form-item prop="contacts" label="仓库负责人：" label-width="25%">
+          <el-select style="width:60%" v-model="form2.contacts" placeholder="请选择活动区域">
+            <el-option v-for="item in user" :key="item.value" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item prop="warehouseType" label="仓库类型：" label-width="25%">
-          <el-select style="width:60%" v-model="form2.warehouseType" placeholder="请选择活动区域">
+        <el-form-item prop="storehouse_type" label="仓库类型：" label-width="25%">
+          <el-select style="width:60%" v-model="form2.storehouse_type" placeholder="请选择活动区域">
             <el-option v-for="item in genre" :key="item.value" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item prop="enable" label="状态：" label-width="25%">
-          <el-select style="width:60%" v-model="form2.enable" placeholder="请选择活动区域">
+        <el-form-item prop="state" label="状态：" label-width="25%">
+          <el-select style="width:60%" v-model="form2.state" placeholder="请选择活动区域">
             <el-option v-for="item in invoke" :key="item.value" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="排序：" label-width="25%">
-          <el-input style="width:60%" v-model="form2.rank"></el-input>
+          <el-input style="width:60%" v-model="form2.sort"></el-input>
         </el-form-item>
         <el-form-item label="备注：" label-width="25%">
-          <el-input style="width:60%" type="textarea" :rows="3" v-model="form2.remark"></el-input>
+          <el-input style="width:60%" type="textarea" :rows="3" v-model="form2.remarks"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -147,6 +147,12 @@
 <script>
 import { userList } from "@/api/setting.js";
 import { getStylistList } from "@/api/researchDevelopment.js";
+import {
+  storehouseAdd, //新增仓库接口
+  storehouseEdit, //编辑仓库接口
+  storehouseDel, //删除仓库接口
+  storehouseList // 查看仓库接口
+} from "@/api/warehouse.js";
 export default {
   data() {
     return {
@@ -155,50 +161,40 @@ export default {
         name: ""
       },
       // 新建
-      form1: {
-        name: "",
-        man: "",
-        warehouseType: "",
-        enable: "",
-        rank: "",
-        remark: ""
-      },
+      form1: {},
       // 编辑
-      form2: {
-        name: "",
-        man: "",
-        warehouseType: "",
-        enable: "",
-        rank: "",
-        remark: ""
-      },
+      form2: {},
       // 新建校对
       rules1: {
-        name: [{ required: true, message: "请输入仓库名称", trigger: "blur" }],
-        man: [
+        storehouse_name: [
+          { required: true, message: "请输入仓库名称", trigger: "blur" }
+        ],
+        contacts: [
           { required: true, message: "请选择仓库负责人", trigger: "change" }
         ],
-        warehouseType: [
+        storehouse_type: [
           { required: true, message: "请选择仓库类型", trigger: "change" }
         ],
-        enable: [
+        state: [
           { required: true, message: "请选择是否启用", trigger: "change" }
         ]
       },
       // 编辑校对
       rules2: {
-        name: [{ required: true, message: "请输入仓库名称", trigger: "blur" }],
-        man: [
+        storehouse_name: [
+          { required: true, message: "请输入仓库名称", trigger: "blur" }
+        ],
+        contacts: [
           { required: true, message: "请选择仓库负责人", trigger: "change" }
         ],
-        warehouseType: [
+        storehouse_type: [
           { required: true, message: "请选择仓库类型", trigger: "change" }
         ],
-        enable: [
+        state: [
           { required: true, message: "请选择是否启用", trigger: "change" }
         ]
       },
-      ware: [{ name: "0" }],
+      ware: [],
       dialogFormVisible: false,
       dialogFormVisible1: false,
       invoke: [
@@ -212,15 +208,17 @@ export default {
       user: [],
       page: 1,
       page_size: 9,
-      count:0
+      count: 0
     };
   },
   methods: {
     onSubmit() {
       console.log(this.form);
     },
-    handleEdit(a, b) {
+    handleEdit(a, row) {
       this.dialogFormVisible1 = true;
+      console.log(a, row);
+      this.form2 = row;
     },
     handleDelete(a, b) {
       console.log(a, b);
@@ -229,17 +227,55 @@ export default {
       this.dialogFormVisible = true;
     },
     Submit() {
-      this.$refs["form1"].validate(valid => {
+      this.$refs["form1"].validate(async valid => {
         if (!valid) return;
         this.dialogFormVisible = false;
-        console.log(this.form1);
+        let res = await storehouseAdd({
+          storehouse_name: this.form1.storehouse_name,
+          contacts: this.form1.contacts,
+          storehouse_type: this.form1.storehouse_type,
+          state: this.form1.state,
+          sort: this.form1.sort,
+          remarks: this.form1.remarks
+        });
+        console.log(res);
       });
     },
     Submit1() {
-      this.$refs["form2"].validate(valid => {
+      this.$refs["form2"].validate(async valid => {
         if (!valid) return;
         this.dialogFormVisible1 = false;
         console.log(this.form2);
+        let cont1 = "";
+        let cont2 = "";
+        let cont3 = "";
+        this.user.map((v, i) => {
+          if (v.name == this.form2.contacts) {
+            cont1 = v.id;
+          }
+        });
+        this.genre.map((v, i) => {
+          if (v.name == this.form2.storehouse_type) {
+            cont2 = v.id;
+          }
+        });
+        this.invoke.map((v, i) => {
+          if (v.name == this.form2.state) {
+            cont3 = v.id;
+          }
+        });
+        // console.log(cont1, cont2, cont3);
+        // let res = await storehouseEdit({
+        //   storehouse_name: this.form1.storehouse_name,
+        //   contacts: cont1 ? cont1 : this.form2.contacts,
+        //   storehouse_type: cont2 ? cont2 : this.form2.storehouse_type,
+        //   state: cont3 ? cont3 : this.form2.state,
+        //   sort: this.form2.sort,
+        //   remarks: this.form2.remarks,
+        //   id: this.form2.id
+        // });
+        // console.log(res);
+        this.init();
       });
     },
     handleSizeChange(val) {
@@ -257,12 +293,43 @@ export default {
       let { data } = res.data;
       // console.log(data);
       this.user = data;
-      console.log(this.user);
-      
+      // console.log(this.user);
     },
+    async init() {
+      let res = await storehouseList({
+        page: this.page,
+        page_size: this.page_size
+      });
+      let { data } = res.data;
+      this.ware = data;
+      this.user.map((v, i) => {
+        this.ware.map((j, k) => {
+          if (v.id == j.contacts) {
+            j.contacts = v.name;
+          }
+        });
+      });
+      this.genre.map((v, i) => {
+        this.ware.map((j, k) => {
+          if (v.id == j.storehouse_type) {
+            j.storehouse_type = v.name;
+          }
+        });
+      });
+      this.invoke.map((v, i) => {
+        this.ware.map((j, k) => {
+          if (v.id == j.state) {
+            j.state = v.name;
+          }
+        });
+      });
+
+      // console.log(res);
+    }
   },
   async mounted() {
-   this.getStylist()
+    this.getStylist();
+    this.init();
   }
 };
 </script>
@@ -277,7 +344,7 @@ export default {
     .center {
     }
   }
-  .pagination{
+  .pagination {
     float: right;
   }
 }

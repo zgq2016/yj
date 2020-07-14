@@ -372,9 +372,9 @@
           </div>
         </div>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div slot="footer"  class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="determine">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -829,6 +829,7 @@ export default {
       }
       // console.log(row);
     },
+    // 刷新新增入库单
     addCreateWare() {
       this.weretable = [];
       for (let i = 0; i < 6; i++) {
@@ -858,6 +859,10 @@ export default {
 
         this.weretable.push(obj);
       }
+    },
+    //新增入库单数据
+    determine(){
+
     }
   },
   mounted() {
@@ -873,7 +878,6 @@ export default {
 .stockInquiry {
   list-style: none;
   .main {
-    background: rgb(248, 245, 245);
 
     overflow: hidden;
     .left {
@@ -1076,6 +1080,11 @@ export default {
               }
             }
           }
+        }
+      }
+      .el-dialog__footer{
+        .dialog-footer{
+          text-align: center !important;
         }
       }
     }

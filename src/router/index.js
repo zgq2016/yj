@@ -28,6 +28,7 @@ import AddSupplier from "@/views/archives/distributor_id/addSupplier.vue";
 import ListDeital from "@/views/archives/distributor_id/listDeital.vue";
 import EditSupplier from "@/views/archives/distributor_id/editSupplier.vue";
 import RouteCard from "@/views/archives/routeCard.vue";
+import Plant from "@/views/archives/plant.vue";
 import RouteCard_list from "@/views/archives/routeCard_id/routeCard_list.vue";
 import AddRouteCard from "@/views/archives/routeCard_id/addRouteCard.vue";
 import RouteCardDeital from "@/views/archives/routeCard_id/routeCardDeital.vue";
@@ -301,6 +302,11 @@ const routes = [
         path: "/designFile",
         name: "DesignFile",
         component: DesignFile,
+      },
+      {
+        path: "/plant",
+        name: "Plant",
+        component: Plant,
       },
       // 财务路由开始
       {
