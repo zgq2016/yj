@@ -195,3 +195,37 @@ export const factoryList = (data) => {
     data: data,
   });
 };
+
+// 工厂加工方式select接口
+export const getFactoryModeSelect = (data) => {
+  return axios({
+    url: "?g=get_factory_mode_select",
+    method: "post",
+    data: data,
+  });
+};
+
+// 工厂加工方式
+export const factoryModeAdd = (data) => {
+  return axios({
+    url: "?g=factory_mode_add",
+    method: "post",
+    data: data,
+  });
+};
+// 工厂加工方式编辑接口
+export const factoryModeEdit = (data) => {
+  return axios({
+    url: "?g=factory_mode_edit",
+    method: "post",
+    data: data,
+  });
+};
+// 工厂加工方式删除接口
+export const factoryModeDel = (data) => {
+  return axios({
+    url: "?g=factory_mode_del",
+    method: "post",
+    data: data,
+  });
+};

@@ -23,7 +23,7 @@
       <hr style="border:1px dashed #ccc" />
     </div>
     <div class="center">
-      <el-table :data="ware" row-key="id" size="mini">
+      <el-table :data="ware" row-key="id" size="mini" :header-cell-style="{background:'#eef1f6',color:'#606266'}">
         <el-table-column align="center" width="90" label="操作">
           <template slot-scope="scope">
             <div
@@ -71,20 +71,20 @@
     >
       <el-form ref="form1" :rules="rules1" :model="form1">
         <el-form-item prop="storehouse_name" label="仓库名称：" label-width="25%">
-          <el-input style="width:60%" v-model="form1.storehouse_name"></el-input>
+          <el-input style="width:60%" placeholder="请输入仓库名称" v-model="form1.storehouse_name"></el-input>
         </el-form-item>
         <el-form-item prop="contacts" label="仓库负责人：" label-width="25%">
-          <el-select style="width:60%" v-model="form1.contacts" placeholder="请选择活动区域">
+          <el-select style="width:60%" v-model="form1.contacts" placeholder="请选择仓库负责人">
             <el-option v-for="item in user" :key="item.value" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item prop="storehouse_type" label="仓库类型：" label-width="25%">
-          <el-select style="width:60%" v-model="form1.storehouse_type" placeholder="请选择活动区域">
+          <el-select style="width:60%" v-model="form1.storehouse_type" placeholder="请选择仓库类型">
             <el-option v-for="item in genre" :key="item.value" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item prop="state" label="状态：" label-width="25%">
-          <el-select style="width:60%" v-model="form1.state" placeholder="请选择活动区域">
+          <el-select style="width:60%" v-model="form1.state" placeholder="请选择状态">
             <el-option v-for="item in invoke" :key="item.value" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -112,20 +112,20 @@
     >
       <el-form ref="form2" :rules="rules2" :model="form2">
         <el-form-item prop="storehouse_name" label="仓库名称：" label-width="25%">
-          <el-input style="width:60%" v-model="form2.storehouse_name"></el-input>
+          <el-input style="width:60%" placeholder="请输入仓库名称" v-model="form2.storehouse_name"></el-input>
         </el-form-item>
         <el-form-item prop="contacts" label="仓库负责人：" label-width="25%">
-          <el-select style="width:60%" v-model="form2.contacts" placeholder="请选择活动区域">
+          <el-select style="width:60%" v-model="form2.contacts" placeholder="请选择仓库负责人">
             <el-option v-for="item in user" :key="item.value" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item prop="storehouse_type" label="仓库类型：" label-width="25%">
-          <el-select style="width:60%" v-model="form2.storehouse_type" placeholder="请选择活动区域">
+          <el-select style="width:60%" v-model="form2.storehouse_type" placeholder="请选择仓库类型">
             <el-option v-for="item in genre" :key="item.value" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item prop="state" label="状态：" label-width="25%">
-          <el-select style="width:60%" v-model="form2.state" placeholder="请选择活动区域">
+          <el-select style="width:60%" v-model="form2.state" placeholder="请选择状态">
             <el-option v-for="item in invoke" :key="item.value" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -215,17 +215,39 @@ export default {
     onSubmit() {
       console.log(this.form);
     },
-    handleEdit(a, row) {
+    handleEdit(index, row) {
       this.dialogFormVisible1 = true;
-      console.log(a, row);
       this.form2 = row;
     },
-    handleDelete(a, b) {
-      console.log(a, b);
+    handleDelete(index, row) {
+      this.$confirm("此操作将永久删除该行数据, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          let res = await storehouseDel({
+            id: row.id
+          });
+          // console.log(res);
+          this.init();
+          this.$message({
+            type: "success",
+            message: "删除成功!"
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
     addWarehouse() {
+      this.form1 = {}
       this.dialogFormVisible = true;
     },
+    // 新增仓库
     Submit() {
       this.$refs["form1"].validate(async valid => {
         if (!valid) return;
@@ -238,43 +260,47 @@ export default {
           sort: this.form1.sort,
           remarks: this.form1.remarks
         });
-        console.log(res);
+        // console.log(res);
+        this.init();
       });
     },
+    // 编辑库存设置
     Submit1() {
       this.$refs["form2"].validate(async valid => {
         if (!valid) return;
         this.dialogFormVisible1 = false;
-        console.log(this.form2);
         let cont1 = "";
         let cont2 = "";
         let cont3 = "";
         this.user.map((v, i) => {
           if (v.name == this.form2.contacts) {
             cont1 = v.id;
+            console.log(1);
           }
         });
         this.genre.map((v, i) => {
           if (v.name == this.form2.storehouse_type) {
+            console.log(2);
             cont2 = v.id;
           }
         });
         this.invoke.map((v, i) => {
           if (v.name == this.form2.state) {
             cont3 = v.id;
+            console.log(3);
           }
         });
-        // console.log(cont1, cont2, cont3);
-        // let res = await storehouseEdit({
-        //   storehouse_name: this.form1.storehouse_name,
-        //   contacts: cont1 ? cont1 : this.form2.contacts,
-        //   storehouse_type: cont2 ? cont2 : this.form2.storehouse_type,
-        //   state: cont3 ? cont3 : this.form2.state,
-        //   sort: this.form2.sort,
-        //   remarks: this.form2.remarks,
-        //   id: this.form2.id
-        // });
-        // console.log(res);
+        console.log(cont1, cont2, cont3, this.form2.state);
+        let res = await storehouseEdit({
+          storehouse_name: this.form2.storehouse_name,
+          contacts: cont1 === "" ? this.form2.contacts : cont1,
+          storehouse_type: cont2 === "" ? this.form2.storehouse_type : cont2,
+          state: cont3 === "" ? this.form2.state : cont3,
+          sort: this.form2.sort,
+          remarks: this.form2.remarks,
+          id: this.form2.id
+        });
+        console.log(res);
         this.init();
       });
     },
@@ -295,6 +321,7 @@ export default {
       this.user = data;
       // console.log(this.user);
     },
+    // 初始化
     async init() {
       let res = await storehouseList({
         page: this.page,
@@ -302,6 +329,7 @@ export default {
       });
       let { data } = res.data;
       this.ware = data;
+      this.count = res.data.count
       this.user.map((v, i) => {
         this.ware.map((j, k) => {
           if (v.id == j.contacts) {

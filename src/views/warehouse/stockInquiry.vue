@@ -198,7 +198,7 @@
                     :fetch-suggestions="querySearch"
                     placeholder="点击选择"
                     @blur="bblur(scope.row,scope.column)"
-                    @select="handleSelect($event,scope.column, scope.row)"
+                    @select="handleSelect($event,scope.column, scope.row,scope.$index)"
                   ></el-autocomplete>
                   <span v-else>{{scope.row.commodity || "点击选择"}}</span>
                 </template>
@@ -215,7 +215,7 @@
                     v-model="scope.row.color"
                     :fetch-suggestions="querySearch1"
                     @blur="bblur(scope.row,scope.column)"
-                    @select="handleSelect($event,scope.$index, scope.row)"
+                    @select="handleSelect($event,scope.column, scope.row,scope.$index)"
                   ></el-autocomplete>
                   <span v-else>{{scope.row.color}}</span>
                 </template>
@@ -230,7 +230,7 @@
                     v-model="scope.row.size"
                     :fetch-suggestions="querySearch2"
                     @blur="bblur(scope.row,scope.column)"
-                    @select="handleSelect($event,scope.$index, scope.row)"
+                    @select="handleSelect($event,scope.column, scope.row,scope.$index)"
                   ></el-autocomplete>
                   <span v-else>{{scope.row.size}}</span>
                 </template>
@@ -358,6 +358,7 @@
         </div>
       </div>
     </div>
+    <!-- 填尺码 -->
     <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
       <el-form :model="form1">
         <div>
@@ -365,14 +366,19 @@
             <span></span>
             <span v-for="(item_t,index_t) in sizes" :key="index_t">{{item_t.value}}</span>
           </div>
-          <br>
+          <br />
           <div v-for="(item_c,index_c) in colors" :key="index_c" class="table_list">
             <span>{{item_c.value}}</span>
-            <el-input size="mini" v-for="(item_t,index_t) in sizes" v-model="item_c.quantitys[index_t]" :key="index_t"></el-input>
+            <el-input
+              size="mini"
+              v-for="(item_t,index_t) in sizes"
+              v-model="item_c.quantitys[index_t]"
+              :key="index_t"
+            ></el-input>
           </div>
         </div>
       </el-form>
-      <div slot="footer"  class="dialog-footer">
+      <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="determine">确 定</el-button>
       </div>
@@ -391,9 +397,9 @@ export default {
   data() {
     return {
       form1: {
-        quantitys:[],
+        quantitys: []
       },
-      
+
       dialogFormVisible: false,
       //选择商品
 
@@ -406,15 +412,11 @@ export default {
         { value: "三全鲜食4", item_no: "121356", bar_code: "d121353" }
       ],
       colors: [
-        { value: "红色",quantitys:[] },
-        { value: "白色",quantitys:[] },
-        { value: "浅绿色",quantitys:[] }
+        { value: "红色", quantitys: [] },
+        { value: "白色", quantitys: [] },
+        { value: "浅绿色", quantitys: [] }
       ],
-      sizes: [
-        { value: "L" },
-        { value: "XL" },
-        { value: "M" }
-      ],
+      sizes: [{ value: "L" }, { value: "XL" }, { value: "M" }],
 
       // table数据
       weretable: [
@@ -626,7 +628,8 @@ export default {
           name: "已撤销",
           address: "上海市普7"
         }
-      ]
+      ],
+      indexk: 0
     };
   },
   methods: {
@@ -756,9 +759,9 @@ export default {
         color: "",
         size: "",
         quantity: "0",
-        univalence: "0",
+        univalence: "0.00",
         discount: "100",
-        discountPrice: "0",
+        discountPrice: "0.00",
         sum: "0.00",
         sumed: "0.00",
         remark: "",
@@ -811,7 +814,7 @@ export default {
       };
     },
     // 提示选框
-    handleSelect(v, column, row) {
+    handleSelect(v, column, row, index) {
       // console.log(v,idnex,row);
       // console.log(column.label);
       if (column.label == "商品") {
@@ -820,6 +823,11 @@ export default {
         row.bar_code = v.bar_code;
         row.showHidden1 = false;
         this.dialogFormVisible = true;
+        this.colors.forEach(item => {
+          item.quantitys = [];
+        });
+        // console.log(index);
+        this.indexk = index;
       } else if (column.label == "颜色") {
         row.color = v.value;
         row.showHidden2 = false;
@@ -861,8 +869,49 @@ export default {
       }
     },
     //新增入库单数据
-    determine(){
+    determine() {
+      console.log(this.colors);
+      let bl = true;
 
+      this.colors.map((v, i) => {
+        if (v.quantitys.length > 0) {
+          v.quantitys.map((j, k) => {
+            if (bl && j != undefined && j != "") {
+              this.weretable[this.indexk].color = v.value;
+              this.weretable[this.indexk].size = this.sizes[k].value;
+              this.weretable[this.indexk].quantity = j;
+              bl = false;
+              return;
+            } else if (j != undefined && j != "") {
+              let obj = {
+                commodity: this.weretable[this.indexk].commodity,
+                item_no: this.weretable[this.indexk].item_no,
+                bar_code: this.weretable[this.indexk].bar_code,
+                monad: "件",
+                color: v.value,
+                size: this.sizes[k].value,
+                quantity: j,
+                univalence: "0.00",
+                discount: "100",
+                discountPrice: "0.00",
+                sum: "0.00",
+                sumed: "0.00",
+                remark: "",
+                showHidden1: false,
+                showHidden2: false,
+                showHidden3: false,
+                showHidden4: false,
+                showHidden5: false,
+                showHidden6: false,
+                showHidden7: false,
+                showHidden8: false
+              };
+              this.weretable.splice(this.indexk, 0, obj);
+            }
+          });
+        }
+      });
+      this.dialogFormVisible = false;
     }
   },
   mounted() {
@@ -878,11 +927,11 @@ export default {
 .stockInquiry {
   list-style: none;
   .main {
-
     overflow: hidden;
     .left {
       overflow: hidden;
       margin: 10px 1% 10px 1%;
+      border: 1px solid #cccccc;
       float: left;
       background: #fff;
       width: 22%;
@@ -935,6 +984,7 @@ export default {
     }
     .right {
       margin: 10px 1% 50px 0;
+      border: 1px solid #cccccc;
       background: #fff;
       width: 75%;
       float: right;
@@ -1000,11 +1050,6 @@ export default {
             }
           }
         }
-        .right_table {
-          // /deep/.el-input__inner {
-          //   padding: 0 6px !important;
-          // }
-        }
       }
       .right_footer {
         .el-form {
@@ -1048,7 +1093,9 @@ export default {
       .el-dialog__body {
         .el-form {
           overflow: hidden;
-          div{overflow: hidden;}
+          div {
+            overflow: hidden;
+          }
           /deep/.table_nav {
             span {
               display: block;
@@ -1082,8 +1129,8 @@ export default {
           }
         }
       }
-      .el-dialog__footer{
-        .dialog-footer{
+      .el-dialog__footer {
+        .dialog-footer {
           text-align: center !important;
         }
       }

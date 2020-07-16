@@ -15,16 +15,16 @@
           class="el-menu-vertical-demo"
           :router="true"
           :unique-opened="true"
-          style="height:80vh;width:11vw;"
+          style="height:240px;width:11vw;"
         >
-          <el-submenu :index="item.id+''" v-for="(item,index) in menuList" :key="index">
+          <!-- <el-submenu :index="item.id+''" v-for="(item,index) in menuList" :key="index">
             <template slot="title">
               <div
                 style="display: flex;justify-content: space-between;align-items: center;margin-right:10px;"
                 @mouseenter="mouseenter(index)"
                 @mouseleave="mouseleave"
               >
-                <span class="classname">{{item.classname}}</span>
+                <span class="classname">{{item.mode_name}}</span>
                 <span
                   class="el-icon-edit-outline"
                   :class="active===index?'block':'none'"
@@ -42,7 +42,7 @@
                 @mouseenter="mouseenter1(index1)"
                 @mouseleave="mouseleave1"
               >
-                <span class="classname">{{item1.classname}}</span>
+                <span class="classname">{{item1.mode_name}}</span>
                 <span
                   class="el-icon-edit-outline"
                   :class="active1===index1?'block':'none'"
@@ -56,27 +56,55 @@
                 <span>新增工厂二级分类</span>
               </template>
             </el-menu-item>
-          </el-submenu>
+          </el-submenu>-->
+          <el-menu-item v-for="(item,index) in menuList" :key="index">
+            <div
+              @mouseenter="mouseenter(index)"
+              @mouseleave="mouseleave"
+              @click="clickMenu(item)"
+              style="display: flex;justify-content: space-between;align-items: center;margin-right:10px;"
+            >
+              <span slot="title" style="color:#000;">{{item.mode_name}}</span>
+              <span
+                class="el-icon-edit-outline"
+                :class="active===index?'block':'none'"
+                @click.stop="aa(item)"
+              ></span>
+            </div>
+          </el-menu-item>
           <el-menu-item index @click="handelShow(level=0)">
             <template slot="title">
               <span class="el-icon-plus"></span>
-              <span>新增工厂分类</span>
+              <span>新增工厂方式</span>
             </template>
           </el-menu-item>
         </el-menu>
       </el-aside>
+
+      <!-- 右边 -->
       <div>
         <div class="form" style="margin:15px">
           <el-form :inline="true" :model="form" class="demo-form-inline">
             <el-form-item label="工厂名称:">
-              <el-input v-model="form.companyname" placeholder="工厂名称关键字"></el-input>
+              <el-input v-model="form.companyname" style="width:120px" placeholder="工厂名称"></el-input>
             </el-form-item>
             <el-form-item label="联系人:">
-              <el-input v-model="form.contacts" placeholder="联系人"></el-input>
+              <el-input v-model="form.contacts" style="width:120px" placeholder="联系人"></el-input>
             </el-form-item>
             <el-form-item label="电话:">
-              <el-input v-model="form.phone" placeholder="电话"></el-input>
+              <el-input v-model="form.phone" style="width:125px" placeholder="电话"></el-input>
             </el-form-item>
+            <el-form-item label="指派方式:">
+              <el-select v-model="form.mode_name" placeholder="请选择指派方式">
+                <el-option
+                  v-for="item in menuList"
+                  :key="item.value"
+                  :label="item.mode_name"
+                  :value="item.mode_name"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+
             <el-form-item>
               <el-button type="primary" icon="el-icon-search" @click="onSubmit">搜索</el-button>
             </el-form-item>
@@ -89,11 +117,12 @@
           :data="tableData"
           stripe
           :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-          style=" width:50vw;margin:5px;cursor: pointer;"
+          style=" width:960px;margin:5px;cursor: pointer;"
         >
           <el-table-column prop="factory_name" align="center" label="工厂名称"></el-table-column>
-          <el-table-column prop="phone" align="center" label="联系人"></el-table-column>
-          <el-table-column prop="contacts" align="center" label="电话"></el-table-column>
+          <el-table-column prop="contacts" align="center" label="联系人"></el-table-column>
+          <el-table-column prop="phone" align="center" label="电话"></el-table-column>
+          <el-table-column prop="mode_name" align="center" label="指派方式"></el-table-column>
           <el-table-column label="操作" align="center">
             <template v-slot="scope">
               <div @click="handleEdit1(scope.row)" class="check">查看</div>
@@ -114,31 +143,26 @@
     </el-container>
 
     <!-- 弹出框1 -->
-    <el-dialog title="增加工厂分类" :visible.sync="centerDialogVisible" width="30%" center>
-      <el-input v-if="level===0" v-model="value" placeholder="请输入工厂分类名称" style="width:300px"></el-input>
-      <el-input v-if="level===1" v-model="value" placeholder="请输入工厂分类名称" style="width:300px"></el-input>
+    <el-dialog title="新增工厂方式" :visible.sync="centerDialogVisible" width="30%" center>
+      <el-input v-model="value" placeholder="请输入工厂方式" style="width:300px"></el-input>
+      <!-- <el-input v-if="level===1" v-model="value" placeholder="请输入工厂分类名称" style="width:300px"></el-input> -->
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addLevel">确 定</el-button>
       </span>
     </el-dialog>
     <!-- 弹出框2 -->
-    <el-dialog title="编辑工厂分类" :visible.sync="centerDialogVisible1" width="50%" center>
-      <div v-if="edit_id===0">
+    <el-dialog title="编辑工厂方式" :visible.sync="centerDialogVisible1" width="50%" center>
+      <div>
         <el-input
-          v-model="getMaterialsClassInfoObj.classname"
+          v-model="row_mode.mode_name"
           placeholder="分类名称"
-          style="width:300px;padding:10px 10px"
-        ></el-input>
-        <el-input
-          v-model="getMaterialsClassInfoObj.sort"
-          placeholder="排序"
           style="width:300px;padding:10px 10px"
         ></el-input>
       </div>
-      <div v-if="edit_id===1">
+      <!-- <div v-if="edit_id===1">
         <el-input
-          v-model="getMaterialsClassInfoObj.classname"
+          v-model="getMaterialsClassInfoObj.mode_name"
           placeholder="分类名称"
           style="width:300px;padding:10px 10px"
         ></el-input>
@@ -148,11 +172,11 @@
           style="width:300px;padding:10px 10px"
         ></el-input>
         <el-input
-          v-model="getMaterialsClassInfoObj.class_id_classname"
+          v-model="getMaterialsClassInfoObj.class_id_mode_name"
           placeholder="上级分类"
           style="width:300px;padding:10px 10px"
         ></el-input>
-      </div>
+      </div>-->
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleDel">删除</el-button>
         <el-button type="primary" @click="handleEdit">保存</el-button>
@@ -175,6 +199,16 @@
         </el-form-item>
         <el-form-item prop="phone" label="电话:">
           <el-input v-model="form1.phone" style="width:75%" placeholder="电话"></el-input>
+        </el-form-item>
+        <el-form-item prop="mode_name" label="指派方式:">
+          <el-select v-model="form1.mode_name" placeholder="请选择指派方式">
+            <el-option
+              v-for="item in menuList"
+              :key="item.value"
+              :label="item.mode_name"
+              :value="item.mode_name"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item style="margin-left:20px;">
           <el-button type="primary" @click="addfrot">确定</el-button>
@@ -199,6 +233,16 @@
         <el-form-item prop="phone" label="电话:">
           <el-input v-model="form2.phone" style="width:75%" placeholder="电话"></el-input>
         </el-form-item>
+        <el-form-item prop="mode_name" label="指派方式:">
+          <el-select v-model="form2.mode_name" placeholder="请选择指派方式">
+            <el-option
+              v-for="item in menuList"
+              :key="item.value"
+              :label="item.mode_name"
+              :value="item.mode_name"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item style="margin-left:20px;">
           <el-button type="primary" @click="editadd">保存</el-button>
           <el-button type="primary" @click="deleteFactory">删除</el-button>
@@ -218,7 +262,11 @@ import {
   factoryAdd, //新增工厂接口
   factoryEdit, //编辑工厂接口
   factoryDel, //删除工厂接口
-  factoryList //工厂list接口
+  factoryList, //工厂list接口
+  getFactoryModeSelect, //左边栏
+  factoryModeAdd, //工厂加工方式
+  factoryModeEdit, //工厂加工方式编辑接口
+  factoryModeDel //工厂加工方式删除接口
 } from "@/api/archives";
 export default {
   data() {
@@ -234,6 +282,9 @@ export default {
         ],
         contacts: [
           { required: true, message: "请输入联系人", trigger: "blur" }
+        ],
+        mode_name: [
+          { required: true, message: "请选择指派方式", trigger: "change" }
         ],
         phone: [
           { required: true, message: "请输入手机号码", trigger: "blur" },
@@ -251,6 +302,9 @@ export default {
         ],
         contacts: [
           { required: true, message: "请输入联系人", trigger: "blur" }
+        ],
+        mode_name: [
+          { required: true, message: "请选择指派方式", trigger: "change" }
         ],
         phone: [
           { required: true, message: "请输入手机号码", trigger: "blur" },
@@ -281,7 +335,8 @@ export default {
       page: 1,
       page_size: 9,
       count: 0,
-      TL: ""
+      TL: "",
+      row_mode: {}
     };
   },
   methods: {
@@ -295,30 +350,30 @@ export default {
       this.page = val;
       // this.init(this.form);
     },
+    // 编辑工厂指派方式保存
     async handleEdit() {
-      let obj = this.getMaterialsClassInfoObj;
-      console.log(obj);
-      delete obj["class_data"];
-      delete obj["level"];
-      delete obj["class_id_classname"];
-      let res = await getMaterialsClassEdit(obj);
+      let res = await factoryModeEdit({
+        mode_name: this.row_mode.mode_name,
+        id: this.row_mode.id
+      });
       console.log(res);
       this.init();
-      this.$router.push({
-        path: "routeCard_list"
-      });
+
       this.centerDialogVisible1 = false;
     },
+    // 编辑工厂指派方式删除
     async handleDel() {
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该指派方式, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(async () => {
-          //   let res = await materialsClassDel({ id: this.item.id });
+          let res = await factoryModeDel({
+            id: this.row_mode.id
+          });
+          console.log(res);
           this.init();
-          //   this.$router.push({ path: "/routeCard_list" });
           this.$message({
             type: "success",
             message: "删除成功!"
@@ -332,12 +387,10 @@ export default {
         });
       this.centerDialogVisible1 = false;
     },
+    // 编辑工厂方式
     async aa(item) {
-      this.edit_id = item.level;
-      this.item = item;
-      let res = await getMaterialsClassInfo({ id: item.id });
-      console.log(res);
-      this.getMaterialsClassInfoObj = res.data.data;
+      console.log(item);
+      this.row_mode = item;
       this.centerDialogVisible1 = true;
     },
     async aa1(item) {
@@ -360,22 +413,11 @@ export default {
     mouseleave() {
       this.active = "";
     },
+    // 新增分类
     async addLevel() {
-      let obj = this.obj;
-      if (this.level === 0) {
-        let class_id = 0;
-        obj["class_id"] = class_id;
-        obj["level"] = this.level;
-        obj["classname"] = this.value;
-      }
-      if (this.level === 1) {
-        let item_id = this.item_id;
-        console.log(item_id);
-        obj["class_id"] = item_id.id;
-        obj["level"] = this.level;
-        obj["classname"] = this.value;
-      }
-      let res = await materialsClassAdd(obj);
+      let res = await factoryModeAdd({
+        mode_name: this.value
+      });
       console.log(res);
       this.value = "";
       this.init();
@@ -390,14 +432,21 @@ export default {
     handleIten(item1) {
       this.itemList = item1;
     },
-    async init() {
+    // 初始化
+    async init(obj) {
       let res = await factoryList({
         page_size: this.page_size,
-        page: this.page
+        page: this.page,
+        ...obj
       });
       let { data } = res.data;
       this.tableData = data;
-    //   console.log(this.tableData);
+      this.count = res.data.count;
+      // console.log(this.tableData);
+      // console.log(res);
+      let res1 = await getFactoryModeSelect();
+      this.menuList = res1.data.data;
+      // console.log(res1);
     },
     handleEdit1(row) {
       //   console.log(row);
@@ -405,7 +454,13 @@ export default {
       this.centerDialogVisible3 = true;
     },
     onSubmit() {
-      console.log(1);
+      console.log(this.form);
+      this.init(this.form);
+    },
+    // 点击menu
+    clickMenu(item) {
+      console.log(item);
+      this.init(item);
     },
     // 新增工厂触发事件
     addClient() {
@@ -420,9 +475,10 @@ export default {
         let res = await factoryAdd({
           factory_name: this.form1.factory_name,
           contacts: this.form1.contacts,
-          phone: this.form1.phone
+          phone: this.form1.phone,
+          mode_name: this.form1.mode_name
         });
-        // console.log(res);
+        console.log(res);
         this.init();
       });
     },
@@ -435,17 +491,19 @@ export default {
           factory_name: this.form2.factory_name,
           contacts: this.form2.contacts,
           phone: this.form2.phone,
-          id: this.form2.id
+          id: this.form2.id,
+          mode_name: this.form2.mode_name
         });
         // console.log(res);
+        this.init();
       });
     },
     // 删除工厂
     async deleteFactory() {
       this.centerDialogVisible3 = false;
       let res = await factoryDel({ id: this.form2.id });
-    //   console.log(res);
-      this.init()
+      //   console.log(res);
+      this.init();
     }
   },
   mounted() {
@@ -488,8 +546,8 @@ export default {
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
   }
-  .pagination{
-      float: right;
+  .pagination {
+    float: right;
   }
 }
 </style>
