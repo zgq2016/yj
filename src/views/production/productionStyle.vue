@@ -586,8 +586,8 @@
                     <el-option
                       v-for="item_l in modes"
                       :key="item_l.id"
-                      :label="item_l.name"
-                      :value="item_l.name"
+                      :label="item_l.mode_name"
+                      :value="item_l.mode_name"
                     ></el-option>
                   </el-select>
                 </el-form-item>
@@ -1037,7 +1037,8 @@ import {
 } from "@/api/production";
 import {
   getMaterialsInfo, //物料
-  getSupplierInfo //供应商
+  getSupplierInfo, //供应商
+  getFactoryModeSelect
 } from "@/api/archives";
 export default {
   data() {
@@ -1274,11 +1275,7 @@ export default {
       produce_order_procure_id: 0,
 
       regions1: [],
-      modes: [
-        { name: "包工包料", id: 1 },
-        { name: "包工不包料", id: 2 },
-        { name: "裁片加工", id: 3 }
-      ],
+      modes: [],
       last: [], //上一个数组值
       last1: [], //上一个数组值
       mode: [],
@@ -2474,8 +2471,8 @@ export default {
     // 选择指派方式
     select_l(index) {
       this.modes.map((v, i) => {
-        if (this.formInline[index].mode[0].name == v.name) {
-          this.formInline[index].mode = [{ id: v.id, name: v.name }];
+        if (this.formInline[index].mode[0].name == v.mode_name) {
+          this.formInline[index].mode = [{ id: v.id, name: v.mode_name }];
         }
       });
     },
@@ -2585,6 +2582,8 @@ export default {
     // 生产排单初始化
     async init_r() {
       let { id } = this.$route.query;
+      let des = await getFactoryModeSelect()
+      this.modes = des.data.data
       let res = await produceInfo({
         //批次
         style_id: id
@@ -2623,7 +2622,7 @@ export default {
           }
           this.modes.map((j, k) => {
             if (v.mode == j.id) {
-              this.mode.push(j.name);
+              this.mode.push(j.mode_name);
             }
           });
           this.regions.map((j, k) => {

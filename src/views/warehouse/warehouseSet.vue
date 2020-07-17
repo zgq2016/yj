@@ -10,7 +10,7 @@
       <div class="header">
         <el-form style="float:left" :inline="true" :model="form">
           <el-form-item label="名称:">
-            <el-input v-model="form.name" placeholder="请输入仓库名称"></el-input>
+            <el-input v-model="form.storehouse_name" placeholder="请输入仓库名称"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -213,7 +213,7 @@ export default {
   },
   methods: {
     onSubmit() {
-      console.log(this.form);
+      this.init(this.form)
     },
     handleEdit(index, row) {
       this.dialogFormVisible1 = true;
@@ -275,22 +275,19 @@ export default {
         this.user.map((v, i) => {
           if (v.name == this.form2.contacts) {
             cont1 = v.id;
-            console.log(1);
           }
         });
         this.genre.map((v, i) => {
           if (v.name == this.form2.storehouse_type) {
-            console.log(2);
             cont2 = v.id;
           }
         });
         this.invoke.map((v, i) => {
           if (v.name == this.form2.state) {
             cont3 = v.id;
-            console.log(3);
           }
         });
-        console.log(cont1, cont2, cont3, this.form2.state);
+        // console.log(cont1, cont2, cont3, this.form2.state);
         let res = await storehouseEdit({
           storehouse_name: this.form2.storehouse_name,
           contacts: cont1 === "" ? this.form2.contacts : cont1,
@@ -300,7 +297,6 @@ export default {
           remarks: this.form2.remarks,
           id: this.form2.id
         });
-        console.log(res);
         this.init();
       });
     },
@@ -322,11 +318,13 @@ export default {
       // console.log(this.user);
     },
     // 初始化
-    async init() {
+    async init(obj) {
       let res = await storehouseList({
         page: this.page,
-        page_size: this.page_size
+        page_size: this.page_size,
+        ...obj
       });
+      console.log(res);
       let { data } = res.data;
       this.ware = data;
       this.count = res.data.count

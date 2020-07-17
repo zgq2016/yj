@@ -11,10 +11,8 @@
       <div class="left">
         <div class="left_nav">
           <ul>
-            <li>默认</li>
-            <li>已入库</li>
-            <li>草稿</li>
-            <li>已撤销</li>
+            <li v-for="(item,index) in valueElement" :key="index"  :class="active===index?'active':''" @click.stop="changed(index)">{{item}}</li>
+            
           </ul>
         </div>
         <div class="left_submit">
@@ -331,7 +329,7 @@
             <div style="position: absolute;left:5px;">
               <el-form-item label="附图:"></el-form-item>
             </div>
-            <div style="position: absolute;right:-40px;width:540px;">
+            <div style="position: absolute;right:-40px;width:556px;">
               <el-form-item label="其他费用账目类型:">
                 <el-select size="mini" v-model="ruleForm.region" placeholder="请选择">
                   <el-option label="区域一" value="shanghai"></el-option>
@@ -359,7 +357,7 @@
       </div>
     </div>
     <!-- 填尺码 -->
-    <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
+    <el-dialog :title="this.weretable[indexk].commodity+'  '+this.weretable[indexk].item_no" :visible.sync="dialogFormVisible">
       <el-form :model="form1">
         <div>
           <div class="table_nav">
@@ -396,10 +394,11 @@ import {
 export default {
   data() {
     return {
+      active:0,
       form1: {
         quantitys: []
       },
-
+      valueElement:['默认','已入库','草稿','已撤销'],
       dialogFormVisible: false,
       //选择商品
 
@@ -633,6 +632,9 @@ export default {
     };
   },
   methods: {
+    changed(index){
+      this.active = index
+    },
     // table指定列合计
     getSummaries(param) {
       const { columns, data } = param;
@@ -870,7 +872,7 @@ export default {
     },
     //新增入库单数据
     determine() {
-      console.log(this.colors);
+      // console.log(this.colors);
       let bl = true;
 
       this.colors.map((v, i) => {
@@ -926,6 +928,9 @@ export default {
 <style lang="less" scoped>
 .stockInquiry {
   list-style: none;
+  .active{
+    color: royalblue;
+  }
   .main {
     overflow: hidden;
     .left {

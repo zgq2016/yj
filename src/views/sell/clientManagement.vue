@@ -19,7 +19,7 @@
           <el-input v-model="form.phone" placeholder="电话"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary"  icon="el-icon-search" @click="onSubmit">搜索</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="onSubmit">搜索</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -61,11 +61,7 @@ import { getCustomerList } from "@/api/sell.js";
 export default {
   data() {
     return {
-      form: {
-        companyname: "",
-        contacts: "",
-        phone: ""
-      },
+      form: {},
       tableData: [],
       pageIndex: 1,
       pageSize: 9,

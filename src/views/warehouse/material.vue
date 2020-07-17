@@ -49,37 +49,152 @@
       </div>
       <hr style="border:1px dashed #ccc" />
       <div class="table">
-        <el-table
-          id="printTest"
-          ref="singleTable"
-          :data="tableData"
-          highlight-current-row
-          style="width: 100%"
-        >
-          <el-table-column align="center" type="index" width="50"></el-table-column>
-          <el-table-column align="center" property="username" label="名称"></el-table-column>
-          <el-table-column align="center" width="70" label="图片">
-            <template slot-scope="scope">
-              <img :src="scope.row.picimg" class="img" alt />
-            </template>
-          </el-table-column>
-          <el-table-column align="center" property="stylenumber" label="货号"></el-table-column>
-          <el-table-column align="center" property="stylenumber" label="条码"></el-table-column>
-          <!-- <el-table-column :property="scope.row.color" label="条码"></el-table-column> -->
-          <el-table-column
-            align="center"
-            v-for="(item,index) in color"
-            :key="index"
-            :prop="'color.'+index"
-            :label="item"
-          ></el-table-column>
-
-          <el-table-column align="center" property="category1" label="F"></el-table-column>
-          <el-table-column align="center" property="category" label="品牌"></el-table-column>
-          <el-table-column align="center" property="inventorynum" label="仓库"></el-table-column>
-          <el-table-column align="center" property="unit" label="单位"></el-table-column>
-          <el-table-column align="center" property="num" label="当前库存"></el-table-column>
-        </el-table>
+        <div class="box">
+          <div class="child">
+            <div class="left">
+              <img
+                src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1594963650563&di=ee9edf3ea2950aa9a99a7d0b5ca6fe5f&imgtype=0&src=http%3A%2F%2Fc.hiphotos.baidu.com%2Fzhidao%2Fwh%3D450%2C600%2Fsign%3D1d3f4efd8126cffc697fb7b68c3166a6%2F241f95cad1c8a786636d726a6409c93d70cf500a.jpg"
+                alt
+              />
+              <div class="left_n">
+                <span>主料</span>
+                <span>粉红色</span>
+                <span>内部编号:001</span>
+                <span>大事噶是</span>
+              </div>
+            </div>
+            <div class="right">
+              <h5>库存量</h5>
+              <em>500000</em>
+            </div>
+          </div>
+          <div class="child">
+            <div class="left">
+              <img
+                src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1594963650563&di=ee9edf3ea2950aa9a99a7d0b5ca6fe5f&imgtype=0&src=http%3A%2F%2Fc.hiphotos.baidu.com%2Fzhidao%2Fwh%3D450%2C600%2Fsign%3D1d3f4efd8126cffc697fb7b68c3166a6%2F241f95cad1c8a786636d726a6409c93d70cf500a.jpg"
+                alt
+              />
+              <div class="left_n">
+                <span>主料</span>
+                <span>粉红色</span>
+                <span>内部编号:001</span>
+                <span>大事噶是</span>
+              </div>
+            </div>
+            <div class="right">
+              <h5>库存量</h5>
+              <em>500000</em>
+            </div>
+          </div>
+          <div class="child">
+            <div class="left">
+              <img
+                src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1594963650563&di=ee9edf3ea2950aa9a99a7d0b5ca6fe5f&imgtype=0&src=http%3A%2F%2Fc.hiphotos.baidu.com%2Fzhidao%2Fwh%3D450%2C600%2Fsign%3D1d3f4efd8126cffc697fb7b68c3166a6%2F241f95cad1c8a786636d726a6409c93d70cf500a.jpg"
+                alt
+              />
+              <div class="left_n">
+                <span>主料</span>
+                <span>粉红色</span>
+                <span>内部编号:001</span>
+                <span>大事噶是</span>
+              </div>
+            </div>
+            <div class="right">
+              <h5>库存量</h5>
+              <em>500000</em>
+            </div>
+          </div>
+          <div class="child">
+            <div class="left">
+              <img
+                src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1594963650563&di=ee9edf3ea2950aa9a99a7d0b5ca6fe5f&imgtype=0&src=http%3A%2F%2Fc.hiphotos.baidu.com%2Fzhidao%2Fwh%3D450%2C600%2Fsign%3D1d3f4efd8126cffc697fb7b68c3166a6%2F241f95cad1c8a786636d726a6409c93d70cf500a.jpg"
+                alt
+              />
+              <div class="left_n">
+                <span>主料</span>
+                <span>粉红色</span>
+                <span>内部编号:001</span>
+                <span>大事噶是</span>
+              </div>
+            </div>
+            <div class="right">
+              <h5>库存量</h5>
+              <em>500000</em>
+            </div>
+          </div>
+          <div class="child">
+            <div class="left">
+              <img
+                src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1594963650563&di=ee9edf3ea2950aa9a99a7d0b5ca6fe5f&imgtype=0&src=http%3A%2F%2Fc.hiphotos.baidu.com%2Fzhidao%2Fwh%3D450%2C600%2Fsign%3D1d3f4efd8126cffc697fb7b68c3166a6%2F241f95cad1c8a786636d726a6409c93d70cf500a.jpg"
+                alt
+              />
+              <div class="left_n">
+                <span>主料</span>
+                <span>粉红色</span>
+                <span>内部编号:001</span>
+                <span>大事噶是</span>
+              </div>
+            </div>
+            <div class="right">
+              <h5>库存量</h5>
+              <em>500000</em>
+            </div>
+          </div>
+          <div class="child">
+            <div class="left">
+              <img
+                src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1594963650563&di=ee9edf3ea2950aa9a99a7d0b5ca6fe5f&imgtype=0&src=http%3A%2F%2Fc.hiphotos.baidu.com%2Fzhidao%2Fwh%3D450%2C600%2Fsign%3D1d3f4efd8126cffc697fb7b68c3166a6%2F241f95cad1c8a786636d726a6409c93d70cf500a.jpg"
+                alt
+              />
+              <div class="left_n">
+                <span>主料</span>
+                <span>粉红色</span>
+                <span>内部编号:001</span>
+                <span>大事噶是</span>
+              </div>
+            </div>
+            <div class="right">
+              <h5>库存量</h5>
+              <em>500000</em>
+            </div>
+          </div>
+          <div class="child">
+            <div class="left">
+              <img
+                src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1594964476331&di=3f3573c4fd9b0f2ca185560428315961&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fforum%2Fw%3D580%2Fsign%3Dde32eec79e13b07ebdbd50003cd59113%2F90ef76c6a7efce1bb8d6a12ca251f3deb58f6552.jpg"
+                alt
+              />
+              <div class="left_n">
+                <span>主料</span>
+                <span>粉红色</span>
+                <span>内部编号:001</span>
+                <span>大事噶是</span>
+              </div>
+            </div>
+            <div class="right">
+              <h5>库存量</h5>
+              <em>500000</em>
+            </div>
+          </div>
+          <div class="child">
+            <div class="left">
+              <img
+                src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1594963650563&di=ee9edf3ea2950aa9a99a7d0b5ca6fe5f&imgtype=0&src=http%3A%2F%2Fc.hiphotos.baidu.com%2Fzhidao%2Fwh%3D450%2C600%2Fsign%3D1d3f4efd8126cffc697fb7b68c3166a6%2F241f95cad1c8a786636d726a6409c93d70cf500a.jpg"
+                alt
+              />
+              <div class="left_n">
+                <span>主料</span>
+                <span>粉红色</span>
+                <span>内部编号:001</span>
+                <span>大事噶是</span>
+              </div>
+            </div>
+            <div class="right">
+              <h5>库存量</h5>
+              <em>500000</em>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -106,25 +221,9 @@ export default {
       form: {
         checked: true
       },
-      tableData: [
-        {
-          picimg:
-            "https://axure-file.lanhuapp.com/b0e7ed9c-a55b-4903-972b-002bbf42cf81__9baf896cacfe3438e33a5434b694f14c.svg",
-          username: "阿斯顿",
-          stylenumber: "品牌",
-          color: ["100", "200", "200"],
-          category: "西所",
-          inventorynum: "仓库1",
-          unit: "件",
-          operation: "0",
-          category1: 0,
-          num: 0
-        }
-      ],
       pageIndex: 1,
       pageSize: 10,
-      total: 0,
-      color: ["X", "L", "XXL"]
+      total: 0
     };
   },
   methods: {
@@ -151,9 +250,51 @@ export default {
     .searchInput {
     }
     .table {
-      .img {
-        width: 40px;
-        height: 40px;
+      .box {
+        overflow: hidden;
+        .child {
+          cursor: pointer;
+          overflow: hidden;
+          float: left;
+          width: 30%;
+          margin-left: 3%;
+          margin-top: 15px;
+
+          .left {
+            float: left;
+            width: 80%;
+            overflow: hidden;
+            border-radius: 12px;
+            background: #f2f2f2;
+
+            img {
+              width: 100px;
+              height: 100px;
+              float: left;
+            }
+            .left_n {
+              float: left;
+              span {
+                display: block;
+                padding: 3px;
+              }
+              span:first-of-type{
+                font-size: 14px;
+                font-weight: 900;
+                color: #000;
+              }
+            }
+          }
+          .right {
+            border-radius: 12px;
+            background: #f2f2f2;
+            height: 104px;
+            line-height: 40px;
+            float: left;
+            width: 20%;
+            text-align: center;
+          }
+        }
       }
     }
   }
