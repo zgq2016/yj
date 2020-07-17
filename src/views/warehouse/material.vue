@@ -50,7 +50,7 @@
       <hr style="border:1px dashed #ccc" />
       <div class="table">
         <div class="box">
-          <div class="child">
+          <div class="child" @click="toMaterial">
             <div class="left">
               <img
                 src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1594963650563&di=ee9edf3ea2950aa9a99a7d0b5ca6fe5f&imgtype=0&src=http%3A%2F%2Fc.hiphotos.baidu.com%2Fzhidao%2Fwh%3D450%2C600%2Fsign%3D1d3f4efd8126cffc697fb7b68c3166a6%2F241f95cad1c8a786636d726a6409c93d70cf500a.jpg"
@@ -227,6 +227,11 @@ export default {
     };
   },
   methods: {
+    toMaterial() {
+      this.$router.push({
+        path: `/materialTable?`
+      });
+    },
     handleSizeChange(val) {
       this.pageSize = val;
     },
@@ -278,7 +283,7 @@ export default {
                 display: block;
                 padding: 3px;
               }
-              span:first-of-type{
+              span:first-of-type {
                 font-size: 14px;
                 font-weight: 900;
                 color: #000;

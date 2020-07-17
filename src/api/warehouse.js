@@ -32,3 +32,28 @@ export const storehouseList = data => {
         data: data
     });
 };
+// 物料入库list接口
+export const materialStockOrderList = data => {
+    return axios({
+        url: "?g=material_stock_order_list",
+        method: "post",
+        data: data
+    });
+};
+
+// 物料入库物料信息list接口
+export const materialStockOrderListInfo = data => {
+    return axios({
+        url: "?g=material_stock_order_list_info",
+        method: "post",
+        data: data
+    });
+};
+// 物料入库物料信息编辑接口
+export const materialStockOrderListEdit = data => {
+    return axios({
+        url: "?g=material_stock_order_list_edit",
+        method: "post",
+        data: data
+    });
+};

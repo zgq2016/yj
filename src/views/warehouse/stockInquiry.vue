@@ -11,8 +11,12 @@
       <div class="left">
         <div class="left_nav">
           <ul>
-            <li v-for="(item,index) in valueElement" :key="index"  :class="active===index?'active':''" @click.stop="changed(index)">{{item}}</li>
-            
+            <li
+              v-for="(item,index) in valueElement"
+              :key="index"
+              :class="active===index?'active':''"
+              @click.stop="changed(index,item)"
+            >{{item}}</li>
           </ul>
         </div>
         <div class="left_submit">
@@ -327,7 +331,20 @@
           <!-- style="position:realtive" -->
           <el-form :model="ruleForm" inline ref="ruleForm" class="demo-ruleForm">
             <div style="position: absolute;left:5px;">
-              <el-form-item label="附图:"></el-form-item>
+              <el-form-item label="附图:">
+                <el-upload
+                  class="upload-demo"
+                  action="https://yj.ppp-pay.top/uploadpic.php"
+                  :on-preview="handlePreview"
+                  :on-remove="handleRemove"
+                  :file-list="fileList"
+                  :on-success='successFile'
+                  list-type="picture"
+                  style="float:left;"
+                >
+                  <el-button size="mini"  v-if="vh" type="primary">点击上传</el-button>
+                </el-upload>
+              </el-form-item>
             </div>
             <div style="position: absolute;right:-40px;width:556px;">
               <el-form-item label="其他费用账目类型:">
@@ -357,7 +374,10 @@
       </div>
     </div>
     <!-- 填尺码 -->
-    <el-dialog :title="this.weretable[indexk].commodity+'  '+this.weretable[indexk].item_no" :visible.sync="dialogFormVisible">
+    <el-dialog
+      :title="this.weretable[indexk].commodity+'  '+this.weretable[indexk].item_no"
+      :visible.sync="dialogFormVisible"
+    >
       <el-form :model="form1">
         <div>
           <div class="table_nav">
@@ -394,11 +414,12 @@ import {
 export default {
   data() {
     return {
-      active:0,
+      fileList: [],
+      active: 0,
       form1: {
         quantitys: []
       },
-      valueElement:['默认','已入库','草稿','已撤销'],
+      valueElement: ["默认", "已入库", "草稿", "已撤销"],
       dialogFormVisible: false,
       //选择商品
 
@@ -628,12 +649,27 @@ export default {
           address: "上海市普7"
         }
       ],
-      indexk: 0
+      indexk: 0,
+      vh: true,
     };
   },
   methods: {
-    changed(index){
-      this.active = index
+   successFile(response, file, fileList){
+     if(fileList.length>=3){
+       this.vh = false
+     }
+   },
+    // 右边上传图片==>删除
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+      this.vh = true;
+    },
+    handlePreview(file) {
+      console.log(file);
+    },
+    // 左边切换状态
+    changed(index, item) {
+      this.active = index;
     },
     // table指定列合计
     getSummaries(param) {
@@ -928,7 +964,7 @@ export default {
 <style lang="less" scoped>
 .stockInquiry {
   list-style: none;
-  .active{
+  .active {
     color: royalblue;
   }
   .main {
@@ -1060,7 +1096,7 @@ export default {
         .el-form {
           position: relative;
           width: 100%;
-          height: 200px;
+          height: 250px;
           overflow: hidden;
           /deep/.el-form-item {
             float: left;
@@ -1086,6 +1122,15 @@ export default {
                 width: 100px;
                 color: red;
                 font-size: 16px;
+              }
+            }
+          }
+          /deep/.upload-demo {
+            .el-upload-list {
+              li {
+                width: 105px;
+                float: left !important;
+                margin-right: 10px;
               }
             }
           }
