@@ -1,5 +1,5 @@
 <template>
-  <div class="productionOrders">
+  <div class="productionOrders" v-if="power.indexOf('B1000300')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
@@ -61,7 +61,7 @@
           <el-button type="primary" @click="onSubmit">查询</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="info" round @click="addOrders">新增下单</el-button>
+          <el-button type="info" round @click="addOrders" v-if="power.indexOf('B1000700')!=-1">新增下单</el-button>
         </el-form-item>
       </el-form>
       <div class="table">
@@ -111,8 +111,8 @@
     <div style="display: flex;justify-content: space-between;align-items: center;">
       <!-- 打印  导出-->
       <div class="btn">
-        <el-button v-print="'#printTest'" size="mini">打印</el-button>
-        <el-button size="mini">导出</el-button>
+        <el-button v-print="'#printTest'" size="mini" v-if="power.indexOf('B1000500')!=-1">打印</el-button>
+        <el-button size="mini" v-if="power.indexOf('B1000600')!=-1">导出</el-button>
       </div>
       <!-- 分页 -->
       <el-pagination
@@ -143,6 +143,7 @@ import { produceAdd, getProduceList } from "@/api/production";
 export default {
   data() {
     return {
+      power: "",
       formInline: {
         styleno: "",
         year: "",
@@ -307,6 +308,8 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>

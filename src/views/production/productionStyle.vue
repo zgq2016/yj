@@ -8,9 +8,7 @@
       <el-breadcrumb-item v-if="TL===1" :to="{ path: '/purchase' }">采购列表</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===2" :to="{ path: '/productionScheduling' }">生产排期</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===3" :to="{ path: '/tailor' }">裁剪</el-breadcrumb-item>
-      <!-- /
-/
-      款式详细-->
+      <!-- 款式详细-->
       <el-breadcrumb-item v-if="TL===4" :to="{ path: '/shipment' }">生产出货</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===21" :to="{ path: '/designFile' }">款式档案</el-breadcrumb-item>
       <el-breadcrumb-item
@@ -91,7 +89,7 @@
       </div>
       <!-- 信息部分 -->
       <el-collapse v-model="activeNames" @change="handleChange">
-        <el-collapse-item v-if="showhide1" title="下单信息" name="1">
+        <el-collapse-item v-if="showhide1&&power.indexOf('B1000300')!=-1" title="下单信息" name="1">
           <div class="orderInformation">
             <!-- <div style="margin-left:50px;">请先增加批次</div> -->
             <!-- 没数据或者修改 -->
@@ -278,7 +276,7 @@
               </el-form>
             </div>
             <!-- 确定订单和新增颜色 -->
-            <el-form v-if="show1" :ref="form1" style="width:100%;">
+            <el-form v-if="show1&&power.indexOf('B1000100')!=-1" :ref="form1" style="width:100%;">
               <el-form-item style="width:300px; float:left;" label="增加颜色">
                 <el-select
                   v-model="color"
@@ -1044,6 +1042,7 @@ import {
 export default {
   data() {
     return {
+      power: "",
       home: false,
       // 下单信息验证
       rules: {
@@ -3415,6 +3414,9 @@ export default {
     this.ProcureList();
     // this.logData();
     this.TL = this.$route.query.TL - 0;
+
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>

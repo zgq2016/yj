@@ -1,5 +1,5 @@
 <template>
-  <div class="itemDesign">
+  <div class="itemDesign" v-if="power.indexOf('A1000200')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
@@ -78,7 +78,8 @@
       </div>
     </div>
     <!-- 新增项目 -->
-    <div class="addStyle">
+
+    <div class="addStyle" v-if="power.indexOf('A1000100')!=-1">
       <el-dropdown trigger="click" @command="handleCommand">
         <span class="el-dropdown-link el-icon-plus">新增项目</span>
         <el-dropdown-menu slot="dropdown">
@@ -169,7 +170,8 @@ export default {
           id: 1
         }
       ],
-      obj: {}
+      obj: {},
+      power: ""
     };
   },
   methods: {
@@ -288,6 +290,9 @@ export default {
     this.getStylist();
     this.getCategory();
     this.getWest();
+
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>

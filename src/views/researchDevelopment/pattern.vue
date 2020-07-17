@@ -1,5 +1,5 @@
 <template>
-  <div class="pattern">
+  <div class="pattern" v-if="power.indexOf('A7000300')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
@@ -129,6 +129,7 @@ import {
 export default {
   data() {
     return {
+      power: "",
       formInline: {
         styleno: "",
         year: "",
@@ -152,7 +153,7 @@ export default {
       states: [
         { name: "未开始", id: 0 },
         { name: "开始画图", id: 1 },
-        { name: "完成上传", id: 2 },
+        { name: "完成上传", id: 2 }
       ]
     };
   },
@@ -228,6 +229,8 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>

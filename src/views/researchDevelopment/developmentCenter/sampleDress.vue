@@ -1,7 +1,7 @@
 <template>
   <div class="sampleDress">
     <div class="sampleDressName">版次1</div>
-    <div class="upload">
+    <div class="upload" v-if="power.indexOf('A8000300')!=-1">
       <!-- <el-upload
         class="avatar-uploader"
         action="https://yj.ppp-pay.top/uploadpic.php"
@@ -16,12 +16,11 @@
         action="https://yj.ppp-pay.top/uploadpic.php"
         list-type="picture-card"
         :on-preview="handlePictureCardPreview"
-        :on-remove="handleRemove"
         :on-success="handleSuccess"
         :file-list="img_list"
         :before-upload="beforeUpload"
       >
-        <i class="el-icon-plus">上传样衣图片</i>
+        <i class="el-icon-plus" v-if="power.indexOf('A8000100')!=-1">上传样衣图片</i>
       </el-upload>
       <el-dialog :visible.sync="dialogVisible">
         <img width="100%" :src="dialogImageUrl" alt />
@@ -39,6 +38,7 @@ import {
 export default {
   data() {
     return {
+      power: "",
       dialogImageUrl: "",
       dialogVisible: false,
       img_list: [] //图片数据
@@ -73,6 +73,8 @@ export default {
   },
   mounted() {
     this.init();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>

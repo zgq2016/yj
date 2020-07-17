@@ -1,5 +1,5 @@
 <template>
-  <div class="platemaking">
+  <div class="platemaking" v-if="power.indexOf('A8000300')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
@@ -129,6 +129,7 @@ import {
 export default {
   data() {
     return {
+      power: "",
       formInline: {
         styleno: "",
         year: "",
@@ -229,6 +230,8 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>

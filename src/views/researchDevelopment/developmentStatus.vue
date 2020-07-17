@@ -45,17 +45,26 @@
           class="el-icon-edit-outline"
           style="font-size: 40px;color: #ffa500;cursor: pointer;width:40px;height:40px"
           @click="editTheStyle"
+          v-if="power.indexOf('A2000300')!=-1||power.indexOf('A2000400')!=-1"
         ></span>
       </div>
       <el-container>
         <el-header>
           <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane label="研发状态" name="/development"></el-tab-pane>
-            <el-tab-pane label="设计版单" name="/designNote"></el-tab-pane>
-            <el-tab-pane label="物料工艺" name="/materialProcess"></el-tab-pane>
-            <el-tab-pane label="版料采购" name="/materialPurchasing"></el-tab-pane>
-            <el-tab-pane label="纸样" name="/patternStatus"></el-tab-pane>
-            <el-tab-pane label="样衣" name="/sampleDress"></el-tab-pane>
+            <el-tab-pane v-if="power.indexOf('A3000')!=-1" label="研发状态" name="/development"></el-tab-pane>
+            <el-tab-pane v-if="power.indexOf('A4000')!=-1" label="设计版单" name="/designNote"></el-tab-pane>
+            <el-tab-pane
+              v-if="power.indexOf('A5000')!=-1"
+              label="物料工艺"
+              name="/materialProcess"
+            ></el-tab-pane>
+            <el-tab-pane
+              v-if="power.indexOf('A6000')!=-1"
+              label="版料采购"
+              name="/materialPurchasing"
+            ></el-tab-pane>
+            <el-tab-pane v-if="power.indexOf('A7000')!=-1" label="纸样" name="/patternStatus"></el-tab-pane>
+            <el-tab-pane v-if="power.indexOf('A8000')!=-1" label="样衣" name="/sampleDress"></el-tab-pane>
             <el-tab-pane v-if="TL===21" label="生产信息" name="/ProductionStyle"></el-tab-pane>
             <el-tab-pane v-if="TL===21" label="商品信息" name="/merchandiseNews"></el-tab-pane>
           </el-tabs>
@@ -73,6 +82,7 @@ import { getStyle } from "@/api/researchDevelopment";
 export default {
   data() {
     return {
+      power: "",
       obj: {},
       activeName: "",
       TL: "",
@@ -107,6 +117,9 @@ export default {
     this.TL = this.$route.query.TL - 0;
     this.TL1 = this.$route.query.TL1 - 0;
     // this.$router.push({ path: `/materialPurchasing?id=${id}` });
+
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   },
   watch: {
     $route() {

@@ -27,12 +27,20 @@
         <div class="season">季节：{{obj.season}}</div>
         <div class="claim">要求：{{obj.detailed}}</div>
       </div>
-      <div class="edit el-icon-edit-outline" @click="editOutline"></div>
+      <div
+        class="edit el-icon-edit-outline"
+        @click="editOutline"
+        v-if="power.indexOf('A1000300')!=-1||power.indexOf('A1000400')!=-1"
+      ></div>
     </div>
     <!-- add -->
-    <div class="addStyle">
-      <span class="add" @click="addTheStyle">添加款式</span>
-      <span class="el-dropdown-link el-icon-plus" @click="newTheStyle">新增款式</span>
+    <div class="addStyle" v-if="power.indexOf('A2000100')!=-1">
+      <span class="add" @click="addTheStyle" v-if="power.indexOf('A2000200')!=-1">添加款式</span>
+      <span
+        class="el-dropdown-link el-icon-plus"
+        @click="newTheStyle"
+        v-if="power.indexOf('A2000200')!=-1"
+      >新增款式</span>
     </div>
     <!-- table -->
     <div class="table">
@@ -132,7 +140,9 @@ export default {
       pageIndex: 1,
       pageSize: 9,
       total: 0,
-      styleList: []
+      styleList: [],
+
+      power: ""
     };
   },
   methods: {
@@ -195,6 +205,8 @@ export default {
   },
   async mounted() {
     this.init();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>

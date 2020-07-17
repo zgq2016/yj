@@ -1,5 +1,5 @@
 <template>
-  <div class="designNote">
+  <div class="designNote" v-if="power.indexOf('A4000200')!=-1">
     <div v-if="designRemark===0">
       <el-input type="textarea" v-model="obj.designidea" class="textarea"></el-input>
       <div class="drawing">图纸</div>
@@ -38,6 +38,7 @@
         class="el-icon-edit-outline"
         style="font-size: 40px;color: #ffa500;cursor: pointer;width:40px;height:40px"
         @click="handleKeepEdit"
+        v-if="power.indexOf('A4000100')!=-1"
       ></span>
     </div>
   </div>
@@ -53,6 +54,7 @@ import {
 export default {
   data() {
     return {
+      power: "",
       obj: {},
       designRemark: 1,
       dialogImageUrl: "",
@@ -105,6 +107,8 @@ export default {
       this.designRemark = this.$route.query.designRemark - 0;
     }
     this.init();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>

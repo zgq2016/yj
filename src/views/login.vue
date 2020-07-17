@@ -9,12 +9,12 @@
         </div>
       </div>
       <div class="form">
-        <el-form ref="loginForm" :model="loginForm" label-width="80px">
-          <el-form-item label="账户：">
-            <el-input v-model="loginForm.username" placeholder="请输入账号"></el-input>
+        <el-form :model="form" ref="form" :rules="rules" label-width="80px">
+          <el-form-item label="账户：" prop="username">
+            <el-input v-model="form.username" placeholder="请输入账号"></el-input>
           </el-form-item>
-          <el-form-item label="密码：">
-            <el-input v-model="loginForm.password" type="password" placeholder="请输入密码"></el-input>
+          <el-form-item label="密码：" prop="password">
+            <el-input v-model="form.password" type="password" placeholder="请输入密码"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button @click="login">登录</el-button>
@@ -29,27 +29,38 @@
 import { userlogin } from "@/api/user.js";
 export default {
   data() {
+    const validateUsername = (rule, value, callback) => {
+      const reg = /^1[3-9][0-9]{9}$/;
+      // 正则下面的test方法返回布尔值
+      if (reg.test(value)) {
+        // 验证通过
+        callback();
+      } else {
+        callback("手机号码格式错误");
+      }
+    };
     return {
-      loginForm: {
+      form: {
         // username: "13822113535",
         // password: "123456"
+      },
+      rules: {
+        username: [{ validator: validateUsername, trigger: "blur" }],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
       }
     };
   },
   methods: {
-    async login() {
-      let res = await userlogin(this.loginForm);
-      let myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
-      if (!myreg.test(this.loginForm.username)) {
-        this.$message.error("请输入正确的账号！");
-      } else {
-        if (res.data.error_code === 0) {
-          this.$message.success({ message: res.data.msg, showClose: true });
-          this.$router.push({ name: "Index" });
-        } else {
-          this.$message.error(res.data.msg);
-        }
-      }
+    login() {
+      this.$refs["form"].validate(valid => {
+        if (!valid) return;
+        // 调用actions的登录方法
+        this.$store.dispatch("login", this.form).then(res => {
+          if (res === true) {
+            this.$message.success("登录成功");
+          }
+        });
+      });
     }
   }
 };

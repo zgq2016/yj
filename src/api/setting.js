@@ -274,3 +274,42 @@ export const getRole = (data) => {
     data: data,
   });
 };
+//编辑角色
+export const roleEdit = (data) => {
+  return axios({
+    url: "?g=role_edit",
+    method: "post",
+    data: data,
+  });
+};
+//删除角色接口
+export const roleDel = (data) => {
+  return axios({
+    url: "?g=role_del",
+    method: "post",
+    data: data,
+  });
+};
+//角色select接口
+export const getRoleSelect = (data) => {
+  return axios({
+    url: "?g=get_role_select",
+    method: "post",
+    data: data,
+  });
+};
+//用户资料更新接口
+export const userEdit = (data) => {
+  return axios({
+    url: "?g=user_edit",
+    method: "post",
+    data: data,
+  });
+};
+
+// user_edit
+// 用户资料更新接口
+// role_name、name
+
+// user_del
+// 用户删除接口
