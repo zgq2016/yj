@@ -1,5 +1,5 @@
 <template>
-  <div class="colorManagement">
+  <div class="colorManagement" v-if="power.indexOf('H4000400')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
@@ -7,15 +7,23 @@
       <el-breadcrumb-item>材质管理</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 添加材质 -->
-    <div class="addClassify">
+    <div class="addClassify" v-if="power.indexOf('H4000100')!=-1">
       <el-button type="primary" @click="addClassify">添加材质</el-button>
     </div>
     <el-table :data="tableData" style="width: 100%;margin: 20px 0;">
       <el-table-column prop="material_name" label="材质名称" width="200"></el-table-column>
       <el-table-column align="right" label="操作">
         <template slot-scope="scope">
-          <div class="el-icon-edit btn" @click="handleEdit(scope.$index, scope.row)"></div>
-          <div class="el-icon-delete btn" @click="handleDelete(scope.$index, scope.row)"></div>
+          <div
+            v-if="power.indexOf('H4000300')!=-1"
+            class="el-icon-edit btn"
+            @click="handleEdit(scope.$index, scope.row)"
+          ></div>
+          <div
+            v-if="power.indexOf('H4000200')!=-1"
+            class="el-icon-delete btn"
+            @click="handleDelete(scope.$index, scope.row)"
+          ></div>
         </template>
       </el-table-column>
     </el-table>
@@ -94,6 +102,7 @@ import {
 export default {
   data() {
     return {
+      power: "",
       tableData: [],
       centerDialogVisible: false, //添加材质
       centerDialogVisible1: false, //编辑材质
@@ -190,6 +199,8 @@ export default {
   },
   mounted() {
     this.init();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>

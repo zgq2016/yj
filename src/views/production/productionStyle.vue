@@ -270,13 +270,14 @@
                     style="width:100px;position:absolute;right:100px;top:20px;"
                     @click="omit(index)"
                     round
+                    v-if="power.indexOf('B1000200')!=-1"
                   >删除</el-button>
                   <hr style="border:1px dashed #999999" />
                 </div>
               </el-form>
             </div>
             <!-- 确定订单和新增颜色 -->
-            <el-form v-if="show1&&power.indexOf('B1000100')!=-1" :ref="form1" style="width:100%;">
+            <el-form v-if="show1" :ref="form1" style="width:100%;">
               <el-form-item style="width:300px; float:left;" label="增加颜色">
                 <el-select
                   v-model="color"
@@ -292,7 +293,7 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item v-if="ascertain1" style=" float:right;">
+              <el-form-item v-if="ascertain1&&power.indexOf('B1000100')!=-1" style=" float:right;">
                 <el-button @click="clickOrders()">确认下单</el-button>
               </el-form-item>
             </el-form>
@@ -315,6 +316,7 @@
                   </div>
                 </div>
                 <el-button
+                  v-if="ascertain1&&power.indexOf('B1000400')!=-1"
                   style="width:100px;position:absolute;right:100px;top:20px;"
                   @click="btnModify()"
                   round
@@ -324,7 +326,7 @@
             </div>
           </div>
         </el-collapse-item>
-        <el-collapse-item v-if="showhide2" title="采购" name="2">
+        <el-collapse-item v-if="showhide2&&power.indexOf('B2000300')!=-1" title="采购" name="2">
           <div class="purchase" v-if="king1">
             <div class="color">
               <span
@@ -348,7 +350,11 @@
                         <div class="cardStyle_left_content">
                           <div class="cardStyle_left_content_name">
                             <div>{{item1.mainclass}}</div>
-                            <div class="el-icon-close" @click="procureDel(item1)"></div>
+                            <div
+                              v-if="power.indexOf('B2000200')!=-1"
+                              class="el-icon-close"
+                              @click="procureDel(item1)"
+                            ></div>
                           </div>
                           <div>{{item1.color}}</div>
                           <div>内部编号:{{item1.materialsno}}</div>
@@ -424,7 +430,7 @@
                         </template>
                       </el-step>
                     </el-steps>
-                    <div v-if="item1.produce_order_procure_log_data">
+                    <div v-if="item1.produce_order_procure_log_data&&power.indexOf('B2000400')!=-1">
                       <el-button
                         style="margin-left:10px"
                         size="mini"
@@ -550,10 +556,15 @@
                 <el-button @click="outerVisible = false;innerVisibled = true;">延迟回料</el-button>
               </div>
             </el-dialog>
-            <el-button size="mini" @click="handleMaterialsCard" round>+ 增加物料</el-button>
+            <el-button
+              size="mini"
+              @click="handleMaterialsCard"
+              round
+              v-if="power.indexOf('B2000100')!=-1"
+            >+ 增加物料</el-button>
           </div>
         </el-collapse-item>
-        <el-collapse-item v-if="showhide3" title="生产排单" name="3">
+        <el-collapse-item v-if="showhide3&&power.indexOf('B3000300')!=-1" title="生产排单" name="3">
           <!-- 无数据 -->
           <div v-if="!vb" class="productionArranged">
             <el-form
@@ -616,6 +627,7 @@
                   type="danger"
                   @click="factoryDel(item.id,index)"
                   round
+                  v-if="power.indexOf('B3000200')!=-1"
                 >删除</el-button>
                 <hr style="border:1px dashed #999999" />
               </div>
@@ -644,7 +656,7 @@
             <el-button
               @click="arranged"
               round
-              v-if="ascertain2"
+              v-if="ascertain2&&power.indexOf('B3000100')!=-1"
               style="float:right;margin-bottom:15px;"
             >确认排单</el-button>
           </div>
@@ -672,12 +684,12 @@
 
               <hr style="border:1px dashed #999999" />
             </div>
-            <div class="factory_right">
+            <div class="factory_right" v-if="ascertain2&&power.indexOf('B3000400')!=-1">
               <el-button round type="info" @click="factoryEidt()">修改</el-button>
             </div>
           </div>
         </el-collapse-item>
-        <el-collapse-item v-if="showhide4" title="裁剪" name="4">
+        <el-collapse-item v-if="showhide4&&power.indexOf('B4000300')!=-1" title="裁剪" name="4">
           <div class="tailor">
             <div>
               <!-- <div v-if="tailorList.category>0"> -->
@@ -711,6 +723,7 @@
                     type="danger"
                     style="position:absolute;right:10%;top:5%;"
                     @click="tailorDel(item.id,index)"
+                    v-if="power.indexOf('B4000200')!=-1"
                   >删除</el-button>
                   <div @click.stop="ide(index)">
                     <span>裁床单：</span>
@@ -761,17 +774,18 @@
                   round
                   type="info"
                   @click="tailorEdit()"
+                  v-if="showhide3&&power.indexOf('B4000400')!=-1"
                 >修改</el-button>
               </div>
             </div>
             <div class="add" v-if="!vb1">
               <el-button size="mini" v-if="tailorVB" @click="tailoradd" round>+ 增加床次</el-button>
-              <el-button @click="tailored" v-if="ascertain3" round>确定</el-button>
+              <el-button @click="tailored" v-if="ascertain3&&power.indexOf('B4000100')!=-1" round>确定</el-button>
             </div>
             <!-- </div> -->
           </div>
         </el-collapse-item>
-        <el-collapse-item v-if="showhide5" title="出货" name="5">
+        <el-collapse-item v-if="showhide5&&power.indexOf('B5000300')!=-1" title="出货" name="5">
           <div class="shipment">
             <div class="shipmentList">
               <!-- 无数据 -->
@@ -845,6 +859,7 @@
                     type="danger"
                     style="position:absolute;top:5%;right:10%"
                     @click="completeDel(item.id_c,index)"
+                    v-if="power.indexOf('B5000300')!=-1"
                   >删除</el-button>
                   <hr style="border:1px dashed #999999" />
                 </el-form>
@@ -914,12 +929,13 @@
                   round
                   type="info"
                   @click="completeEdit()"
+                  v-if="power.indexOf('B5000400')!=-1"
                 >修改</el-button>
               </div>
             </div>
             <div class="add" v-if="!vb2">
               <el-button @click="goDownAdd" v-if="shipmentVB" round>+增加出货批次</el-button>
-              <el-button @click="goDownlist" v-if="ascertain4" round>确定</el-button>
+              <el-button @click="goDownlist" v-if="power.indexOf('B5000100')!=-1" round>确定</el-button>
             </div>
           </div>
         </el-collapse-item>
@@ -2582,8 +2598,8 @@ export default {
     // 生产排单初始化
     async init_r() {
       let { id } = this.$route.query;
-      let des = await getFactoryModeSelect()
-      this.modes = des.data.data
+      let des = await getFactoryModeSelect();
+      this.modes = des.data.data;
       let res = await produceInfo({
         //批次
         style_id: id

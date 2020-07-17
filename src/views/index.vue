@@ -85,7 +85,7 @@
               <el-menu-item index="/listAccounts">账户列表</el-menu-item>
               <el-menu-item index="authorityManagement">权限管理</el-menu-item>
             </el-submenu>
-            <el-menu-item index="/logout" v-if="power.indexOf('H8000')!=-1">退出系统</el-menu-item>
+            <el-menu-item index="/logout" v-if="power.indexOf('H8000')!=-1">退出系统</el-menu-item> 
           </el-submenu>
           <!-- <el-submenu index="9">
             <template slot="title">设置</template>

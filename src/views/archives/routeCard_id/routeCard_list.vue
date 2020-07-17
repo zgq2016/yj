@@ -7,7 +7,7 @@
         <el-button class="el-icon-search">搜索</el-button>
       </div>
       <!-- add -->
-      <div class="addStyle">
+      <div class="addStyle" v-if="power.indexOf('E2000100')!=-1">
         <span class="add" @click="addRouteCard">新增</span>
       </div>
     </div>
@@ -62,6 +62,7 @@ export default {
   },
   data() {
     return {
+      power: "",
       companyname: "", //搜索
       SupplierList: [], //列表数据
       pageIndex: 1,
@@ -100,6 +101,8 @@ export default {
   },
   mounted() {
     this.init();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   },
   watch: {
     data() {

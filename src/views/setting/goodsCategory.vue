@@ -1,5 +1,5 @@
 <template>
-  <div class="goodsCategory">
+  <div class="goodsCategory" v-if="power.indexOf('H1000400')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
@@ -19,7 +19,7 @@
       <el-breadcrumb-item>商品分类</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 添加分类 -->
-    <div class="addClassify">
+    <div class="addClassify" v-if="power.indexOf('H1000100')!=-1">
       <el-button type="primary" @click="addClassify">添加分类</el-button>
     </div>
     <el-table
@@ -34,8 +34,8 @@
       <el-table-column prop="sort" label="排序" width="200"></el-table-column>
       <el-table-column align="right" label="操作">
         <template slot-scope="scope">
-          <div class="el-icon-edit btn" @click="handleEdit(scope.$index, scope.row)"></div>
-          <div class="el-icon-delete btn" @click="handleDelete(scope.$index, scope.row)"></div>
+          <div v-if="power.indexOf('H1000300')!=-1" class="el-icon-edit btn" @click="handleEdit(scope.$index, scope.row)"></div>
+          <div v-if="power.indexOf('H1000200')!=-1" class="el-icon-delete btn" @click="handleDelete(scope.$index, scope.row)"></div>
         </template>
       </el-table-column>
     </el-table>
@@ -140,6 +140,7 @@ import {
 export default {
   data() {
     return {
+      power: "",
       rules: {
         goods_category_name: [
           { required: true, message: "请输入分类名称", trigger: "blur" }
@@ -313,6 +314,8 @@ export default {
   },
   mounted() {
     this.init();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>

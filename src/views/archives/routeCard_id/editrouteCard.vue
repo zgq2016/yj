@@ -167,8 +167,16 @@
           <el-input type="textarea" v-model="obj.remarks" placeholder="备注"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button @click="handleEdit" style="padding:10px 50px;border-radius: 10px;">保存</el-button>
-          <el-button @click="handleDel" style="padding:10px 50px;border-radius: 10px;">删除</el-button>
+          <el-button
+            v-if="power.indexOf('E2000300')!=-1"
+            @click="handleEdit"
+            style="padding:10px 50px;border-radius: 10px;"
+          >保存</el-button>
+          <el-button
+            v-if="power.indexOf('E2000200')!=-1"
+            @click="handleDel"
+            style="padding:10px 50px;border-radius: 10px;"
+          >删除</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -288,6 +296,7 @@ export default {
   },
   data() {
     return {
+      power: "",
       //剪切图片上传
       crap: false,
       previews: {},
@@ -666,6 +675,8 @@ export default {
     this.getUnit();
     this.getColor();
     this.getMaterialList();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>
