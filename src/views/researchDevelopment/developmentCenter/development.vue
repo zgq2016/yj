@@ -1,5 +1,5 @@
 <template>
-  <div class="development">
+  <div class="development" v-if="power.indexOf('A3000100')!=-1">
     <el-steps space="200" style="margin-top:50px">
       <el-step
         style="width:100px"
@@ -17,6 +17,7 @@ import { getStyle } from "@/api/researchDevelopment";
 export default {
   data() {
     return {
+      power: "",
       activities_endlong: []
     };
   },
@@ -30,6 +31,8 @@ export default {
   },
   mounted() {
     this.init();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>

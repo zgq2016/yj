@@ -252,9 +252,9 @@ export default {
           }
         });
         if (v.complete_status == 0) {
-          v.state = "未裁剪";
+          v.state = "未出货";
         } else if (v.complete_status == 1) {
-          v.state = "已裁剪";
+          v.state = "已出货";
         }
       });
     },

@@ -170,13 +170,17 @@ export default {
       delete obj["class_data"];
       delete obj["level"];
       delete obj["class_id_classname"];
-      let res = await getMaterialsClassEdit(obj);
-      console.log(res);
-      this.init();
-      this.$router.push({
-        path: "routeCard_list"
-      });
-      this.centerDialogVisible1 = false;
+      if (obj.classname !== "") {
+        let res = await getMaterialsClassEdit(obj);
+        console.log(res);
+        this.init();
+        this.$router.push({
+          path: "routeCard_list"
+        });
+        this.centerDialogVisible1 = false;
+      } else {
+        this.$message.error("请输入分类");
+      }
     },
     async handleDel() {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
@@ -244,14 +248,18 @@ export default {
         obj["level"] = this.level;
         obj["classname"] = this.value;
       }
-      let res = await materialsClassAdd(obj);
-      console.log(res);
-      this.value = "";
-      this.init();
-      this.$router.push({
-        path: "routeCard_list"
-      });
-      this.centerDialogVisible = false;
+      if (obj.classname !== "") {
+        let res = await materialsClassAdd(obj);
+        console.log(res);
+        this.value = "";
+        this.init();
+        this.$router.push({
+          path: "routeCard_list"
+        });
+        this.centerDialogVisible = false;
+      } else {
+        this.$message.error("请输入分类");
+      }
     },
     handelShow(level, item_id) {
       this.level = level;

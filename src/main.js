@@ -7,6 +7,7 @@ Vue.prototype.axios = myaxios;
 import App from "./App.vue";
 import router from "./router";
 import Print from "vue-print-nb";
+import { store } from "./store/user";
 // 注意 我使用的imageConversion版本为2.1.1，需要使用下面的形式导入
 import * as imageConversion from "image-conversion";
 
@@ -46,5 +47,6 @@ Vue.use(Print);
 Vue.use(ElementUI);
 new Vue({
   router,
+  store,
   render: (h) => h(App),
 }).$mount("#app");

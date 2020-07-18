@@ -2,7 +2,7 @@
   <div class="patternStatus">
     <div class="pattern">
       <!-- 纸样文件 -->
-      <div class="patternFile">
+      <div class="patternFile" v-if="power.indexOf('A7000300')!=-1">
         <div class="patternFileName">纸样文件</div>
         <div class="upload">
           <el-upload
@@ -16,7 +16,7 @@
             :file-list="fileList"
             :on-exceed="handleExceed"
           >
-            <el-button size="small" type="primary">点击上传</el-button>
+            <el-button size="small" type="primary" v-if="power.indexOf('A7000100')!=-1">点击上传</el-button>
           </el-upload>
         </div>
       </div>
@@ -40,7 +40,7 @@
         </div>
       </div>-->
       <!-- 物料用量 -->
-      <div class="materialUsage">
+      <div class="materialUsage" v-if="power.indexOf('A7000600')!=-1">
         <div class="materialUsageName">物料用量</div>
         <div class="cardList">
           <div class="card" v-for="(item, index) in MaterialsList" :key="index">
@@ -100,11 +100,13 @@
             </div>
           </div>
         </div>
-        <div v-if="antistopActive==true">
-          <el-button @click="modification" type="primary">修改</el-button>
-        </div>
-        <div v-if="antistopActive==false">
-          <el-button @click="affirm" type="primary">确认</el-button>
+        <div v-if="power.indexOf('A7000500')!=-1">
+          <div v-if="antistopActive==true">
+            <el-button @click="modification" type="primary">修改</el-button>
+          </div>
+          <div v-if="antistopActive==false">
+            <el-button @click="affirm" type="primary">确认</el-button>
+          </div>
         </div>
         <!-- <button @click="antistopActive=false">修改</button>
         <button @click="antistopActive=true">确认</button>-->
@@ -122,7 +124,7 @@
               <div style="margin-right:5px">{{item.name}}</div>
               <div>提交于: {{item.del_time}}</div>
             </div>
-            <div class="restore" @click="Resume(item)">还原</div>
+            <div class="restore" @click="Resume(item)" v-if="power.indexOf('A7000400')!=-1">还原</div>
           </div>
         </div>
       </div>
@@ -143,6 +145,7 @@ import {
 export default {
   data() {
     return {
+      power: "",
       fileList: [],
       dosageCargo: "",
 
@@ -261,6 +264,8 @@ export default {
   mounted() {
     this.init();
     this.antistopActive = true;
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>

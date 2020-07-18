@@ -122,8 +122,16 @@
             </div>
           </el-form-item>
           <el-form-item>
-            <el-button @click="handleKeep" style="padding:10px 50px;border-radius: 15px;">保存</el-button>
-            <el-button @click="handleDel" style="padding:10px 50px;border-radius: 15px;">删除</el-button>
+            <el-button
+              v-if="power.indexOf('A1000300')!=-1"
+              @click="handleKeep"
+              style="padding:10px 50px;border-radius: 15px;"
+            >保存</el-button>
+            <el-button
+              v-if="power.indexOf('A1000400')!=-1"
+              @click="handleDel"
+              style="padding:10px 50px;border-radius: 15px;"
+            >删除</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -315,6 +323,8 @@ export default {
       west: "",
       year: "",
       season: "",
+
+      power: "",
       // 表单规则
       rules: {
         projectname: [
@@ -600,6 +610,9 @@ export default {
     this.getYear();
     this.getSeason();
     this.getstylist();
+
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>

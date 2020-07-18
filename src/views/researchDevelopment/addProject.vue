@@ -347,7 +347,7 @@ export default {
           { required: true, message: "请输入要求数量", trigger: "blur" }
         ]
       },
-      arr: []
+      arr: [],
     };
   },
   methods: {

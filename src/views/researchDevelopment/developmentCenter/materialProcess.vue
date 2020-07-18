@@ -2,7 +2,7 @@
   <div class="materialProcess">
     <div class="main">
       <!-- 增加款式颜色 -->
-      <div style="display:flex">
+      <div style="display:flex" v-if="power.indexOf('A5000300')!=-1">
         <div class="color_num" v-for="(item, index) in obj.style_color_data" :key="index">
           <div
             style="display: flex;justify-content: center;align-items: center;"
@@ -10,14 +10,18 @@
             :class="active===index?'active':''"
           >
             <div class="color">{{item.style_color_name}}</div>
-            <div class="el-icon-close" @click.stop="styleColorDel(item)"></div>
+            <div
+              v-if="power.indexOf('A5000200')!=-1"
+              class="el-icon-close"
+              @click.stop="styleColorDel(item)"
+            ></div>
           </div>
         </div>
-        <div class="addColor" @click="addKindColor">增加款式颜色</div>
+        <div class="addColor" @click="addKindColor" v-if="power.indexOf('A5000100')!=-1">增加款式颜色</div>
         <!--  -->
       </div>
       <!-- 数据 -->
-      <div v-if="style_color_data_length!==0">
+      <div v-if="style_color_data_length!==0&&power.indexOf('A5000700')!=-1">
         <div class="cardList" v-for="(item, index) in cardList" :key="index">
           <div style="display: flex;justify-content: space-between;align-items: flex-end;">
             <div>
@@ -33,6 +37,7 @@
                           <div class="cardStyle_left_content_name">
                             <div>{{item2.materials_mainclass_name}} ({{item2.materials_class_name}})</div>
                             <div
+                              v-if="power.indexOf('A5000600')!=-1"
                               class="el-icon-close"
                               style="cursor: pointer;"
                               @click.stop="handleStyleMaterialsDel(item2)"
@@ -79,6 +84,7 @@
               size="mini"
               round
               @click="handleMaterialsCard(item)"
+              v-if="power.indexOf('A5000500')!=-1"
             >添加{{item.materialsCard}}</el-button>
           </div>
           <el-divider content-position="right">{{item.materials}}</el-divider>
@@ -86,7 +92,7 @@
       </div>
       <div class="del_purchase_note" v-if="card.length>0">
         <el-checkbox class="checkbox" v-model="isAllCheck" @change="handleAllCheck">全选</el-checkbox>
-        <el-button size="mini" round @click="purchaseOrder">生成采购单</el-button>
+        <el-button size="mini" round @click="purchaseOrder" v-if="power.indexOf('A6000500')!=-1">生成采购单</el-button>
       </div>
       <!-- 删除历史 -->
       <div class="del_history">
@@ -111,7 +117,11 @@
                 {{item1.color}}
                 <div>{{item1.color_no}}</div>
               </div>
-              <div class="restore" @click="handleRestore(item1)">还原</div>
+              <div
+                class="restore"
+                @click="handleRestore(item1)"
+                v-if="power.indexOf('A5000800')!=-1"
+              >还原</div>
             </div>
           </div>
         </div>
@@ -141,11 +151,11 @@
                         <div class="cardStyle_left_content">
                           <div class="cardStyle_left_content_name">
                             <div>{{item2.materials_mainclass_name}} ({{item2.materials_class_name}})</div>
-                            <div
+                            <!-- <div
                               class="el-icon-close"
                               style="cursor: pointer;"
                               @click.stop="handleStyleMaterialsDel(item2)"
-                            ></div>
+                            ></div>-->
                           </div>
                           <div>{{item2.materials_data[0].materialsname}}</div>
                           <div>内部编号:{{item2.materials_data[0].materialsno}}</div>
@@ -208,8 +218,8 @@
           style="width:300px"
         ></el-input>
         <router-link
-          :to="`/addRouteCard?id_NO=${this.$route.query.id}&TL=10&project_id=${this.$route.query.project_id}`"
-          style="margin-left:30px"
+          :to="`/addRouteCard?id_NO=${$route.query.id}&TL=10&project_id=${this.$route.query.project_id}`"
+          style="margin-left:30px" v-if="power.indexOf('A5000400')!=-1"
         >新增主料卡</router-link>
       </div>
       <div class="searchCard">
@@ -295,6 +305,7 @@ import {
 export default {
   data() {
     return {
+      power: "",
       designColor: "",
       obj: {},
       centerDialogVisible: false, //增加款式颜色
@@ -694,6 +705,8 @@ export default {
   mounted() {
     this.init();
     this.delListInit();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>

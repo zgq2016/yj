@@ -1,6 +1,6 @@
 <template>
   <div class="materialPurchasing">
-    <div class="material_purchase_name">
+    <div class="material_purchase_name" v-if="power.indexOf('A6000100')!=-1">
       <div
         v-for="(item, index) in obj.style_color_data"
         :key="index"
@@ -15,93 +15,95 @@
         <el-divider direction="vertical"></el-divider>
       </div>
     </div>
-    <div v-for="(item, index) in style_materials" :key="index">
-      <div class="content" v-for="(item1, index1) in item.style_materials_data" :key="index1">
-        <div class="card">
-          <div class="cardStyle">
-            <div class="cardStyle_left">
-              <div class="cardStyle_left_img">
-                <img :src="item1.picurl" alt />
-              </div>
-              <div class="cardStyle_left_content">
-                <div class="cardStyle_left_content_name">
-                  <div>{{item1.materials_mainclass_name}} ({{item1.materials_class_name}})</div>
-                  <div
-                    class="el-icon-close"
-                    style="cursor: pointer;"
-                    v-if="item1.style_purchase_log_data.length===0"
-                    @click.stop="handleStyleMaterialsDel(item1)"
-                  ></div>
+    <div v-if="power.indexOf('A6000200')!=-1">
+      <div v-for="(item, index) in style_materials" :key="index">
+        <div class="content" v-for="(item1, index1) in item.style_materials_data" :key="index1">
+          <div class="card">
+            <div class="cardStyle">
+              <div class="cardStyle_left">
+                <div class="cardStyle_left_img">
+                  <img :src="item1.picurl" alt />
                 </div>
-                <div>{{item1.materials_data[0].materialsname}}</div>
-                <div>内部编号:{{item1.materials_data[0].materialsno}}</div>
-                <div
-                  v-if="item1.style_materials_supplier_data.length>0"
-                >{{item1.style_materials_supplier_data[0].companyname}}</div>
+                <div class="cardStyle_left_content">
+                  <div class="cardStyle_left_content_name">
+                    <div>{{item1.materials_mainclass_name}} ({{item1.materials_class_name}})</div>
+                    <div
+                      class="el-icon-close"
+                      style="cursor: pointer;"
+                      v-if="item1.style_purchase_log_data.length===0&&power.indexOf('A6000400')!=-1"
+                      @click.stop="handleStyleMaterialsDel(item1)"
+                    ></div>
+                  </div>
+                  <div>{{item1.materials_data[0].materialsname}}</div>
+                  <div>内部编号:{{item1.materials_data[0].materialsno}}</div>
+                  <div
+                    v-if="item1.style_materials_supplier_data.length>0"
+                  >{{item1.style_materials_supplier_data[0].companyname}}</div>
+                </div>
               </div>
-            </div>
-            <div class="cardStyle_right">
-              <div>
-                {{item1.color}}
-                <div>{{item1.color_no}}</div>
+              <div class="cardStyle_right">
+                <div>
+                  {{item1.color}}
+                  <div>{{item1.color_no}}</div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="orderInformation">
-          <el-steps finish-status="wait" :active="item1.style_purchase_log_data.length-1">
-            <el-step
-              style="width:125px"
-              v-for="(item_g, index_g) in item1.style_purchase_log_data"
-              :key="index_g"
-              title
-              description
-              icon="el-icon-success"
-            >
-              <template v-slot:title>
-                <div class="tt">
-                  <span>
-                    {{item_g.logname}}
-                    <em>{{''}}</em>
-                    <!-- <em v-if="item_g.state == '1'">{{item_g.quantity+"m"}}</em> -->
-                  </span>
-                  <span>{{item_g.ctime}}</span>
-                </div>
-              </template>
-              <template v-slot:description>
-                <div class="dt">
-                  <span>{{"预计回料时间"}}</span>
-                  <span>{{item_g.returntime}}</span>
-                  <!-- ****************************************************************** -->
-                  <!-- <span v-if="index_g==0">{{"预计回料时间"}}</span>
+          <div class="orderInformation">
+            <el-steps finish-status="wait" :active="item1.style_purchase_log_data.length-1">
+              <el-step
+                style="width:125px"
+                v-for="(item_g, index_g) in item1.style_purchase_log_data"
+                :key="index_g"
+                title
+                description
+                icon="el-icon-success"
+              >
+                <template v-slot:title>
+                  <div class="tt">
+                    <span>
+                      {{item_g.logname}}
+                      <em>{{''}}</em>
+                      <!-- <em v-if="item_g.state == '1'">{{item_g.quantity+"m"}}</em> -->
+                    </span>
+                    <span>{{item_g.ctime}}</span>
+                  </div>
+                </template>
+                <template v-slot:description>
+                  <div class="dt">
+                    <span>{{"预计回料时间"}}</span>
+                    <span>{{item_g.returntime}}</span>
+                    <!-- ****************************************************************** -->
+                    <!-- <span v-if="index_g==0">{{"预计回料时间"}}</span>
                   <span v-if="item_g.state == '2'">{{"延迟回料时间"}}</span>
                   <span v-if="item_g.state == '1'">{{"部分回料时间"}}</span>
                   <span v-if="item_g.state == '3'">{{"回料总量"}}</span>
                   <span v-if="item_g.state == '3'">{{item1.amountPurchased+'m'}}</span>
                   <span v-else-if="item_g.state == '0'">{{item1.finishTime}}</span>
-                  <span v-else>{{item_g.returntime}}</span>-->
-                </div>
-              </template>
-            </el-step>
-          </el-steps>
-          <div>
-            <el-button
-              size="mini"
-              round
-              @click="goPanelPurchase(item1)"
-              v-if="item1.style_purchase_log_data.length===0"
-            >{{"采购录入"}}</el-button>
-            <el-button
-              size="mini"
-              round
-              @click="updateStatus(item1)"
-              v-if="item1.style_purchase_log_data.length>0&&item1.style_purchase_log_data[item1.style_purchase_log_data.length-1].state!=='3'"
-            >{{"更新状态"}}</el-button>
-            <!-- &&item1.style_purchase_log_data[item1.style_purchase_log_data.length-1].logname!=='全部回料' -->
+                    <span v-else>{{item_g.returntime}}</span>-->
+                  </div>
+                </template>
+              </el-step>
+            </el-steps>
+            <div>
+              <el-button
+                size="mini"
+                round
+                @click="goPanelPurchase(item1)"
+                v-if="item1.style_purchase_log_data.length===0&&power.indexOf('A6000300')!=-1"
+              >{{"采购录入"}}</el-button>
+              <el-button
+                size="mini"
+                round
+                @click="updateStatus(item1)"
+                v-if="item1.style_purchase_log_data.length>0&&item1.style_purchase_log_data[item1.style_purchase_log_data.length-1].state!=='3'&&power.indexOf('A6000300')!=-1"
+              >{{"更新状态"}}</el-button>
+              <!-- &&item1.style_purchase_log_data[item1.style_purchase_log_data.length-1].logname!=='全部回料' -->
+            </div>
           </div>
         </div>
+        <el-divider content-position="right">{{item.mainclass}}</el-divider>
       </div>
-      <el-divider content-position="right">{{item.mainclass}}</el-divider>
     </div>
     <!-- 弹框 -->
     <el-dialog width="30%" title="请选择更新后的状态" class="tan" :visible.sync="outerVisible" center>
@@ -192,6 +194,7 @@ import moment from "moment";
 export default {
   data() {
     return {
+      power: "",
       cardList: [
         {
           materialsCard: "主料卡",
@@ -407,6 +410,8 @@ export default {
   },
   mounted() {
     this.init();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>

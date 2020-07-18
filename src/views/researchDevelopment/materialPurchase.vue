@@ -1,13 +1,12 @@
 <template>
-  <div class="materialPurchase">
-    <!-- 面
-    包屑 -->
+  <div class="materialPurchase" v-if="power.indexOf('A6000200')!=-1">
+    <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>研发</el-breadcrumb-item>
       <el-breadcrumb-item>版料采购</el-breadcrumb-item>
     </el-breadcrumb>
-     <div class="main">
+    <div class="main">
       <!-- search_condition -->
       <div class="search_condition">
         <el-form
@@ -130,6 +129,7 @@ import {
 export default {
   data() {
     return {
+      power: "",
       formInline: {
         styleno: "",
         year: "",
@@ -149,13 +149,13 @@ export default {
       page_size: 9,
       count: 0,
       stylist: "",
-      state:'',
-      states:[
-        {name:"未下单",id:0},
-        {name:"已下单",id:1},
-        {name:"部份回料",id:2},
-        {name:"延时回料",id:3},
-        {name:"全部回料",id:4},
+      state: "",
+      states: [
+        { name: "未下单", id: 0 },
+        { name: "已下单", id: 1 },
+        { name: "部份回料", id: 2 },
+        { name: "延时回料", id: 3 },
+        { name: "全部回料", id: 4 }
       ]
     };
   },
@@ -168,7 +168,7 @@ export default {
       this.$router.push({ path: `/materialPurchasing?id=${row.id}&TL=${1}` });
     },
     handleUser_id(e) {
-      this.formInline.user_id = e
+      this.formInline.user_id = e;
     },
     async getYear() {
       let res = await getYearList();
@@ -231,6 +231,8 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>
@@ -268,7 +270,7 @@ export default {
       }
     }
   }
-  .el-pagination{
+  .el-pagination {
     text-align: right;
   }
 }

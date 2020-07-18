@@ -109,8 +109,13 @@
         </div>
       </div>
       <div class="display:flex">
-        <el-button round style="margin:30px  100px 30px 250px" @click="handleEdit">编辑</el-button>
-        <el-button round @click="handleDel">删除</el-button>
+        <el-button
+          v-if="power.indexOf('A2000300')!=-1"
+          round
+          style="margin:30px  100px 30px 250px"
+          @click="handleEdit"
+        >编辑</el-button>
+        <el-button v-if="power.indexOf('A2000400')!=-1" round @click="handleDel">删除</el-button>
       </div>
     </div>
     <el-dialog
@@ -268,6 +273,7 @@ export default {
   },
   data() {
     return {
+      power: "",
       headImg: "",
       //剪切图片上传
       crap: false,
@@ -619,6 +625,8 @@ export default {
     this.getstylist();
     this.getCategory();
     this.getStyleno();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>
