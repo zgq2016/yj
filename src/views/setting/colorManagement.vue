@@ -1,5 +1,5 @@
 <template>
-  <div class="goodsCategory">
+  <div class="goodsCategory" v-if="power.indexOf('H2000400')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
@@ -19,7 +19,7 @@
       <el-breadcrumb-item>颜色管理</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 添加颜色 -->
-    <div class="addClassify">
+    <div class="addClassify" v-if="power.indexOf('H2000100')!=-1">
       <el-button type="primary" @click="addClassify">添加颜色</el-button>
     </div>
     <el-table
@@ -33,8 +33,16 @@
       <el-table-column prop="sort" label="排序" width="200"></el-table-column>
       <el-table-column align="right" label="操作">
         <template slot-scope="scope">
-          <div class="el-icon-edit btn" @click="handleEdit(scope.$index, scope.row)"></div>
-          <div class="el-icon-delete btn" @click="handleDelete(scope.$index, scope.row)"></div>
+          <div
+            class="el-icon-edit btn"
+            v-if="power.indexOf('H2000300')!=-1"
+            @click="handleEdit(scope.$index, scope.row)"
+          ></div>
+          <div
+            class="el-icon-delete btn"
+            v-if="power.indexOf('H2000200')!=-1"
+            @click="handleDelete(scope.$index, scope.row)"
+          ></div>
         </template>
       </el-table-column>
     </el-table>
@@ -133,6 +141,7 @@ import {
 export default {
   data() {
     return {
+      power: "",
       rules: {
         color_name: [
           { required: true, message: "请输入颜色名称", trigger: "blur" }
@@ -304,6 +313,8 @@ export default {
   },
   mounted() {
     this.init();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>
@@ -328,7 +339,6 @@ export default {
   .pagination {
     margin-top: 10px;
     text-align: right;
-    
   }
 }
 // materialManagement

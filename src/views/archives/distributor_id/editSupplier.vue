@@ -138,8 +138,8 @@
           <el-input type="textarea" v-model="obj.remarks" placeholder="请输入内容" clearable></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button @click="handleEdit" style="padding:10px 50px;border-radius: 10px;">保存</el-button>
-          <el-button @click="handleDel" style="padding:10px 50px;border-radius: 10px;">删除</el-button>
+          <el-button v-if="power.indexOf('E1000300')!=-1" @click="handleEdit" style="padding:10px 50px;border-radius: 10px;">保存</el-button>
+          <el-button v-if="power.indexOf('E1000200')!=-1" @click="handleDel" style="padding:10px 50px;border-radius: 10px;">删除</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -262,6 +262,7 @@ export default {
   },
   data() {
     return {
+      power: "",
       headImg: "",
       //剪切图片上传
       crap: false,
@@ -568,6 +569,8 @@ export default {
     this.getBankName();
     let res1 = await getMaterialsClass();
     this.classData = res1.data.data;
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>

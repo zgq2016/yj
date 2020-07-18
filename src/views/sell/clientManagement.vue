@@ -1,5 +1,5 @@
 <template>
-  <div class="clientManagement">
+  <div class="clientManagement" v-if="power.indexOf('D1000400')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
@@ -24,7 +24,7 @@
       </el-form>
     </div>
     <!-- 新增项目 -->
-    <div class="addStyle">
+    <div class="addStyle" v-if="power.indexOf('D1000100')!=-1">
       <div @click="addClient">新增客户</div>
     </div>
     <!-- table -->
@@ -61,6 +61,7 @@ import { getCustomerList } from "@/api/sell.js";
 export default {
   data() {
     return {
+      power: "",
       form: {},
       tableData: [],
       pageIndex: 1,
@@ -102,6 +103,8 @@ export default {
   },
   mounted() {
     this.init();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>

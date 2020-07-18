@@ -1,7 +1,7 @@
 <template>
   <div class="tailor">
     <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
+    <el-breadcrumb separator="/" class="breadcrumb" v-if="power.indexOf('B4000300')!=-1">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>生产</el-breadcrumb-item>
       <el-breadcrumb-item>裁剪</el-breadcrumb-item>
@@ -101,8 +101,8 @@
     <div style="display: flex;justify-content: space-between;align-items: center;">
       <!-- 打印  导出-->
       <div class="btn">
-        <el-button v-print="'#printTest'" size="mini">打印</el-button>
-        <el-button size="mini">导出</el-button>
+        <el-button v-print="'#printTest'" size="mini" v-if="power.indexOf('B4000500')!=-1">打印</el-button>
+        <el-button size="mini" v-if="power.indexOf('B4000600')!=-1">导出</el-button>
       </div>
       <!-- 分页 -->
       <el-pagination
@@ -133,6 +133,7 @@ import { getProduceCutList } from "@/api/production";
 export default {
   data() {
     return {
+      power: "",
       formInline: {
         styleno: "",
         year: "",
@@ -166,8 +167,7 @@ export default {
         {
           v: "已裁剪",
           id: 1
-        },
-      
+        }
       ],
       tableData: [],
       count: 0,
@@ -271,6 +271,8 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>

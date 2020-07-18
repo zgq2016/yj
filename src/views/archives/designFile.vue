@@ -1,5 +1,5 @@
 <template>
-  <div class="designFile">
+  <div class="designFile" v-if="power.indexOf('E3000100')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
@@ -127,12 +127,11 @@ import {
   getStyleList,
   produceOrderCreateAdd
 } from "@/api/researchDevelopment";
-import{
-  produceLotAdd
-}from "@/api/production"
+import { produceLotAdd } from "@/api/production";
 export default {
   data() {
     return {
+      power: "",
       TL: "",
       formInline: {
         styleno: "",
@@ -255,7 +254,6 @@ export default {
     },
     // 确定下单
     async OrderCreate() {
-      
       this.$confirm("提交已选下单, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -266,13 +264,13 @@ export default {
           let res = await produceOrderCreateAdd({
             style_id_data: this.ids
           });
-          let sid = []
-          this.ids.map((v,i) => {
-            sid.push({style_id:v.id})
-          })
+          let sid = [];
+          this.ids.map((v, i) => {
+            sid.push({ style_id: v.id });
+          });
           let res1 = await produceLotAdd({
-            style_id_data:sid
-          })
+            style_id_data: sid
+          });
           console.log(res1);
           this.$router.push({ path: "/productionOrders" });
           this.$message({
@@ -295,6 +293,8 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   },
   watch: {
     $route() {

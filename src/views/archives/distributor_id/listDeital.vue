@@ -44,7 +44,11 @@
           </div>
         </div>
       </div>
-      <router-link :to="`/editSupplier?id=${obj.id}&TL=2`" :data="obj">
+      <router-link
+        :to="`/editSupplier?id=${obj.id}&TL=2`"
+        :data="obj"
+        v-if="power.indexOf('E1000200')!=-1||power.indexOf('E1000300')!=-1"
+      >
         <span class="el-icon-edit" style="font-size: 30px;cursor: pointer;"></span>
       </router-link>
     </div>
@@ -62,6 +66,7 @@ import { getSupplierInfo } from "@/api/archives";
 export default {
   data() {
     return {
+      power: "",
       id: "",
       obj: {},
       dialogVisible: false,
@@ -89,6 +94,8 @@ export default {
     if (this.obj.isbill === "1") {
       this.obj.isbill = "不开";
     }
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>

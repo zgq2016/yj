@@ -34,7 +34,7 @@
             </div>
           </div>
         </div>
-        <router-link :to="`/editrouteCard?id=${upData.id}&TL=2`" :data="upData">
+        <router-link :to="`/editrouteCard?id=${upData.id}&TL=2`" :data="upData" v-if="power.indexOf('E2000200')!=-1||power.indexOf('E2000300')!=-1">
           <span class="el-icon-edit" style="font-size: 30px;cursor: pointer;"></span>
         </router-link>
       </div>
@@ -82,6 +82,7 @@ import { getMaterialsInfo, getSupplierInfo } from "@/api/archives";
 export default {
   data() {
     return {
+      power: "",
       upData: {},
       obj: {},
       dialogVisible: false,
@@ -115,6 +116,8 @@ export default {
       this.upData.instock = "否";
     }
     this.init();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>

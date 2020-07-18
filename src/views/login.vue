@@ -57,7 +57,11 @@ export default {
         // 调用actions的登录方法
         this.$store.dispatch("login", this.form).then(res => {
           if (res === true) {
-            this.$message.success("登录成功");
+            this.$message({
+              showClose: true,
+              message: "登录成功",
+              type: "success"
+            });
           }
         });
       });

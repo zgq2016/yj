@@ -1,5 +1,5 @@
 <template>
-  <div class="distributor">
+  <div class="distributor" v-if="power.indexOf('E2000400')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
@@ -144,6 +144,7 @@ import {
 export default {
   data() {
     return {
+      power: "",
       menuList: [], //导航项
       itemList: {},
       centerDialogVisible: false,
@@ -281,6 +282,8 @@ export default {
   },
   mounted() {
     this.init();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   },
   watch: {
     itemList() {

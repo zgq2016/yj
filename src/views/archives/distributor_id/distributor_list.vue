@@ -9,7 +9,7 @@
       </div>
       <!-- add -->
       <div class="addStyle">
-        <span class="add" @click="addSupplier">新增</span>
+        <span class="add" @click="addSupplier" v-if="power.indexOf('E2000100')!=-1">新增</span>
       </div>
     </div>
 
@@ -68,6 +68,7 @@ export default {
   },
   data() {
     return {
+      power: "",
       companyname: "", //搜索
       SupplierList: [], //列表数据
       pageIndex: 1,
@@ -115,6 +116,8 @@ export default {
   },
   mounted() {
     this.init();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   },
   watch: {
     data() {

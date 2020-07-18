@@ -1,5 +1,5 @@
 <template>
-  <div class="shipment">
+  <div class="shipment" v-if="power.indexOf('B5000300')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
@@ -101,8 +101,8 @@
     <div style="display: flex;justify-content: space-between;align-items: center;">
       <!-- 打印  导出-->
       <div class="btn">
-        <el-button v-print="'#printTest'" size="mini">打印</el-button>
-        <el-button size="mini">导出</el-button>
+        <el-button v-print="'#printTest'" size="mini" v-if="power.indexOf('B5000500')!=-1">打印</el-button>
+        <el-button size="mini" v-if="power.indexOf('B5000600')!=-1">导出</el-button>
       </div>
       <!-- 分页 -->
       <el-pagination
@@ -133,6 +133,7 @@ import { getProduceCompleteList } from "@/api/production";
 export default {
   data() {
     return {
+      power: "",
       formInline: {
         styleno: "",
         year: "",
@@ -276,6 +277,8 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>

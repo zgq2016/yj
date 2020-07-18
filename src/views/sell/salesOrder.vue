@@ -1,5 +1,5 @@
 <template>
-  <div class="salesOrder">
+  <div class="salesOrder" v-if="power.indexOf('D2000100')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
@@ -119,6 +119,7 @@ import {
 export default {
   data() {
     return {
+      power: "",
       formInline: {
         styleno: "",
         year: "",
@@ -149,7 +150,7 @@ export default {
       this.$router.push({ path: `/sampleDress?id=${row.id}` });
     },
     handleUser_id(e) {
-      this.formInline.user_id = e
+      this.formInline.user_id = e;
     },
     async getYear() {
       let res = await getYearList();
@@ -212,6 +213,8 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
+    this.power = localStorage.getItem("power");
+    console.log(this.power);
   }
 };
 </script>
@@ -249,7 +252,7 @@ export default {
       }
     }
   }
-  .el-pagination{
+  .el-pagination {
     text-align: right;
   }
 }
