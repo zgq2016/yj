@@ -66,8 +66,8 @@
             :header-cell-style="{background:'#eef1f6',color:'#606266'}"
             style="width: 100%;margin-top:15px;"
           >
-            <el-table-column align="center" type="index" label="序号" width="50"></el-table-column>
-            <el-table-column align="center" prop="purchaseBatch" label="采购批次"></el-table-column>
+            <!-- <el-table-column align="center" type="index" label="采购批次" width="50"></el-table-column> -->
+            <el-table-column align="center" type="index" prop="purchaseBatch" width="90" label="采购批次"></el-table-column>
             <el-table-column align="center" prop="purchaseTime" label="采购时间"></el-table-column>
             <el-table-column align="center" prop="pantone" label="色卡"></el-table-column>
             <el-table-column align="center" prop="amountPurchased" label="采购量"></el-table-column>
@@ -75,7 +75,7 @@
             <el-table-column align="center" prop="subscription" label="订金"></el-table-column>
             <el-table-column align="center" prop="cargo" label="回货量"></el-table-column>
             <el-table-column align="center" prop="cargoTime" label="回货时间"></el-table-column>
-            <el-table-column align="center" prop="scheduledReceipt" label="入库量"></el-table-column>
+            <!-- <el-table-column align="center" prop="scheduledReceipt" label="入库量"></el-table-column> -->
             <el-table-column align="center" prop="inventory" label="库存量"></el-table-column>
             <el-table-column align="center" prop="settlementAmount" label="结算金额"></el-table-column>
             <el-table-column align="center" prop="amount" label="余结金额"></el-table-column>

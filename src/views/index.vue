@@ -48,7 +48,8 @@
             <el-menu-item index="/distributor" v-if="power.indexOf('E1000')!=-1">供应商</el-menu-item>
             <el-menu-item index="/routeCard" v-if="power.indexOf('E2000')!=-1">物料工艺卡</el-menu-item>
             <el-menu-item index="/designFile" v-if="power.indexOf('E3000')!=-1">款式档案</el-menu-item>
-            <el-menu-item index="/plant" v-if="power.indexOf('E4000')!=-1">工厂</el-menu-item>
+            <el-menu-item index="/plant" >工厂</el-menu-item>
+            <!-- v-if="power.indexOf('E4000')!=-1" -->
           </el-submenu>
           <el-submenu index="7" v-if="power.indexOf('F')!=-1">
             <template slot="title" v-if="power.indexOf('F')!=-1">财务</template>

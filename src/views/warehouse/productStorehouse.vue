@@ -49,10 +49,17 @@
       </div>
       <hr style="border:1px dashed #ccc" />
       <div class="table">
-        <el-table id="printTest" ref="singleTable" :data="tableData" highlight-current-row style="width: 100%">
+        <el-table
+          id="printTest"
+          ref="singleTable"
+          :data="tableData"
+          :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+          highlight-current-row
+          style="width: 100%"
+        >
           <el-table-column align="center" type="index" width="50"></el-table-column>
           <el-table-column align="center" property="username" label="名称"></el-table-column>
-          <el-table-column align="center"  width="70" label="图片">
+          <el-table-column align="center" width="70" label="图片">
             <template slot-scope="scope">
               <img :src="scope.row.picimg" class="img" alt />
             </template>
@@ -60,8 +67,13 @@
           <el-table-column align="center" property="stylenumber" label="货号"></el-table-column>
           <el-table-column align="center" property="stylenumber" label="条码"></el-table-column>
           <!-- <el-table-column :property="scope.row.color" label="条码"></el-table-column> -->
-          <el-table-column align="center" v-for="(item,index) in color" :key="index" :prop="'color.'+index" :label="item">
-          </el-table-column>
+          <el-table-column
+            align="center"
+            v-for="(item,index) in color"
+            :key="index"
+            :prop="'color.'+index"
+            :label="item"
+          ></el-table-column>
 
           <el-table-column align="center" property="category1" label="F"></el-table-column>
           <el-table-column align="center" property="category" label="品牌"></el-table-column>
@@ -71,19 +83,19 @@
         </el-table>
       </div>
     </div>
-    
-      <!-- 分页 -->
-      <el-pagination
-        class="pagination"
-        style="float:right"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pageIndex"
-        :page-sizes="[10, 20, 30, 40]"
-        :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
-      ></el-pagination>
+
+    <!-- 分页 -->
+    <el-pagination
+      class="pagination"
+      style="float:right"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="pageIndex"
+      :page-sizes="[10, 20, 30, 40]"
+      :page-size="pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+    ></el-pagination>
   </div>
 </template>
 
@@ -106,8 +118,8 @@ export default {
           inventorynum: "仓库1",
           unit: "件",
           operation: "0",
-          category1:0,
-          num:0
+          category1: 0,
+          num: 0
         }
       ],
       pageIndex: 1,
@@ -134,9 +146,9 @@ export default {
 .productStorehouse {
   .main {
     margin: 20px;
-      /deep/.pagination {
-       float: right;
-      }
+    /deep/.pagination {
+      float: right;
+    }
     .searchInput {
     }
     .table {
