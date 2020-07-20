@@ -19,4 +19,7 @@
     }
   }
 }
+.el-select-dropdown {
+  width: 170px !important;
+}
 </style>

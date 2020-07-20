@@ -303,12 +303,12 @@ export default {
     handleSizeChange(val) {
       // console.log(val)
       this.page_size = val;
-      // this.init(this.form);
+      this.init();
     },
     handleCurrentChange(val) {
       // console.log(val)
       this.page = val;
-      // this.init(this.form);
+      this.init();
     },
     async getStylist() {
       let res = await getStylistList();

@@ -22,20 +22,36 @@
                   <div style="margin-right:100px">
                     <div>内部编号：{{header.materialsno}}</div>
                     <div>编号：{{header.materialsno}}</div>
-                    <div>面料分类：</div>
-                    <div>料属性：</div>
+                    <div>面料分类：{{header.materials_mainclass_name}}{{`(${header.materials_class_name})`}}</div>
+                    <div>
+                      料 属 性 ：
+                      <span
+                        style="margin-right:10px;text-align:center;width:50px;display:inline-block;"
+                        v-for="(item,index) in header.material_data"
+                        :key="index"
+                      >{{item.material_name}}</span>
+                    </div>
                     <div style="display: flex;">
-                      <div style="margin-right:10px;width:70px;">面料成分：</div>
-                      <div style="width:70px;">
-                        <div></div>
+                      <div>
+                        面料成分：
+                        <span
+                          style="margin-right:10px;text-align:center;width:50px;display:inline-block;"
+                          v-for="(item,index) in header.material_data"
+                          :key="index"
+                        >{{item.content}}%</span>
                       </div>
+                      <!-- <div style="width:70px;">
+                        <div></div>
+                      </div>-->
                     </div>
                   </div>
-                  <div style="width:150px;">
-                    <div>色号：{{colors.color_no}}</div>
-                    <div>颜色：{{colors.color}}</div>
+                  <div>
+                    <!-- <div>色号：{{colors.color_no}}</div> -->
+                    <!-- <div>颜色：{{colors.color}}</div> -->
                     <div>大货单价：{{header.wsale_price}}</div>
                     <div>幅宽：{{header.unit}}</div>
+                    <div>到货时间：{{header.arrival_time}}</div>
+                    <div :title="header.remarks" class="rearmk">备注：{{header.remarks}}</div>
                   </div>
                 </div>
               </div>
@@ -50,10 +66,9 @@
               </div>
               <div class="supplierInfoContentText">
                 <div class="supplierInfoContentTextName">{{supplier.companyname}}</div>
-                <div>1354561325</div>
-                <div></div>
+                <div v-for="(item,index) in supplier.contact_data" :key="index">{{item.phone}}</div>
                 <div>账号信息：</div>
-                <div>{{supplier.address}}</div>
+                <div style="width:155px">{{supplier.address}}</div>
                 <div></div>
               </div>
             </div>
@@ -67,7 +82,13 @@
             style="width: 100%;margin-top:15px;"
           >
             <!-- <el-table-column align="center" type="index" label="采购批次" width="50"></el-table-column> -->
-            <el-table-column align="center" type="index" prop="purchaseBatch" width="90" label="采购批次"></el-table-column>
+            <el-table-column
+              align="center"
+              type="index"
+              prop="purchaseBatch"
+              width="90"
+              label="采购批次"
+            ></el-table-column>
             <el-table-column align="center" prop="purchaseTime" label="采购时间"></el-table-column>
             <el-table-column align="center" prop="pantone" label="色卡"></el-table-column>
             <el-table-column align="center" prop="amountPurchased" label="采购量"></el-table-column>
@@ -86,6 +107,10 @@
   </div>
 </template>
 <script>
+import {
+  getMaterialsInfo, //物料
+  getSupplierInfo //供应商
+} from "@/api/archives";
 export default {
   data() {
     return {
@@ -131,6 +156,7 @@ export default {
       });
       let data1 = res1.data.data;
       this.supplier = data1;
+      console.log(this.header, this.supplier);
     }
   },
   mounted() {
@@ -158,6 +184,7 @@ export default {
             }
           }
           .cardInfoContentText {
+            cursor: pointer;
             div {
               margin: 3px 0;
               font-size: 14px;
@@ -166,6 +193,18 @@ export default {
               font-size: 16px;
               font-weight: 600;
               margin-top: 10px;
+            }
+            /deep/.rearmk {
+              width: 170px;
+              word-wrap: break-word;
+              word-break: normal;
+
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: -webkit-box;
+              // 控制行数
+              -webkit-line-clamp: 4;
+              -webkit-box-orient: vertical;
             }
           }
         }

@@ -11,10 +11,19 @@
         <el-form :inline="true" :model="form">
           <el-form-item label="仓库:">
             <el-select v-model="form.warehouse" placeholder="请选择仓库" style="width:120px">
-              <!-- <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option> -->
-              <el-option label="仓库1" value="仓库1"></el-option>
-              <el-option label="仓库2" value="仓库1"></el-option>
-              <el-option label="仓库3" value="仓库1"></el-option>
+              <el-option
+                v-for="item in ware"
+                :key="item.id"
+                :label="item.storehouse_name"
+                :value="item.id"
+              ></el-option>
+              <el-pagination
+                small
+                layout="prev, pager, next"
+                @size-change="handleSize"
+                @current-change="handleCurrent"
+                :total="total2"
+              ></el-pagination>
             </el-select>
           </el-form-item>
 
@@ -24,20 +33,29 @@
 
           <el-form-item label="物料分类:">
             <el-select
-              v-model="form.warehouse"
+              v-model="form.materials_class"
               placeholder="请选择物料分类"
               style="width:120px;margin-right:10px;"
+              @change="handleClassDatasId($event)"
             >
-              <!-- <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option> -->
-              <el-option label="分类1" value="分类1"></el-option>
-              <el-option label="分类2" value="分类2"></el-option>
-              <el-option label="分类3" value="分类3"></el-option>
+              <el-option
+                v-for="item in classData"
+                :key="item.id"
+                :label="item.classname"
+                :value="item.id"
+              ></el-option>
             </el-select>
-            <el-select v-model="form.warehouse" placeholder="请选择物料分类" style="width:120px">
-              <!-- <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option> -->
-              <el-option label="分类1" value="分类1"></el-option>
-              <el-option label="分类2" value="分类2"></el-option>
-              <el-option label="分类3" value="分类3"></el-option>
+            <el-select
+              v-model="form.materials_class_name"
+              placeholder="请选择物料分类"
+              style="width:120px"
+            >
+              <el-option
+                v-for="item in class_datas.class_data"
+                :key="item.id"
+                :label="item.classname"
+                :value="item.id"
+              ></el-option>
             </el-select>
           </el-form-item>
 
@@ -61,7 +79,7 @@
       <hr style="border:1px dashed #ccc" />
       <div class="table">
         <div class="box">
-          <div class="child" @click="toMaterial">
+          <div class="child" @click="toMaterial()">
             <div class="left">
               <img
                 src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1594963650563&di=ee9edf3ea2950aa9a99a7d0b5ca6fe5f&imgtype=0&src=http%3A%2F%2Fc.hiphotos.baidu.com%2Fzhidao%2Fwh%3D450%2C600%2Fsign%3D1d3f4efd8126cffc697fb7b68c3166a6%2F241f95cad1c8a786636d726a6409c93d70cf500a.jpg"
@@ -388,6 +406,8 @@ import {
   getMaterialsList,
   projectStyleMaterialsAdd
 } from "@/api/researchDevelopment";
+import { storehouseList } from "@/api/warehouse.js";
+import { getMaterialsClass, getMaterialsClassInfo } from "@/api/archives.js";
 export default {
   data() {
     return {
@@ -422,11 +442,14 @@ export default {
         checked: true
       },
       pageIndex: 1,
-      pageSize: 10,
+      pageSize: 9,
       total: 0,
       pageIndex1: 1,
-      pageSize1: 10,
+      pageSize1: 9,
+      pageIndex2: 1,
+      pageSize2: 9,
       total1: 0,
+      total2: 0,
       form1: { picurl: "" },
       rules: {
         amountPurchased: [
@@ -442,26 +465,62 @@ export default {
         entrepot: [
           { required: true, message: "请选择仓库类型", trigger: "change" }
         ]
-      }
+      },
+      classData: [],
+      class_datas: [],
+      classDatasId: "",
+      ware: []
     };
   },
   methods: {
-    toMaterial() {
+    // 获取分类
+    async getClassData() {
+      let res = await getMaterialsClass();
+      let { data } = res.data;
+      this.classData = data;
+    },
+    async handleClassDatasId(e) {
+      this.classDatasId = e;
+      let res = await getMaterialsClassInfo({
+        id: this.classDatasId
+      });
+      let { data } = res.data;
+      this.class_datas = data;
+      this.form.materials_class_name = "";
+      this.form.materials_class_id = "";
+      if (data.class_data.length > 0) {
+        this.form.materials_class_name = this.class_datas.class_data[0].classname;
+        // this.form.materials_class_id = this.class_datas.class_data[0].id;
+      }
+    },
+    toMaterial(item) {
       this.$router.push({
-        path: `/materialTable?`
+        path: `/materialTable?materials_id=${112}`
       });
     },
     handleSizeChange(val) {
       this.pageSize = val;
+      this.init();
     },
     handleCurrentChange(val) {
       this.pageIndex = val;
+      this.init();
+    },
+    handleSize(val) {
+      this.pageSize2 = val;
+      this.init();
+    },
+    handleCurrent(val) {
+      this.pageIndex2 = val;
+      this.init();
     },
     handleSizeChang(val) {
       this.pageSize1 = val;
+      this.init();
     },
     handleCurrentChang(val) {
       this.pageIndex1 = val;
+      this.init();
     },
     onSubmit() {
       console.log(this.form);
@@ -531,9 +590,23 @@ export default {
         this.centerDialogVisible2 = false;
         console.log(this.form1);
       });
+    },
+    async init() {
+      // 仓库
+      let res = await storehouseList({
+        page: this.pageIndex2,
+        page_size: this.pageSize2
+      });
+      let { data } = res.data;
+      this.ware = data;
+      this.total2 = res.data.count;
+
     }
   },
-  mounted() {}
+  mounted() {
+    this.getClassData();
+    this.init();
+  }
 };
 </script>
 <style lang="less" scoped>

@@ -11,10 +11,19 @@
         <el-form :inline="true" :model="form">
           <el-form-item label="仓库:">
             <el-select v-model="form.warehouse" placeholder="请选择仓库" style="width:120px">
-              <!-- <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option> -->
-              <el-option label="仓库1" value="仓库1"></el-option>
-              <el-option label="仓库2" value="仓库1"></el-option>
-              <el-option label="仓库3" value="仓库1"></el-option>
+              <el-option
+                v-for="item in ware"
+                :key="item.id"
+                :label="item.storehouse_name"
+                :value="item.id"
+              ></el-option>
+              <el-pagination
+                small
+                layout="prev, pager, next"
+                @size-change="handleSize"
+                @current-change="handleCurrent"
+                :total="total2"
+              ></el-pagination>
             </el-select>
           </el-form-item>
 
@@ -100,6 +109,7 @@
 </template>
 
 <script>
+import { storehouseList } from "@/api/warehouse.js";
 export default {
   data() {
     return {
@@ -123,9 +133,13 @@ export default {
         }
       ],
       pageIndex: 1,
-      pageSize: 10,
+      pageSize: 9,
+      pageIndex2: 1,
+      pageSize2: 9,
       total: 0,
-      color: ["X", "L", "XXL"]
+      total2: 0,
+      color: ["X", "L", "XXL"],
+      ware: []
     };
   },
   methods: {
@@ -137,9 +151,29 @@ export default {
     },
     onSubmit() {
       console.log(this.form);
+    },
+    handleSize(val) {
+      this.pageSize2 = val;
+      this.init();
+    },
+    handleCurrent(val) {
+      this.pageIndex2 = val;
+      this.init();
+    },
+    async init() {
+      // 仓库
+      let res = await storehouseList({
+        page: this.pageIndex2,
+        page_size: this.pageSize2
+      });
+      let { data } = res.data;
+      this.ware = data;
+      this.total2 = res.data.count;
     }
   },
-  mounted() {}
+  mounted() {
+    this.init();
+  }
 };
 </script>
 <style lang="less" scoped>
