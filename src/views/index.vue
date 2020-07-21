@@ -48,7 +48,7 @@
             <el-menu-item index="/distributor" v-if="power.indexOf('E1000')!=-1">供应商</el-menu-item>
             <el-menu-item index="/routeCard" v-if="power.indexOf('E2000')!=-1">物料工艺卡</el-menu-item>
             <el-menu-item index="/designFile" v-if="power.indexOf('E3000')!=-1">款式档案</el-menu-item>
-            <el-menu-item index="/plant" >工厂</el-menu-item>
+            <el-menu-item index="/plant">工厂</el-menu-item>
             <!-- v-if="power.indexOf('E4000')!=-1" -->
           </el-submenu>
           <el-submenu index="7" v-if="power.indexOf('F')!=-1">
@@ -86,7 +86,7 @@
               <el-menu-item index="/listAccounts">账户列表</el-menu-item>
               <el-menu-item index="authorityManagement">权限管理</el-menu-item>
             </el-submenu>
-            <el-menu-item index="/logout" v-if="power.indexOf('H8000')!=-1">退出系统</el-menu-item> 
+            <el-menu-item index="/logout" v-if="power.indexOf('H8000')!=-1">退出系统</el-menu-item>
           </el-submenu>
           <!-- <el-submenu index="9">
             <template slot="title">设置</template>
@@ -124,6 +124,8 @@ export default {
   mounted() {
     this.power = localStorage.getItem("power");
     // console.log(this.power);
+    // console.log(localStorage.getItem("user_id"));
+    
   }
 };
 </script>

@@ -41,6 +41,8 @@ const actions = {
       // 调用user下的mutations的方法
       store.commit("setUserInfo", res.data.data);
       localStorage.setItem("power", this.state.userInfo.power);
+
+      localStorage.setItem("user_id", this.state.userInfo.id);
       return true;
     });
   },

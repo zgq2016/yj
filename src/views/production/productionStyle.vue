@@ -1591,7 +1591,7 @@ export default {
       let res = await getSizeSelect();
       let { data } = res.data;
       this.sizes = data;
-      // console.log(this.sizes);
+      console.log(res);
     },
     // 确定增加批次
     async addDesign() {

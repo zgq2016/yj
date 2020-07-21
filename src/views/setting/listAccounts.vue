@@ -14,8 +14,15 @@
       <el-table-column prop="username" label="账号"></el-table-column>
       <el-table-column align="center" width="100" label="操作">
         <template slot-scope="scope">
-          <div class="el-icon-s-tools btn" @click="handleEdit(scope.$index, scope.row)"></div>
-          <div class="el-icon-edit btn" @click="handleEditUser(scope.$index, scope.row)"></div>
+          <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
+            <div class="el-icon-s-tools btn" @click="handleEdit(scope.$index, scope.row)"></div>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="设置权限" placement="top-start">
+            <div
+              class="el-icon-edit btn"
+              @click="handleEditUser(scope.$index, scope.row)"
+            ></div>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>

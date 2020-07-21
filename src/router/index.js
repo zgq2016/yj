@@ -88,7 +88,7 @@ const routes = [
     path: "/index",
     name: "Index",
     component: Index,
-    redirect: { name: "ItemDesign" },
+    redirect: { name: "Homepage" },
     children: [
       { path: "/homepage", name: "Homepage", component: Homepage },
       { path: "/itemDesign", name: "ItemDesign", component: ItemDesign },

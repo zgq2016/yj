@@ -43,10 +43,8 @@
           </el-form-item>
           <el-form-item label="尺码:">
             <el-select v-model="form.warehouse" placeholder="请选择分类" style="width:120px">
-              <!-- <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option> -->
-              <el-option label="分类1" value="分类1"></el-option>
-              <el-option label="分类2" value="分类2"></el-option>
-              <el-option label="分类3" value="分类3"></el-option>
+              <el-option v-for="item in sizes" :key="item.id" :label="item.size_name" :value="item.size_name"></el-option>
+             
             </el-select>
           </el-form-item>
 
@@ -107,6 +105,7 @@
 <script>
 import { storehouseList } from "@/api/warehouse.js";
 import { getColorSelect } from "@/api/researchDevelopment";
+import { getSizeSelect } from "@/api/production";
 export default {
   data() {
     return {
@@ -123,7 +122,8 @@ export default {
       total2: 0,
       color: ["X", "L", "XXL"],
       ware: [],
-      options: []
+      options: [],
+      sizes:[]
     };
   },
   methods: {
@@ -155,6 +155,11 @@ export default {
       this.total2 = res.data.count;
       let res2 = await getColorSelect();
       this.options = res2.data.data;
+      // 尺码
+      let res1 = await getSizeSelect();
+      let data1 = res1.data.data;
+      this.sizes = data1;
+      console.log(res1);
     }
   },
   mounted() {
