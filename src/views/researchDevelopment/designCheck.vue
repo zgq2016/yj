@@ -88,8 +88,7 @@
           style="width:300px"
           @input="searchInput"
         ></el-input>
-        <div style="display:flex;flex-wrap: wrap;">
-          <div></div>
+        <div style="display:flex;flex-wrap: wrap;width:100%">
           <div class="search__card" v-for="(item, index) in styleList" :key="index">
             <div @click="handleSelectItem(item)">
               <!-- router-link :to="`/newTheStyle?id=${$route.query.id}&oldId=${item.id}`" -->
@@ -276,7 +275,7 @@ export default {
   }
   .search__card {
     display: flex;
-    width: 30%;
+    width: 300px;
     margin: 10px;
     .search_card_left {
       width: 300px;

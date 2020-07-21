@@ -34,13 +34,18 @@ export default {
     async determine() {
       let res = await this.$store.commit("setUserInfo", {});
       if (res !== true) {
-        this.$message.success("退出成功");
+        // this.$message.success("退出成功");
       }
       localStorage.removeItem("power");
       this.$router.push({
         path: `/Login`
       });
-      this.$message.success("退出成功");
+      // this.$message.success("退出成功");
+      this.$message({
+        showClose: true,
+        message: "退出成功",
+        type: "success"
+      });
     }
   },
   mounted() {}

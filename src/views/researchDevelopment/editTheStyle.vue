@@ -26,7 +26,21 @@
           <div class="form">
             <el-form ref="obj" :model="obj" :rules="rules" label-width="80px">
               <el-form-item label="款号">
-                <div>{{obj.styleno}}</div>
+                <!-- <div>{{obj.styleno}}</div> -->
+                <div style="display:flex">
+                  <div style="width:200px;display:flex">
+                    <div>款号:</div>
+                    <div>{{styleno}}</div>
+                  </div>
+                  <div style="width:200px;display:flex">
+                    <div>指派设计师:</div>
+                    <div>{{obj.user_name}}</div>
+                  </div>
+                  <div style="width:200px;display:flex">
+                    <div>协助:</div>
+                    <div v-for="(item, index) in obj.user_id_data" :key="index">{{item.name}}</div>
+                  </div>
+                </div>
               </el-form-item>
               <el-form-item label="名称" prop="stylename">
                 <el-input v-model="obj.stylename" style="width:200px"></el-input>
@@ -61,7 +75,7 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="设计师" prop="user_name">
+              <!-- <el-form-item label="设计师" prop="user_name">
                 <el-select
                   v-model="obj.user_name"
                   placeholder="工作人员名称"
@@ -74,19 +88,13 @@
                     :value="item.id"
                   ></el-option>
                 </el-select>
-                <el-button
-                  type="primary"
-                  style="margin-left:20px;"
-                  round
-                  @click="handleAssistant"
-                >助理</el-button>
               </el-form-item>
-              <el-form-item label="指派助理" v-if="Assistant===true||user_id_data_length>0">
+              <el-form-item label="指派助理">
                 <div style="display:flex">
                   <div v-for="(item, index) in obj.user_id_data" :key="index">{{item.name}},</div>
                   <div @click="handleAddAssistant" style="margin-left:20px">添加助理</div>
                 </div>
-              </el-form-item>
+              </el-form-item>-->
               <el-form-item label="颜色" prop="style_color">
                 <el-select v-model="obj.style_color">
                   <el-option
@@ -354,7 +362,9 @@ export default {
       });
       this.centerDialogVisible1 = false;
     },
-    AssistantCancel() {},
+    AssistantCancel() {
+      this.centerDialogVisible1 = false;
+    },
     isCheckList(e, i) {
       this.arr = [];
       if (e.checked == false) {

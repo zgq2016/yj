@@ -4,18 +4,6 @@
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>设置</el-breadcrumb-item>
-      <el-breadcrumb-item
-        v-if="this.$route.query.TL-0===1"
-        :to="{ path: `/itemDesign?id=${this.$route.query.id}` }"
-      >项目设计</el-breadcrumb-item>
-      <el-breadcrumb-item
-        v-if="this.$route.query.TL-0===1"
-        :to="{ path: `/designCheck?id=${this.$route.query.id}` }"
-      >项目详细</el-breadcrumb-item>
-      <el-breadcrumb-item
-        v-if="this.$route.query.TL-0===1"
-        :to="{ path: `/newTheStyle?id=${this.$route.query.id}` }"
-      >新增款式</el-breadcrumb-item>
       <el-breadcrumb-item>颜色管理</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 添加颜色 -->
@@ -31,7 +19,11 @@
     >
       <el-table-column prop="color_name" label="分类名称" width="200"></el-table-column>
       <el-table-column prop="sort" label="排序" width="200"></el-table-column>
-      <el-table-column align="right" label="操作">
+      <el-table-column
+        align="right"
+        label="操作"
+        v-if="power.indexOf('H2000300')!=-1||power.indexOf('H2000200')!=-1"
+      >
         <template slot-scope="scope">
           <div
             class="el-icon-edit btn"
@@ -75,7 +67,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="排序" prop="sort">
+        <el-form-item label="排序">
           <el-input v-model="form.sort" style="width:80%;"></el-input>
         </el-form-item>
       </el-form>
@@ -108,7 +100,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="排序" prop="sort">
+        <el-form-item label="排序">
           <el-input v-model="obj.sort" style="width:80%;"></el-input>
         </el-form-item>
       </el-form>
@@ -145,27 +137,11 @@ export default {
       rules: {
         color_name: [
           { required: true, message: "请输入颜色名称", trigger: "blur" }
-        ],
-
-        sort: [
-          {
-            required: true,
-            message: "请输入排序",
-            trigger: "blur"
-          }
         ]
       },
       rules1: {
         color_name: [
           { required: true, message: "请输入颜色名称", trigger: "blur" }
-        ],
-
-        sort: [
-          {
-            required: true,
-            message: "请输入排序",
-            trigger: "blur"
-          }
         ]
       },
       tableData: [],

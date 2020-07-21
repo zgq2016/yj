@@ -538,6 +538,7 @@ export default {
       })
         .then(async () => {
           let res = await roleDel({ id: row.id });
+          this.status = 1;
           this.init();
           this.$message({
             type: "success",

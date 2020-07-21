@@ -164,29 +164,13 @@ body {
   margin: auto;
   width: 1200px;
 }
-.avatar-uploader .el-upload {
-  background-color: #ccc;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  border-radius: 15px;
+.el-autocomplete-suggestion {
+  width: 150px !important;
 }
-.avatar-uploader .el-upload:hover {
-  border-color: #409eff;
-}
-.avatar-uploader-icon {
-  font-size: 50px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
-  text-align: center;
-}
-.avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
+.el-autocomplete-suggestion .el-scrollbar .el-autocomplete-suggestion__wrap ul li {
+  padding: 0 10px !important;
+  line-height: 28px;
+  font-size: 10px;
 }
 .breadcrumb {
   padding: 0 40px 10px;
@@ -201,27 +185,4 @@ body {
   top: 0;
   width: 15px;
   height: 15px;
-}
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.avatar-uploader .el-upload:hover {
-  border-color: #409eff;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
-  text-align: center;
-}
-.avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
 }

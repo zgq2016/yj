@@ -71,7 +71,10 @@
                 </template>
                 <template v-slot:description>
                   <div class="dt">
-                    <span>{{"预计回料时间"}}</span>
+                    <!-- <span>{{item_g.logname}}</span> -->
+                    <span v-if="item_g.state == '2'">{{"延迟回料时间"}}</span>
+                    <span v-if="item_g.state == '1'">{{"部分回料时间"}}</span>
+                    <span v-if="item_g.state == '3'">{{"回料总量"}}</span>
                     <span>{{item_g.returntime}}</span>
                     <!-- ****************************************************************** -->
                     <!-- <span v-if="index_g==0">{{"预计回料时间"}}</span>
@@ -122,7 +125,7 @@
           </el-upload>
           <div style="width:150px;margin:0 auto">
             <el-button @click="innerVisibled1 = false">取消</el-button>
-            <el-button @click="allMaterial()">确定</el-button>
+            <el-button @click="allMaterial">确定</el-button>
           </div>
         </el-form>
       </el-dialog>
@@ -280,8 +283,8 @@ export default {
         amount: 0, //结算金额
         remarks: "" //原因备注
       });
-      this.init();
       console.log(res);
+      this.init();
     },
     // 部分回料
     partBack() {

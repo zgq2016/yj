@@ -92,7 +92,12 @@
       </div>
       <div class="del_purchase_note" v-if="card.length>0">
         <el-checkbox class="checkbox" v-model="isAllCheck" @change="handleAllCheck">全选</el-checkbox>
-        <el-button size="mini" round @click="purchaseOrder" v-if="power.indexOf('A6000500')!=-1">生成采购单</el-button>
+        <el-button
+          size="mini"
+          round
+          @click="purchaseOrder"
+          v-if="power.indexOf('A6000500')!=-1"
+        >生成采购单</el-button>
       </div>
       <!-- 删除历史 -->
       <div class="del_history">
@@ -218,8 +223,10 @@
           style="width:300px"
         ></el-input>
         <router-link
-          :to="`/addRouteCard?id_NO=${$route.query.id}&TL=10&project_id=${this.$route.query.project_id}`"
-          style="margin-left:30px" v-if="power.indexOf('A5000400')!=-1"
+          to="/addRouteCard"
+          style="margin-left:30px"
+          v-if="power.indexOf('A5000400')!=-1"
+          target="_blank"
         >新增主料卡</router-link>
       </div>
       <div class="searchCard">

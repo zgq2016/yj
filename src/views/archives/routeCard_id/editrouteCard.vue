@@ -23,7 +23,7 @@
             ></el-autocomplete>
           </el-col>
           <el-col :span="4">
-            <router-link to="/addSupplier?id=0">新增供应商</router-link>
+            <router-link :to="`/addSupplier`" target="_blank">新增供应商</router-link>
           </el-col>
         </el-form-item>
         <el-form-item label="编号" prop="materialsno">

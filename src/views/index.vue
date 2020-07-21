@@ -122,7 +122,7 @@ export default {
   methods: {},
   mounted() {
     this.power = localStorage.getItem("power");
-    console.log(this.power);
+    // console.log(this.power);
   }
 };
 </script>

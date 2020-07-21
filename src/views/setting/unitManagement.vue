@@ -12,7 +12,11 @@
     </div>
     <el-table :data="tableData" style="width: 100%;margin: 20px 0;">
       <el-table-column prop="unit_name" label="单位名称" width="200"></el-table-column>
-      <el-table-column align="right" label="操作">
+      <el-table-column
+        align="right"
+        label="操作"
+        v-if="power.indexOf('H6000300')!=-1||power.indexOf('H6000200')!=-1"
+      >
         <template slot-scope="scope">
           <div
             v-if="power.indexOf('H6000300')!=-1"

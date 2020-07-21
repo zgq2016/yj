@@ -12,9 +12,17 @@
     </div>
     <el-table :data="tableData" style="width: 100%;margin: 20px 0;">
       <el-table-column prop="season_name" label="季节名称" width="200"></el-table-column>
-      <el-table-column align="right" label="操作">
+      <el-table-column
+        align="right"
+        label="操作"
+        v-if="power.indexOf('H5000200')!=-1||power.indexOf('H5000300')!=-1"
+      >
         <template slot-scope="scope">
-          <div class="el-icon-edit btn" @click="handleEdit(scope.$index, scope.row)"></div>
+          <div
+            v-if="power.indexOf('H5000300')!=-1"
+            class="el-icon-edit btn"
+            @click="handleEdit(scope.$index, scope.row)"
+          ></div>
           <div
             v-if="power.indexOf('H5000200')!=-1"
             class="el-icon-delete btn"

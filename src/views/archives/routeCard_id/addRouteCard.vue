@@ -23,13 +23,13 @@
             ></el-autocomplete>
           </el-col>
           <el-col :span="4">
-            <router-link
+            <!-- <router-link
               v-if="this.$route.query.TL-0===10"
               :to="`/addSupplier?id=0&id_NO=${this.$route.query.id_NO}&project_id=${this.$route.query.project_id}&TL=10`"
-            >新增供应商</router-link>
-            <router-link v-else :to="`/addSupplier?id=0&TL=20`">新增供应商</router-link>
+            >新增供应商</router-link>-->
+            <router-link :to="`/addSupplier`" target="_blank">新增供应商</router-link>
           </el-col>
-        </el-form-item>
+        </el-form-item> 
         <el-form-item label="编号" prop="materialsno">
           <el-input v-model="form.materialsno" style="width:200px;" placeholder="编号"></el-input>
         </el-form-item>

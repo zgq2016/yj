@@ -4,18 +4,6 @@
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>设置</el-breadcrumb-item>
-      <el-breadcrumb-item
-        v-if="this.$route.query.TL-0===1"
-        :to="{ path: `/itemDesign?id=${this.$route.query.id}` }"
-      >项目设计</el-breadcrumb-item>
-      <el-breadcrumb-item
-        v-if="this.$route.query.TL-0===1"
-        :to="{ path: `/designCheck?id=${this.$route.query.id}` }"
-      >项目详细</el-breadcrumb-item>
-      <el-breadcrumb-item
-        v-if="this.$route.query.TL-0===1"
-        :to="{ path: `/newTheStyle?id=${this.$route.query.id}` }"
-      >新增款式</el-breadcrumb-item>
       <el-breadcrumb-item>商品分类</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 添加分类 -->
@@ -32,10 +20,22 @@
       <el-table-column prop="goods_category_name" label="分类名称" width="200"></el-table-column>
       <el-table-column prop="describe" label="分类描述" width="200"></el-table-column>
       <el-table-column prop="sort" label="排序" width="200"></el-table-column>
-      <el-table-column align="right" label="操作">
+      <el-table-column
+        align="right"
+        label="操作"
+        v-if="power.indexOf('H1000300')!=-1||power.indexOf('H1000200')!=-1"
+      >
         <template slot-scope="scope">
-          <div v-if="power.indexOf('H1000300')!=-1" class="el-icon-edit btn" @click="handleEdit(scope.$index, scope.row)"></div>
-          <div v-if="power.indexOf('H1000200')!=-1" class="el-icon-delete btn" @click="handleDelete(scope.$index, scope.row)"></div>
+          <div
+            v-if="power.indexOf('H1000300')!=-1"
+            class="el-icon-edit btn"
+            @click="handleEdit(scope.$index, scope.row)"
+          ></div>
+          <div
+            v-if="power.indexOf('H1000200')!=-1"
+            class="el-icon-delete btn"
+            @click="handleDelete(scope.$index, scope.row)"
+          ></div>
         </template>
       </el-table-column>
     </el-table>
@@ -68,10 +68,10 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="分类描述" prop="describe">
+        <el-form-item label="分类描述">
           <el-input type="textarea" v-model="form.describe"></el-input>
         </el-form-item>
-        <el-form-item label="排序" prop="sort">
+        <el-form-item label="排序">
           <el-input v-model="form.sort" style="width:80%;"></el-input>
         </el-form-item>
       </el-form>
@@ -104,10 +104,10 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="分类描述" prop="describe">
+        <el-form-item label="分类描述">
           <el-input type="textarea" v-model="obj.describe"></el-input>
         </el-form-item>
-        <el-form-item label="排序" prop="sort">
+        <el-form-item label="排序">
           <el-input v-model="obj.sort" style="width:80%;"></el-input>
         </el-form-item>
       </el-form>
@@ -144,31 +144,11 @@ export default {
       rules: {
         goods_category_name: [
           { required: true, message: "请输入分类名称", trigger: "blur" }
-        ],
-        describe: [
-          { required: true, message: "请输入分类描述", trigger: "blur" }
-        ],
-        sort: [
-          {
-            required: true,
-            message: "请输入排序",
-            trigger: "blur"
-          }
         ]
       },
       rules1: {
         goods_category_name: [
           { required: true, message: "请输入分类名称", trigger: "blur" }
-        ],
-        describe: [
-          { required: true, message: "请输入分类描述", trigger: "blur" }
-        ],
-        sort: [
-          {
-            required: true,
-            message: "请输入排序",
-            trigger: "blur"
-          }
         ]
       },
       tableData: [],

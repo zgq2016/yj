@@ -5,18 +5,7 @@
 </template>
 
 <style lang="less">
-.el-autocomplete-suggestion {
-  width: 150px !important;
-  .el-scrollbar {
-    .el-autocomplete-suggestion__wrap {
-      ul {
-        li {
-          padding: 0 10px !important;
-          line-height: 28px;
-          font-size: 10px;
-        }
-      }
-    }
-  }
-}
+
+
+
 </style>

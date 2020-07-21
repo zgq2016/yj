@@ -19,7 +19,11 @@
     >
       <el-table-column prop="size_name" label="分类名称" width="200"></el-table-column>
       <el-table-column prop="sort" label="排序" width="200"></el-table-column>
-      <el-table-column align="right" label="操作">
+      <el-table-column
+        align="right"
+        label="操作"
+        v-if="power.indexOf('H3000300')!=-1||power.indexOf('H3000200')!=-1"
+      >
         <template slot-scope="scope">
           <div
             v-if="power.indexOf('H3000300')!=-1"
@@ -63,7 +67,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="排序" prop="sort">
+        <el-form-item label="排序">
           <el-input v-model="form.sort" style="width:80%;"></el-input>
         </el-form-item>
       </el-form>
@@ -96,7 +100,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="排序" prop="sort">
+        <el-form-item label="排序">
           <el-input v-model="obj.sort" style="width:80%;"></el-input>
         </el-form-item>
       </el-form>
@@ -133,27 +137,11 @@ export default {
       rules: {
         size_name: [
           { required: true, message: "请输入尺码名称", trigger: "blur" }
-        ],
-
-        sort: [
-          {
-            required: true,
-            message: "请输入排序",
-            trigger: "blur"
-          }
         ]
       },
       rules1: {
         size_name: [
           { required: true, message: "请输入尺码名称", trigger: "blur" }
-        ],
-
-        sort: [
-          {
-            required: true,
-            message: "请输入排序",
-            trigger: "blur"
-          }
         ]
       },
       tableData: [],

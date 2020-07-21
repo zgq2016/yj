@@ -114,9 +114,8 @@
                 :value="item.id"
               ></el-option>
             </el-select>
-            <el-button type="primary" style="margin-left:20px;" round @click="handleAssistant">助理</el-button>
           </el-form-item>
-          <el-form-item label="指派助理" v-if="Assistant===true">
+          <el-form-item label="指派助理">
             <div style="display:flex">
               <div v-for="(item, index) in arr" :key="index">{{item.name}},</div>
               <div @click="handleAddAssistant" style="margin-left:20px">添加助理</div>
@@ -347,7 +346,7 @@ export default {
           { required: true, message: "请输入要求数量", trigger: "blur" }
         ]
       },
-      arr: [],
+      arr: []
     };
   },
   methods: {
@@ -359,7 +358,9 @@ export default {
       });
       this.centerDialogVisible1 = false;
     },
-    AssistantCancel() {},
+    AssistantCancel() {
+      this.centerDialogVisible1 = false;
+    },
     isCheckList(e, i) {
       this.arr = [];
       if (e.checked == false) {

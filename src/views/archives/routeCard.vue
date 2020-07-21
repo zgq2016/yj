@@ -4,20 +4,8 @@
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>档案库</el-breadcrumb-item>
-      <!-- <el-breadcrumb-item>物料工艺卡</el-breadcrumb-item> -->
       <el-breadcrumb-item :to="{ path: '/routeCard_list' }">物料工艺卡</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="TL===10" :to="{ path: `/itemDesign` }">设计项目</el-breadcrumb-item>
-      <el-breadcrumb-item
-        v-if="TL===10"
-        :to="{ path: `/designCheck?id=${this.$route.query.project_id}` }"
-      >项目详细</el-breadcrumb-item>
-      <el-breadcrumb-item
-        v-if="TL===10"
-        :to="{ path: `/materialProcess?id=${this.$route.query.id_NO}&TL=30&project_id=${this.$route.query.project_id}` }"
-      >款式详细</el-breadcrumb-item>
-
       <el-breadcrumb-item v-if="TL===0">新增物料工艺卡</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="TL===10">新增物料工艺卡</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===1">物料工艺卡详情</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===2" :to="{ path: `/routeCardDeital?id=${id_NO}&TL=1` }">物料工艺卡详情</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===2">物料工艺卡编辑</el-breadcrumb-item>
