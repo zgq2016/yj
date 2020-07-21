@@ -100,7 +100,6 @@ img {
   display: block;
   border: 0;
   /*ie6*/
-  vertical-align: middle;
 }
 /*让button 按钮 变成小手*/
 button {

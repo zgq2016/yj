@@ -136,7 +136,7 @@
                   <span :v-model="form_i.color" style="margin-left:20px;">{{form_i.color}}</span>
                 </el-form-item>
                 <el-form-item prop="sum" label="总量">
-                  <el-input v-model="form_i.sum" @input="inputChange()" style="width:200px"></el-input>
+                  <el-input v-model.number="form_i.sum" @input="inputChange()" style="width:200px"></el-input>
                 </el-form-item>
                 <el-form-item prop="size_name" label="尺码">
                   <div
@@ -176,7 +176,7 @@
                   >
                     <el-input
                       @input="inputChange()"
-                      v-model="form_i.ratio[indexScale]"
+                      v-model.number="form_i.ratio[indexScale]"
                       style="display: inline-block;width:100px;margin:0 10px;"
                     ></el-input>
                   </el-form-item>
@@ -208,7 +208,7 @@
                   </el-form-item>
                   <el-form-item :prop="'child.'+index+'.sum'" :rules="inspection.sum" label="总量">
                     <el-input
-                      v-model="item.sum"
+                      v-model.number="item.sum"
                       @input="inputChange(index,index)"
                       style="width:200px"
                     ></el-input>
@@ -250,7 +250,7 @@
                     >
                       <el-input
                         @input="inputChange(index,index)"
-                        v-model="item.ratio[indexScale]"
+                        v-model.number="item.ratio[indexScale]"
                         style="display: inline-block;width:100px;margin:0 10px;"
                       ></el-input>
                     </el-form-item>
@@ -343,7 +343,7 @@
                 <div class="content" v-for="(item1, index1) in item.list" :key="index1">
                   <div class="card">
                     <div class="cardStyle">
-                      <div class="cardStyle_left">
+                      <div class="cardStyle_left" style="overflow: hidden !important;">
                         <div class="cardStyle_left_img">
                           <img :src="item1.picurl" alt />
                         </div>
@@ -439,13 +439,19 @@
                         v-if="item1.amountPurchased == 0"
                       >采购录入</el-button>
                       <el-button
-                        v-if="item1.amountPurchased != 0 && item1.produce_order_procure_log_data[item1.produce_order_procure_log_data['length']-1].state != 3 "
+                        v-if="item1.amountPurchased != 0 && item1.produce_order_procure_log_data[item1.produce_order_procure_log_data['length']-1].state < 3 "
                         size="mini"
                         style="margin-left:10px"
                         @click.stop="updateStatus(item1)"
                         round
                       >更新状态</el-button>
-                      <!-- <el-button size="mini"  style="margin-left:10px" @click.stop="seeDetails()" round>查看详情</el-button> -->
+                      <el-button
+                        size="mini"
+                        style="margin-left:10px"
+                        @click.stop="seeDetails1(item1)"
+                        v-if="item1.amountPurchased != 0 && item1.produce_order_procure_log_data[item1.produce_order_procure_log_data['length']-1].state == 3 "
+                        round
+                      >查看详情</el-button>
                     </div>
                   </div>
                 </div>
@@ -499,10 +505,10 @@
               >
                 <el-form ref="form3" :rules="rules2" :model="form3" label-width="110px">
                   <el-form-item prop="number" label="回料数量">
-                    <el-input placeholder="请输入内容" style="width:200px" v-model="form3.number"></el-input>
+                    <el-input placeholder="请输入内容" style="width:200px" v-model.number="form3.number"></el-input>
                   </el-form-item>
                   <el-form-item prop="money" label="结算金额">
-                    <el-input placeholder="请输入内容" style="width:200px" v-model="form3.money"></el-input>
+                    <el-input placeholder="请输入内容" style="width:200px" v-model.number="form3.money"></el-input>
                   </el-form-item>
                   <el-form-item prop="date" label="部分回料时间">
                     <el-date-picker v-model="form3.date" type="date" placeholder="选择日期"></el-date-picker>
@@ -607,14 +613,14 @@
                   :rules="contactRules.quantity"
                   label="指派数量："
                 >
-                  <el-input v-model="item.quantity" placeholder="请填入指派数量" style="width:150px"></el-input>
+                  <el-input v-model.number="item.quantity" placeholder="请填入指派数量" style="width:150px"></el-input>
                 </el-form-item>
                 <el-form-item
                   :prop="'child.'+index+'.price'"
                   :rules="contactRules.price"
                   label="加工价格："
                 >
-                  <el-input v-model="item.price" placeholder="请填入加工价格" style="width:150px"></el-input>
+                  <el-input v-model.number="item.price" placeholder="请填入加工价格" style="width:150px"></el-input>
                 </el-form-item>
                 <el-form-item>
                   <el-button>加工费对比</el-button>
@@ -713,7 +719,7 @@
                       :key="index_q"
                       placeholder="请输入内容"
                       @input="inputNumber(index,index_c)"
-                      v-model="item_c.size_input[index_q]"
+                      v-model.number="item_c.size_input[index_q]"
                     ></el-input>
                     <span>{{item_c.sizeNum}}</span>
                     <span v-if="index_c == item.category.length-1 ">{{item.total}}</span>
@@ -816,7 +822,7 @@
                           :key="index_qq"
                           placeholder="请输入内容"
                           @input="goDowninput(index,index_cc)"
-                          v-model="item_cc.size_input[index_qq]"
+                          v-model.number="item_cc.size_input[index_qq]"
                         ></el-input>
                         <span>{{item_cc.sizeNum}}</span>
                         <span
@@ -846,7 +852,7 @@
                         :key="index_qt"
                         placeholder="请输入内容"
                         @input="goDowninput1(index,index_cd)"
-                        v-model="item_c.size_input[index_qt]"
+                        v-model.number="item_c.size_input[index_qt]"
                       ></el-input>
                       <span>{{item_c.sizeNum}}</span>
                       <span
@@ -952,7 +958,7 @@
                 <div v-for="(item2, index2) in item1.style_materials_data" :key="index2">
                   <div class="card" v-if="item.materials===item1.mainclass" style="margin:10px 0">
                     <div class="cardStyle">
-                      <div class="cardStyle_left">
+                      <div class="cardStyle_left" style="overflow: hidden !important;">
                         <div class="cardStyle_left_img">
                           <img :src="item2.materials_color_data[0].picurl" alt />
                         </div>
@@ -1073,7 +1079,10 @@ export default {
             trigger: "change"
           }
         ],
-        sum: [{ required: true, message: "请输入数量", trigger: "blur" }],
+        sum: [
+          { required: true, message: "请输入数量", trigger: "blur" },
+          { type: "number", message: "必须为数字值" }
+        ],
 
         size_name: [
           {
@@ -1090,7 +1099,8 @@ export default {
             required: true,
             message: "请输入比例",
             trigger: "blur"
-          }
+          },
+          { type: "number", message: "必须为数字值" }
         ]
       },
       // 采购
@@ -1109,14 +1119,16 @@ export default {
             required: true,
             message: "请输入回料数量",
             trigger: "blur"
-          }
+          },
+          { type: "number", message: "必须为数字值" }
         ],
         money: [
           {
             required: true,
             message: "请输入结账金额",
             trigger: "blur"
-          }
+          },
+          { type: "number", message: "必须为数字值" }
         ],
         date: [
           {
@@ -1311,13 +1323,17 @@ export default {
           { required: true, message: "请选择指派方式", trigger: "change" }
         ],
         quantity: [
-          { required: true, message: "请输入指派数量", trigger: "blur" }
+          { required: true, message: "请输入指派数量", trigger: "blur" },
+          { type: "number", message: "必须为数字值" }
         ],
-        price: [{ required: true, message: "请输入加工费", trigger: "blur" }],
-        remarks: [{ required: true, message: "请填写备注", trigger: "blur" }]
+        price: [{ required: true, message: "请输入加工费", trigger: "blur" },
+          { type: "number", message: "必须为数字值" }],
+        remarks: [{ required: true, message: "请填写备注", trigger: "blur" },
+          { type: "number", message: "必须为数字值" }]
       },
       inspection: {
-        sum: [{ required: true, message: "请输入总数", trigger: "blur" }],
+        sum: [{ required: true, message: "请输入总数", trigger: "blur" },
+          { type: "number", message: "必须为数字值" }],
         size_name: [
           {
             type: "array",
@@ -1331,7 +1347,8 @@ export default {
             required: true,
             message: "请填写完整比例",
             trigger: "blur"
-          }
+          },
+          { type: "number", message: "必须为数字值" }
         ]
       },
       formg: {},
@@ -2163,13 +2180,19 @@ export default {
     },
     // 采购录入
     async seeDetails(item) {
-      console.log(item);
+      // console.log(item.materials_id);
       // this.itemList = item
       let obj = JSON.stringify(item);
       this.$router.push({
         path: `/PanelPurchase?materials_id=${
           item.materials_id
         }&e=${obj}&tabName=${"采购"}`
+      });
+    },
+    // 采购查看
+    async seeDetails1(item) {
+      this.$router.push({
+        path: `/materialTable?materials_id=${item.materials_id}`
       });
     },
     // 更新状态
@@ -3846,12 +3869,12 @@ export default {
           width: 320px;
           height: 100px;
           display: flex;
+
           .cardStyle_left {
             width: 270px;
             display: flex;
             background-color: #f2f2f2;
             border-radius: 10px;
-            overflow: hidden;
             .cardStyle_left_img {
               img {
                 width: 100px;

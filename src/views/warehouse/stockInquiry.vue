@@ -26,7 +26,7 @@
                 v-model="ruleForm.value1"
                 size="mini"
                 type="daterange"
-                range-separator="一"
+                range-separator="至"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
               ></el-date-picker>
@@ -212,6 +212,7 @@
                   <el-autocomplete
                     class="inline-input"
                     size="mini"
+                    :disabled="scope.row.commodity==''? true : false"
                     v-if="scope.row.showHidden2"
                     :title="scope.row.color"
                     v-model="scope.row.color"
@@ -222,7 +223,7 @@
                   <span v-else>{{scope.row.color}}</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="size" width="70" align="center" label="尺码">
+              <el-table-column prop="size" width="60" align="center" label="尺码">
                 <template slot-scope="scope">
                   <el-autocomplete
                     class="inline-input"
@@ -338,15 +339,15 @@
                   :on-preview="handlePreview"
                   :on-remove="handleRemove"
                   :file-list="fileList"
-                  :on-success='successFile'
+                  :on-success="successFile"
                   list-type="picture"
                   style="float:left;"
                 >
-                  <el-button size="mini"  v-if="vh" type="primary">点击上传</el-button>
+                  <el-button size="mini" v-if="vh" type="primary">点击上传</el-button>
                 </el-upload>
               </el-form-item>
             </div>
-            <div style="position: absolute;right:-40px;width:556px;">
+            <div style="position: absolute;right:-40px;width:540px;">
               <el-form-item label="其他费用账目类型:">
                 <el-select size="mini" v-model="ruleForm.region" placeholder="请选择">
                   <el-option label="区域一" value="shanghai"></el-option>
@@ -650,15 +651,15 @@ export default {
         }
       ],
       indexk: 0,
-      vh: true,
+      vh: true
     };
   },
   methods: {
-   successFile(response, file, fileList){
-     if(fileList.length>=3){
-       this.vh = false
-     }
-   },
+    successFile(response, file, fileList) {
+      if (fileList.length >= 3) {
+        this.vh = false;
+      }
+    },
     // 右边上传图片==>删除
     handleRemove(file, fileList) {
       console.log(file, fileList);
@@ -744,6 +745,14 @@ export default {
       // console.log(row, column, cell, event);
       if (column.label == "商品") {
         row.showHidden1 = true;
+      } else if (row.commodity == "") {
+        row.showHidden2 = false;
+        row.showHidden3 = false;
+        row.showHidden4 = false;
+        row.showHidden5 = false;
+        row.showHidden6 = false;
+        row.showHidden7 = false;
+        row.showHidden8 = false;
       } else if (column.label == "颜色") {
         row.showHidden2 = true;
       } else if (column.label == "尺码") {
@@ -860,7 +869,6 @@ export default {
         row.item_no = v.item_no;
         row.bar_code = v.bar_code;
         row.showHidden1 = false;
-        this.dialogFormVisible = true;
         this.colors.forEach(item => {
           item.quantitys = [];
         });
@@ -995,7 +1003,8 @@ export default {
         margin-bottom: 10px;
         .el-form {
           position: relative;
-          padding: 3px 10px;
+          padding: 3px 5px;
+
           .sub {
             text-align: center;
           }
@@ -1006,9 +1015,13 @@ export default {
                 width: 178px;
               }
               .el-date-editor--daterange {
-                width: 178px;
+                width: 210px;
                 position: absolute;
                 top: 5px;
+                /deep/.el-range-separator {
+                  padding: 0 !important;
+                  width: auto;
+                }
               }
             }
           }

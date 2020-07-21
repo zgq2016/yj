@@ -28,12 +28,23 @@
                   <div style="margin-right:100px">
                     <div>内部编号：{{header.materialsno}}</div>
                     <div>编号：{{header.materialsno}}</div>
-                    <div>面料分类：</div>
-                    <div>料属性：</div>
+                    <div>面料分类：{{header.materials_mainclass_name}}{{`(${header.materials_class_name})`}}</div>
+                    <div>
+                      料 属 性 ：
+                      <span
+                        style="margin-right:10px;text-align:center;width:50px;display:inline-block;"
+                        v-for="(item,index) in header.material_data"
+                        :key="index"
+                      >{{item.material_name}}</span>
+                    </div>
                     <div style="display: flex;">
-                      <div style="margin-right:10px;width:70px;">面料成分：</div>
-                      <div style="width:70px;">
-                        <div></div>
+                      <div>
+                        面料成分：
+                        <span
+                          style="margin-right:10px;text-align:center;width:50px;display:inline-block;"
+                          v-for="(item,index) in header.material_data"
+                          :key="index"
+                        >{{item.content}}%</span>
                       </div>
                     </div>
                   </div>
@@ -56,10 +67,9 @@
               </div>
               <div class="supplierInfoContentText">
                 <div class="supplierInfoContentTextName">{{supplier.companyname}}</div>
-                <div>1354561325</div>
-                <div></div>
+                <div v-for="(item,index) in supplier.contact_data" :key="index">{{item.phone}}</div>
                 <div>账号信息：</div>
-                <div>{{supplier.address}}</div>
+                <div style="width:155px">{{supplier.address}}</div>
                 <div></div>
               </div>
             </div>
@@ -82,7 +92,11 @@
             <el-form :model="form" ref="form" :rules="rules" label-width="120px">
               <el-form-item label="用量" prop="dosage">
                 <el-col :span="6">
-                  <el-input v-model="form.dosage" placeholder="请输入用量(以米为单位)" style="width:200px"></el-input>
+                  <el-input
+                    v-model.number="form.dosage"
+                    placeholder="请输入用量(以米为单位)"
+                    style="width:200px"
+                  ></el-input>
                 </el-col>
                 <el-col :span="6">
                   <el-button size="small" round @click="readyforTheCall">备货调用</el-button>
@@ -90,7 +104,7 @@
               </el-form-item>
               <el-form-item label="采购量" prop="amountPurchased">
                 <el-input
-                  v-model="form.amountPurchased"
+                  v-model.number="form.amountPurchased"
                   @input="changed()"
                   placeholder="请输入采购量(以米为单位)"
                   style="width:200px"
@@ -98,7 +112,7 @@
               </el-form-item>
               <el-form-item label="采购单价" prop="purchasePrice">
                 <el-input
-                  v-model="form.purchasePrice"
+                  v-model.number="form.purchasePrice"
                   @input="changed()"
                   placeholder="请输入采购单价"
                   style="width:200px"
@@ -106,7 +120,7 @@
               </el-form-item>
               <el-form-item label="金额" prop="money">
                 <el-input
-                  v-model="form.money"
+                  v-model.number="form.money"
                   @input="changed1()"
                   placeholder="请输入金额"
                   style="width:200px"
@@ -119,11 +133,11 @@
                 </el-radio-group>
               </el-form-item>
               <el-form-item v-if="form.payment==0" label="订金" prop="deposit">
-                <el-input v-model="form.deposit" placeholder="请输入订金" style="width:200px"></el-input>
+                <el-input v-model.number="form.deposit" placeholder="请输入订金" style="width:200px"></el-input>
               </el-form-item>
               <el-form-item v-if="form.payment==1" label="全额付款" prop="fullPayout">
                 <el-input
-                  v-model="form.fullPayout"
+                  v-model.number="form.fullPayout"
                   disabled
                   placeholder="请输入金额"
                   style="width:200px"
@@ -230,18 +244,28 @@ export default {
       ],
       // 表单规则
       rules: {
-        dosage: [{ required: true, message: "请输入用量", trigger: "blur" }],
+        dosage: [
+          { required: true, message: "请输入用量" },
+          { type: "number", message: "用量必须为数字值" }
+        ],
         amountPurchased: [
-          { required: true, message: "请输入采购量", trigger: "blur" }
+          { required: true, message: "请输入采购量", trigger: "blur" },
+          { type: "number", message: "采购量必须为数字值" }
         ],
         purchasePrice: [
-          { required: true, message: "请输入采购单价", trigger: "blur" }
+          { required: true, message: "请输入采购单价", trigger: "blur" },
+          { type: "number", message: "采购单价必须为数字值" }
         ],
-        money: [{ required: true, message: "请输入金额", trigger: "blur" }],
+        money: [
+          { required: true, message: "请输入金额", trigger: "blur" },
+          { type: "number", message: "金额必须为数字值" }
+        ],
         payManneItem: [
           { required: true, message: "请选择支付方式", trigger: "blur" }
         ],
-        payment: [{ required: true, message: "请输入元素", trigger: "blur" }],
+        payment: [
+          { required: true, message: "请选择付款方式 ", trigger: "blur" }
+        ],
         finishTime: [
           {
             type: "date",
@@ -250,9 +274,13 @@ export default {
             trigger: "blur"
           }
         ],
-        deposit: [{ required: true, message: "请输入定金", trigger: "blur" }],
+        deposit: [
+          { required: true, message: "请输入定金", trigger: "blur" },
+          { type: "number", message: "定金必须为数字值" }
+        ],
         fullPayout: [
-          { required: true, message: "请输入全部金额", trigger: "blur" }
+          { required: true, message: "请输入全部金额", trigger: "blur" },
+          { type: "number", message: "金额必须为数字值" }
         ]
       }
     };
@@ -263,12 +291,12 @@ export default {
     },
     async changed() {
       this.form.money = this.form.amountPurchased * this.form.purchasePrice;
-      this.form.money = String(this.form.money);
+      // this.form.money = String(this.form.money);
       this.form.fullPayout = this.form.money;
     },
     async changed1() {
       this.form.purchasePrice = this.form.money / this.form.amountPurchased;
-      this.form.purchasePrice = String(this.form.purchasePrice);
+      // this.form.purchasePrice = String(this.form.purchasePrice);
     },
     async onSubmit() {
       this.$refs["form"].validate(async valid => {
