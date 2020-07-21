@@ -33,10 +33,12 @@
 
           <el-form-item label="颜色:">
             <el-select v-model="form.warehouse" placeholder="请选择分类" style="width:120px">
-              <!-- <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option> -->
-              <el-option label="分类1" value="分类1"></el-option>
-              <el-option label="分类2" value="分类2"></el-option>
-              <el-option label="分类3" value="分类3"></el-option>
+              <el-option
+                v-for="(item,index) in options"
+                :key="index"
+                :label="item.color_name"
+                :value="item.color_name"
+              ></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="尺码:">
@@ -104,6 +106,7 @@
 
 <script>
 import { storehouseList } from "@/api/warehouse.js";
+import { getColorSelect } from "@/api/researchDevelopment";
 export default {
   data() {
     return {
@@ -119,7 +122,8 @@ export default {
       total: 0,
       total2: 0,
       color: ["X", "L", "XXL"],
-      ware:[]
+      ware: [],
+      options: []
     };
   },
   methods: {
@@ -149,10 +153,12 @@ export default {
       let { data } = res.data;
       this.ware = data;
       this.total2 = res.data.count;
+      let res2 = await getColorSelect();
+      this.options = res2.data.data;
     }
   },
   mounted() {
-    this.init()
+    this.init();
   }
 };
 </script>

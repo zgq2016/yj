@@ -128,8 +128,19 @@
                 label="仓库:"
               >
                 <el-select size="mini" v-model="form.ware" placeholder="请选择仓库">
-                  <el-option label="区域一" value="shanghai"></el-option>
-                  <el-option label="区域二" value="beijing"></el-option>
+                  <el-option
+                    v-for="item in ware"
+                    :key="item.id"
+                    :label="item.storehouse_name"
+                    :value="item.id"
+                  ></el-option>
+                  <el-pagination
+                    small
+                    layout="prev, pager, next"
+                    @size-change="handleSize"
+                    @current-change="handleCurrent"
+                    :total="total2"
+                  ></el-pagination>
                 </el-select>
               </el-form-item>
               <el-form-item style="display:inline-block;width:30%;margin-left:1%;" label="结算账户:">
@@ -412,6 +423,7 @@ import {
   getStylistList,
   getCategoryList
 } from "@/api/researchDevelopment";
+import { storehouseList } from "@/api/warehouse.js";
 export default {
   data() {
     return {
@@ -604,8 +616,12 @@ export default {
       category: "", //类别
 
       pageIndex: 1,
-      pageSize: 10,
+      pageSize: 9,
       total: 0,
+      pageIndex2: 1,
+      pageSize2: 9,
+      total2: 0,
+      ware:[],
       ruleForm: {}, //查询表单
       form: {
         manufacturer: "",
@@ -958,9 +974,28 @@ export default {
         }
       });
       this.dialogFormVisible = false;
+    },
+     handleSize(val) {
+      this.pageSize2 = val;
+      this.init();
+    },
+    handleCurrent(val) {
+      this.pageIndex2 = val;
+      this.init();
+    },
+    async init(){
+       // 仓库
+      let res = await storehouseList({
+        page: this.pageIndex2,
+        page_size: this.pageSize2
+      });
+      let { data } = res.data;
+      this.ware = data;
+      this.total2 = res.data.count;
     }
   },
   mounted() {
+    this.init()
     this.getYear();
     this.getSeason();
     this.getStylist();
