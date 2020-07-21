@@ -163,14 +163,6 @@ body {
   margin: auto;
   width: 1200px;
 }
-.el-autocomplete-suggestion {
-  width: 150px !important;
-}
-.el-autocomplete-suggestion .el-scrollbar .el-autocomplete-suggestion__wrap ul li {
-  padding: 0 10px !important;
-  line-height: 28px;
-  font-size: 10px;
-}
 .breadcrumb {
   padding: 0 40px 10px;
   border-bottom: 1px solid #eee;
