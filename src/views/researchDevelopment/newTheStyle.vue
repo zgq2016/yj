@@ -25,8 +25,8 @@
                   <div style="width:170px">年份: {{defaultData.year}}</div>
                   <div style="width:170px">季节: {{defaultData.season}}</div>
                   <div style="width:170px">设计师: {{defaultData.user_name}}</div>
-                  <div style="display:flex" v-if="user_id_data_length>0">
-                    <div>设计助理:</div>
+                  <div style="display:flex">
+                    <div>协助:</div>
                     <div
                       v-for="(item, index) in defaultData.user_id_data"
                       :key="index"
@@ -104,9 +104,9 @@
                     <div>指派设计师:</div>
                     <div>{{obj.user_name}}</div>
                   </div>
-                  <div style="width:200px;display:flex">
+                  <div style="display:flex">
                     <div>协助:</div>
-                    <div v-for="(item, index) in obj.user_id_data" :key="index">{{item.name}}</div>
+                    <div v-for="(item, index) in obj.user_id_data" :key="index">{{item.name}},</div>
                   </div>
                 </div>
               </el-form-item>

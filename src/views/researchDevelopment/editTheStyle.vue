@@ -25,20 +25,20 @@
         <div class="styleNumberContent">
           <div class="form">
             <el-form ref="obj" :model="obj" :rules="rules" label-width="80px">
-              <el-form-item label="款号">
+              <el-form-item>
                 <!-- <div>{{obj.styleno}}</div> -->
                 <div style="display:flex">
                   <div style="width:200px;display:flex">
                     <div>款号:</div>
-                    <div>{{styleno}}</div>
+                    <div>{{obj.styleno}}</div>
                   </div>
                   <div style="width:200px;display:flex">
                     <div>指派设计师:</div>
                     <div>{{obj.user_name}}</div>
                   </div>
-                  <div style="width:200px;display:flex">
+                  <div style="display:flex">
                     <div>协助:</div>
-                    <div v-for="(item, index) in obj.user_id_data" :key="index">{{item.name}}</div>
+                    <div v-for="(item, index) in obj.user_id_data" :key="index">{{item.name}},</div>
                   </div>
                 </div>
               </el-form-item>
