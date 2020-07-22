@@ -13,7 +13,7 @@
         :header-cell-style="{background:'#eef1f6',color:'#606266'}"
         size="small"
       >
-        <el-table-column type="index" :index="indexMethod" label="序号"></el-table-column>
+        <el-table-column type="index"  label="序号"></el-table-column>
         <el-table-column align="center" prop="ctime" width="95" label="时间"></el-table-column>
         <el-table-column prop="title" width="250" label="标题"></el-table-column>
         <el-table-column prop="text" label="内容"></el-table-column>

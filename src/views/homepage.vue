@@ -30,7 +30,7 @@
             type="month"
             size="mini"
             style="width:130px;position: relative;left:150px;top:35px;z-index:2;cursor: pointer;"
-            @change="changedDate"
+            @change="changedDate($event)"
             placeholder="选择月"
           ></el-date-picker>
           <div id="myChart" :style="{width: '100%', height: '500px',border:'1px solid #ccc'}"></div>
@@ -43,7 +43,11 @@
           </div>
           <div class="nav_list">
             <ul>
-              <li v-for="(item1,index) in nav_list" :key="index" @click.stop="lookTitle(item1)">{{item1.title}}</li>
+              <li
+                v-for="(item1,index) in nav_list"
+                :key="index"
+                @click.stop="lookTitle(item1)"
+              >{{item1.title}}</li>
               <li @click.stop="$router.push({path: `/announcements`})">+ 更多公告</li>
             </ul>
           </div>
@@ -54,8 +58,11 @@
           </div>
           <div class="nav_list">
             <ul>
-              <li>暂无信息</li>
-              <li>暂无信息</li>
+              <li
+                v-for="(item1,index) in list2"
+                :key="index"
+                @click.stop="lookTitle1(item1)"
+              >{{item1.title}}</li>
             </ul>
           </div>
         </div>
@@ -76,16 +83,29 @@
       </span>
     </el-dialog>
     <!-- 公告信息 -->
-    <el-dialog title="公告" :visible.sync="dialogVisible1" width="30%" center>
+    <el-dialog title="公告信息" :visible.sync="dialogVisible1" width="30%" center>
       <el-form :model="form" style="margin:0 20px" label-width="60px">
-        <el-form-item label="主题:" >
+        <el-form-item label="主题:">
           <span>{{form.title}}</span>
         </el-form-item>
-        <el-form-item label="时间:" >
+        <el-form-item label="时间:">
           <span>{{form.ctime}}</span>
         </el-form-item>
-        <el-form-item label="内容:" >
+        <el-form-item label="内容:">
           <span>{{form.text}}</span>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    <el-dialog title="提醒信息" :visible.sync="dialogVisible2" width="30%" center>
+      <el-form :model="form1" style="margin:0 20px" label-width="60px">
+        <el-form-item label="主题:">
+          <span>{{form1.title}}</span>
+        </el-form-item>
+        <el-form-item label="时间:">
+          <span>{{form1.ctime}}</span>
+        </el-form-item>
+        <el-form-item label="内容:">
+          <span>{{form1.text}}</span>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -97,14 +117,18 @@ import {
   shortcutKeyUserAdd,
   shortcutKeyUserDel,
   shortcutKeyUserList,
-  noticeIndexList
+  noticeIndexList,
+  warnList
 } from "@/api/home.js";
+import moment from "moment";
 export default {
   data() {
     return {
       list: [],
+      list2: [],
       dialogVisible: false,
       dialogVisible1: false,
+      dialogVisible2: false,
       vb: false,
       cut: "",
       feature: [],
@@ -177,7 +201,8 @@ export default {
       ],
       nav_list: [],
       nav_list1: [],
-      form: {}
+      form: {},
+      form1: {}
     };
   },
   mounted() {
@@ -186,9 +211,9 @@ export default {
   },
   methods: {
     // 查看公告
-    lookTitle(item){
-      this.dialogVisible1 = true
-      this.form = item
+    lookTitle(item) {
+      this.dialogVisible1 = true;
+      this.form = item;
     },
     // 删除快捷功能
     delShor(item, index) {
@@ -279,8 +304,10 @@ export default {
       });
     },
     // 选择月份
-    changedDate() {
-      this.xA = ["1", "2", "3", "4", "5", "6", "7"];
+    changedDate(item) {
+      this.date1 = moment(item).format("YYYY-MM");
+      console.log(this.date1);
+      this.xA = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
       this.yA = [
         1020,
         20,
@@ -322,6 +349,12 @@ export default {
         path: `/${item.url}`
       });
     },
+    // 提醒信息
+    lookTitle1(item) {
+      // console.log(item);
+      this.dialogVisible2 = true;
+      this.form1 = item;
+    },
     async init() {
       // 快捷方式list
       let res = await shortcutKeyUserList();
@@ -334,6 +367,13 @@ export default {
       });
       let data1 = res1.data.data;
       this.nav_list = data1;
+      // 提醒信息
+      let res2 = await warnList({
+        page_size: 10,
+        page: 1
+      });
+      let data2 = res2.data.data;
+      this.list2 = data2;
     }
   }
 };
@@ -449,8 +489,12 @@ export default {
         .nav_list {
           ul {
             li {
+              cursor: pointer;
               list-style: none;
               padding: 3px 0;
+            }
+            li:hover {
+              color: rgb(223, 64, 64);
             }
           }
         }

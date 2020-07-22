@@ -42,3 +42,13 @@ export const noticeIndexList = data => {
     data: data
   });
 };
+
+// 
+// 提醒信息list接口
+export const warnList = data => {
+  return axios({
+    url: "?g=warn_list",
+    method: "post",
+    data: data
+  });
+};
