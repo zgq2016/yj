@@ -306,6 +306,38 @@ export const userEdit = (data) => {
     data: data,
   });
 };
+// 公司公告list接口
+export const noticeList = (data) => {
+  return axios({
+    url: "?g=notice_list",
+    method: "post",
+    data: data,
+  });
+};
+// 增加公司公告接口
+export const noticeAdd = (data) => {
+  return axios({
+    url: "?g=notice_add",
+    method: "post",
+    data: data,
+  });
+};
+// 编辑公司公告接口
+export const noticeEdit = (data) => {
+  return axios({
+    url: "?g=notice_edit",
+    method: "post",
+    data: data,
+  });
+};
+// 删除公司公告接口
+export const noticeDel = (data) => {
+  return axios({
+    url: "?g=notice_del",
+    method: "post",
+    data: data,
+  });
+};
 
 // user_edit
 // 用户资料更新接口

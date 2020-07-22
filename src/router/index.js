@@ -42,6 +42,7 @@ import UnitManagement from "@/views/setting/unitManagement.vue";
 import ListAccounts from "@/views/setting/listAccounts.vue";
 import Logout from "@/views/setting/logout.vue";
 import AuthorityManagement from "@/views/setting/authorityManagement.vue";
+import Announcements from "@/views/setting/announcements.vue";
 import Pattern from "@/views/researchDevelopment/pattern.vue";
 import Platemaking from "@/views/researchDevelopment/platemaking.vue";
 import StockInquiry from "@/views/warehouse/stockInquiry.vue";
@@ -162,6 +163,11 @@ const routes = [
         path: "/authorityManagement",
         name: "AuthorityManagement",
         component: AuthorityManagement,
+      },
+      {
+        path: "/announcements",
+        name: "Announcements",
+        component: Announcements,
       },
 
       { path: "/stockInquiry", name: "StockInquiry", component: StockInquiry },

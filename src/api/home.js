@@ -33,3 +33,12 @@ export const shortcutKeyUserList = data => {
     data: data
   });
 };
+
+// 首页公司公告接口
+export const noticeIndexList = data => {
+  return axios({
+    url: "?g=notice_index_list",
+    method: "post",
+    data: data
+  });
+};

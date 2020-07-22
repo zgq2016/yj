@@ -15,7 +15,7 @@
               @mouseleave="vb = false"
               @click.stop="skip(item)"
             >
-              <span class="del" @click.stop="delshor(item,index)" v-if="vb">x</span>
+              <span class="del" @click.stop="delShor(item,index)" v-if="vb">x</span>
               {{item.title}}
             </li>
             <li @click.stop="addshort">
@@ -24,7 +24,17 @@
             </li>
           </ul>
         </div>
-        <div id="myChart" :style="{width: '100%', height: '450px',border:'1px solid #ccc'}"></div>
+        <div>
+          <el-date-picker
+            v-model="date1"
+            type="month"
+            size="mini"
+            style="width:130px;position: relative;left:150px;top:35px;z-index:2;cursor: pointer;"
+            @change="changedDate"
+            placeholder="选择月"
+          ></el-date-picker>
+          <div id="myChart" :style="{width: '100%', height: '500px',border:'1px solid #ccc'}"></div>
+        </div>
       </div>
       <div class="right">
         <div class="nav1">
@@ -33,8 +43,8 @@
           </div>
           <div class="nav_list">
             <ul>
-              <li>暂无信息</li>
-              <li>暂无信息</li>
+              <li v-for="(item1,index) in nav_list" :key="index" @click.stop="lookTitle(item1)">{{item1.title}}</li>
+              <li @click.stop="$router.push({path: `/announcements`})">+ 更多公告</li>
             </ul>
           </div>
         </div>
@@ -51,6 +61,7 @@
         </div>
       </div>
     </div>
+    <!-- 选择快捷功能 -->
     <el-dialog title="请选择快捷功能" :visible.sync="dialogVisible" center width="30%">
       <el-form style="width:250px;margin:0 auto;">
         <el-form-item label="快捷功能:">
@@ -64,6 +75,20 @@
         <el-button type="primary" @click="addshortcutKey">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 公告信息 -->
+    <el-dialog title="公告" :visible.sync="dialogVisible1" width="30%" center>
+      <el-form :model="form" style="margin:0 20px" label-width="60px">
+        <el-form-item label="主题:" >
+          <span>{{form.title}}</span>
+        </el-form-item>
+        <el-form-item label="时间:" >
+          <span>{{form.ctime}}</span>
+        </el-form-item>
+        <el-form-item label="内容:" >
+          <span>{{form.text}}</span>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -71,16 +96,88 @@ import {
   shortcutKeyList,
   shortcutKeyUserAdd,
   shortcutKeyUserDel,
-  shortcutKeyUserList
+  shortcutKeyUserList,
+  noticeIndexList
 } from "@/api/home.js";
 export default {
   data() {
     return {
       list: [],
       dialogVisible: false,
+      dialogVisible1: false,
       vb: false,
       cut: "",
-      feature: []
+      feature: [],
+      date1: "",
+      xA: [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "29",
+        "30",
+        "31"
+      ],
+      yA: [
+        1020,
+        20,
+        150,
+        80,
+        70,
+        110,
+        130,
+        50,
+        150,
+        80,
+        70,
+        110,
+        10,
+        20,
+        100,
+        80,
+        70,
+        110,
+        130,
+        40,
+        150,
+        80,
+        70,
+        110,
+        50,
+        10,
+        150,
+        80,
+        70,
+        110,
+        130
+      ],
+      nav_list: [],
+      nav_list1: [],
+      form: {}
     };
   },
   mounted() {
@@ -88,8 +185,13 @@ export default {
     this.init();
   },
   methods: {
-    //  删除快捷功能
-    delshor(item, index) {
+    // 查看公告
+    lookTitle(item){
+      this.dialogVisible1 = true
+      this.form = item
+    },
+    // 删除快捷功能
+    delShor(item, index) {
       this.$confirm("删除快捷功能, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -116,7 +218,6 @@ export default {
     },
     // 确认增加选择的快捷功能
     async addshortcutKey() {
-      // console.log(this.cut);
       let str = "";
       this.list.map((v, i) => {
         if (this.cut == v.title) {
@@ -142,15 +243,15 @@ export default {
       if (this.feature.length > 0) {
         this.feature.map((v, i) => {
           this.list.map((j, k) => {
-            if (v.url === j.url) {
-              this.list.splice(j, 1);
+            if (v.url == j.url) {
+              this.list.splice(k, 1);
             }
           });
         });
       }
-      console.log(res);
+      console.log(this.list);
     },
-    //  echarts表
+    // echarts表
     drawLine() {
       // 基于准备好的dom，初始化echarts实例
       let myChart = this.$echarts.init(document.getElementById("myChart"));
@@ -162,39 +263,7 @@ export default {
         xAxis: {
           name: "日期",
           type: "category",
-          data: [
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20",
-            "21",
-            "22",
-            "23",
-            "24",
-            "25",
-            "26",
-            "27",
-            "28",
-            "29",
-            "30",
-            "31"
-          ]
+          data: this.xA
         },
         yAxis: {
           name: "款式数量",
@@ -203,44 +272,51 @@ export default {
         series: [
           {
             name: "款式数量",
-            data: [
-              120,
-              200,
-              150,
-              80,
-              70,
-              110,
-              130,
-              200,
-              150,
-              80,
-              70,
-              110,
-              130,
-              200,
-              150,
-              80,
-              70,
-              110,
-              130,
-              200,
-              150,
-              80,
-              70,
-              110,
-              130,
-              200,
-              150,
-              80,
-              70,
-              110,
-              130
-            ],
+            data: this.yA,
             type: "bar"
           }
         ]
       });
     },
+    // 选择月份
+    changedDate() {
+      this.xA = ["1", "2", "3", "4", "5", "6", "7"];
+      this.yA = [
+        1020,
+        20,
+        150,
+        80,
+        70,
+        110,
+        130,
+        50,
+        150,
+        80,
+        1020,
+        110,
+        10,
+        1020,
+        100,
+        80,
+        70,
+        110,
+        130,
+        40,
+        1500,
+        80,
+        70,
+        110,
+        50,
+        10,
+        150,
+        80,
+        70,
+        110,
+        130
+      ];
+      this.drawLine();
+    },
+    // 快捷跳转
     skip(item) {
       this.$router.push({
         path: `/${item.url}`
@@ -251,6 +327,13 @@ export default {
       let res = await shortcutKeyUserList();
       let { data } = res.data;
       this.feature = data;
+      // 公司公告
+      let res1 = await noticeIndexList({
+        page_size: 10,
+        page: 1
+      });
+      let data1 = res1.data.data;
+      this.nav_list = data1;
     }
   }
 };
@@ -312,9 +395,11 @@ export default {
       float: left;
       width: 25%;
       .nav1 {
+        position: relative;
         width: 100%;
         padding: 0 5%;
-        height: 300px;
+        min-height: 300px;
+        max-height: auto;
         border: 1px solid #cccccc;
         margin-bottom: 10px;
         .head {
@@ -323,13 +408,26 @@ export default {
           line-height: 30px;
           font-size: 15px;
           font-weight: 600;
-          border-bottom: 1px solid #cccccc;
+          border-bottom: 1px dashed #cccccc;
         }
+
         .nav_list {
           ul {
+            overflow: hidden;
             li {
+              cursor: pointer;
               list-style: none;
-              padding: 5px 0;
+              padding: 3px 0;
+            }
+            li:last-of-type {
+              position: absolute;
+              bottom: 5px;
+              right: 15px;
+              font-size: 12px;
+              font-weight: 600;
+            }
+            li:hover {
+              color: rgb(223, 64, 64);
             }
           }
         }
@@ -337,7 +435,8 @@ export default {
       .nav2 {
         width: 100%;
         padding: 0 5%;
-        height: 450px;
+        min-height: 450px;
+        max-height: auto;
         border: 1px solid #cccccc;
         .head {
           width: 100%;
@@ -345,13 +444,13 @@ export default {
           font-size: 15px;
           font-weight: 600;
           line-height: 30px;
-          border-bottom: 1px solid #cccccc;
+          border-bottom: 1px dashed #cccccc;
         }
         .nav_list {
           ul {
             li {
               list-style: none;
-              padding: 5px 0;
+              padding: 3px 0;
             }
           }
         }
