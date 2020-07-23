@@ -122,7 +122,7 @@
         <el-form-item label="状态">
           <el-radio-group v-model="form.status" style="width:80%">
             <el-radio :label="1">启用</el-radio>
-            <el-radio :label="0">禁用</el-radio>
+            <el-radio :label="0">停用</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="账户类型">
@@ -205,7 +205,7 @@ export default {
       console.log(this.obj);
       delete this.obj.balance;
       this.obj.sort = Number(this.obj.sort);
-      let res = await balanceAccountAdd(this.obj);
+      let res = await balanceAccountEdit(this.obj);
       console.log(res);
       this.obj.account_name = "";
       this.obj.account = "";
@@ -300,7 +300,7 @@ export default {
           v["statusName"] = "启用";
         }
         if (v.status === "0") {
-          v["statusName"] = "禁用";
+          v["statusName"] = "停用";
         }
       });
       let { data, count } = res.data;

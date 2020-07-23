@@ -641,18 +641,22 @@ export default {
         });
     },
     async handleEdit() {
-      this.$refs["obj"].validate(async valid => {
-        if (!valid) return;
-        // 调用actions的登录方法
+      if (this.supplier_companyname === "") {
+        this.$message.error("请选择供应商 or 请添加供应商");
+      } else {
+        this.$refs["obj"].validate(async valid => {
+          if (!valid) return;
+          // 调用actions的登录方法
 
-        delete this.obj["supplier_id"];
-        delete this.obj["supplier_companyname"];
-        delete this.obj["materials_supplier_data"];
-        console.log(this.obj);
-        let res = await materialsEdit(this.obj);
-        console.log(res);
-        this.$router.go(-1);
-      });
+          delete this.obj["supplier_id"];
+          delete this.obj["supplier_companyname"];
+          delete this.obj["materials_supplier_data"];
+          console.log(this.obj);
+          let res = await materialsEdit(this.obj);
+          console.log(res);
+          this.$router.go(-1);
+        });
+      }
     },
     async getMaterialList() {
       let res = await getMaterialSelect();

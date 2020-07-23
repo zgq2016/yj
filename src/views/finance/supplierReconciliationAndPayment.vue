@@ -5,80 +5,78 @@
       <el-breadcrumb-item>财务</el-breadcrumb-item>
       <el-breadcrumb-item>供应商对账及付款</el-breadcrumb-item>
     </el-breadcrumb>
-    <div class="main clearfix">
-      <div class="supplier fl">
-        <label for>供应商：</label>
-        <el-select v-model="stylist" placeholder="- 全部 -" @change="handleUser_id($event)">
-          <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
-        </el-select>
-      </div>
-      <div class="date fl">
-        <label for>日期：</label>
-        <el-date-picker
-          v-model="date"
-          type="daterange"
-          range-separator="至"
-          :start-placeholder="ctime_start"
-          :end-placeholder="ctime_end"
-        ></el-date-picker>
-      </div>
-      <div class="accountType fl">
-        <label for>账目类型：</label>
-        <el-select v-model="category" placeholder="类别">
-          <el-option
-            v-for="item in categorys"
-            :key="item.id"
-            :label="item.style_type"
-            :value="item.style_type"
-          ></el-option>
-        </el-select>
-      </div>
-      <div class="settlement fl">
-        <label for>结算账户：</label>
-        <el-select v-model="category" placeholder="-请选择-">
-          <el-option
-            v-for="item in categorys"
-            :key="item.id"
-            :label="item.style_type"
-            :value="item.style_type"
-          ></el-option>
-        </el-select>
-      </div>
-
-      <div class="stylist fl">
-        <label for>操作者：</label>
-        <el-select v-model="stylist" placeholder="- 全部 -" @change="handleUser_id($event)">
-          <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
-        </el-select>
-      </div>
-
-      <div class="odd fl">
-        <label for>单号：</label>
-        <el-input placeholder="单据编号" v-model="odd" clearable></el-input>
-      </div>
-
-      <div class="btn fl" @click="handlesearch">
-        <el-button type="primary" icon="el-icon-search">查询</el-button>
-      </div>
-      <div class="btn fl">
-        <el-button type="primary">付款</el-button>
-      </div>
-      <div class="btn fl">
-        <el-button type="primary">期初调整</el-button>
-      </div>
-      <div class="btn fl">
-        <el-button type="primary" v-print="'#printTest'" icon="el-icon-printer">打印</el-button>
-      </div>
-      <div class="btn fl">
-        <el-button type="primary" icon="el-icon-upload2">导出</el-button>
-      </div>
+    <div class="form">
+      <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form-item label="供应商：">
+          <el-select v-model="formInline.Supplier" placeholder="- 全部 -">
+            <el-option
+              v-for="item in SupplierList"
+              :key="item.address"
+              :label="item.value"
+              :value="item.address"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="日期：">
+          <el-date-picker
+            v-model="formInline.date"
+            type="daterange"
+            range-separator="至"
+            :start-placeholder="ctime_start"
+            :end-placeholder="ctime_end"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item label="账目类型：">
+          <el-select v-model="formInline.account_type_id">
+            <el-option
+              v-for="item in BalanceAccountType"
+              :key="item.id"
+              :label="item.balance_account_type"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="结算账户：">
+          <el-select v-model="formInline.balance_account_id">
+            <el-option
+              v-for="item in BalanceAccount"
+              :key="item.id"
+              :label="item.account_name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="操作者：">
+          <el-select v-model="formInline.user_id">
+            <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="单号：">
+          <el-input placeholder="单据编号" v-model="formInline.account_no" clearable></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">查询</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="handlePayment">付款</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="beginninGbalanceAdjustment">期初调整</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" v-print="'#printTest'" icon="el-icon-printer">打印</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-upload2">导出</el-button>
+        </el-form-item>
+      </el-form>
     </div>
     <el-divider></el-divider>
     <div id="printTest">
       <div class="header">
         <h2 style="text-align:center;height:40px;">供应商对账单</h2>
         <div class="cont">
-          <span>供应商：何老板</span>
+          <span>供应商：{{formInline.Supplier}}</span>
           <span>日期：{{this.ctime_start}} 至 {{this.ctime_end}}</span>
         </div>
         <div class="tb">
@@ -99,149 +97,405 @@
       </div>
       <div class="table">
         <el-table :data="tableData" border>
-          <el-table-column fixed prop="data" label="操作"></el-table-column>
-          <el-table-column fixed prop="data" label="业务时间"></el-table-column>
-          <el-table-column fixed prop="data" label="单据编号"></el-table-column>
-          <el-table-column fixed prop="data" label="操作人"></el-table-column>
-          <el-table-column fixed prop="data" label="结算账户"></el-table-column>
-          <el-table-column fixed prop="data" label="账目类型"></el-table-column>
-          <el-table-column fixed prop="data" label="应付金额"></el-table-column>
-          <el-table-column fixed prop="data" label="实付金额"></el-table-column>
-          <el-table-column fixed prop="data" label="本单应付余额"></el-table-column>
-          <el-table-column fixed prop="data" label="累计应付款余额"></el-table-column>
-          <el-table-column fixed prop="data" label="备注"></el-table-column>
+          <el-table-column width="180" prop="ctime" label="业务时间"></el-table-column>
+          <el-table-column width="160" prop="account_no" label="单据编号"></el-table-column>
+          <el-table-column width="130" prop="user_name" label="操作人"></el-table-column>
+          <el-table-column width="130" prop="account_name" label="结算账户"></el-table-column>
+          <el-table-column width="130" prop="account_type_name" label="账目类型"></el-table-column>
+          <el-table-column width="130" prop="cope_price" label="应付金额"></el-table-column>
+          <el-table-column width="130" prop="pay_price" label="实付金额"></el-table-column>
+          <el-table-column width="130" prop="opay_price" label="本单应付余额"></el-table-column>
+          <el-table-column width="130" prop="total_price" label="累计应付款余额"></el-table-column>
+          <el-table-column width="130" prop="remarks" label="备注"></el-table-column>
+          <el-table-column prop="data" label="操作"></el-table-column>
         </el-table>
       </div>
     </div>
+
+    <el-pagination
+      class="pagination"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="pageIndex"
+      :page-sizes="[9, 18, 27, 36]"
+      :page-size="pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+    ></el-pagination>
+    <!-- 供应商前期调整 -->
+    <el-dialog
+      title="账目类型信息"
+      :visible.sync="dialogVisible"
+      width="30%"
+      center
+      class="dialog"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
+      <el-form :model="form" :rules="rules" ref="form" label-width="140px" class="demo-form">
+        <el-form-item label="供应商" prop="supplier_companyname">
+          <el-autocomplete
+            class="inline-input"
+            v-model="form.supplier_companyname"
+            :fetch-suggestions="querySearch"
+            placeholder="供应商"
+            @select="handleSelect"
+            style="width:70%;"
+          ></el-autocomplete>
+        </el-form-item>
+        <el-form-item label="操作人" prop="user_id">
+          <el-select v-model="form.user_id" style="width:70%;">
+            <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="结算账户" prop="balance_account_id">
+          <el-select v-model="form.balance_account_id" style="width:70%;">
+            <el-option
+              v-for="item in BalanceAccount"
+              :key="item.id"
+              :label="item.account_name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="账目类型" prop="account_type_id">
+          <el-select v-model="form.account_type_id" style="width:70%;">
+            <el-option
+              v-for="item in BalanceAccountType"
+              :key="item.id"
+              :label="item.balance_account_type"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="应付金额" prop="cope_price">
+          <el-input v-model="form.cope_price" placeholder="请输入内容" style="width:70%;"></el-input>
+        </el-form-item>
+        <el-form-item label="实付金额" prop="pay_price">
+          <el-input v-model="form.pay_price" placeholder="请输入内容" style="width:70%;"></el-input>
+        </el-form-item>
+        <el-form-item label="本单应付余额" prop="opay_price">
+          <el-input v-model="form.opay_price" placeholder="请输入内容" style="width:70%;"></el-input>
+        </el-form-item>
+        <el-form-item label="累计应付余额" prop="total_price">
+          <el-input v-model="form.total_price" placeholder="请输入内容" style="width:70%;"></el-input>
+        </el-form-item>
+        <el-form-item label="备注" prop="remarks">
+          <el-input type="textarea" v-model="form.remarks" placeholder="请输入内容" style="width:70%;"></el-input>
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleAddForm('form')">提 交</el-button>
+        <el-button @click="handleClose('form')">取 消</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      title="账目类型信息"
+      :visible.sync="dialogVisible1"
+      width="30%"
+      center
+      class="dialog"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
+      <el-form :model="form1" :rules="rules1" ref="form1" label-width="140px" class="demo-form">
+        <el-form-item label="供应商" prop="supplier_companyname">
+          <el-autocomplete
+            class="inline-input"
+            v-model="form1.supplier_companyname"
+            :fetch-suggestions="querySearch1"
+            placeholder="供应商"
+            @select="handleSelect1"
+            style="width:70%;"
+          ></el-autocomplete>
+        </el-form-item>
+        <el-form-item label="操作人" prop="user_id">
+          <el-select v-model="form1.user_id" style="width:70%;">
+            <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="应付金额" prop="cope_price">
+          <el-input v-model="form1.cope_price" placeholder="请输入内容" style="width:70%;"></el-input>
+        </el-form-item>
+        <el-form-item label="实付金额" prop="pay_price">
+          <el-input v-model="form1.pay_price" placeholder="请输入内容" style="width:70%;"></el-input>
+        </el-form-item>
+        <el-form-item label="本单应付余额" prop="opay_price">
+          <el-input v-model="form1.opay_price" placeholder="请输入内容" style="width:70%;"></el-input>
+        </el-form-item>
+        <el-form-item label="累计应付余额" prop="total_price">
+          <el-input v-model="form1.total_price" placeholder="请输入内容" style="width:70%;"></el-input>
+        </el-form-item>
+        <el-form-item label="业务时间" prop="service_time">
+          <el-date-picker
+            v-model="form1.service_time"
+            type="date"
+            placeholder="选择日期"
+            style="width:70%;"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item label="备注" prop="remarks">
+          <el-input type="textarea" v-model="form1.remarks" placeholder="请输入内容" style="width:70%;"></el-input>
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleAddForm1('form1')">提 交</el-button>
+        <el-button @click="handleClose1('form1')">取 消</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import moment from "moment";
+import { getStylistList } from "@/api/researchDevelopment";
 import {
-  getDataList,
-  getYearList,
-  getSeasonList,
-  getStylistList,
-  getCategoryList
-} from "@/api/researchDevelopment";
+  supplierAccountList,
+  balanceAccountSelect,
+  supplierAccountAdd,
+  balanceAccountTypeSelect
+} from "@/api/finance";
+import { getSupplierSelect } from "@/api/archives";
 export default {
   data() {
     return {
-      data: [],
-      years: [],
-      seasons: [],
-      stylists: [],
-      categorys: [],
-      wests: [],
-      date: "", //日期
-      name: "", //名称
-      year: "", //年
-      season: "", //季节
-      stylist: "", //设计师
-      category: "", //类别
-      west: "", //西所
-      state: "", //状态
       ctime_start: "",
       ctime_end: "",
       pageIndex: 1,
       pageSize: 9,
       total: 0,
-      user_id: "",
-      customer_id: "",
-      stateId: "",
-      odd: "", //单据编号
-      their_name: "aaa", //账户所属门店
-      remark: "", //备注
-      tableData: [
-        {
-          data: "aa"
-        },
-        {
-          data: "abcdefg"
-        }
-      ],
-      money: "999999999"
+      tableData: [],
+      money: "999999999",
+      dialogVisible: false,
+      dialogVisible1: false,
+      form: {
+        supplier_companyname: "",
+        supplier_id: "",
+        user_id: "",
+        balance_account_id: "",
+        cope_price: "",
+        pay_price: "",
+        opay_price: "",
+        total_price: "",
+        remarks: "",
+        account_type_id: ""
+      },
+      form1: {
+        supplier_id: "",
+        supplier_companyname: "",
+        user_id: "",
+        cope_price: "",
+        pay_price: "",
+        opay_price: "",
+        total_price: "",
+        service_time: "",
+        remarks: ""
+      },
+      rules1: {
+        supplier_companyname: [
+          { required: true, message: "供应商", trigger: "change" }
+        ],
+        user_id: [{ required: true, message: "操作人", trigger: "change" }],
+        cope_price: [
+          { required: true, message: "应付金额", trigger: "change" }
+        ],
+        opay_price: [
+          { required: true, message: "本单应付余额", trigger: "change" }
+        ],
+        pay_price: [{ required: true, message: "实付金额", trigger: "change" }],
+        service_time: [
+          { required: true, message: "业务时间", trigger: "change" }
+        ],
+        total_price: [
+          { required: true, message: "累计应付余额", trigger: "change" }
+        ]
+      },
+      rules: {
+        supplier_companyname: [
+          { required: true, message: "供应商", trigger: "change" }
+        ],
+        user_id: [{ required: true, message: "操作人", trigger: "change" }],
+        balance_account_id: [
+          { required: true, message: "结算账户", trigger: "change" }
+        ],
+        account_type_id: [
+          { required: true, message: "账目类型", trigger: "change" }
+        ],
+        cope_price: [
+          { required: true, message: "应付金额", trigger: "change" }
+        ],
+        opay_price: [
+          { required: true, message: "本单应付余额", trigger: "change" }
+        ],
+        pay_price: [{ required: true, message: "实付金额", trigger: "change" }],
+        total_price: [
+          { required: true, message: "累计应付余额", trigger: "change" }
+        ]
+      },
+      formInline: {
+        Supplier: "",
+        date: "",
+        account_type_id: "",
+        balance_account_id: "",
+        user_id: "",
+        odd: ""
+      },
+      Suppliers: [],
+      BalanceAccount: [],
+      BalanceAccountType: [],
+      SupplierList: [],
+      stylists: [],
+      status: ""
     };
   },
   methods: {
-    handleUser_id(e) {
-      this.user_id = e;
+    async onSubmit() {
+      this.supplierInit();
     },
-    async getYear() {
-      let res = await getYearList();
+    async querySearch(value, cb) {
+      this.form.supplier_companyname = value;
+      console.log(value);
+      let res = await getSupplierSelect({
+        keyword: this.form.supplier_companyname
+      });
       let { data } = res.data;
-      console.log(data);
-      this.years = data;
+      cb(data);
     },
-    async getSeason() {
-      let res = await getSeasonList();
+    async querySearch1(value, cb) {
+      this.form1.supplier_companyname = value;
+      let res = await getSupplierSelect({
+        keyword: this.form1.supplier_companyname
+      });
       let { data } = res.data;
-      console.log(data);
-      this.seasons = data;
+      cb(data);
+    },
+    handleSelect(item) {
+      this.form.supplier_id = item.address;
+      this.form.supplier_companyname = item.value;
+    },
+    handleSelect1(item) {
+      this.form1.supplier_id = item.address;
+      this.form1.supplier_companyname = item.value;
+    },
+    handlePayment() {
+      this.dialogVisible = true;
+    },
+    beginninGbalanceAdjustment() {
+      this.dialogVisible1 = true;
+    },
+    async handleAddForm1(form) {
+      this.$refs["form1"].validate(async valid => {
+        if (!valid) return;
+        // 调用actions的登录方法
+        this.form1.service_time = moment(this.form1.service_time).format(
+          "YYYY-MM-DD"
+        );
+        this.form1.cope_price = Number(this.form1.cope_price);
+        this.form1.supplier_id = Number(this.form1.supplier_id);
+        this.form1.opay_price = Number(this.form1.opay_price);
+        this.form1.pay_price = Number(this.form1.pay_price);
+        this.form1.total_price = Number(this.form1.total_price);
+        this.form1.account_type_id = 0;
+        this.form1.balance_account_id = 0;
+        delete this.form1.supplier_companyname;
+        let res = await supplierAccountAdd(this.form1);
+        console.log(res);
+        this.$refs[form].resetFields();
+        this.form1.supplier_id = "";
+        this.supplierInit();
+
+        this.dialogVisible1 = false;
+      });
+    },
+    handleClose1(form) {
+      this.$refs[form].resetFields();
+      this.form1.supplier_id = "";
+      console.log(this.form1);
+      this.dialogVisible1 = false;
+    },
+    async handleAddForm(form) {
+      this.$refs["form"].validate(async valid => {
+        if (!valid) return;
+        // 调用actions的登录方法
+        this.form.cope_price = Number(this.form.cope_price);
+        this.form.supplier_id = Number(this.form.supplier_id);
+        this.form.opay_price = Number(this.form.opay_price);
+        this.form.pay_price = Number(this.form.pay_price);
+        this.form.total_price = Number(this.form.total_price);
+        this.form.account_type_id = Number(this.form.account_type_id);
+        this.form.balance_account_id = Number(this.form.balance_account_id);
+        delete this.form.supplier_companyname;
+        let res = await supplierAccountAdd(this.form);
+        console.log(res);
+        this.$refs[form].resetFields();
+        this.form.supplier_id = "";
+        this.supplierInit();
+        this.dialogVisible = false;
+      });
+    },
+    handleClose(form) {
+      this.$refs[form].resetFields();
+      this.form.supplier_id = "";
+      this.dialogVisible = false;
     },
     async getStylist() {
       let res = await getStylistList();
       let { data } = res.data;
-      console.log(data);
       this.stylists = data;
     },
-    async getCategory() {
-      let res = await getCategoryList();
+    async getBalanceAccount() {
+      let res = await balanceAccountSelect();
       let { data } = res.data;
-      console.log(data);
-      this.categorys = data;
+      this.BalanceAccount = data;
     },
-    // 搜索
-    async handlesearch() {
-      var obj = {};
-      // console.log(...this.date)
-      obj["ctime_start"] = moment(this.date[0]).format("YYYY-MM-DD");
-      obj["ctime_end"] = moment(this.date[1]).format("YYYY-MM-DD");
-      obj["stylekeyword"] = this.name;
-      obj["year"] = this.year;
-      obj["season"] = this.season;
-      obj["user_id"] = this.user_id;
-      obj["style_type"] = this.category;
-      obj["customer_id"] = this.customer_id;
-      obj["state"] = this.stateId;
-      obj["their_name"] = this.their_name;
-      obj["odd"] = this.odd;
-      obj["remark"] = this.remark;
-      delete obj["0"];
-      delete obj["1"];
-      this.init(obj);
+    async getBalanceAccountType() {
+      let res = await balanceAccountTypeSelect();
+      let { data } = res.data;
+      this.BalanceAccountType = data;
     },
-    async init(obj) {
-      let res = await getDataList({
-        page: this.pageIndex,
-        page_size: this.pageSize,
-        ...obj
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.supplierInit();
+    },
+    handleCurrentChange(val) {
+      this.pageIndex = val;
+      this.supplierInit();
+    },
+    async init() {
+      this.ctime_start = moment(this.formInline.date[0]).format("YYYY-MM-DD");
+      this.ctime_end = moment(this.formInline.date[1]).format("YYYY-MM-DD");
+      let res1 = await getSupplierSelect({
+        keyword: ""
       });
-      console.log(res);
+      this.SupplierList = res1.data.data;
+    },
+    async supplierInit() {
+      let res = await supplierAccountList({
+        page: this.pageIndex,
+        page_size: this.pageSize
+      });
       let { data, count } = res.data;
-      this.data = data;
+      this.tableData = data;
       this.total = count;
-      this.ctime_start = moment(this.date[0]).format("YYYY-MM-DD");
-      this.ctime_end = moment(this.date[1]).format("YYYY-MM-DD");
+      this.ctime_start = moment(this.formInline.date[0]).format("YYYY-MM-DD");
+      this.ctime_end = moment(this.formInline.date[1]).format("YYYY-MM-DD");
     }
   },
-  mounted() {
+  async mounted() {
     this.init();
-    this.getYear();
-    this.getSeason();
     this.getStylist();
-    this.getCategory();
+    this.getBalanceAccount();
+    this.getBalanceAccountType();
   }
 };
 </script>
 
 <style lang="less" scoped>
 .supplierReconciliationAndPayment {
-  label {
-    width: 40px;
-    margin-right: 10px;
-  }
   .tb {
     display: flex;
     width: 100%;
@@ -265,80 +519,7 @@ export default {
       margin: 10px 0;
     }
   }
-  .main {
-    padding: 20px 100px 30px 20px;
-    /deep/.el-input__inner {
-      width: 380px;
-    }
-    .stylist {
-      margin-top: 10px;
-      /deep/.el-input__inner {
-        width: 120px !important;
-      }
-    }
-    .category {
-      margin-top: 10px;
-      /deep/.el-input__inner {
-        width: 100px !important;
-      }
-    }
-    .odd {
-      display: flex;
-      margin-top: 10px;
-      label {
-        width: 50px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      /deep/.el-input__inner {
-        width: 200px !important;
-        margin-left: -4px;
-      }
-    }
-    .remark {
-      display: flex;
-      margin-top: 10px;
-      label {
-        width: 55px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      /deep/.el-input__inner {
-        width: 150px !important;
-      }
-    }
-    .their {
-      margin-top: 10px;
-      /deep/.el-input__inner {
-        width: 100px !important;
-      }
-    }
-    .accountType {
-      margin-top: 10px;
-      /deep/.el-input__inner {
-        width: 100px !important;
-      }
-    }
-    .settlement {
-      margin-top: 10px;
-      /deep/.el-input__inner {
-        width: 100px !important;
-      }
-    }
-    .supplier {
-      margin-top: 10px;
-      /deep/.el-input__inner {
-        width: 120px !important;
-      }
-    }
 
-    .btn,
-    .date {
-      margin-top: 10px;
-    }
-  }
   .table {
     /deep/table {
       th {
@@ -347,6 +528,10 @@ export default {
         }
       }
     }
+  }
+  .pagination {
+    margin: 20px;
+    text-align: right;
   }
 }
 </style>

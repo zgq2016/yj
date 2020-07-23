@@ -6,76 +6,70 @@
       <el-breadcrumb-item>研发</el-breadcrumb-item>
       <el-breadcrumb-item>设计项目</el-breadcrumb-item>
     </el-breadcrumb>
-    <!-- 条件 -->
-    <div class="condition clearfix">
-      <div class="date fl">
-        <label for>创建时间</label>
-        <el-date-picker
-          v-model="date"
-          type="daterange"
-          range-separator="至"
-          :start-placeholder="ctime_start"
-          :end-placeholder="ctime_end"
-        ></el-date-picker>
-      </div>
-      <div class="name fl">
-        <label for>项目</label>
-        <el-input v-model="name" placeholder="项目"></el-input>
-      </div>
-      <div class="year fl">
-        <label for>年份</label>
-        <el-select v-model="year" placeholder="年份">
-          <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
-        </el-select>
-      </div>
-      <div class="season fl">
-        <label for>季节</label>
-        <el-select v-model="season" placeholder="季节">
-          <el-option
-            v-for="item in seasons"
-            :key="item.id"
-            :label="item.season"
-            :value="item.season"
-          ></el-option>
-        </el-select>
-      </div>
-      <div class="stylist fl">
-        <label for>设计师</label>
-        <el-select v-model="stylist" placeholder="设计师" @change="handleUser_id($event)">
-          <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
-        </el-select>
-      </div>
-      <div class="category fl">
-        <label for>类别</label>
-        <el-select v-model="category" placeholder="类别">
-          <el-option
-            v-for="item in categorys"
-            :key="item.id"
-            :label="item.style_type"
-            :value="item.style_type"
-          ></el-option>
-        </el-select>
-      </div>
-      <div class="west fl">
-        <label for>西所</label>
-        <el-select v-model="west" placeholder="西所" @change="handleCustomer_id($event)">
-          <el-option
-            v-for="item in wests"
-            :key="item.id"
-            :label="item.companyname"
-            :value="item.id"
-          ></el-option>
-        </el-select>
-      </div>
-      <div class="state fl">
-        <label for>状态</label>
-        <el-select v-model="state" placeholder="状态" @change="handelState($event)">
-          <el-option v-for="item in states" :key="item.id" :label="item.v" :value="item.id"></el-option>
-        </el-select>
-      </div>
-      <div class="btn fl" @click="handlesearch">
-        <el-button icon="el-icon-search">查询</el-button>
-      </div>
+
+    <div class="form">
+      <el-form :inline="true" class="demo-form-inline">
+        <el-form-item label="创建时间">
+          <el-date-picker
+            v-model="date"
+            type="daterange"
+            range-separator="至"
+            :start-placeholder="ctime_start"
+            :end-placeholder="ctime_end"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item label="项目">
+          <el-input v-model="name" placeholder="项目"></el-input>
+        </el-form-item>
+        <el-form-item label="年份">
+          <el-select v-model="year" placeholder="年份">
+            <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="季节">
+          <el-select v-model="season" placeholder="季节">
+            <el-option
+              v-for="item in seasons"
+              :key="item.id"
+              :label="item.season"
+              :value="item.season"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="设计师">
+          <el-select v-model="stylist" placeholder="设计师" @change="handleUser_id($event)">
+            <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="类别">
+          <el-select v-model="category" placeholder="类别">
+            <el-option
+              v-for="item in categorys"
+              :key="item.id"
+              :label="item.style_type"
+              :value="item.style_type"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="西所">
+          <el-select v-model="west" placeholder="西所" @change="handleCustomer_id($event)">
+            <el-option
+              v-for="item in wests"
+              :key="item.id"
+              :label="item.companyname"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="状态">
+          <el-select v-model="state" placeholder="状态" @change="handelState($event)">
+            <el-option v-for="item in states" :key="item.id" :label="item.v" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="handlesearch">查询</el-button>
+        </el-form-item>
+      </el-form>
     </div>
     <!-- 新增项目 -->
 
@@ -304,61 +298,7 @@ export default {
     width: 40px;
     margin-right: 10px;
   }
-  .condition {
-    padding: 20px 100px 30px 20px;
-    /deep/.el-input__inner {
-      width: 300px;
-    }
-    .name {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      /deep/.el-input__inner {
-        width: 230px !important;
-      }
-    }
-    .year {
-      /deep/.el-input__inner {
-        width: 100px !important;
-      }
-      .el-date-editor.el-input,
-      .el-date-editor.el-input__inner {
-        width: 100px;
-      }
-    }
-    .season {
-      /deep/.el-input__inner {
-        width: 100px !important;
-      }
-    }
-    .stylist {
-      margin-top: 10px;
-      /deep/.el-input__inner {
-        width: 140px !important;
-      }
-    }
-    .category {
-      margin-top: 10px;
-      /deep/.el-input__inner {
-        width: 100px !important;
-      }
-    }
-    .west {
-      margin-top: 10px;
-      /deep/.el-input__inner {
-        width: 100px !important;
-      }
-    }
-    .state {
-      margin-top: 10px;
-      /deep/.el-input__inner {
-        width: 100px !important;
-      }
-    }
-    .btn {
-      margin-top: 10px;
-    }
-  }
+
   .addStyle {
     margin: 0 30px 30px 0;
     text-align: right;
@@ -407,6 +347,7 @@ export default {
     }
   }
   .pagination {
+    margin: 20px;
     text-align: right;
   }
   /deep/.el-date-editor .el-range-separator {

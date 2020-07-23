@@ -89,7 +89,7 @@
       :close-on-press-escape="false"
     >
       <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-form">
-        <el-form-item label="类型名称" prop="account_type_name ">
+        <el-form-item label="类型名称" prop="account_type_name">
           <el-input v-model="form.account_type_name" style="width:80%"></el-input>
         </el-form-item>
         <el-form-item label="状态">

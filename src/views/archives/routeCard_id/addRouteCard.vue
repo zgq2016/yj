@@ -29,7 +29,7 @@
             >新增供应商</router-link>-->
             <router-link :to="`/addSupplier`" target="_blank">新增供应商</router-link>
           </el-col>
-        </el-form-item> 
+        </el-form-item>
         <el-form-item label="编号" prop="materialsno">
           <el-input v-model="form.materialsno" style="width:200px;" placeholder="编号"></el-input>
         </el-form-item>
@@ -640,20 +640,23 @@ export default {
         });
     },
     async handleEdit() {
-      this.$refs["form"].validate(async valid => {
-        if (!valid) return;
-        // 调用actions的登录方法
+      if (this.supplier_companyname === "") {
+        this.$message.error("请选择供应商 or 请添加供应商");
+      } else {
+        this.$refs["form"].validate(async valid => {
+          if (!valid) return;
 
-        delete this.form["supplier_id"];
-        delete this.form["supplier_companyname"];
-        delete this.form["materials_supplier_data"];
+          delete this.form["supplier_id"];
+          delete this.form["supplier_companyname"];
+          delete this.form["materials_supplier_data"];
 
-        this.form["arrival_time"] = moment(this.form.arrival_time).format(
-          "YYYY-MM-DD"
-        );
-        let res = await materialsAdd(this.form);
-        this.$router.go(-1);
-      });
+          this.form["arrival_time"] = moment(this.form.arrival_time).format(
+            "YYYY-MM-DD"
+          );
+          let res = await materialsAdd(this.form);
+          this.$router.go(-1);
+        });
+      }
     },
     async getMaterialList() {
       let res = await getMaterialSelect();

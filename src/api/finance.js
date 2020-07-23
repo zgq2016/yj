@@ -88,21 +88,71 @@ export const balanceAccountDel = (data) => {
     data: data,
   });
 };
+// 供应商账目list接口;
+export const supplierAccountList = (data) => {
+  return axios({
+    url: "?g=supplier_account_list",
+    method: "post",
+    data: data,
+  });
+};
+// 结算账户select接口;
+export const balanceAccountSelect = (data) => {
+  return axios({
+    url: "?g=balance_account_select",
+    method: "post",
+    data: data,
+  });
+};
+// 新增供应商账目接口;
+export const supplierAccountAdd = (data) => {
+  return axios({
+    url: "?g=supplier_account_add",
+    method: "post",
+    data: data,
+  });
+};
+// 客户账目list接口;
+export const customerAccountList = (data) => {
+  return axios({
+    url: "?g=customer_account_list",
+    method: "post",
+    data: data,
+  });
+};
+// 新增客户账目接口;
+export const customerAccountAdd = (data) => {
+  return axios({
+    url: "?g=customer_account_add",
+    method: "post",
+    data: data,
+  });
+};
 
-// balance_account_type_select;
-// 账户类型select接口;
+// supplier_account_add;
+// 新增供应商账目接口;
 
-// balance_account_list;
-// 结算账户list接口;
+//   supplier_id,
+//   account_no,
+//   `user_id`,
+//   balance_account_id,
+//   account_type_id,
+//   cope_price,
+//   pay_price,
+//   opay_price,
+//   total_price,
+//   remarks;
 
-// balance_account_add;
-// 新增结算账户接口;
+// 传入数值;
 
-// balance_account_info;
-// 查看结算账户接口;
+// customer_account_list;
+// 客户账目list接口;
 
-// balance_account_edit;
-// 编辑结算账户接口;
+// customer_account_add;
+// 新增客户账目接口;
 
-// balance_account_del;
-// 删除结算账户接口;
+// my_account_list;
+// 公司账目list接口;
+
+// my_account_add;
+// 新增公司账目接口;
