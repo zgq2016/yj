@@ -151,16 +151,17 @@ export default {
     },
     onSubmit() {
       console.log(this.form);
+      this.init(this.form)
     },
     handleSize(val) {
       this.pageSize2 = val;
-      this.init();
+      this.init(this.form);
     },
     handleCurrent(val) {
       this.pageIndex2 = val;
-      this.init();
+      this.init(this.form);
     },
-    async init() {
+    async init(obj) {
       // 仓库
       let res = await storehouseList({
         page: this.pageIndex2,

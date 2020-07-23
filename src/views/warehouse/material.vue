@@ -371,7 +371,7 @@
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload"
             >
-              <img v-if="form1.picurl" :src="form1.picurl" class="avatar" />
+              <img v-if="form1.picurl" :src="form1.picurl" style="width:150px;height:150px;" class="avatar" />
               <i v-else class="el-icon-upload avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item>
@@ -600,7 +600,6 @@ export default {
       let { data } = res.data;
       this.ware = data;
       this.total2 = res.data.count;
-
     }
   },
   mounted() {
@@ -672,6 +671,10 @@ export default {
     /deep/.el-dialog__body {
       padding: 25px 80px 30px;
       .el-form {
+        // /deep/.avatar-uploader{
+        //   width: 150px;
+        //   height: 150px;
+        // }
         .el-form-item:last-of-type {
           .el-form-item__content {
             margin-left: 0 !important;

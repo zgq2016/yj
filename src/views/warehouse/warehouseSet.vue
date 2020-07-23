@@ -23,7 +23,12 @@
       <hr style="border:1px dashed #ccc" />
     </div>
     <div class="center">
-      <el-table :data="ware" row-key="id" size="mini" :header-cell-style="{background:'#eef1f6',color:'#606266'}">
+      <el-table
+        :data="ware"
+        row-key="id"
+        size="mini"
+        :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+      >
         <el-table-column align="center" width="90" label="操作">
           <template slot-scope="scope">
             <div
@@ -213,7 +218,7 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.init(this.form)
+      this.init(this.form);
     },
     handleEdit(index, row) {
       this.dialogFormVisible1 = true;
@@ -244,7 +249,7 @@ export default {
         });
     },
     addWarehouse() {
-      this.form1 = {}
+      this.form1 = {};
       this.dialogFormVisible = true;
     },
     // 新增仓库
@@ -303,12 +308,12 @@ export default {
     handleSizeChange(val) {
       // console.log(val)
       this.page_size = val;
-      this.init();
+      this.init(this.form);
     },
     handleCurrentChange(val) {
       // console.log(val)
       this.page = val;
-      this.init();
+      this.init(this.form);
     },
     async getStylist() {
       let res = await getStylistList();
@@ -327,7 +332,7 @@ export default {
       console.log(res);
       let { data } = res.data;
       this.ware = data;
-      this.count = res.data.count
+      this.count = res.data.count;
       this.user.map((v, i) => {
         this.ware.map((j, k) => {
           if (v.id == j.contacts) {

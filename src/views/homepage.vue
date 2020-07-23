@@ -31,7 +31,7 @@
             size="mini"
             style="width:130px;position: relative;left:150px;top:35px;z-index:2;cursor: pointer;"
             @change="changedDate($event)"
-            placeholder="选择月"
+            placeholder="请选择月份"
           ></el-date-picker>
           <div id="myChart" :style="{width: '100%', height: '500px',border:'1px solid #ccc'}"></div>
         </div>
@@ -96,6 +96,7 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <!-- 提醒信息 -->
     <el-dialog title="提醒信息" :visible.sync="dialogVisible2" width="30%" center>
       <el-form :model="form1" style="margin:0 20px" label-width="60px">
         <el-form-item label="主题:">
@@ -202,7 +203,8 @@ export default {
       nav_list: [],
       nav_list1: [],
       form: {},
-      form1: {}
+      form1: {},
+      yearMonth: ""
     };
   },
   mounted() {
@@ -307,10 +309,12 @@ export default {
     changedDate(item) {
       this.date1 = moment(item).format("YYYY-MM");
       console.log(this.date1);
+      let times = this.date1.split('-')
+      console.log(this.getDaysInMonth(times[0],times[1]));
       this.xA = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
       this.yA = [
         1020,
-        20,
+        0,
         150,
         80,
         70,
@@ -374,6 +378,33 @@ export default {
       });
       let data2 = res2.data.data;
       this.list2 = data2;
+      // 获取当前年月
+      let myDate = new Date();
+      let year = myDate.getFullYear();
+      let month = myDate.getMonth();
+      let mh = month + 1;
+      if (mh.toString().length == 1) {
+        mh = "0" + mh;
+      }
+      this.yearMonth = year + "-" + mh;
+      console.log(this.yearMonth.split('-'));
+      // 计算某月的具体日期
+      let month_i = parseInt(mh, 10);
+      console.log(this.getDaysInMonth(year,month_i)); 
+    },
+    //根据某年某月计算出具体日期
+    getDaysInMonth(year, month) {
+      const daysOfMonth = [];
+      month = parseInt(month, 10);
+      const lastDayOfMonth = new Date(year, month, 0).getDate();
+      for (let i = 1; i <= lastDayOfMonth; i++) {
+        if (i < 10) {
+          daysOfMonth.push("0" + i); //判断是部否小于10，如果小于加0，，例如“01”
+        } else {
+          daysOfMonth.push(i + "");
+        }
+      }
+      return daysOfMonth;
     }
   }
 };
