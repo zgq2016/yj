@@ -15,26 +15,39 @@
               v-for="(item,index) in valueElement"
               :key="index"
               :class="active===index?'active':''"
-              @click.stop="changed(index,item)"
-            >{{item}}</li>
+              @click.stop="changed(item,index)"
+            >{{item.name}}</li>
           </ul>
         </div>
         <div class="left_submit">
           <el-form :model="ruleForm" ref="ruleForm" class="demo-ruleForm">
             <el-form-item label="日期:">
               <el-date-picker
-                v-model="ruleForm.value1"
+                v-model="ruleForm.ctime"
                 size="mini"
                 type="daterange"
                 range-separator="至"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
+                format="yyyy-MM-dd"
+                value-format="yyyy-MM-dd"
               ></el-date-picker>
             </el-form-item>
             <el-form-item label="厂商:">
-              <el-select size="mini" v-model="ruleForm.region" placeholder="请选择厂商">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
+              <el-select size="mini" v-model="ruleForm.factory_name" placeholder="请选择厂商">
+                <el-option
+                  v-for="item in factorys"
+                  :key="item.id"
+                  :label="item.factory_name"
+                  :value="item.id"
+                ></el-option>
+                <el-pagination
+                  small
+                  layout="prev, pager, next"
+                  @size-change="handleSize1"
+                  @current-change="handleCurrent1"
+                  :total="total1"
+                ></el-pagination>
               </el-select>
             </el-form-item>
             <el-form-item label="单号:">
@@ -46,6 +59,7 @@
             </el-form-item>
           </el-form>
         </div>
+        <!-- 表格 -->
         <div class="left_table">
           <el-table
             :data="tableData"
@@ -57,13 +71,13 @@
             @selection-change="handleSelectionChange"
           >
             <el-table-column align="center" type="selection" width="25"></el-table-column>
-            <el-table-column align="center" prop="name" label="状态" width="60"></el-table-column>
+            <el-table-column align="center" prop="state_name" label="状态" width="60"></el-table-column>
             <el-table-column align="center" label="日期" width="96">
-              <template slot-scope="scope">{{ scope.row.date }}</template>
+              <template slot-scope="scope">{{ scope.row.ctime }}</template>
             </el-table-column>
             <el-table-column
               align="center"
-              prop="address"
+              prop="factory_name"
               width="81"
               label="厂商名称"
               show-overflow-tooltip
@@ -105,29 +119,41 @@
                   <em style="color:red;">&yen;{{'0.00'}}</em>
                 </div>
                 <div class="cssa" style="float:right;padding:10px 15px 0 0;width:210px;">
-                  <el-steps :space="110" align-center :active="1" finish-status="wait">
+                  <el-steps :space="110" align-center :active="actionsLenght" finish-status="wait">
                     <el-step icon="el-icon-success" title="草稿"></el-step>
                     <el-step icon="el-icon-success" title="已入库"></el-step>
+                    <el-step icon="el-icon-success" v-if="form.state==4" title="已撤销"></el-step>
                   </el-steps>
                 </div>
               </el-form-item>
 
-              <el-form-item
-                prop="manufacturer"
-                style="display:inline-block;width:30%;margin-left:3%;"
-                label="厂商:"
-              >
-                <el-select size="mini" v-model="form.manufacturer" placeholder="请选择厂商">
-                  <el-option label="区域一" value="shanghai"></el-option>
-                  <el-option label="区域二" value="beijing"></el-option>
+              <!-- prop="factory_name" -->
+              <el-form-item style="float:left;width:30%;margin-left:3%;" label="厂商:">
+                <el-select v-if="vh1" size="mini" v-model="form.factory_name" placeholder="请选择厂商">
+                  <el-option
+                    v-for="item in factorys"
+                    :key="item.id"
+                    :label="item.factory_name"
+                    :value="item.id"
+                  ></el-option>
+                  <el-pagination
+                    small
+                    layout="prev, pager, next"
+                    @size-change="handleSize1"
+                    @current-change="handleCurrent1"
+                    :total="total"
+                  ></el-pagination>
                 </el-select>
+                <span v-if="!vh1">{{form.factory_name}}</span>
               </el-form-item>
-              <el-form-item
-                prop="ware"
-                style="display:inline-block;width:30%;margin-left:2%;"
-                label="仓库:"
-              >
-                <el-select size="mini" v-model="form.ware" placeholder="请选择仓库">
+              <!-- prop="storehouse_name" -->
+              <el-form-item style="float:left;width:30%;margin-left:2%;" label="仓库:">
+                <el-select
+                  v-if="vh1"
+                  size="mini"
+                  v-model="form.storehouse_name"
+                  placeholder="请选择仓库"
+                >
                   <el-option
                     v-for="item in ware"
                     :key="item.id"
@@ -142,35 +168,53 @@
                     :total="total2"
                   ></el-pagination>
                 </el-select>
+                <span v-if="!vh1">{{form.storehouse_name}}</span>
               </el-form-item>
-              <el-form-item style="display:inline-block;width:30%;margin-left:1%;" label="结算账户:">
-                <el-select size="mini" v-model="form.user" placeholder="请选择结账账户">
-                  <el-option label="区域一" value="shanghai"></el-option>
-                  <el-option label="区域二" value="beijing"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item style="display:inline-block;width:26%;margin-left:3%;" label="实付金额:">
-                <el-input size="mini" placeholder="请输入实付金额" style="width: 60%;" v-model="form.name"></el-input>
-              </el-form-item>
-              <el-form-item
-                style="display:inline-block;width:30%;margin-left:2%;"
-                label="日期:"
-                prop="date1"
-              >
+              <!-- prop="ctime" -->
+              <el-form-item style="float:left;width:30%;margin-left:1%;" label="日期:">
                 <el-date-picker
                   type="date"
                   size="mini"
                   placeholder="选择日期"
-                  v-model="form.date1"
+                  v-model="form.ctime"
                   style="width: 75%;"
+                  v-if="vh1"
+                  format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd"
                 ></el-date-picker>
+                <span v-if="!vh1">{{form.ctime}}</span>
               </el-form-item>
-              <el-form-item
-                style="display:inline-block;width:35%;margin-left:1%;"
-                label="备注:"
-                prop="desc"
-              >
-                <el-input size="mini" style="width:75%;" type="textarea" v-model="form.desc"></el-input>
+              <el-form-item style="float:left;width:30%;margin-left:3%;" label="结算账户:">
+                <el-select v-if="vh1" size="mini" v-model="form.account_name" placeholder="请选择结账账户">
+                  <el-option
+                    v-for="item in settlement"
+                    :key="item.id"
+                    :label="item.account_name"
+                    :value="item.id"
+                  ></el-option>
+                </el-select>
+                <span v-if="!vh1">{{form.account_name}}</span>
+              </el-form-item>
+              <el-form-item style="float:left;width:26%;margin-left:2%;" label="实付金额:">
+                <el-input
+                  size="mini"
+                  placeholder="请输入实付金额"
+                  style="width: 60%;"
+                  v-model="form.pay_price"
+                  v-if="vh1"
+                ></el-input>
+                <span v-if="!vh1">{{form.pay_price}}</span>
+              </el-form-item>
+
+              <el-form-item style="float:left;width:35%;margin-left:1%;" label="备注:" prop="desc">
+                <el-input
+                  size="mini"
+                  v-if="vh1"
+                  style="width:75%;"
+                  type="textarea"
+                  v-model="form.remarks"
+                ></el-input>
+                <span v-if="!vh1">{{form.remarks}}</span>
               </el-form-item>
             </el-form>
           </div>
@@ -354,7 +398,7 @@
                   list-type="picture"
                   style="float:left;"
                 >
-                  <el-button size="mini" v-if="vh" type="primary">点击上传</el-button>
+                  <el-button size="mini" type="primary">点击上传</el-button>
                 </el-upload>
               </el-form-item>
             </div>
@@ -366,19 +410,23 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="费用金额:">
-                <el-input size="mini" v-model="ruleForm.name" placeholder="请输入金额"></el-input>
+                <el-input size="mini" v-model="ruleForm.money1" placeholder="请输入金额"></el-input>
+                <span>{{ruleForm.money1}}</span>
               </el-form-item>
               <el-form-item label="抹零:">
-                <el-input size="mini" v-model="ruleForm.name" placeholder="请输入金额"></el-input>
+                <el-input size="mini" v-model="ruleForm.name2" placeholder="请输入金额"></el-input>
+                <span>{{ruleForm.money2}}</span>
               </el-form-item>
               <el-form-item label="总合计:">
                 <span>&yen;{{'0.00'}}</span>
               </el-form-item>
             </div>
             <div style="position: absolute;bottom:5px;left:40%;">
-              <el-form-item>
-                <el-button size="mini" type="primary" @click="onSubmit">草稿</el-button>
-                <el-button size="mini" type="primary">入库</el-button>
+              <el-form-item v-if="!vh4">
+                <el-button size="mini" v-if="!vh3" type="primary" @click="sketch">草稿</el-button>
+                <el-button size="mini" v-if="!vh3" type="primary">入库</el-button>
+                <el-button size="mini" v-if="vh2 && !vh3" @click="delStock" type="primary">删除</el-button>
+                <el-button size="mini" v-if="vh3" @click="backout" type="primary">撤销</el-button>
               </el-form-item>
             </div>
           </el-form>
@@ -421,33 +469,55 @@ import {
   getYearList,
   getSeasonList,
   getStylistList,
-  getCategoryList
+  getCategoryList,
 } from "@/api/researchDevelopment";
-import { storehouseList } from "@/api/warehouse.js";
+import {
+  storehouseList,
+  bookStockOrderList,
+  bookStockOrderInfo,
+  balanceAccountSelect,
+  bookStockOrderAdd,
+  bookStockOrderEdit,
+  bookStockOrderDel,
+} from "@/api/warehouse.js";
+import { factoryList } from "@/api/archives";
 export default {
   data() {
     return {
+      settlement: [], //结算账户
       fileList: [],
       active: 0,
       form1: {
-        quantitys: []
+        quantitys: [],
       },
-      valueElement: ["默认", "已入库", "草稿", "已撤销"],
+      valueElement: [
+        { name: "默认" },
+        { name: "已入库", state: 1 },
+        { name: "草稿", state: 0 },
+        { name: "已撤销", state: 4 },
+      ],
       dialogFormVisible: false,
       //选择商品
 
       restaurants: [
         { value: "三全鲜食1", item_no: "121356", bar_code: "a1213516" },
         { value: "三全鲜食2", item_no: "121356", bar_code: "b121355" },
+        { value: "三全鲜食4", item_no: "121356", bar_code: "d121353" },
+        { value: "三全鲜食4", item_no: "121356", bar_code: "d121353" },
+        { value: "三全鲜食3", item_no: "121a36", bar_code: "c121354" },
+        { value: "三全鲜食3", item_no: "121a36", bar_code: "c121354" },
+        { value: "三全鲜食3", item_no: "121a36", bar_code: "c121354" },
+        { value: "三全鲜食3", item_no: "121a36", bar_code: "c121354" },
+        { value: "三全鲜食3", item_no: "121a36", bar_code: "c121354" },
+        { value: "三全鲜食3", item_no: "121a36", bar_code: "c121354" },
         { value: "三全鲜食3", item_no: "121a36", bar_code: "c121354" },
         { value: "三全鲜食4", item_no: "121356", bar_code: "d121353" },
-        { value: "三全鲜食4", item_no: "121356", bar_code: "d121353" },
-        { value: "三全鲜食4", item_no: "121356", bar_code: "d121353" }
+        { value: "三全鲜食3", item_no: "121a36", bar_code: "c121354" },
       ],
       colors: [
         { value: "红色", quantitys: [] },
         { value: "白色", quantitys: [] },
-        { value: "浅绿色", quantitys: [] }
+        { value: "浅绿色", quantitys: [] },
       ],
       sizes: [{ value: "L" }, { value: "XL" }, { value: "M" }],
 
@@ -474,7 +544,7 @@ export default {
           showHidden5: false,
           showHidden6: false,
           showHidden7: false,
-          showHidden8: false
+          showHidden8: false,
         },
         {
           commodity: "",
@@ -497,7 +567,7 @@ export default {
           showHidden5: false,
           showHidden6: false,
           showHidden7: false,
-          showHidden8: false
+          showHidden8: false,
         },
         {
           commodity: "",
@@ -520,7 +590,7 @@ export default {
           showHidden5: false,
           showHidden6: false,
           showHidden7: false,
-          showHidden8: false
+          showHidden8: false,
         },
         {
           commodity: "",
@@ -543,7 +613,7 @@ export default {
           showHidden5: false,
           showHidden6: false,
           showHidden7: false,
-          showHidden8: false
+          showHidden8: false,
         },
         {
           commodity: "",
@@ -566,7 +636,7 @@ export default {
           showHidden5: false,
           showHidden6: false,
           showHidden7: false,
-          showHidden8: false
+          showHidden8: false,
         },
         {
           commodity: "",
@@ -589,22 +659,24 @@ export default {
           showHidden5: false,
           showHidden6: false,
           showHidden7: false,
-          showHidden8: false
-        }
+          showHidden8: false,
+        },
       ],
       rules: {
-        manufacturer: [
-          { required: true, message: "请选择厂商", trigger: "change" }
+        factory_name: [
+          { required: true, message: "请选择厂商", trigger: "change" },
         ],
-        ware: [{ required: true, message: "请选择仓库", trigger: "change" }],
-        date1: [
+        storehouse_name: [
+          { required: true, message: "请选择仓库", trigger: "change" },
+        ],
+        ctime: [
           {
             type: "date",
             required: true,
             message: "请选择日期",
-            trigger: "blur"
-          }
-        ]
+            trigger: "blur",
+          },
+        ],
       },
       years: [],
       seasons: [],
@@ -616,58 +688,29 @@ export default {
       category: "", //类别
 
       pageIndex: 1,
-      pageSize: 9,
+      pageSize: 10,
       total: 0,
       pageIndex2: 1,
-      pageSize2: 9,
+      pageSize2: 10,
       total2: 0,
-      ware:[],
+      pageIndex1: 1,
+      pageSize1: 10,
+      total1: 0,
+      factorys: [],
+      ware: [],
       ruleForm: {}, //查询表单
-      form: {
-        manufacturer: "",
-        ware: "",
-        date1: ""
-      },
+      form: {},
       //选择表单
-      tableData: [
-        {
-          date: "2016-05-03 18:01",
-          name: "已入库",
-          address: "上海市普11111"
-        },
-        {
-          date: "2016-05-02 18:01",
-          name: "已入库",
-          address: "上海市普2"
-        },
-        {
-          date: "2016-05-04 18:01",
-          name: "已入库",
-          address: "上海市普3"
-        },
-        {
-          date: "2016-05-01 18:01",
-          name: "草稿",
-          address: "上海市普4"
-        },
-        {
-          date: "2016-05-08 18:01",
-          name: "草稿",
-          address: "上海市普5"
-        },
-        {
-          date: "2016-05-06 18:01",
-          name: "已撤销",
-          address: "上海市普6"
-        },
-        {
-          date: "2016-05-07 18:01",
-          name: "已撤销",
-          address: "上海市普7"
-        }
-      ],
+      tableData: [],
       indexk: 0,
-      vh: true
+      vh: true,
+      vh1: true,
+      vh2: false,
+      vh3: false,
+      vh4: false,
+      stated: 1,
+      obj: {},
+      actionsLenght: 0,
     };
   },
   methods: {
@@ -685,8 +728,25 @@ export default {
       console.log(file);
     },
     // 左边切换状态
-    changed(index, item) {
+    async changed(item, index) {
       this.active = index;
+      this.stated = item;
+      let res = await bookStockOrderList({
+        page: this.pageIndex,
+        page_size: this.pageSize,
+        state: item.state,
+      });
+      console.log(res);
+      this.tableData = res.data.data;
+      this.tableData.map((v, i) => {
+        if (v.state == 0) {
+          v.state_name = "草稿";
+        } else if (v.state == 1) {
+          v.state_name = "已入库";
+        } else if (v.state == 4) {
+          v.state_name = "已撤销";
+        }
+      });
     },
     // table指定列合计
     getSummaries(param) {
@@ -696,8 +756,8 @@ export default {
         if (index === 1) {
           sums[index] = "总计";
         } else if (index === 8 || index === 11 || index === 12) {
-          const values = data.map(item => Number(item[column.property]));
-          if (!values.every(value => isNaN(value))) {
+          const values = data.map((item) => Number(item[column.property]));
+          if (!values.every((value) => isNaN(value))) {
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr);
               if (!isNaN(value)) {
@@ -719,14 +779,25 @@ export default {
       return sums;
     },
     onSubmit() {
-      console.log("submit!");
+      // console.log(this.stated, this.ruleForm);
+      this.obj = {
+        factory_id: this.ruleForm.factory_name,
+        state: this.stated.state,
+      };
+      if (this.ruleForm.ctime) {
+        this.obj.ctimea = this.ruleForm.ctime[0];
+        this.obj.ctimeb = this.ruleForm.ctime[1];
+      }
+      this.init(this.obj);
     },
     handleUser_id() {},
     handleSizeChange(val) {
       this.pageSize = val;
+      this.init(this.obj);
     },
     handleCurrentChange(val) {
       this.pageIndex = val;
+      this.init(this.obj);
     },
     async getYear() {
       let res = await getYearList();
@@ -753,8 +824,33 @@ export default {
       this.multipleSelection = val;
     },
     //左边单元格被点击
-    cellClick(row, column, cell, event) {
-      console.log(row, column, cell, event);
+    async cellClick(row, column, cell, event) {
+      // console.log(row, column, cell, event);
+      let res = await bookStockOrderInfo({
+        id: row.id,
+      });
+      let { data } = res.data;
+      this.form = data;
+      if (this.form.state == 0) {
+        this.actionsLenght = 0;
+        this.vh1 = true;
+        this.vh2 = true;
+        this.vh3 = false;
+        this.vh4 = false;
+      } else if (this.form.state == 1) {
+        this.actionsLenght = 1;
+        this.vh1 = false;
+        this.vh2 = false;
+        this.vh4 = false;
+        this.vh3 = true;
+      } else if (this.form.state == 4) {
+        this.actionsLenght = 2;
+        this.vh1 = false;
+        this.vh2 = false;
+        this.vh3 = false;
+        this.vh4 = true;
+      }
+      console.log(res);
     },
     //右边单元格被点击
     cellClick1(row, column, cell, event) {
@@ -835,7 +931,7 @@ export default {
         showHidden5: false,
         showHidden6: false,
         showHidden7: false,
-        showHidden8: false
+        showHidden8: false,
       };
       this.weretable.splice(index, 0, obj);
     },
@@ -869,7 +965,7 @@ export default {
       cb(results);
     },
     createFilter(queryString) {
-      return restaurant => {
+      return (restaurant) => {
         return (
           restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) ===
           0
@@ -885,7 +981,8 @@ export default {
         row.item_no = v.item_no;
         row.bar_code = v.bar_code;
         row.showHidden1 = false;
-        this.colors.forEach(item => {
+        this.dialogFormVisible = true;
+        this.colors.forEach((item) => {
           item.quantitys = [];
         });
         // console.log(index);
@@ -902,6 +999,13 @@ export default {
     // 刷新新增入库单
     addCreateWare() {
       this.weretable = [];
+      this.actionsLenght = 0;
+      this.vh1 = true;
+      this.vh3 = false;
+      this.vh4 = false;
+      this.vh2 = false;
+
+      this.form = {};
       for (let i = 0; i < 6; i++) {
         let obj = {
           commodity: "",
@@ -924,7 +1028,7 @@ export default {
           showHidden5: false,
           showHidden6: false,
           showHidden7: false,
-          showHidden8: false
+          showHidden8: false,
         };
 
         this.weretable.push(obj);
@@ -934,7 +1038,6 @@ export default {
     determine() {
       // console.log(this.colors);
       let bl = true;
-
       this.colors.map((v, i) => {
         if (v.quantitys.length > 0) {
           v.quantitys.map((j, k) => {
@@ -966,7 +1069,7 @@ export default {
                 showHidden5: false,
                 showHidden6: false,
                 showHidden7: false,
-                showHidden8: false
+                showHidden8: false,
               };
               this.weretable.splice(this.indexk, 0, obj);
             }
@@ -975,7 +1078,7 @@ export default {
       });
       this.dialogFormVisible = false;
     },
-     handleSize(val) {
+    handleSize(val) {
       this.pageSize2 = val;
       this.init();
     },
@@ -983,24 +1086,149 @@ export default {
       this.pageIndex2 = val;
       this.init();
     },
-    async init(){
-       // 仓库
+    handleSize1(val) {
+      this.pageSize1 = val;
+      this.init();
+    },
+    handleCurrent1(val) {
+      this.pageIndex1 = val;
+      this.init();
+    },
+    // 数据
+    async information() {
+      // 仓库
       let res = await storehouseList({
         page: this.pageIndex2,
-        page_size: this.pageSize2
+        page_size: this.pageSize2,
       });
       let { data } = res.data;
       this.ware = data;
       this.total2 = res.data.count;
-    }
+      // 厂商
+      let res2 = await factoryList({
+        page_size: this.pageSize1,
+        page: this.pageIndex1,
+      });
+      this.factorys = res2.data.data;
+      this.total1 = res2.data.count;
+      // 结算账户
+      let res3 = await balanceAccountSelect();
+      this.settlement = res3.data.data;
+      // console.log(res3);
+    },
+    // 采购
+    async sketch() {
+      console.log(this.form);
+      // 新增
+      if (!this.form.id) {
+        let res = await bookStockOrderAdd({
+          factory_id: this.form.factory_name,
+          storehouse_id: this.form.storehouse_name,
+          balance_account_id: this.form.account_name,
+          pay_price: this.form.pay_price,
+          remarks: this.form.remarks,
+        });
+        console.log(res);
+        this.form = {};
+        this.init(this.obj);
+      } else {
+        // 编辑
+        let id1 = "";
+        let id2 = "";
+        let id3 = "";
+        if (typeof this.form.factory_name == "string") {
+          this.factorys.map((v, i) => {
+            if (this.form.factory_name == v.factory_name) {
+              id1 = v.id;
+            }
+          });
+        }
+        if (typeof this.form.storehouse_name == "string") {
+          this.ware.map((v, i) => {
+            if (this.form.storehouse_name == v.storehouse_name) {
+              id2 = v.id;
+            }
+          });
+        }
+        if (typeof this.form.account_name == "string") {
+          this.settlement.map((v, i) => {
+            if (this.form.account_name == v.account_name) {
+              id3 = v.id;
+            }
+          });
+        }
+        let res = await bookStockOrderEdit({
+          factory_id: id1 || this.form.factory_name,
+          storehouse_id: id2 || this.form.storehouse_name,
+          balance_account_id: id3 || this.form.account_name,
+          pay_price: this.form.pay_price,
+          remarks: this.form.remarks,
+          id: this.form.id,
+        });
+        console.log(res);
+        this.form = {};
+        this.init(this.obj);
+      }
+    },
+    // 删除草稿
+    delStock() {
+      this.$confirm("此操作将永久删除该草稿, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          let res = await bookStockOrderDel({
+            id: this.form.id,
+          });
+          this.vh2 = false;
+          this.form = {};
+          this.init(this.obj);
+          this.$message({
+            type: "success",
+            message: "删除成功!",
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
+    async backout() {
+      this.vh3 = false;
+      this.form = {};
+      this.init(this.obj);
+    },
+    async init(obj) {
+      // 数据类型 0草稿 1已入库 4已撤销
+      let res = await bookStockOrderList({
+        page: this.pageIndex,
+        page_size: this.pageSize,
+        ...obj,
+      });
+      this.tableData = res.data.data;
+      this.total = res.data.count;
+      this.tableData.map((v, i) => {
+        if (v.state == 0) {
+          v.state_name = "草稿";
+        } else if (v.state == 1) {
+          v.state_name = "已入库";
+        } else if (v.state == 4) {
+          v.state_name = "已撤销";
+        }
+      });
+    },
   },
   mounted() {
-    this.init()
+    this.init();
+    this.information();
     this.getYear();
     this.getSeason();
     this.getStylist();
     this.getCategory();
-  }
+  },
 };
 </script>
 
