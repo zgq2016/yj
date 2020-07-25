@@ -10,7 +10,7 @@
       <div class="searchInput">
         <el-form :inline="true" :model="form">
           <el-form-item label="仓库:">
-            <el-select v-model="form.warehouse" placeholder="请选择仓库" style="width:120px">
+            <el-select v-model="form.warehouse" clearable placeholder="请选择仓库" style="width:120px">
               <el-option
                 v-for="item in ware"
                 :key="item.id"
@@ -32,8 +32,13 @@
           </el-form-item>
 
           <el-form-item label="分类:">
-            <el-select v-model="form.warehouse" placeholder="请选择分类" style="width:120px">
-              <el-option v-for="item in cate" :key="item.id" :label="item.style_type" :value="item.style_type"></el-option>
+            <el-select v-model="form.warehouse" clearable placeholder="请选择分类" style="width:120px">
+              <el-option
+                v-for="item in cate"
+                :key="item.id"
+                :label="item.style_type"
+                :value="item.style_type"
+              ></el-option>
             </el-select>
           </el-form-item>
 
@@ -114,7 +119,7 @@ export default {
     return {
       input: "",
       form: {
-        checked: true
+        checked: true,
       },
       tableData: [
         {
@@ -128,8 +133,8 @@ export default {
           unit: "件",
           operation: "0",
           category1: 0,
-          num: 0
-        }
+          num: 0,
+        },
       ],
       pageIndex: 1,
       pageSize: 9,
@@ -139,46 +144,51 @@ export default {
       total2: 0,
       color: ["X", "L", "XXL"],
       ware: [],
-      cate: []
+      cate: [],
     };
   },
   methods: {
     handleSizeChange(val) {
       this.pageSize = val;
+      this.init(this.form);
     },
     handleCurrentChange(val) {
       this.pageIndex = val;
+      this.init(this.form);
     },
     onSubmit() {
       console.log(this.form);
-      this.init(this.form)
+      this.init(this.form);
     },
     handleSize(val) {
       this.pageSize2 = val;
-      this.init(this.form);
+      this.store()
     },
     handleCurrent(val) {
       this.pageIndex2 = val;
-      this.init(this.form);
+      this.store()
     },
-    async init(obj) {
-      // 仓库
+    // 仓库
+    async store() {
       let res = await storehouseList({
         page: this.pageIndex2,
-        page_size: this.pageSize2
+        page_size: this.pageSize2,
       });
       let { data } = res.data;
       this.ware = data;
       this.total2 = res.data.count;
+    },
+    async init(obj) {
       // 分类
-      let res1 = await getCategoryList();
-      this.cate = res1.data.data;
-      console.log(res1);
-    }
+      let res = await getCategoryList();
+      this.cate = res.data.data;
+      console.log(res);
+    },
   },
   mounted() {
     this.init();
-  }
+    this.store();
+  },
 };
 </script>
 <style lang="less" scoped>

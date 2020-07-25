@@ -95,7 +95,7 @@
               <el-input v-model="form.phone" style="width:125px" placeholder="电话"></el-input>
             </el-form-item>
             <el-form-item label="指派方式:">
-              <el-select v-model="form.mode_name" placeholder="请选择指派方式">
+              <el-select v-model="form.mode_name" clearable placeholder="请选择指派方式">
                 <el-option
                   v-for="item in menuList"
                   :key="item.value"

@@ -10,7 +10,7 @@
       <div class="searchInput">
         <el-form :inline="true" :model="form">
           <el-form-item label="仓库:">
-            <el-select v-model="form.warehouse" placeholder="请选择仓库" style="width:120px">
+            <el-select v-model="form.warehouse" clearable placeholder="请选择仓库" style="width:120px">
               <el-option
                 v-for="item in ware"
                 :key="item.id"
@@ -32,7 +32,7 @@
           </el-form-item>
 
           <el-form-item label="颜色:">
-            <el-select v-model="form.warehouse" placeholder="请选择分类" style="width:120px">
+            <el-select v-model="form.warehouse" clearable placeholder="请选择分类" style="width:120px">
               <el-option
                 v-for="(item,index) in options"
                 :key="index"
@@ -42,9 +42,13 @@
             </el-select>
           </el-form-item>
           <el-form-item label="尺码:">
-            <el-select v-model="form.warehouse" placeholder="请选择分类" style="width:120px">
-              <el-option v-for="item in sizes" :key="item.id" :label="item.size_name" :value="item.size_name"></el-option>
-             
+            <el-select v-model="form.warehouse"  clearable placeholder="请选择分类" style="width:120px">
+              <el-option
+                v-for="item in sizes"
+                :key="item.id"
+                :label="item.size_name"
+                :value="item.size_name"
+              ></el-option>
             </el-select>
           </el-form-item>
 
@@ -111,7 +115,7 @@ export default {
     return {
       input: "",
       form: {
-        checked: true
+        checked: true,
       },
       tableData: [{ num: 0 }],
       pageIndex: 1,
@@ -123,7 +127,7 @@ export default {
       color: ["X", "L", "XXL"],
       ware: [],
       options: [],
-      sizes:[]
+      sizes: [],
     };
   },
   methods: {
@@ -135,36 +139,41 @@ export default {
     },
     handleSize(val) {
       this.pageSize2 = val;
-      this.init();
+      this.stock();
     },
     handleCurrent(val) {
       this.pageIndex2 = val;
-      this.init();
+      this.stock();
     },
     onSubmit() {
       console.log(this.form);
     },
-    async init() {
-      // 仓库
+      // 尺码
+    async sized() {
+      let res1 = await getSizeSelect();
+      let data1 = res1.data.data;
+      this.sizes = data1;
+      console.log(res1);
+    },
+    async init() {},
+    // 仓库
+    async stock() {
       let res = await storehouseList({
         page: this.pageIndex2,
-        page_size: this.pageSize2
+        page_size: this.pageSize2,
       });
       let { data } = res.data;
       this.ware = data;
       this.total2 = res.data.count;
       let res2 = await getColorSelect();
       this.options = res2.data.data;
-      // 尺码
-      let res1 = await getSizeSelect();
-      let data1 = res1.data.data;
-      this.sizes = data1;
-      console.log(res1);
-    }
+    },
   },
   mounted() {
     this.init();
-  }
+    this.stock();
+    this.sized();
+  },
 };
 </script>
 <style lang="less" scoped>

@@ -10,7 +10,7 @@
       <div class="searchInput">
         <el-form :inline="true" :model="form">
           <el-form-item label="仓库:">
-            <el-select v-model="form.warehouse" placeholder="请选择仓库" style="width:120px">
+            <el-select v-model="form.warehouse" placeholder="请选择仓库" clearable style="width:120px">
               <el-option
                 v-for="item in ware"
                 :key="item.id"
@@ -37,6 +37,7 @@
               placeholder="请选择物料分类"
               style="width:120px;margin-right:10px;"
               @change="handleClassDatasId($event)"
+              clearable
             >
               <el-option
                 v-for="item in classData"
@@ -49,6 +50,7 @@
               v-model="form.materials_class_name"
               placeholder="请选择物料分类"
               style="width:120px"
+              clearable
             >
               <el-option
                 v-for="item in class_datas.class_data"
@@ -508,11 +510,11 @@ export default {
     },
     handleSize(val) {
       this.pageSize2 = val;
-      this.init();
+      this.stock();
     },
     handleCurrent(val) {
       this.pageIndex2 = val;
-      this.init();
+      this.stock();
     },
     handleSizeChang(val) {
       this.pageSize1 = val;
@@ -592,7 +594,10 @@ export default {
       });
     },
     async init() {
-      // 仓库
+     
+    },
+    async stock(){
+       // 仓库
       let res = await storehouseList({
         page: this.pageIndex2,
         page_size: this.pageSize2
@@ -605,6 +610,7 @@ export default {
   mounted() {
     this.getClassData();
     this.init();
+    this.stock();
   }
 };
 </script>
