@@ -273,20 +273,28 @@
                     @select="handleSelect($event,scope.column, scope.row,scope.$index)"
                   ></el-autocomplete>-->
                   <el-select
-                    v-if="scope.row.showHidden1"
+                    v-show="scope.row.showHidden1"
                     v-model="scope.row.commodity"
+                    filterable
                     @blur="bblur(scope.row,scope.column)"
                     @change="handleSelect($event,scope.column, scope.row,scope.$index)"
-                    filterable
                     placeholder="请选择"
-                    size='mini'
+                    size="mini"
                   >
+                    <!-- style="width:120px" -->
                     <el-option
-                      v-for="item in querySearch"
+                      v-for="item in shopppings"
                       :key="item.value"
                       :label="item.stylename+' '+item.styleno"
                       :value="item.id"
                     ></el-option>
+                    <el-pagination
+                      small
+                      layout="prev, pager, next"
+                      @size-change="handleSize2"
+                      @current-change="handleCurrent2"
+                      :total="total3"
+                    ></el-pagination>
                   </el-select>
                   <span v-if="!scope.row.showHidden1&&!vh5">{{scope.row.commodity || "点击选择"}}</span>
                 </template>
@@ -528,6 +536,7 @@ import { factoryList } from "@/api/archives";
 export default {
   data() {
     return {
+      shopppings: [], //商品
       settlement: [], //结算账户
       fileList: [],
       active: 0,
@@ -738,6 +747,9 @@ export default {
       pageIndex2: 1,
       pageSize2: 10,
       total2: 0,
+      pageIndex3: 1,
+      pageSize3: 10,
+      total3: 0,
       pageIndex1: 1,
       pageSize1: 10,
       total1: 0,
@@ -757,6 +769,7 @@ export default {
       stated: 1,
       obj: {},
       actionsLenght: 0,
+      dow: [],
     };
   },
   methods: {
@@ -928,6 +941,7 @@ export default {
     //右边单元格被点击
     cellClick1(row, column, cell, event) {
       // console.log(row, column, cell, event);
+
       if (column.label == "商品") {
         row.showHidden1 = true;
       } else if (row.commodity == "") {
@@ -953,12 +967,26 @@ export default {
       } else if (column.label == "备注") {
         row.showHidden8 = true;
       }
+      this.shopping()
+      this.dow = document.getElementsByClassName("el-input__inner");
+      let arr = [];
+      this.dow.forEach((el, index) => {
+        if (el.placeholder == "请选择") {
+          arr.push(el);
+        }
+      });
+      console.log(arr);
+      arr.map((v, i) => {
+        v.oninput = () => {
+          this.shopping(v.value);
+        };
+      });
     },
-    // 输入
+    // 鼠标离开
     bblur(row, v, item) {
       setTimeout(() => {
         if (v.label == "商品") {
-          row.showHidden1 = false;
+          // row.showHidden1 = false;
         } else if (v.label == "颜色") {
           row.showHidden2 = false;
         } else if (v.label == "尺码") {
@@ -1168,19 +1196,40 @@ export default {
     },
     handleSize(val) {
       this.pageSize2 = val;
-      this.init();
+      this.information();
     },
     handleCurrent(val) {
       this.pageIndex2 = val;
-      this.init();
+      this.information();
     },
+    async handleSize2(val) {
+      this.pageSize3 = val;
+      this.shopping();
+    },
+    async handleCurrent2(val) {
+      this.pageIndex3 = val;
+      this.shopping();
+    },
+
     handleSize1(val) {
       this.pageSize1 = val;
-      this.init();
+      this.information();
     },
     handleCurrent1(val) {
       this.pageIndex1 = val;
-      this.init();
+      this.information();
+    },
+    // 商品
+    async shopping(item) {
+      
+      let res1 = await getProjectStyleList({
+        keyword: item == undefined ? "a" : item,
+        page: this.pageIndex3,
+        page_size: this.pageSize3,
+      });
+      console.log(res1);
+      this.shopppings = res1.data.data;
+      this.total3 = res1.data.count;
     },
     // 数据
     async information() {
@@ -1310,16 +1359,10 @@ export default {
           v.state_name = "已撤销";
         }
       });
-      let res1 = await getProjectStyleList({
-        keyword: "a",
-        page: this.pageIndex,
-        page_size: this.pageSize,
-      });
-      console.log(res1);
-      this.querySearch = res1.data.data
     },
   },
-  mounted() {
+  async mounted() {
+    this.shopping();
     this.init();
     this.information();
     this.getYear();
@@ -1420,6 +1463,7 @@ export default {
       }
       .right_main {
         .right_form {
+         
           /deep/.cssa {
             .el-steps {
               position: relative;
