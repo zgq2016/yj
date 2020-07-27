@@ -97,16 +97,36 @@
       </div>
       <div class="table">
         <el-table :data="tableData" border size="mini">
-          <el-table-column width="140" prop="ctime" label="业务时间"></el-table-column>
-          <el-table-column width="120" prop="account_no" label="单据编号"></el-table-column>
-          <el-table-column width="80" prop="user_name" label="操作人"></el-table-column>
-          <el-table-column width="100" prop="account_name" label="结算账户"></el-table-column>
-          <el-table-column width="90" prop="account_type_name" label="账目类型"></el-table-column>
-          <el-table-column width="90" prop="cope_price" label="应付金额"></el-table-column>
-          <el-table-column width="90" prop="pay_price" label="实付金额"></el-table-column>
-          <el-table-column width="100" prop="opay_price" label="本单应付余额"></el-table-column>
-          <el-table-column width="110" prop="total_price" label="累计应付款余额"></el-table-column>
-          <el-table-column width="130" prop="remarks" label="备注"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" width="140" prop="ctime" label="业务时间"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" width="120" prop="account_no" label="单据编号"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" width="80" prop="user_name" label="操作人"></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            width="100"
+            prop="account_name"
+            label="结算账户"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            width="90"
+            prop="account_type_name"
+            label="账目类型"
+          ></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" width="90" prop="cope_price" label="应付金额"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" width="90" prop="pay_price" label="实付金额"></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            width="100"
+            prop="opay_price"
+            label="本单应付余额"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            width="110"
+            prop="total_price"
+            label="累计应付款余额"
+          ></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" width="130" prop="remarks" label="备注"></el-table-column>
           <el-table-column prop="data" label="操作"></el-table-column>
         </el-table>
       </div>

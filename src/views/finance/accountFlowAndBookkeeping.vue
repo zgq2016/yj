@@ -187,11 +187,11 @@
           <div class="dv">当前查询统计数据：</div>
           <div class="dv">
             收入
-            <span style="color:orange;">999</span>
+            <span style="color:orange;">{{expend_price}}</span>
           </div>
           <div class="dv">
             支出
-            <span style="color:orange;">999</span>
+            <span style="color:orange;">{{in_price}}</span>
           </div>
           <div class="dv">
             盈余
@@ -229,8 +229,8 @@
           ></el-table-column>
           <el-table-column :show-overflow-tooltip="true" width="90" prop="data" label="交易方"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" width="80" prop="user_name" label="操作人"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="80" prop="income" label="收入"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="80" prop="expend" label="支出"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" width="70" prop="income" label="收入"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" width="70" prop="expend" label="支出"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" width="80" prop="surplus" label="盈余"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" width="80" prop="balance" label="账户余额"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" width="90" prop="remarks" label="备注"></el-table-column>
@@ -557,6 +557,8 @@ import {
 export default {
   data() {
     return {
+      expend_price: "",
+      in_price: "",
       ctime_start: "",
       ctime_end: "",
       pageIndex: 1,
@@ -779,6 +781,7 @@ export default {
         page_size: this.pageSize,
       });
       let { data, count } = res.data;
+      let { expend_price, in_price } = res.data.data;
       res.data.data.map((v) => {
         // console.log(v);
         if (v.account_type === "0") {
