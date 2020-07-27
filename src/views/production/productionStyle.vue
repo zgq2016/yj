@@ -613,7 +613,11 @@
                   :rules="contactRules.quantity"
                   label="指派数量："
                 >
-                  <el-input v-model.number="item.quantity" placeholder="请填入指派数量" style="width:150px"></el-input>
+                  <el-input
+                    v-model.number="item.quantity"
+                    placeholder="请填入指派数量"
+                    style="width:150px"
+                  ></el-input>
                 </el-form-item>
                 <el-form-item
                   :prop="'child.'+index+'.price'"
@@ -1025,7 +1029,7 @@ import {
   projectStyleColorDel,
   getWestList,
   getMaterialsList,
-  getStyleMaterialsList
+  getStyleMaterialsList,
 } from "@/api/researchDevelopment";
 import {
   produceLogData, //批次日志
@@ -1055,12 +1059,12 @@ import {
   produceCompleteAdd, //新增出货信息
   produceCompleteList, //显示出货信息
   produceCompleteDel, //删除出货信息
-  produceCompleteEdit //编辑出货信息
+  produceCompleteEdit, //编辑出货信息
 } from "@/api/production";
 import {
   getMaterialsInfo, //物料
   getSupplierInfo, //供应商
-  getFactoryModeSelect
+  getFactoryModeSelect,
 } from "@/api/archives";
 export default {
   data() {
@@ -1070,18 +1074,18 @@ export default {
       // 下单信息验证
       rules: {
         companyname: [
-          { required: true, message: "选择客户", trigger: "change" }
+          { required: true, message: "选择客户", trigger: "change" },
         ],
         date: [
           {
             required: true,
             message: "请选择日期",
-            trigger: "change"
-          }
+            trigger: "change",
+          },
         ],
         sum: [
           { required: true, message: "请输入数量", trigger: "blur" },
-          { type: "number", message: "必须为数字值" }
+          { type: "number", message: "必须为数字值" },
         ],
 
         size_name: [
@@ -1089,19 +1093,19 @@ export default {
             type: "array",
             required: true,
             message: "请至少选择一个尺码",
-            trigger: "change"
-          }
-        ]
+            trigger: "change",
+          },
+        ],
       },
       ratios: {
         ratio: [
           {
             required: true,
             message: "请输入比例",
-            trigger: "blur"
+            trigger: "blur",
           },
-          { type: "number", message: "必须为数字值" }
-        ]
+          { type: "number", message: "必须为数字值" },
+        ],
       },
       // 采购
       rules1: {
@@ -1109,57 +1113,57 @@ export default {
           {
             required: true,
             message: "请上传凭证图片",
-            trigger: "blur"
-          }
-        ]
+            trigger: "blur",
+          },
+        ],
       },
       rules2: {
         number: [
           {
             required: true,
             message: "请输入回料数量",
-            trigger: "blur"
+            trigger: "blur",
           },
-          { type: "number", message: "必须为数字值" }
+          { type: "number", message: "必须为数字值" },
         ],
         money: [
           {
             required: true,
             message: "请输入结账金额",
-            trigger: "blur"
+            trigger: "blur",
           },
-          { type: "number", message: "必须为数字值" }
+          { type: "number", message: "必须为数字值" },
         ],
         date: [
           {
             required: true,
             message: "请选择回料时间",
-            trigger: "change"
-          }
+            trigger: "change",
+          },
         ],
         imageUrl: [
           {
             required: true,
             message: "请选择回料凭证",
-            trigger: "blur"
-          }
-        ]
+            trigger: "blur",
+          },
+        ],
       },
       rules3: {
         date: [
           {
             required: true,
             message: "请选择时间",
-            trigger: "change"
-          }
+            trigger: "change",
+          },
         ],
         reason: [
           {
             required: true,
             message: "请输入原因",
-            trigger: "blur"
-          }
-        ]
+            trigger: "blur",
+          },
+        ],
       },
       chang_color: "",
       cardList_materials: "",
@@ -1188,39 +1192,39 @@ export default {
       regions: [], //工厂数组
       activities_endlong: [
         {
-          logname: "已下单"
+          logname: "已下单",
         },
         {
-          logname: "部分回料"
+          logname: "部分回料",
         },
         {
-          logname: "延迟回料"
+          logname: "延迟回料",
         },
         {
-          logname: "回料"
-        }
+          logname: "回料",
+        },
       ], //日志
       cardList: [
         {
           materials: "主料",
           list: [[], [], [], [], [], [], [], []],
-          data: {}
+          data: {},
         },
         {
           materials: "里料",
           list: [[], [], [], [], [], [], [], []],
-          data: {}
+          data: {},
         },
         {
           materials: "辅料",
           list: [[], [], [], [], [], [], [], []],
-          data: {}
+          data: {},
         },
         {
           materials: "工艺",
           list: [[], [], [], [], [], [], [], []],
-          data: {}
-        }
+          data: {},
+        },
       ],
       searchCard: [], //新增物料
       tailorList: [], // 裁剪
@@ -1248,7 +1252,7 @@ export default {
         size_name: [],
         size: "",
         ratio: [],
-        quantity: []
+        quantity: [],
       },
       table_data: false,
 
@@ -1269,18 +1273,18 @@ export default {
       innerVisibled: false,
       innerVisibled1: false,
       form2: {
-        imageUrl: ""
+        imageUrl: "",
       },
       form3: {
         number: "",
         money: "",
         money1: "",
         date: "",
-        imageUrl: ""
+        imageUrl: "",
       },
       form4: {
         date: "",
-        reason: ""
+        reason: "",
       },
       popoverId1: "",
       visible1: "",
@@ -1320,36 +1324,42 @@ export default {
 
       contactRules: {
         name: [
-          { required: true, message: "请选择指派方式", trigger: "change" }
+          { required: true, message: "请选择指派方式", trigger: "change" },
         ],
         quantity: [
           { required: true, message: "请输入指派数量", trigger: "blur" },
-          { type: "number", message: "必须为数字值" }
+          { type: "number", message: "必须为数字值" },
         ],
-        price: [{ required: true, message: "请输入加工费", trigger: "blur" },
-          { type: "number", message: "必须为数字值" }],
-        remarks: [{ required: true, message: "请填写备注", trigger: "blur" },
-          { type: "number", message: "必须为数字值" }]
+        price: [
+          { required: true, message: "请输入加工费", trigger: "blur" },
+          { type: "number", message: "必须为数字值" },
+        ],
+        remarks: [
+          { required: true, message: "请填写备注", trigger: "blur" },
+          { type: "number", message: "必须为数字值" },
+        ],
       },
       inspection: {
-        sum: [{ required: true, message: "请输入总数", trigger: "blur" },
-          { type: "number", message: "必须为数字值" }],
+        sum: [
+          { required: true, message: "请输入总数", trigger: "blur" },
+          { type: "number", message: "必须为数字值" },
+        ],
         size_name: [
           {
             type: "array",
             required: true,
             message: "选择至少一个尺码",
-            trigger: "change"
-          }
+            trigger: "change",
+          },
         ],
         ratio: [
           {
             required: true,
             message: "请填写完整比例",
-            trigger: "blur"
+            trigger: "blur",
           },
-          { type: "number", message: "必须为数字值" }
-        ]
+          { type: "number", message: "必须为数字值" },
+        ],
       },
       formg: {},
       formgg: {},
@@ -1363,7 +1373,7 @@ export default {
       showhide2: true,
       showhide3: true,
       showhide4: true,
-      showhide5: true
+      showhide5: true,
     };
   },
   methods: {
@@ -1396,12 +1406,12 @@ export default {
       this.$confirm("确定删除吗？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           if (index != undefined) {
             let res = await produceOrderDel({
-              id: this.form[index].id
+              id: this.form[index].id,
             });
             this.form.splice(index, 1);
             this.size_name.splice(index, 1);
@@ -1410,7 +1420,7 @@ export default {
             this.formgg = { child: this.form };
           } else {
             let res = await produceOrderDel({
-              id: this.form_i.id
+              id: this.form_i.id,
             });
             if (this.form.length == 0) {
               this.form_i = {
@@ -1423,7 +1433,7 @@ export default {
                 size_name: [],
                 size: "",
                 ratio: [],
-                quantity: []
+                quantity: [],
               };
               this.king = false;
             } else {
@@ -1444,15 +1454,15 @@ export default {
           }
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
 
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
@@ -1528,7 +1538,7 @@ export default {
           companyname: this.form_i.companyname,
           size_name: [],
           ratio: [],
-          sum: ""
+          sum: "",
         });
       }
       this.color = "";
@@ -1606,7 +1616,7 @@ export default {
         this.ob.push({
           num: i,
           produce_no: v.produce_no,
-          logDatas: v.produce_log_data
+          logDatas: v.produce_log_data,
         });
       });
       // this.date = [];
@@ -1646,7 +1656,7 @@ export default {
         size_name: [],
         size: "",
         ratio: [],
-        quantity: []
+        quantity: [],
       };
       // this.form_i.ratio = [];
       // this.form_i.size_name = [];
@@ -1674,13 +1684,13 @@ export default {
       this.$confirm("此操作将永久删除该批次, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           let { id } = this.$route.query;
           let res = await produceDel({
             style_id: Number(id),
-            produce_no: item.produce_no
+            produce_no: item.produce_no,
           });
           // console.log(res);
           this.ob.splice(index, 1);
@@ -1708,14 +1718,14 @@ export default {
           }
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
           // this.date = [];
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
@@ -1769,7 +1779,7 @@ export default {
           // console.log(this.form_i);
           // 重新计算数量
           let add = 0;
-          this.form_i.ratio.forEach(el => {
+          this.form_i.ratio.forEach((el) => {
             add += Number(el);
           });
           this.form_i.ratio.map((q, w) => {
@@ -1823,7 +1833,7 @@ export default {
           this.last1 = arrNew;
           // 重新计算数量
           let add = 0;
-          this.ratio[index].forEach(el => {
+          this.ratio[index].forEach((el) => {
             add += Number(el);
           });
           this.ratio[index].map((q, w) => {
@@ -1857,12 +1867,12 @@ export default {
       this.lot = data;
       this.num = 0;
       this.ob = [];
-      data.forEach(element => {
+      data.forEach((element) => {
         this.num++;
         this.ob.push({
           num: this.num,
           produce_no: element.produce_no,
-          logDatas: element.produce_log_data
+          logDatas: element.produce_log_data,
         });
       });
 
@@ -1877,13 +1887,13 @@ export default {
         size_name: [],
         size: "",
         ratio: [],
-        quantity: []
+        quantity: [],
       };
       if (this.ob.length != 0) {
         this.showhide1 = true;
         let res = await produceOrderInfo({
           style_id: Number(id),
-          produce_no: this.ob[this.active].produce_no
+          produce_no: this.ob[this.active].produce_no,
         });
 
         let data1 = res.data.data;
@@ -1953,7 +1963,7 @@ export default {
               ratio: arrNew2,
               size_name: arrNew1,
               ids: ids,
-              companyname: comname
+              companyname: comname,
             };
             // console.log(obj_list);
 
@@ -2048,15 +2058,15 @@ export default {
       let arr = [];
       let arr1 = [[], [], [], [], [], [], [], [], [], [], []];
       if (this.form_i.color != "") {
-        this.$refs["form_i"].validate(valid => {
-          this.$refs["formgg"].validate(valid1 => {
+        this.$refs["form_i"].validate((valid) => {
+          this.$refs["formgg"].validate((valid1) => {
             if (!valid) return;
             if (!valid1) return;
 
             this.$confirm("请你确定下单！", "提示", {
               confirmButtonText: "确定",
               cancelButtonText: "取消",
-              type: "warning"
+              type: "warning",
             })
               .then(async () => {
                 //取得form数据
@@ -2082,7 +2092,7 @@ export default {
                         size: this.form[i].size_name[a],
                         quantity: Number(this.form[i].quantity[a]),
                         ratio: Number(this.form[i].ratio[a]),
-                        id: Number(this.form[i].ids[a]) //修改部分
+                        id: Number(this.form[i].ids[a]), //修改部分
                       });
                     } else {
                       arr1[i].push({
@@ -2091,7 +2101,7 @@ export default {
                         style_color_name: this.form[i].color,
                         size: this.form[i].size_name[a],
                         quantity: Number(this.form[i].quantity[a]),
-                        ratio: Number(this.form[i].ratio[a])
+                        ratio: Number(this.form[i].ratio[a]),
                       });
                     }
                     // console.log(this.form[i].size_name[a]);
@@ -2108,7 +2118,7 @@ export default {
                     total: Number(this.form[i].sum),
                     customer_id: this.form[i].customer_id,
                     expect_date: this.form[i].date,
-                    produce_order_size: arr1[i]
+                    produce_order_size: arr1[i],
                   });
                 }
                 // console.log(arr);
@@ -2119,7 +2129,7 @@ export default {
                   let resn = await produceOrderEdit({
                     style_id: style_id,
                     produce_no: this.ob[this.active].produce_no,
-                    produce_order: arr
+                    produce_order: arr,
                   });
                   console.log(resn);
                 } else {
@@ -2138,15 +2148,15 @@ export default {
 
                 this.$message({
                   type: "success",
-                  message: "下单成功!"
+                  message: "下单成功!",
                 });
               })
-              .catch(err => {
+              .catch((err) => {
                 console.log(err);
 
                 this.$message({
                   type: "success",
-                  message: "取消下单"
+                  message: "取消下单",
                 });
               });
           });
@@ -2166,7 +2176,7 @@ export default {
     async ProcureList() {
       let id = this.$route.query.id;
       let res1 = await produceInfo({
-        style_id: id
+        style_id: id,
       });
       let { data } = res1.data;
       // console.log(data[this.active].produce_no);
@@ -2184,15 +2194,15 @@ export default {
       // this.itemList = item
       let obj = JSON.stringify(item);
       this.$router.push({
-        path: `/PanelPurchase?materials_id=${
+        path: `/PanelPurchase?tabName=${"采购"}&materials_id=${
           item.materials_id
-        }&e=${obj}&tabName=${"采购"}`
+        }&e=${obj}`,
       });
     },
     // 采购查看
     async seeDetails1(item) {
       this.$router.push({
-        path: `/materialTable?materials_id=${item.materials_id}`
+        path: `/materialTable?materials_id=${item.materials_id}`,
       });
     },
     // 更新状态
@@ -2202,7 +2212,7 @@ export default {
     },
     // 全部回料
     async allMaterial() {
-      this.$refs["form2"].validate(async valid => {
+      this.$refs["form2"].validate(async (valid) => {
         if (!valid) return;
 
         this.innerVisibled1 = false;
@@ -2214,14 +2224,14 @@ export default {
           picurl: this.form2.imageUrl, //凭证图片
           quantity: 0, //回料数量
           amount: 0, //结算金额
-          remarks: "" //原因备注
+          remarks: "", //原因备注
         });
       });
       this.int_i();
     },
     // 部分回料
     async partBack() {
-      this.$refs["form3"].validate(async valid => {
+      this.$refs["form3"].validate(async (valid) => {
         if (!valid) return;
         this.innerVisible = false;
         this.form3.date = moment(this.form3.date).format("YYYY-MM-DD");
@@ -2233,7 +2243,7 @@ export default {
           picurl: this.form3.imageUrl, //凭证图片
           quantity: Number(this.form3.number), //回料数量
           amount: Number(this.form3.money), //结算金额
-          remarks: "" //原因备注
+          remarks: "", //原因备注
         });
         this.int_i();
         console.log(res);
@@ -2241,7 +2251,7 @@ export default {
     },
     // 延迟回料
     async delayBack() {
-      this.$refs["form4"].validate(async valid => {
+      this.$refs["form4"].validate(async (valid) => {
         if (!valid) return;
         this.innerVisibled = false;
         this.form4.date = moment(this.form4.date).format("YYYY-MM-DD");
@@ -2253,7 +2263,7 @@ export default {
           picurl: this.form4.imageUrl, //凭证图片
           quantity: 0, //回料数量
           amount: 0, //结算金额
-          remarks: this.form4.reason //原因备注
+          remarks: this.form4.reason, //原因备注
         });
         this.int_i();
         console.log(res);
@@ -2265,12 +2275,12 @@ export default {
       this.centerDialogVisible1 = true;
       let { id } = this.$route.query;
       let res = await produceInfo({
-        style_id: id
+        style_id: id,
       });
       let data1 = res.data.data;
       let res1 = await getStyleMaterialsList({
         style_id: Number(id),
-        style_color_name: this.procurement[this.active1].style_color_name
+        style_color_name: this.procurement[this.active1].style_color_name,
       });
       res1.data.data.forEach((v, i) => {
         v.style_materials_data.forEach((v, i) => {
@@ -2286,7 +2296,7 @@ export default {
       let res = await getMaterialsList({
         keyword: this.searchInput || "",
         page: this.pageIndex,
-        page_size: this.pageSize
+        page_size: this.pageSize,
       });
       let { data } = res.data;
 
@@ -2299,7 +2309,7 @@ export default {
     async addDesignColor() {
       let { id } = this.$route.query;
       let res1 = await produceInfo({
-        style_id: id
+        style_id: id,
       });
       let { data } = res1.data;
       let newArr = [];
@@ -2314,11 +2324,11 @@ export default {
           materials_id: Number(v.style_materials_data.materials_id),
           color: v.style_materials_data.color,
           color_no: v.style_materials_data.color_no,
-          picurl: v.style_materials_data.picurl
+          picurl: v.style_materials_data.picurl,
         });
       });
       let res = await produceOrderProcureAdd({
-        produce_order_procure_materials: newArr
+        produce_order_procure_materials: newArr,
       });
       // console.log(res);
       this.int_i(this.active1);
@@ -2345,8 +2355,8 @@ export default {
             color: e.style_materials_data[0].materials_color_data[0].color,
             color_no:
               e.style_materials_data[0].materials_color_data[0].color_no,
-            picurl: e.style_materials_data[0].materials_color_data[0].picurl
-          }
+            picurl: e.style_materials_data[0].materials_color_data[0].picurl,
+          },
         });
       }
       if (e.isCheckList === false) {
@@ -2368,25 +2378,25 @@ export default {
       this.$confirm("此操作将永久删除该物料, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           let res = await produceOrderProcure_del({
-            id: v.id
+            id: v.id,
           });
           console.log(res.data.data);
           this.int_i(this.active1);
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
 
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
@@ -2395,14 +2405,14 @@ export default {
       let { id } = this.$route.query;
       let res1 = await produceInfo({
         //批次
-        style_id: id
+        style_id: id,
       });
       let { data } = res1.data;
       if (data.length != 0) {
         let res = await produceOrderInfo({
           //下单信息
           style_id: Number(id),
-          produce_no: data[this.active].produce_no
+          produce_no: data[this.active].produce_no,
         });
         let data1 = res.data.data;
         this.procurement = data1;
@@ -2414,7 +2424,7 @@ export default {
         let res2 = await produceOrderProcureList({
           //采购信息
           style_id: Number(id),
-          produce_no: data[this.active].produce_no
+          produce_no: data[this.active].produce_no,
         });
         let data3 = res2.data.data;
         // console.log(data3);
@@ -2435,12 +2445,12 @@ export default {
           all1[itemn].map(async (f, l) => {
             if (v.materials == f.mainclass) {
               let ress = await getMaterialsInfo({
-                id: Number(f.materials_id)
+                id: Number(f.materials_id),
               });
               let { data } = ress.data;
               if (data.materials_supplier_data) {
                 let res1 = await getSupplierInfo({
-                  id: Number(data.materials_supplier_data[0].supplier_id)
+                  id: Number(data.materials_supplier_data[0].supplier_id),
                 });
                 let datas = res1.data.data;
                 f["materialsno"] = data.materialsno;
@@ -2466,7 +2476,7 @@ export default {
       let { id } = this.$route.query;
       let res1 = await produceInfo({
         //批次
-        style_id: id
+        style_id: id,
       });
       let { data } = res1.data;
       if (data.length > 0) {
@@ -2483,14 +2493,14 @@ export default {
             produce_no: data[this.active].produce_no,
             factory_id: f_id,
             mode: [{ id: 0, name: "" }],
-            id: 0
+            id: 0,
           });
         } else {
           this.formInline.push({
             style_id: Number(id),
             produce_no: data[this.active].produce_no,
             factory_id: f_id,
-            mode: [{ id: 0, name: "" }]
+            mode: [{ id: 0, name: "" }],
           });
         }
         this.region = "";
@@ -2517,19 +2527,19 @@ export default {
     },
     // 提交新增指派单
     async arranged() {
-      this.$refs["formg"].validate(async valid => {
+      this.$refs["formg"].validate(async (valid) => {
         if (!valid) return;
 
         this.$confirm("提交指派单, 是否继续?", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         })
           .then(async () => {
             let { id } = this.$route.query;
             let res1 = await produceInfo({
               //批次
-              style_id: id
+              style_id: id,
             });
 
             let { data } = res1.data; /*  */
@@ -2543,7 +2553,7 @@ export default {
                 price: j.price,
                 quantity: j.quantity,
                 remarks: j.remarks,
-                id: j.id
+                id: j.id,
               });
             });
 
@@ -2552,7 +2562,7 @@ export default {
                 //新增排单
                 style_id: Number(id),
                 produce_no: data[this.active].produce_no,
-                produce_factory_order: obj1
+                produce_factory_order: obj1,
               });
               console.log(res);
             } else {
@@ -2560,7 +2570,7 @@ export default {
                 //编辑
                 style_id: Number(id),
                 produce_no: data[this.active].produce_no,
-                produce_factory_order: obj1
+                produce_factory_order: obj1,
               });
               console.log(res2);
             }
@@ -2568,15 +2578,15 @@ export default {
             this.init_r();
             this.$message({
               type: "success",
-              message: "新增成功!"
+              message: "新增成功!",
             });
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err);
 
             this.$message({
               type: "info",
-              message: "已取消新增"
+              message: "已取消新增",
             });
           });
       });
@@ -2590,12 +2600,12 @@ export default {
       this.$confirm("此操作将永久删除该排单, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           if (factory_id != 0) {
             let res = await produceFactoryOrderDel({
-              id: factory_id
+              id: factory_id,
             });
             console.log(res);
           }
@@ -2606,15 +2616,15 @@ export default {
           }
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
 
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
@@ -2625,7 +2635,7 @@ export default {
       this.modes = des.data.data;
       let res = await produceInfo({
         //批次
-        style_id: id
+        style_id: id,
       });
       let { data } = res.data;
       let res1 = await getFactorySelect(); //生产排单select工厂
@@ -2637,7 +2647,7 @@ export default {
         let res2 = await produceFactoryOrderList({
           //显示排单信息
           style_id: id,
-          produce_no: data[this.active].produce_no
+          produce_no: data[this.active].produce_no,
         });
         // console.log(res2.data.data);
         let data2 = res2.data.data;
@@ -2677,7 +2687,7 @@ export default {
             price: v.price,
             quantity: v.quantity,
             remarks: v.remarks,
-            id: v.id
+            id: v.id,
           });
         });
         this.formg = { child: this.formInline };
@@ -2692,7 +2702,7 @@ export default {
       this.tal.map((v, i) => {
         let sz = [];
         let ids = [];
-        v.forEach(e => {
+        v.forEach((e) => {
           sz.push("");
           ids.push(0);
         });
@@ -2700,14 +2710,14 @@ export default {
           tals.push({
             size_input: sz,
             color: this.table[i].style_color_name,
-            sizeNum: 0
+            sizeNum: 0,
           });
         } else {
           tals.push({
             size_input: sz,
             color: this.table[i].style_color_name,
             sizeNum: 0,
-            id: ids
+            id: ids,
           });
         }
       });
@@ -2726,7 +2736,7 @@ export default {
           t_size: this.t_size,
           imageUrl: "",
           total: 0,
-          category: tals
+          category: tals,
         });
       } else {
         this.tailorList.push({
@@ -2734,7 +2744,7 @@ export default {
           imageUrl: "",
           total: 0,
           category: tals,
-          id: 0
+          id: 0,
         });
       }
       // console.log(this.tailorList);
@@ -2751,7 +2761,7 @@ export default {
           size_input[key]
         );
       }
-      this.tailorList[index].category.forEach(item => {
+      this.tailorList[index].category.forEach((item) => {
         this.tailorList[index].total += Number(item.sizeNum);
       });
     },
@@ -2767,14 +2777,14 @@ export default {
         this.$confirm("提交裁剪订单, 是否继续?", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         })
           .then(async () => {
             console.log(this.tailorList);
             let { id } = this.$route.query;
             let res = await produceInfo({
               //批次
-              style_id: id
+              style_id: id,
             });
             let { data } = res.data;
             let arr1 = [];
@@ -2793,7 +2803,7 @@ export default {
                         produce_no: data[this.active].produce_no,
                         style_color_name: j.color,
                         size: v.t_size[g],
-                        quantity: f
+                        quantity: f,
                       });
                     }
                   });
@@ -2802,13 +2812,13 @@ export default {
                   style_id: id,
                   produce_no: data[this.active].produce_no,
                   picurl: v.imageUrl,
-                  produce_cut_order_size: arr2
+                  produce_cut_order_size: arr2,
                 });
               });
               let res1 = await produceCutOrderAdd({
                 style_id: id,
                 produce_no: data[this.active].produce_no,
-                produce_cut_order: arr1
+                produce_cut_order: arr1,
               });
               console.log(res1);
             } else {
@@ -2824,7 +2834,7 @@ export default {
                         style_color_name: j.color,
                         size: v.t_size[g],
                         quantity: f,
-                        id: j.id[g]
+                        id: j.id[g],
                       });
                     }
                   });
@@ -2834,13 +2844,13 @@ export default {
                   produce_no: data[this.active].produce_no,
                   picurl: v.imageUrl,
                   id: v.id,
-                  produce_cut_order_size: arr2
+                  produce_cut_order_size: arr2,
                 });
               });
               let res1 = await produceCutOrderEdit({
                 style_id: id,
                 produce_no: data[this.active].produce_no,
-                produce_cut_order: arr1
+                produce_cut_order: arr1,
               });
               console.log(res1);
             }
@@ -2848,15 +2858,15 @@ export default {
 
             this.$message({
               type: "success",
-              message: "新增成功!"
+              message: "新增成功!",
             });
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err);
 
             this.$message({
               type: "info",
-              message: "已取消新增"
+              message: "已取消新增",
             });
           });
       } else {
@@ -2868,13 +2878,13 @@ export default {
       this.$confirm("此操作将永久删除该裁剪, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           this.tailorList.splice(index, 1);
           if (tailorDel_id != 0) {
             let res = await produceCutOrderDel({
-              id: tailorDel_id
+              id: tailorDel_id,
             });
             // console.log(res);
           }
@@ -2883,15 +2893,15 @@ export default {
           }
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
 
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
@@ -2905,7 +2915,7 @@ export default {
         let { id } = this.$route.query;
         let res = await produceInfo({
           //批次
-          style_id: id
+          style_id: id,
         });
         let { data } = res.data;
 
@@ -2914,7 +2924,7 @@ export default {
           let res1 = await produceCutOrderList({
             //裁剪数据列
             style_id: id,
-            produce_no: data[this.active].produce_no
+            produce_no: data[this.active].produce_no,
           });
           // console.log(res1);
           let data1 = res1.data.data;
@@ -2942,7 +2952,7 @@ export default {
                 color: j.style_color_name,
                 quantity: j.quantity,
                 size: j.size,
-                id: j.id
+                id: j.id,
               });
             });
             arrNew = [...new Set(arrNew)]; //去重
@@ -2973,7 +2983,7 @@ export default {
                 color: q,
                 sizeNum: sum,
                 size_input: sizeInput,
-                id: ids
+                id: ids,
               });
             });
             let sum1 = 0;
@@ -2985,7 +2995,7 @@ export default {
               imageUrl: v.picurl,
               t_size: this.t_size,
               total: sum1,
-              id: v.id
+              id: v.id,
             });
           });
           // console.log(this.tailorList);
@@ -3004,7 +3014,7 @@ export default {
         let sz = [];
         let sz1 = [];
         let id_i = [];
-        v.forEach(e => {
+        v.forEach((e) => {
           sz.push("");
           sz1.push("");
           id_i.push(0);
@@ -3015,27 +3025,27 @@ export default {
           newArr1.push({
             size_input: sz,
             color: this.table[i].style_color_name,
-            sizeNum: 0
+            sizeNum: 0,
           });
           // console.log(newArr1);
 
           newArr2.push({
             size_input: sz1,
             color: this.table[i].style_color_name,
-            sizeNum: 0
+            sizeNum: 0,
           });
         } else {
           newArr1.push({
             size_input: sz,
             color: this.table[i].style_color_name,
             sizeNum: 0,
-            id: id_i
+            id: id_i,
           });
           newArr2.push({
             size_input: sz1,
             color: this.table[i].style_color_name,
             sizeNum: 0,
-            id: id_i
+            id: id_i,
           });
         }
       });
@@ -3046,7 +3056,7 @@ export default {
         produce_complete_size_b_data: newArr2, //次品
         total_a: 0,
         total_b: 0,
-        id_c: 0
+        id_c: 0,
       });
       // console.log(this.complete);
     },
@@ -3065,7 +3075,7 @@ export default {
           index2
         ].sizeNum += Number(size_input[key]);
       }
-      this.complete[index1].produce_complete_size_a_data.forEach(item => {
+      this.complete[index1].produce_complete_size_a_data.forEach((item) => {
         this.complete[index1].total_a += Number(item.sizeNum);
       });
     },
@@ -3083,7 +3093,7 @@ export default {
           index2
         ].sizeNum += Number(size_input[key]);
       }
-      this.complete[index1].produce_complete_size_b_data.forEach(item => {
+      this.complete[index1].produce_complete_size_b_data.forEach((item) => {
         this.complete[index1].total_b += Number(item.sizeNum);
       });
     },
@@ -3100,13 +3110,13 @@ export default {
         this.$confirm("提交出货订单, 是否继续?", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         })
           .then(async () => {
             let { id } = this.$route.query;
             let res = await produceInfo({
               //批次
-              style_id: id
+              style_id: id,
             });
             let { data } = res.data;
             let arrNew = [];
@@ -3123,7 +3133,7 @@ export default {
                         style_color_name: j.color,
                         size: v.t_size[g],
                         quantity: f,
-                        isproduct: 1
+                        isproduct: 1,
                       });
                     }
                   });
@@ -3137,7 +3147,7 @@ export default {
                         style_color_name: j.color,
                         size: v.t_size[g],
                         quantity: f,
-                        isproduct: 0
+                        isproduct: 0,
                       });
                     }
                   });
@@ -3145,13 +3155,13 @@ export default {
                 arrNew.push({
                   style_id: id,
                   produce_no: data[this.active].produce_no,
-                  produce_complete_size: arr
+                  produce_complete_size: arr,
                 });
               });
               let res1 = await produceCompleteAdd({
                 style_id: id,
                 produce_no: data[this.active].produce_no,
-                produce_complete: arrNew
+                produce_complete: arrNew,
               });
               console.log(res1);
             } else {
@@ -3169,7 +3179,7 @@ export default {
                         size: v.t_size[g],
                         quantity: f,
                         isproduct: 1,
-                        id: j.id[g]
+                        id: j.id[g],
                       });
                     }
                   });
@@ -3184,7 +3194,7 @@ export default {
                         size: v.t_size[g],
                         quantity: f,
                         isproduct: 0,
-                        id: j.id[g]
+                        id: j.id[g],
                       });
                     }
                   });
@@ -3193,27 +3203,27 @@ export default {
                   style_id: id,
                   produce_no: data[this.active].produce_no,
                   id: v.id_c,
-                  produce_complete_size: arr
+                  produce_complete_size: arr,
                 });
               });
               let res1 = await produceCompleteEdit({
                 style_id: id,
                 produce_no: data[this.active].produce_no,
-                produce_complete: arrNew
+                produce_complete: arrNew,
               });
               console.log(res1);
             }
             this.init_c();
             this.$message({
               type: "success",
-              message: "出货订单提交成功!"
+              message: "出货订单提交成功!",
             });
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err);
             this.$message({
               type: "info",
-              message: "已取消提交"
+              message: "已取消提交",
             });
           });
       } else {
@@ -3225,27 +3235,27 @@ export default {
       this.$confirm("此操作将永久删除该出货单, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           if (id_c != 0) {
             let res = await produceCompleteDel({
-              id: id_c
+              id: id_c,
             });
             console.log(res);
           }
           this.complete.splice(index, 1);
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
 
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
@@ -3259,14 +3269,14 @@ export default {
         let { id } = this.$route.query;
         let res = await produceInfo({
           //批次
-          style_id: id
+          style_id: id,
         });
         let { data } = res.data;
         this.complete = [];
         if (data.length > 0) {
           let res1 = await produceCompleteList({
             style_id: id,
-            produce_no: data[this.active].produce_no
+            produce_no: data[this.active].produce_no,
           });
           let data1 = res1.data.data;
           // console.log(this.t_size);
@@ -3291,7 +3301,7 @@ export default {
                   style_color_name: j.style_color_name,
                   size: j.size,
                   quantity: j.quantity,
-                  id: j.id
+                  id: j.id,
                 });
                 if (v.produce_complete_size_b_data.length == 0) {
                   arrColor_b.push(j.style_color_name);
@@ -3303,7 +3313,7 @@ export default {
                   style_color_name: j.style_color_name,
                   size: j.size,
                   quantity: j.quantity,
-                  id: j.id
+                  id: j.id,
                 });
                 if (v.produce_complete_size_a_data.length == 0) {
                   arrColor_a.push(j.style_color_name);
@@ -3337,7 +3347,7 @@ export default {
                   color: f,
                   sizeNum: sum,
                   size_input: arrInput_a,
-                  id: id_a
+                  id: id_a,
                 });
               });
               arrColor_b.map((f, g) => {
@@ -3364,7 +3374,7 @@ export default {
                   color: f,
                   sizeNum: sum,
                   size_input: arrInput_b,
-                  id: id_b
+                  id: id_b,
                 });
               });
               let total_aa = 0;
@@ -3382,7 +3392,7 @@ export default {
                 t_size: this.t_size,
                 id_c: v.id,
                 produce_complete_size_a_data: arr_a,
-                produce_complete_size_b_data: arr_b
+                produce_complete_size_b_data: arr_b,
               });
             });
           }
@@ -3398,7 +3408,7 @@ export default {
           // console.log(this.complete);
         }
       }, 500);
-    }
+    },
     // 批次日志
     // async logData() {
     //   let res = await produceLogData(
@@ -3425,7 +3435,7 @@ export default {
         this.ob.push({
           num: i,
           produce_no: v.produce_no,
-          logDatas: v.produce_log_data
+          logDatas: v.produce_log_data,
         });
       });
       this.ob.map((v, i) => {
@@ -3455,7 +3465,7 @@ export default {
 
     this.power = localStorage.getItem("power");
     console.log(this.power);
-  }
+  },
 };
 </script>
 <style lang="less" scoped>

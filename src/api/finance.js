@@ -128,6 +128,56 @@ export const customerAccountAdd = (data) => {
     data: data,
   });
 };
+// 账户余额接口;
+export const balanceAccountBalance = (data) => {
+  return axios({
+    url: "?g=balance_account_balance",
+    method: "post",
+    data: data,
+  });
+};
+// 1账户类型select接口;
+export const accountTypeSelect = (data) => {
+  return axios({
+    url: "?g=account_type_select",
+    method: "post",
+    data: data,
+  });
+};
+// 新增公司账目接口;
+export const myAccountAdd = (data) => {
+  return axios({
+    url: "?g=my_account_add",
+    method: "post",
+    data: data,
+  });
+};
+// 公司账目list接口;
+export const myAccountList = (data) => {
+  return axios({
+    url: "?g=my_account_list",
+    method: "post",
+    data: data,
+  });
+};
+// 结算方式select接口;
+export const settlementModesSelect = (data) => {
+  return axios({
+    url: "?g=settlement_modes_select",
+    method: "post",
+    data: data,
+  });
+};
+// 交易类型select接口;
+export const transactionTypeSelect = (data) => {
+  return axios({
+    url: "?g=transaction_type_select",
+    method: "post",
+    data: data,
+  });
+};
+
+
 
 // supplier_account_add;
 // 新增供应商账目接口;

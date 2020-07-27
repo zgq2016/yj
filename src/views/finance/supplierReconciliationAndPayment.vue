@@ -83,30 +83,50 @@
           <div class="dv">当前查询统计数据：</div>
           <div class="dv">
             应付金额
-            <span style="color:orange;">{{money}}</span>
+            <span style="color:orange;">{{cope_price}}</span>
           </div>
           <div class="dv">
             实付金额
-            <span style="color:orange;">{{money-900000009}}</span>
+            <span style="color:orange;">{{pay_price}}</span>
           </div>
           <div class="dv">
             应付余额
-            <span style="color:orange;">{{money}}</span>
+            <span style="color:orange;">{{opay_price}}</span>
           </div>
         </div>
       </div>
       <div class="table">
-        <el-table :data="tableData" border>
-          <el-table-column width="180" prop="ctime" label="业务时间"></el-table-column>
-          <el-table-column width="160" prop="account_no" label="单据编号"></el-table-column>
-          <el-table-column width="130" prop="user_name" label="操作人"></el-table-column>
-          <el-table-column width="130" prop="account_name" label="结算账户"></el-table-column>
-          <el-table-column width="130" prop="account_type_name" label="账目类型"></el-table-column>
-          <el-table-column width="130" prop="cope_price" label="应付金额"></el-table-column>
-          <el-table-column width="130" prop="pay_price" label="实付金额"></el-table-column>
-          <el-table-column width="130" prop="opay_price" label="本单应付余额"></el-table-column>
-          <el-table-column width="130" prop="total_price" label="累计应付款余额"></el-table-column>
-          <el-table-column width="130" prop="remarks" label="备注"></el-table-column>
+        <el-table :data="tableData" border size="mini">
+          <el-table-column :show-overflow-tooltip="true" width="140" prop="ctime" label="业务时间"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" width="120" prop="account_no" label="单据编号"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" width="80" prop="user_name" label="操作人"></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            width="110"
+            prop="account_name"
+            label="结算账户"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            width="110"
+            prop="account_type_name"
+            label="账目类型"
+          ></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" width="110" prop="cope_price" label="应付金额"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" width="110" prop="pay_price" label="实付金额"></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            width="110"
+            prop="opay_price"
+            label="本单应付余额"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            width="110"
+            prop="total_price"
+            label="累计应付款余额"
+          ></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" width="110" prop="remarks" label="备注"></el-table-column>
           <el-table-column prop="data" label="操作"></el-table-column>
         </el-table>
       </div>
@@ -184,6 +204,18 @@
         <el-form-item label="备注" prop="remarks">
           <el-input type="textarea" v-model="form.remarks" placeholder="请输入内容" style="width:70%;"></el-input>
         </el-form-item>
+        <el-form-item label="附图" prop="picurl">
+          <el-upload
+            class="avatar-uploader"
+            action="https://yj.ppp-pay.top/uploadpic.php"
+            :show-file-list="false"
+            :on-success="handleSuccess1"
+            :before-upload="beforeUpload"
+          >
+            <img v-if="form.picurl" :src="form.picurl" class="avatar" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
       </el-form>
 
       <span slot="footer" class="dialog-footer">
@@ -257,19 +289,21 @@ import {
   supplierAccountList,
   balanceAccountSelect,
   supplierAccountAdd,
-  balanceAccountTypeSelect
+  balanceAccountTypeSelect,
 } from "@/api/finance";
 import { getSupplierSelect } from "@/api/archives";
 export default {
   data() {
     return {
+      cope_price: 999,
+      pay_price: 999,
+      opay_price: 999,
       ctime_start: "",
       ctime_end: "",
       pageIndex: 1,
       pageSize: 9,
       total: 0,
       tableData: [],
-      money: "999999999",
       dialogVisible: false,
       dialogVisible1: false,
       form: {
@@ -282,7 +316,8 @@ export default {
         opay_price: "",
         total_price: "",
         remarks: "",
-        account_type_id: ""
+        account_type_id: "",
+        picurl: "",
       },
       form1: {
         supplier_id: "",
@@ -293,48 +328,48 @@ export default {
         opay_price: "",
         total_price: "",
         service_time: "",
-        remarks: ""
+        remarks: "",
       },
       rules1: {
         supplier_companyname: [
-          { required: true, message: "供应商", trigger: "change" }
+          { required: true, message: "供应商", trigger: "change" },
         ],
         user_id: [{ required: true, message: "操作人", trigger: "change" }],
         cope_price: [
-          { required: true, message: "应付金额", trigger: "change" }
+          { required: true, message: "应付金额", trigger: "change" },
         ],
         opay_price: [
-          { required: true, message: "本单应付余额", trigger: "change" }
+          { required: true, message: "本单应付余额", trigger: "change" },
         ],
         pay_price: [{ required: true, message: "实付金额", trigger: "change" }],
         service_time: [
-          { required: true, message: "业务时间", trigger: "change" }
+          { required: true, message: "业务时间", trigger: "change" },
         ],
         total_price: [
-          { required: true, message: "累计应付余额", trigger: "change" }
-        ]
+          { required: true, message: "累计应付余额", trigger: "change" },
+        ],
       },
       rules: {
         supplier_companyname: [
-          { required: true, message: "供应商", trigger: "change" }
+          { required: true, message: "供应商", trigger: "change" },
         ],
         user_id: [{ required: true, message: "操作人", trigger: "change" }],
         balance_account_id: [
-          { required: true, message: "结算账户", trigger: "change" }
+          { required: true, message: "结算账户", trigger: "change" },
         ],
         account_type_id: [
-          { required: true, message: "账目类型", trigger: "change" }
+          { required: true, message: "账目类型", trigger: "change" },
         ],
         cope_price: [
-          { required: true, message: "应付金额", trigger: "change" }
+          { required: true, message: "应付金额", trigger: "change" },
         ],
         opay_price: [
-          { required: true, message: "本单应付余额", trigger: "change" }
+          { required: true, message: "本单应付余额", trigger: "change" },
         ],
         pay_price: [{ required: true, message: "实付金额", trigger: "change" }],
         total_price: [
-          { required: true, message: "累计应付余额", trigger: "change" }
-        ]
+          { required: true, message: "累计应付余额", trigger: "change" },
+        ],
       },
       formInline: {
         Supplier: "",
@@ -342,17 +377,23 @@ export default {
         account_type_id: "",
         balance_account_id: "",
         user_id: "",
-        odd: ""
+        odd: "",
       },
       Suppliers: [],
       BalanceAccount: [],
       BalanceAccountType: [],
       SupplierList: [],
       stylists: [],
-      status: ""
+      status: "",
     };
   },
   methods: {
+    async handleSuccess1(response, file, fileList) {
+      this.form.picurl = response.data.pic_file_url;
+    },
+    beforeUpload(file) {
+      return this.$elUploadBeforeUpload(file);
+    },
     async onSubmit() {
       this.supplierInit();
     },
@@ -360,7 +401,7 @@ export default {
       this.form.supplier_companyname = value;
       console.log(value);
       let res = await getSupplierSelect({
-        keyword: this.form.supplier_companyname
+        keyword: this.form.supplier_companyname,
       });
       let { data } = res.data;
       cb(data);
@@ -368,7 +409,7 @@ export default {
     async querySearch1(value, cb) {
       this.form1.supplier_companyname = value;
       let res = await getSupplierSelect({
-        keyword: this.form1.supplier_companyname
+        keyword: this.form1.supplier_companyname,
       });
       let { data } = res.data;
       cb(data);
@@ -388,14 +429,14 @@ export default {
       this.dialogVisible1 = true;
     },
     async handleAddForm1(form) {
-      this.$refs["form1"].validate(async valid => {
+      this.$refs["form1"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
         this.form1.service_time = moment(this.form1.service_time).format(
           "YYYY-MM-DD"
         );
-        this.form1.cope_price = Number(this.form1.cope_price);
         this.form1.supplier_id = Number(this.form1.supplier_id);
+        this.form1.cope_price = Number(this.form1.cope_price);
         this.form1.opay_price = Number(this.form1.opay_price);
         this.form1.pay_price = Number(this.form1.pay_price);
         this.form1.total_price = Number(this.form1.total_price);
@@ -418,7 +459,7 @@ export default {
       this.dialogVisible1 = false;
     },
     async handleAddForm(form) {
-      this.$refs["form"].validate(async valid => {
+      this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
         this.form.cope_price = Number(this.form.cope_price);
@@ -469,28 +510,30 @@ export default {
       this.ctime_start = moment(this.formInline.date[0]).format("YYYY-MM-DD");
       this.ctime_end = moment(this.formInline.date[1]).format("YYYY-MM-DD");
       let res1 = await getSupplierSelect({
-        keyword: ""
+        keyword: "",
       });
       this.SupplierList = res1.data.data;
     },
     async supplierInit() {
       let res = await supplierAccountList({
         page: this.pageIndex,
-        page_size: this.pageSize
+        page_size: this.pageSize,
       });
       let { data, count } = res.data;
+      let { cope_price, pay_price, opay_price } = res.data.data;
       this.tableData = data;
       this.total = count;
       this.ctime_start = moment(this.formInline.date[0]).format("YYYY-MM-DD");
       this.ctime_end = moment(this.formInline.date[1]).format("YYYY-MM-DD");
-    }
+    },
   },
   async mounted() {
     this.init();
+    this.supplierInit();
     this.getStylist();
     this.getBalanceAccount();
     this.getBalanceAccountType();
-  }
+  },
 };
 </script>
 
@@ -520,15 +563,6 @@ export default {
     }
   }
 
-  .table {
-    /deep/table {
-      th {
-        .cell {
-          text-align: center;
-        }
-      }
-    }
-  }
   .pagination {
     margin: 20px;
     text-align: right;

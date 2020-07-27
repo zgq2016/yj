@@ -3,12 +3,12 @@
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
-      <el-breadcrumb-item>研发部</el-breadcrumb-item>
+      <!-- <el-breadcrumb-item>研发部</el-breadcrumb-item>
       <el-breadcrumb-item :to="{ path: '/itemDesign' }">设计项目</el-breadcrumb-item>
       <el-breadcrumb-item :to="{ path: `/designCheck?id=${this.$route.query.project_id}` }">项目详细</el-breadcrumb-item>
       <el-breadcrumb-item
         :to="{ path: `/materialPurchasing?id=${this.$route.query.style_id}&TL=30&project_id=${this.$route.query.project_id}` }"
-      >款式详细</el-breadcrumb-item>
+      >款式详细</el-breadcrumb-item>-->
       <el-breadcrumb-item>版料采购单</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main">
@@ -194,13 +194,13 @@
 import moment from "moment";
 import {
   getMaterialsInfo, //物料
-  getSupplierInfo //供应商
+  getSupplierInfo, //供应商
 } from "@/api/archives";
 import {
-  produceOrderProcureEdit //编辑物料
+  produceOrderProcureEdit, //编辑物料
 } from "@/api/production";
 import {
-  purchaseEdit //编辑物料
+  purchaseEdit, //编辑物料
 } from "@/api/researchDevelopment";
 export default {
   data() {
@@ -216,7 +216,7 @@ export default {
         deposit: "", //订金
         fullPayout: "", //全额支付
         picurl: "", //图片
-        remark: "" //备注
+        remark: "", //备注
       },
       centerDialogVisible: false,
       header: [], //物料信息
@@ -227,62 +227,62 @@ export default {
         //选择支付方式
         {
           value: "中国农业银行",
-          label: "中国农业银行"
+          label: "中国农业银行",
         },
         {
           value: "中国工商银行",
-          label: "中国工商银行"
+          label: "中国工商银行",
         },
         {
           value: "微信",
-          label: "微信"
+          label: "微信",
         },
         {
           value: "支付宝",
-          label: "支付宝"
-        }
+          label: "支付宝",
+        },
       ],
       // 表单规则
       rules: {
         dosage: [
           { required: true, message: "请输入用量" },
-          { type: "number", message: "用量必须为数字值" }
+          { type: "number", message: "用量必须为数字值" },
         ],
         amountPurchased: [
           { required: true, message: "请输入采购量", trigger: "blur" },
-          { type: "number", message: "采购量必须为数字值" }
+          { type: "number", message: "采购量必须为数字值" },
         ],
         purchasePrice: [
           { required: true, message: "请输入采购单价", trigger: "blur" },
-          { type: "number", message: "采购单价必须为数字值" }
+          { type: "number", message: "采购单价必须为数字值" },
         ],
         money: [
           { required: true, message: "请输入金额", trigger: "blur" },
-          { type: "number", message: "金额必须为数字值" }
+          { type: "number", message: "金额必须为数字值" },
         ],
         payManneItem: [
-          { required: true, message: "请选择支付方式", trigger: "blur" }
+          { required: true, message: "请选择支付方式", trigger: "blur" },
         ],
         payment: [
-          { required: true, message: "请选择付款方式 ", trigger: "blur" }
+          { required: true, message: "请选择付款方式 ", trigger: "blur" },
         ],
         finishTime: [
           {
             type: "date",
             required: true,
             message: "请输入时间",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         deposit: [
           { required: true, message: "请输入定金", trigger: "blur" },
-          { type: "number", message: "定金必须为数字值" }
+          { type: "number", message: "定金必须为数字值" },
         ],
         fullPayout: [
           { required: true, message: "请输入全部金额", trigger: "blur" },
-          { type: "number", message: "金额必须为数字值" }
-        ]
-      }
+          { type: "number", message: "金额必须为数字值" },
+        ],
+      },
     };
   },
   methods: {
@@ -299,18 +299,16 @@ export default {
       // this.form.purchasePrice = String(this.form.purchasePrice);
     },
     async onSubmit() {
-      this.$refs["form"].validate(async valid => {
+      this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
-        this.form.finishTime = moment(this.form.finishTime).format(
-          "YYYY-MM-DD"
-        );
-        if (this.$route.query.tabName === "采购") {
-          let e = JSON.parse(this.$route.query.e);
-          // console.log(this.form);
-          // console.log(JSON.parse(this.$route.query.e));
-          // console.log(e);
 
+        if (this.$route.query.tabName === "采购") {
+          this.form.finishTime = moment(this.form.finishTime).format(
+            "YYYY-MM-DD"
+          );
+          let e1 = this.$route.query.e;
+          let e = JSON.parse(e1);
           let res = await produceOrderProcureEdit({
             id: e.id,
             style_id: Number(e.style_id),
@@ -330,14 +328,17 @@ export default {
             payment: this.form.payment,
             purchasePrice: this.form.purchasePrice,
             remark: this.form.remark,
-            uploadDocuments: this.form.picurl
+            uploadDocuments: this.form.picurl,
           });
           console.log(res);
           this.$router.push({
-            path: `/ProductionStyle?id=${e.style_id}&activeNames=2`
+            path: `/ProductionStyle?id=${e.style_id}&activeNames=2`,
           });
         }
         if (this.$route.query.tabName === "版料采购") {
+          this.form.finishTime = moment(this.form.finishTime).format(
+            "YYYY-MM-DD"
+          );
           let res = await purchaseEdit({
             id: this.$route.query.id,
             amountPurchased: this.form.amountPurchased,
@@ -349,11 +350,11 @@ export default {
             payment: this.form.payment,
             purchasePrice: this.form.purchasePrice,
             remark: this.form.remark,
-            uploadDocuments: this.form.picurl
+            uploadDocuments: this.form.picurl,
           });
           console.log(res);
           this.$router.push({
-            path: `/materialPurchasing?id=${this.$route.query.style_id}`
+            path: `/materialPurchasing?id=${this.$route.query.style_id}`,
           });
         }
       });
@@ -369,19 +370,19 @@ export default {
       // 物料
       let { materials_id } = this.$route.query;
       let res = await getMaterialsInfo({
-        id: Number(materials_id)
+        id: Number(materials_id),
       });
       console.log(res);
       let { data } = res.data;
       this.header = data;
       this.colors = {
         color: this.header.color_data[0].color,
-        color_no: this.header.color_data[0].color_no
+        color_no: this.header.color_data[0].color_no,
       };
 
       // 供应商
       let res1 = await getSupplierInfo({
-        id: Number(data.materials_supplier_data[0].supplier_id)
+        id: Number(data.materials_supplier_data[0].supplier_id),
       });
       let data1 = res1.data.data;
       this.supplier = data1;
@@ -394,12 +395,11 @@ export default {
       } else {
         this.form.deposit = "";
       }
-    }
+    },
   },
   mounted() {
-    console.log(this.$route.query);
     this.init();
-  }
+  },
 };
 </script>
 
