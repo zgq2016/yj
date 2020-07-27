@@ -19,12 +19,12 @@
             <el-input v-model="formInline.styleno" placeholder="款号"></el-input>
           </el-form-item>
           <el-form-item label="年份">
-            <el-select v-model="formInline.year" placeholder="年份" style="width:120px">
+            <el-select v-model="formInline.year" clearable placeholder="年份" style="width:120px">
               <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="季节">
-            <el-select v-model="formInline.season" placeholder="季节" style="width:120px">
+            <el-select v-model="formInline.season" clearable placeholder="季节" style="width:120px">
               <el-option
                 v-for="item in seasons"
                 :key="item.id"
@@ -35,6 +35,7 @@
           </el-form-item>
           <el-form-item label="设计师">
             <el-select
+              clearable
               v-model="stylist"
               placeholder="设计师"
               @change="handleUser_id($event)"
@@ -49,7 +50,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="类别">
-            <el-select v-model="formInline.style_type" placeholder="类别" style="width:120px">
+            <el-select v-model="formInline.style_type" placeholder="类别" clearable style="width:120px">
               <el-option
                 v-for="item in categorys"
                 :key="item.id"
@@ -114,7 +115,7 @@ import {
   getWestList,
   getStylistList,
   getCategoryList,
-  getStyleList
+  getStyleList,
 } from "@/api/researchDevelopment";
 export default {
   data() {
@@ -125,7 +126,7 @@ export default {
         year: "",
         season: "",
         user_id: "",
-        style_type: ""
+        style_type: "",
       },
       user_id: "",
       tableData: [],
@@ -138,7 +139,7 @@ export default {
       page: 1,
       page_size: 9,
       count: 0,
-      stylist: ""
+      stylist: "",
     };
   },
   methods: {
@@ -182,7 +183,7 @@ export default {
       let res = await getStyleList({
         page: this.page,
         page_size: this.page_size,
-        ...obj
+        ...obj,
       });
       console.log(res);
       this.count = res.data.count;
@@ -204,7 +205,7 @@ export default {
     handleCurrentChange(val) {
       this.page = val;
       this.init(this.formInline);
-    }
+    },
   },
   mounted() {
     this.getYear();
@@ -215,7 +216,7 @@ export default {
     this.init();
     this.power = localStorage.getItem("power");
     console.log(this.power);
-  }
+  },
 };
 </script>
 <style lang="less" scoped>

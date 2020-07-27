@@ -22,12 +22,12 @@
           <el-input v-model="name" placeholder="项目"></el-input>
         </el-form-item>
         <el-form-item label="年份">
-          <el-select v-model="year" placeholder="年份">
+          <el-select v-model="year" clearable placeholder="年份">
             <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="季节">
-          <el-select v-model="season" placeholder="季节">
+          <el-select v-model="season" clearable placeholder="季节">
             <el-option
               v-for="item in seasons"
               :key="item.id"
@@ -37,12 +37,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="设计师">
-          <el-select v-model="stylist" placeholder="设计师" @change="handleUser_id($event)">
+          <el-select v-model="stylist" clearable placeholder="设计师" @change="handleUser_id($event)">
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="类别">
-          <el-select v-model="category" placeholder="类别">
+          <el-select v-model="category" clearable placeholder="类别">
             <el-option
               v-for="item in categorys"
               :key="item.id"
@@ -52,7 +52,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="西所">
-          <el-select v-model="west" placeholder="西所" @change="handleCustomer_id($event)">
+          <el-select v-model="west" clearable placeholder="西所" @change="handleCustomer_id($event)">
             <el-option
               v-for="item in wests"
               :key="item.id"
@@ -62,7 +62,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="状态">
-          <el-select v-model="state" placeholder="状态" @change="handelState($event)">
+          <el-select v-model="state" clearable placeholder="状态" @change="handelState($event)">
             <el-option v-for="item in states" :key="item.id" :label="item.v" :value="item.id"></el-option>
           </el-select>
         </el-form-item>

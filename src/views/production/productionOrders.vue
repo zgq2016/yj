@@ -17,12 +17,12 @@
           <el-input v-model="formInline.styleno" placeholder="款号"></el-input>
         </el-form-item>
         <el-form-item label="年份:">
-          <el-select v-model="formInline.year" placeholder="年份" style="width:120px">
+          <el-select v-model="formInline.year" clearable placeholder="年份" style="width:120px">
             <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="季节:">
-          <el-select v-model="formInline.season" placeholder="季节" style="width:120px">
+          <el-select v-model="formInline.season" clearable placeholder="季节" style="width:120px">
             <el-option
               v-for="item in seasons"
               :key="item.id"
@@ -36,13 +36,14 @@
             v-model="stylist"
             placeholder="设计师"
             @change="handleUser_id($event)"
+            clearable
             style="width:120px"
           >
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="类别:">
-          <el-select v-model="formInline.style_type" placeholder="类别" style="width:120px">
+          <el-select v-model="formInline.style_type" clearable placeholder="类别" style="width:120px">
             <el-option
               v-for="item in categorys"
               :key="item.id"
@@ -53,7 +54,7 @@
         </el-form-item>
 
         <el-form-item label="状态:">
-          <el-select v-model="formInline.state" placeholder="状态" style="width:120px">
+          <el-select v-model="formInline.state" clearable placeholder="状态" style="width:120px">
             <el-option v-for="item in states" :key="item.id" :label="item.v" :value="item.id"></el-option>
           </el-select>
         </el-form-item>

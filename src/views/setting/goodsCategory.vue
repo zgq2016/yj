@@ -20,6 +20,7 @@
       <el-table-column prop="goods_category_name" label="分类名称" width="200"></el-table-column>
       <el-table-column prop="describe" label="分类描述" width="200"></el-table-column>
       <el-table-column prop="sort" label="排序" width="200"></el-table-column>
+      <el-table-column prop="unit" label="单位" width="200"></el-table-column>
       <el-table-column
         align="right"
         label="操作"
@@ -58,6 +59,7 @@
             v-model="region"
             placeholder="可选/可不选"
             style="width:80%;"
+            clearable
             @change="get_goods_category_id($event)"
           >
             <el-option
@@ -65,6 +67,16 @@
               :key="item.value"
               :label="item.goods_category_name "
               :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="region != ''" label="计量单位">
+          <el-select v-model="form.unit" clearable placeholder="请选择">
+            <el-option
+              v-for="item in units"
+              :key="item.id"
+              :label="item.unit_name"
+              :value="item.unit_name"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -95,12 +107,27 @@
           <el-input v-model="obj.goods_category_name" style="width:80%;"></el-input>
         </el-form-item>
         <el-form-item label="上级分类" v-if="rowLevel==='1'">
-          <el-select v-model="region" @change="get_goods_category_id($event)" style="width:80%;">
+          <el-select
+            v-model="region"
+            clearable
+            @change="get_goods_category_id($event)"
+            style="width:80%;"
+          >
             <el-option
               v-for="item in options"
               :key="item.value"
               :label="item.goods_category_name "
               :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="region != ''&&rowLevel==='1'" label="计量单位">
+          <el-select v-model="obj.unit" clearable placeholder="请选择">
+            <el-option
+              v-for="item in units"
+              :key="item.id"
+              :label="item.unit_name"
+              :value="item.unit_name"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -135,21 +162,23 @@ import {
   goodsCategoryInfo,
   goodsCategoryAdd,
   goodsCategoryDel,
-  goodsCategoryEdit
+  goodsCategoryEdit,
 } from "@/api/setting.js";
+import { getUnitSelect } from "@/api/archives";
 export default {
   data() {
     return {
+      units: [],
       power: "",
       rules: {
         goods_category_name: [
-          { required: true, message: "请输入分类名称", trigger: "blur" }
-        ]
+          { required: true, message: "请输入分类名称", trigger: "blur" },
+        ],
       },
       rules1: {
         goods_category_name: [
-          { required: true, message: "请输入分类名称", trigger: "blur" }
-        ]
+          { required: true, message: "请输入分类名称", trigger: "blur" },
+        ],
       },
       tableData: [],
       centerDialogVisible: false, //添加分类
@@ -159,7 +188,7 @@ export default {
         goods_category_name: "",
         describe: "",
         sort: "",
-        level: 0
+        level: 0,
       },
       region: "",
       obj: {},
@@ -168,7 +197,8 @@ export default {
       pageSize: 10,
       total: 0,
       goods_category_id: "",
-      rowLevel: ""
+      rowLevel: "",
+      vh1: false,
     };
   },
   methods: {
@@ -180,14 +210,16 @@ export default {
       this.form.level = 0;
       this.region = "";
       this.centerDialogVisible = false;
+      this.vh1 = false;
       this.init();
     },
     handleClose1() {
       this.centerDialogVisible1 = false;
+      this.vh1 = false;
       this.init();
     },
     handleEditList() {
-      this.$refs["obj"].validate(async valid => {
+      this.$refs["obj"].validate(async (valid) => {
         if (!valid) return;
         delete this.obj.goods_category_data;
         delete this.obj.region;
@@ -218,26 +250,27 @@ export default {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           let res = await goodsCategoryDel({ id: row.id });
           this.init();
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
     get_goods_category_id(e) {
       this.form.goods_category_id = e;
       this.obj.goods_category_id = e;
+      this.vh1 = true;
     },
     async addClassify() {
       if (this.tableData.length === 0) {
@@ -253,7 +286,7 @@ export default {
       }
     },
     async handleNewList() {
-      this.$refs["form"].validate(async valid => {
+      this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         delete this.form.region;
         if (this.tableData.length === 0) {
@@ -276,7 +309,7 @@ export default {
     async init() {
       let res = await goodsCategoryList({
         page: this.pageIndex,
-        page_size: this.pageSize
+        page_size: this.pageSize,
       });
       console.log(res);
       let { data, count } = res.data;
@@ -290,13 +323,19 @@ export default {
     handleCurrentChange(val) {
       this.pageIndex = val;
       this.init();
-    }
+    },
+    async getUnit() {
+      let res = await getUnitSelect();
+      let { data } = res.data;
+      this.units = data;
+    },
   },
   mounted() {
     this.init();
+    this.getUnit();
     this.power = localStorage.getItem("power");
     console.log(this.power);
-  }
+  },
 };
 </script>
 
