@@ -5,183 +5,68 @@
       <el-breadcrumb-item>财务</el-breadcrumb-item>
       <el-breadcrumb-item>账户流水及记账</el-breadcrumb-item>
     </el-breadcrumb>
-
-    <!-- <div class="condition clearfix">
-      <div class="date fl">
-        <label for>日期：</label>
-        <el-date-picker
-          v-model="date"
-          type="daterange"
-          range-separator="至"
-          :start-placeholder="ctime_start"
-          :end-placeholder="ctime_end"
-        ></el-date-picker>
-      </div>
-      <div class="accountType fl">
-        <label for>账目类型：</label>
-        <el-select v-model="category" placeholder="类别">
-          <el-option
-            v-for="item in categorys"
-            :key="item.id"
-            :label="item.style_type"
-            :value="item.style_type"
-          ></el-option>
-        </el-select>
-      </div>
-      <div class="settlement fl">
-        <label for>结算账户：</label>
-        <el-select v-model="category" placeholder="-请选择-">
-          <el-option
-            v-for="item in categorys"
-            :key="item.id"
-            :label="item.style_type"
-            :value="item.style_type"
-          ></el-option>
-        </el-select>
-      </div>
-
-      <div class="stylist fl">
-        <label for>操作者：</label>
-        <el-select v-model="stylist" placeholder="- 全部 -" @change="handleUser_id($event)">
-          <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
-        </el-select>
-      </div>
-
-      <div class="odd fl">
-        <label for>单号：</label>
-        <el-input placeholder="单据编号" v-model="odd" clearable></el-input>
-      </div>
-
-      <div class="their fl">
-        <label for>账户所属门店：</label>
-        <el-select v-model="category" placeholder="- 全部 -">
-          <el-option
-            v-for="item in categorys"
-            :key="item.id"
-            :label="item.style_type"
-            :value="item.style_type"
-          ></el-option>
-        </el-select>
-      </div>
-
-      <div class="category fl">
-        <label for>交易类型：</label>
-        <el-select v-model="category" placeholder="- 全部 -">
-          <el-option
-            v-for="item in categorys"
-            :key="item.id"
-            :label="item.style_type"
-            :value="item.style_type"
-          ></el-option>
-        </el-select>
-      </div>
-
-      <div class="remark fl">
-        <label for>备注：</label>
-        <el-input placeholder="备注" v-model="remark" clearable></el-input>
-      </div>
-
-      <div class="btn fl" @click="handlesearch">
-      </div>
-      <div class="btn fl">
-      </div>
-      <div class="btn fl">
-      </div>
-      <div class="btn fl">
-      </div>
-      <div class="btn fl">
-        
-      </div>
-      <div class="btn fl">
-
-      </div>
-      <div class="btn fl">
-      </div>
-    </div>-->
-    <el-button type="primary" icon="el-icon-search">搜索</el-button>
-    <el-button type="primary" @click="onincome">收入</el-button>
-    <el-button type="primary" @click="onexpend">支出</el-button>
-    <el-button type="primary" @click="onAccounttransfers">账户互转</el-button>
-    <el-button type="primary" @click="onbalanceadjustment">期初调整</el-button>
-    <el-button type="primary" v-print="'#printTest'" icon="el-icon-printer">打印</el-button>
-    <el-button type="primary" icon="el-icon-upload2">导出</el-button>
-    <!-- <div class="form">
+    <div class="form">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="日期：">
           <el-date-picker
-            v-model="date"
+            v-model="formInline.date"
             type="daterange"
             range-separator="至"
-            :start-placeholder="ctime_start"
-            :end-placeholder="ctime_end"
+            :start-placeholder="formInline.ctime_start"
+            :end-placeholder="formInline.ctime_end"
+            style="width:100%"
           ></el-date-picker>
         </el-form-item>
-        <el-form-item label="账目类型：">
-          <el-select v-model="category" placeholder="类别">
+        <el-form-item label="账目类型:" prop="account_type_name">
+          <el-select v-model="formInline.account_type_name">
             <el-option
-              v-for="item in categorys"
+              v-for="item in BalanceAccountType"
               :key="item.id"
-              :label="item.style_type"
-              :value="item.style_type"
+              :label="item.account_type_name"
+              :value="item.account_type_name"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="结算账户：">
-          <el-select v-model="category" placeholder="-请选择-">
+        <el-form-item label="结算账户:" prop="account_name">
+          <el-select v-model="formInline.account_name">
             <el-option
-              v-for="item in categorys"
+              v-for="item in BalanceAccount"
               :key="item.id"
-              :label="item.style_type"
-              :value="item.style_type"
+              :label="item.account_name"
+              :value="item.account_name"
             ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="操作者：">
-          <el-select v-model="category" placeholder="-请选择-">
-            <el-option
-              v-for="item in categorys"
-              :key="item.id"
-              :label="item.style_type"
-              :value="item.style_type"
-            ></el-option>
+          <el-select v-model="formInline.user_id">
+            <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="单号：">
-          <el-select v-model="category" placeholder="-请选择-">
-            <el-option
-              v-for="item in categorys"
-              :key="item.id"
-              :label="item.style_type"
-              :value="item.style_type"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="交易类型：">
-          <el-select v-model="category" placeholder="-请选择-">
-            <el-option
-              v-for="item in categorys"
-              :key="item.id"
-              :label="item.style_type"
-              :value="item.style_type"
-            ></el-option>
-          </el-select>
+          <el-input placeholder="单据编号" v-model="formInline.account_no" clearable></el-input>
         </el-form-item>
         <el-form-item label="备注：">
-          <el-input placeholder="备注" v-model="remark" clearable></el-input>
+          <el-input placeholder="备注" v-model="formInline.remark" clearable></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">查询</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="onsearch">搜索</el-button>
+          <el-button type="primary" @click="onincome">收入</el-button>
+          <el-button type="primary" @click="onexpend">支出</el-button>
+          <el-button type="primary" @click="onAccounttransfers">账户互转</el-button>
+          <el-button type="primary" @click="onbalanceadjustment">期初调整</el-button>
+          <el-button type="primary" v-print="'#printTest'" icon="el-icon-printer">打印</el-button>
+          <el-button type="primary" icon="el-icon-upload2">导出</el-button>
         </el-form-item>
       </el-form>
-    </div>-->
+    </div>
     <el-divider></el-divider>
     <div id="printTest">
       <div class="header">
         <h2 style="text-align:center;height:40px;">资金流水账</h2>
         <div class="cont">
-          <span>结算账户：所有</span>
-          <span>账目类型：999</span>
-          <span>日期：999 至 999</span>
+          <span>结算账户：{{formInline.account_name}}</span>
+          <span>账目类型：{{formInline.account_type_name}}</span>
+          <span>日期：{{formInline.ctime_start}} 至 {{formInline.ctime_end}}</span>
         </div>
         <div class="tb">
           <div class="dv">当前查询统计数据：</div>
@@ -215,18 +100,7 @@
             prop="account_name"
             label="结算账户"
           ></el-table-column>
-          <el-table-column
-            :show-overflow-tooltip="true"
-            width="90"
-            prop="transaction_type"
-            label="交易类型"
-          ></el-table-column>
-          <el-table-column
-            :show-overflow-tooltip="true"
-            width="70"
-            prop="settlement_modes"
-            label="结算方式"
-          ></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" width="90" prop="trade_type" label="交易类型"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" width="90" prop="data" label="交易方"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" width="80" prop="user_name" label="操作人"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" width="70" prop="income" label="收入"></el-table-column>
@@ -278,26 +152,6 @@
         <el-form-item label="账户余额:" prop="balance">
           <div>{{form3.balance}}</div>
         </el-form-item>
-        <!-- <el-form-item label="账目类型:" prop="account_type_id">
-          <el-select v-model="form3.account_type_id" style="width:70%;">
-            <el-option
-              v-for="item in BalanceAccountType"
-              :key="item.id"
-              :label="item.account_type_name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
-        </el-form-item>-->
-        <!-- <el-form-item label="转入账户:" prop="balance_account_id">
-          <el-select v-model="form3.balance_account_id" style="width:70%;">
-            <el-option
-              v-for="item in BalanceAccount"
-              :key="item.id"
-              :label="item.account_name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
-        </el-form-item>-->
         <el-form-item label="期初金额:" prop="total_price">
           <el-input v-model="form3.total_price" placeholder="请输入内容" style="width:70%;"></el-input>
         </el-form-item>
@@ -347,16 +201,6 @@
         <el-form-item label="账户余额:" prop="balance">
           <div>{{form2.balance}}</div>
         </el-form-item>
-        <!-- <el-form-item label="账目类型:" prop="account_type_id">
-          <el-select v-model="form2.account_type_id" style="width:70%;">
-            <el-option
-              v-for="item in BalanceAccountType"
-              :key="item.id"
-              :label="item.account_type_name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
-        </el-form-item>-->
         <el-form-item label="转入账户:" prop="balance_account_id">
           <el-select v-model="form2.balance_account_id" style="width:70%;">
             <el-option
@@ -564,11 +408,22 @@ export default {
       pageIndex: 1,
       pageSize: 9,
       total: 0,
+      stylists: [],
       tableData: [],
       dialogVisible: false,
       dialogVisible1: false,
       dialogVisible2: false,
       dialogVisible3: false,
+      formInline: {
+        date: "",
+        account_type_name: "",
+        account_name: "",
+        user_id: "",
+        account_no: "",
+        remark: "",
+        ctime_start: "",
+        ctime_end: "",
+      },
       form: {
         balance_account_id: "",
         settlement_modes_id: 0,
@@ -612,10 +467,59 @@ export default {
         service_time: "",
         remarks: "",
       },
-      rules: {},
-      rules1: {},
-      rules2: {},
-      rules3: {},
+      rules: {
+        balance_account_id: [
+          { required: true, message: "结算账户", trigger: "change" },
+        ],
+        account_type_id: [
+          { required: true, message: "账目类型", trigger: "change" },
+        ],
+        total_price: [
+          { required: true, message: "收入金额", trigger: "change" },
+        ],
+        service_time: [
+          { required: true, message: "业务时间", trigger: "change" },
+        ],
+      },
+      rules1: {
+        balance_account_id: [
+          { required: true, message: "结算账户", trigger: "change" },
+        ],
+        account_type_id: [
+          { required: true, message: "账目类型", trigger: "change" },
+        ],
+        total_price: [
+          { required: true, message: "收入金额", trigger: "change" },
+        ],
+        service_time: [
+          { required: true, message: "业务时间", trigger: "change" },
+        ],
+      },
+      rules2: {
+        balance_account_id_to: [
+          { required: true, message: "转出账户", trigger: "change" },
+        ],
+        balance_account_id: [
+          { required: true, message: "转入账户", trigger: "change" },
+        ],
+        total_price: [
+          { required: true, message: "收入金额", trigger: "change" },
+        ],
+        service_time: [
+          { required: true, message: "业务时间", trigger: "change" },
+        ],
+      },
+      rules3: {
+        balance_account_id: [
+          { required: true, message: "账户", trigger: "change" },
+        ],
+        total_price: [
+          { required: true, message: "期初金额", trigger: "change" },
+        ],
+        service_time: [
+          { required: true, message: "业务时间", trigger: "change" },
+        ],
+      },
       BalanceAccount: [],
       BalanceAccountType: [],
       SettlementModes: [],
@@ -630,6 +534,16 @@ export default {
     //   tempNode.innerHTML = html;
     //   this.$print(tempNode); // 开始调用插件
     // },
+    onsearch() {
+      // console.log(moment(this.formInline.date[0]).format("YYYY-MM-DD"));
+      this.formInline.ctime_start = moment(this.formInline.date[0]).format(
+        "YYYY-MM-DD"
+      );
+      this.formInline.ctime_end = moment(this.formInline.date[1]).format(
+        "YYYY-MM-DD"
+      );
+      console.log(this.formInline);
+    },
     onincome() {
       this.dialogVisible = true;
     },
@@ -643,19 +557,22 @@ export default {
       this.dialogVisible3 = true;
     },
     async handleAddForm3(form) {
-      this.form3.service_time = moment(this.form3.service_time).format(
-        "YYYY-MM-DD"
-      );
-      this.form3.total_price = Number(this.form3.total_price);
-      this.form3["opay_price"] = this.form3.total_price;
-      this.form3["cope_price"] = this.form3.total_price;
-      this.form3["pay_price"] = this.form3.total_price;
-      this.form3["user_id"] = localStorage.getItem("user_id");
-      let res = await myAccountAdd(this.form3);
-      this.$refs[form].resetFields();
-      console.log(res);
-      this.init();
-      this.dialogVisible3 = false;
+      this.$refs["form3"].validate(async (valid) => {
+        if (!valid) return;
+        this.form3.service_time = moment(this.form3.service_time).format(
+          "YYYY-MM-DD"
+        );
+        this.form3.total_price = Number(this.form3.total_price);
+        this.form3["opay_price"] = this.form3.total_price;
+        this.form3["cope_price"] = this.form3.total_price;
+        this.form3["pay_price"] = this.form3.total_price;
+        this.form3["user_id"] = localStorage.getItem("user_id");
+        let res = await myAccountAdd(this.form3);
+        this.$refs[form].resetFields();
+        console.log(res);
+        this.init();
+        this.dialogVisible3 = false;
+      });
     },
     handleClose3(form) {
       this.$refs[form].resetFields();
@@ -663,19 +580,22 @@ export default {
     },
 
     async handleAddForm2(form) {
-      this.form2.service_time = moment(this.form2.service_time).format(
-        "YYYY-MM-DD"
-      );
-      this.form2.total_price = Number(this.form2.total_price);
-      this.form2["opay_price"] = this.form2.total_price;
-      this.form2["cope_price"] = this.form2.total_price;
-      this.form2["pay_price"] = this.form2.total_price;
-      this.form2["user_id"] = localStorage.getItem("user_id");
-      let res = await myAccountAdd(this.form2);
-      this.$refs[form].resetFields();
-      console.log(res);
-      this.init();
-      this.dialogVisible2 = false;
+      this.$refs["form2"].validate(async (valid) => {
+        if (!valid) return;
+        this.form2.service_time = moment(this.form2.service_time).format(
+          "YYYY-MM-DD"
+        );
+        this.form2.total_price = Number(this.form2.total_price);
+        this.form2["opay_price"] = this.form2.total_price;
+        this.form2["cope_price"] = this.form2.total_price;
+        this.form2["pay_price"] = this.form2.total_price;
+        this.form2["user_id"] = localStorage.getItem("user_id");
+        let res = await myAccountAdd(this.form2);
+        this.$refs[form].resetFields();
+        console.log(res);
+        this.init();
+        this.dialogVisible2 = false;
+      });
     },
     handleClose2(form) {
       this.$refs[form].resetFields();
@@ -683,19 +603,22 @@ export default {
     },
 
     async handleAddForm1(form) {
-      this.form1.service_time = moment(this.form1.service_time).format(
-        "YYYY-MM-DD"
-      );
-      this.form1.total_price = -Number(this.form1.total_price);
-      this.form1["opay_price"] = this.form1.total_price;
-      this.form1["cope_price"] = this.form1.total_price;
-      this.form1["pay_price"] = this.form1.total_price;
-      this.form1["user_id"] = localStorage.getItem("user_id");
-      let res = await myAccountAdd(this.form1);
-      this.$refs[form].resetFields();
-      console.log(res);
-      this.init();
-      this.dialogVisible1 = false;
+      this.$refs["form1"].validate(async (valid) => {
+        if (!valid) return;
+        this.form1.service_time = moment(this.form1.service_time).format(
+          "YYYY-MM-DD"
+        );
+        this.form1.total_price = -Number(this.form1.total_price);
+        this.form1["opay_price"] = this.form1.total_price;
+        this.form1["cope_price"] = this.form1.total_price;
+        this.form1["pay_price"] = this.form1.total_price;
+        this.form1["user_id"] = localStorage.getItem("user_id");
+        let res = await myAccountAdd(this.form1);
+        this.$refs[form].resetFields();
+        console.log(res);
+        this.init();
+        this.dialogVisible1 = false;
+      });
     },
     handleClose1(form) {
       this.$refs[form].resetFields();
@@ -703,19 +626,22 @@ export default {
     },
 
     async handleAddForm(form) {
-      this.form.service_time = moment(this.form.service_time).format(
-        "YYYY-MM-DD"
-      );
-      this.form.total_price = Number(this.form.total_price);
-      this.form["opay_price"] = this.form.total_price;
-      this.form["cope_price"] = this.form.total_price;
-      this.form["pay_price"] = this.form.total_price;
-      this.form["user_id"] = localStorage.getItem("user_id");
-      let res = await myAccountAdd(this.form);
-      this.$refs[form].resetFields();
-      console.log(res);
-      this.init();
-      this.dialogVisible = false;
+      this.$refs["form"].validate(async (valid) => {
+        if (!valid) return;
+        this.form.service_time = moment(this.form.service_time).format(
+          "YYYY-MM-DD"
+        );
+        this.form.total_price = Number(this.form.total_price);
+        this.form["opay_price"] = this.form.total_price;
+        this.form["cope_price"] = this.form.total_price;
+        this.form["pay_price"] = this.form.total_price;
+        this.form["user_id"] = localStorage.getItem("user_id");
+        let res = await myAccountAdd(this.form);
+        this.$refs[form].resetFields();
+        console.log(res);
+        this.init();
+        this.dialogVisible = false;
+      });
     },
     handleClose(form) {
       this.$refs[form].resetFields();
@@ -767,6 +693,11 @@ export default {
       let { data } = res.data;
       this.TransactionType = data;
     },
+    async getStylist() {
+      let res = await getStylistList();
+      let { data } = res.data;
+      this.stylists = data;
+    },
     handleSizeChange(val) {
       this.pageSize = val;
       this.init();
@@ -780,12 +711,13 @@ export default {
         page: this.pageIndex,
         page_size: this.pageSize,
       });
+      console.log(res);
       let { data, count } = res.data;
-      let { expend_price, in_price } = res.data.data;
+      // let { expend_price, in_price } = res.data.data;
       res.data.data.map((v) => {
         // console.log(v);
         if (v.account_type === "0") {
-          v["expend"] = Math.abs(v.total_price);
+          v["expend"] = v.total_price;
           v["income"] = 0;
         }
         if (v.account_type === "1") {
@@ -794,12 +726,17 @@ export default {
         }
 
         v["surplus"] = Number(v["income"]) - Number(v["expend"]);
-        v["income"] += v["income"];
-        console.log(v["income"]);
+        v["trade_type"] = v.account_type_name + "单";
       });
       console.log(data);
       this.tableData = data;
       this.total = count;
+      this.formInline.ctime_start = moment(this.formInline.date[0]).format(
+        "YYYY-MM-DD"
+      );
+      this.formInline.ctime_end = moment(this.formInline.date[1]).format(
+        "YYYY-MM-DD"
+      );
     },
   },
   mounted() {

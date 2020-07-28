@@ -62,23 +62,60 @@
       </span>
     </div>
     <div class="table">
-      <el-table :data="tableData" border>
-        <el-table-column fixed prop="data" label="序号"></el-table-column>
-        <el-table-column fixed prop="data" label="客户名称"></el-table-column>
-        <el-table-column fixed prop="data" label="客户分类"></el-table-column>
-        <el-table-column fixed prop="data" label="联系人"></el-table-column>
-        <el-table-column fixed prop="data" label="手机"></el-table-column>
-        <el-table-column fixed prop="data" label="欠款"></el-table-column>
+      <el-table :data="tableData" border size="mini">
+        <el-table-column :show-overflow-tooltip="true" width="140" prop="ctime" label="业务时间"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" width="120" prop="account_no" label="单据编号"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" width="80" prop="user_name" label="操作人"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" width="100" prop="account_name" label="结算账户"></el-table-column>
+        <el-table-column
+          :show-overflow-tooltip="true"
+          width="90"
+          prop="account_type_name"
+          label="账目类型"
+        ></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" width="90" prop="cope_price" label="应付金额"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" width="90" prop="pay_price" label="实付金额"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" width="100" prop="opay_price" label="本单应付余额"></el-table-column>
+        <el-table-column
+          :show-overflow-tooltip="true"
+          width="110"
+          prop="total_price"
+          label="累计应付款余额"
+        ></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" width="130" prop="remarks" label="备注"></el-table-column>
+        <el-table-column prop="data" label="操作"></el-table-column>
       </el-table>
     </div>
+    <el-pagination
+      class="pagination"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="pageIndex"
+      :page-sizes="[9, 18, 27, 36]"
+      :page-size="pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+    ></el-pagination>
   </div>
 </template>
 
 <script>
 import { getStylistList } from "@/api/researchDevelopment";
+import {
+  // supplierAccountList,
+  balanceAccountSelect,
+  // supplierAccountAdd,
+  customerAccountList,
+  customerAccountAdd,
+  balanceAccountTypeSelect,
+} from "@/api/finance";
+import { getSupplierSelect } from "@/api/archives";
 export default {
   data() {
     return {
+      pageIndex: 1,
+      pageSize: 9,
+      total: 0,
       num1: 0,
       num2: 2,
       stylist: "",
@@ -94,8 +131,8 @@ export default {
         { data: 13 },
         { data: 14 },
         { data: 15 },
-        { data: 15333333333333 }
-      ]
+        { data: 15333333333333 },
+      ],
     };
   },
   methods: {
@@ -113,11 +150,32 @@ export default {
       let { data } = res.data;
       console.log(data);
       this.stylists = data;
-    }
+    },
+    async supplierInit() {
+      let res = await customerAccountList({
+        page: this.pageIndex,
+        page_size: this.pageSize,
+      });
+      let { data, count } = res.data;
+      // let { cope_price, pay_price, opay_price } = res.data.data;
+      this.tableData = data;
+      this.total = count;
+      // this.ctime_start = moment(this.formInline.date[0]).format("YYYY-MM-DD");
+      // this.ctime_end = moment(this.formInline.date[1]).format("YYYY-MM-DD");
+    },
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.supplierInit();
+    },
+    handleCurrentChange(val) {
+      this.pageIndex = val;
+      this.supplierInit();
+    },
   },
   mounted() {
     this.getStylist();
-  }
+    this.supplierInit();
+  },
 };
 </script>
 
@@ -176,11 +234,9 @@ export default {
     }
   }
 
-  .table {
-    margin-top: 80px;
-    /deep/.cell {
-      text-align: center;
-    }
+  .pagination {
+    margin: 20px;
+    text-align: right;
   }
 }
 </style>

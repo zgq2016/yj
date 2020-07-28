@@ -24,6 +24,7 @@
             range-separator="至"
             :start-placeholder="ctime_start"
             :end-placeholder="ctime_end"
+            style="width:100%"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="账目类型：">
@@ -56,19 +57,19 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">查询</el-button>
-        </el-form-item>
-        <el-form-item>
           <el-button type="primary" @click="handlePayment">付款</el-button>
-        </el-form-item>
-        <el-form-item>
           <el-button type="primary" @click="beginninGbalanceAdjustment">期初调整</el-button>
-        </el-form-item>
-        <el-form-item>
           <el-button type="primary" v-print="'#printTest'" icon="el-icon-printer">打印</el-button>
-        </el-form-item>
-        <el-form-item>
           <el-button type="primary" icon="el-icon-upload2">导出</el-button>
         </el-form-item>
+        <!-- <el-form-item>
+        </el-form-item>
+        <el-form-item>
+        </el-form-item>
+        <el-form-item>
+        </el-form-item>
+        <el-form-item>
+        </el-form-item>-->
       </el-form>
     </div>
     <el-divider></el-divider>
@@ -520,7 +521,7 @@ export default {
         page_size: this.pageSize,
       });
       let { data, count } = res.data;
-      let { cope_price, pay_price, opay_price } = res.data.data;
+      // let { cope_price, pay_price, opay_price } = res.data.data;
       this.tableData = data;
       this.total = count;
       this.ctime_start = moment(this.formInline.date[0]).format("YYYY-MM-DD");

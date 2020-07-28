@@ -411,6 +411,14 @@ export const styleSampleDel = (data) => {
     data: data,
   });
 };
+//样衣图片删除接口
+export const goodsStylePriceAdd = (data) => {
+  return axios({
+    url: "?g=goods_style_price_add",
+    method: "post",
+    data: data,
+  });
+};
 
 // contacts、phone
 // bank、bankid、name

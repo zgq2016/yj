@@ -1,5 +1,6 @@
 <template>
   <div class="development" v-if="power.indexOf('A3000100')!=-1">
+    <!-- <input type="text"> -->
     <el-steps space="200" style="margin-top:50px">
       <el-step
         style="width:100px"
@@ -18,7 +19,8 @@ export default {
   data() {
     return {
       power: "",
-      activities_endlong: []
+      activities_endlong: [],
+
     };
   },
   methods: {
@@ -27,13 +29,13 @@ export default {
       let res = await getStyle({ id });
       console.log(res);
       this.activities_endlong = res.data.data.style_log;
-    }
+    },
   },
   mounted() {
     this.init();
     this.power = localStorage.getItem("power");
     console.log(this.power);
-  }
+  },
 };
 </script>
 
