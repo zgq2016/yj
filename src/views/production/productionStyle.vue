@@ -871,6 +871,38 @@
                     @click="completeDel(item.id_c,index)"
                     v-if="power.indexOf('B5000300')!=-1"
                   >删除</el-button>
+                  <el-form-item label="出货方式:" style="width:250px;margin-left:120px;font-size:16px;">
+                    <el-radio-group @change="radioChange($event,item)" v-model="item.shipping_type">
+                      <el-radio :label="0">客户</el-radio>
+                      <el-radio :label="1">仓库</el-radio>
+                    </el-radio-group>
+                  </el-form-item>
+                  <el-form-item
+                    v-if="item.shipping_type==1"
+                    label="仓库:"
+                    style="width:250px;margin-left:120px;font-size:16px;"
+                  >
+                    <el-select
+                      size="mini"
+                      v-model="item.storehouse_id"
+                      placeholder="请选择仓库"
+                      clearable
+                    >
+                      <el-option
+                        v-for="items in wares"
+                        :key="items.id"
+                        :label="items.storehouse_name"
+                        :value="items.id"
+                      ></el-option>
+                      <el-pagination
+                        small
+                        layout="prev, pager, next"
+                        @size-change="handleSize"
+                        @current-change="handleCurrent"
+                        :total="total2"
+                      ></el-pagination>
+                    </el-select>
+                  </el-form-item>
                   <hr style="border:1px dashed #999999" />
                 </el-form>
               </div>
@@ -879,7 +911,7 @@
                 <el-row style="margin-left:5%;" v-if="shipmentVB">
                   <el-col :span="3">出货数量：</el-col>
                 </el-row>
-                <div style="position:relative" v-for="(item,index) in complete" :key="index">
+                <el-form style="position:relative" v-for="(item,index) in complete" :key="index">
                   <!-- 成品 -->
                   <div>
                     <div class="tailor_table">
@@ -932,8 +964,16 @@
                       >{{item.total_b}}</span>
                     </div>
                   </div>
+                  <div
+                    v-if="item.shipping_type==1"
+                    style="margin-left:120px;font-size:16px;font-weight:400;"
+                  >仓库：{{item.storehouse_id}}</div>
+                  <div
+                    v-if="item.shipping_type==0"
+                    style="margin-left:120px;font-size:16px;font-weight:400;"
+                  >客户</div>
                   <hr style="border:1px dashed #999999" />
-                </div>
+                </el-form>
                 <el-button
                   style="position:absolute;right:10%;top:0;"
                   round
@@ -1066,6 +1106,7 @@ import {
   getSupplierInfo, //供应商
   getFactoryModeSelect,
 } from "@/api/archives";
+import { storehouseList } from "@/api/warehouse.js";
 export default {
   data() {
     return {
@@ -1374,6 +1415,10 @@ export default {
       showhide3: true,
       showhide4: true,
       showhide5: true,
+      pageIndex2: 1,
+      pageSize2: 10,
+      total2: 0,
+      wares: [], //仓库
     };
   },
   methods: {
@@ -1601,7 +1646,6 @@ export default {
       let res = await getSizeSelect();
       let { data } = res.data;
       this.sizes = data;
-      console.log(res);
     },
     // 确定增加批次
     async addDesign() {
@@ -2937,6 +2981,7 @@ export default {
             this.showhide5 = true;
           } else {
             this.showhide5 = false;
+            // console.log(1);
             this.ascertain3 = false;
             this.tailoradd();
           }
@@ -3057,8 +3102,28 @@ export default {
         total_a: 0,
         total_b: 0,
         id_c: 0,
+        shipping_type: 0,
       });
       // console.log(this.complete);
+    },
+    // 仓库
+    async ware() {
+      // 仓库
+      let res = await storehouseList({
+        page: this.pageIndex2,
+        page_size: this.pageSize2,
+      });
+      let { data } = res.data;
+      this.wares = data;
+      this.total2 = res.data.count;
+    },
+    handleSize(val) {
+      this.pageSize2 = val;
+      this.ware();
+    },
+    handleCurrent(val) {
+      this.pageIndex2 = val;
+      this.ware();
     },
     // 出货input输入计算
     // 成品
@@ -3102,10 +3167,18 @@ export default {
       console.log(this.complete);
       let blo = true;
       this.complete.map((v, i) => {
-        if (v.total_a == 0 && v.total_b == 0) {
+        if (v.total_a == 0 || v.total_b == 0) {
           blo = false;
+          return;
+        }
+        if (v.shipping_type == 1) {
+          if (v.storehouse_id == undefined || v.storehouse_id == "") {
+            blo = false;
+            return;
+          }
         }
       });
+      // console.log(blo);
       if (blo) {
         this.$confirm("提交出货订单, 是否继续?", "提示", {
           confirmButtonText: "确定",
@@ -3156,6 +3229,8 @@ export default {
                   style_id: id,
                   produce_no: data[this.active].produce_no,
                   produce_complete_size: arr,
+                  shipping_type:v.shipping_type,
+                  storehouse_id: v.shipping_type == 1 ? v.storehouse_id : '',
                 });
               });
               let res1 = await produceCompleteAdd({
@@ -3199,11 +3274,20 @@ export default {
                     }
                   });
                 });
+                let str = "";
+                this.wares.map((j, k) => {
+                  if (v.storehouse_id == j.storehouse_name) {
+                    str = j.id;
+                  }
+                });
                 arrNew.push({
                   style_id: id,
                   produce_no: data[this.active].produce_no,
                   id: v.id_c,
                   produce_complete_size: arr,
+                  shipping_type:v.shipping_type,
+                  storehouse_id:
+                    v.shipping_type == 1 ? str || v.storehouse_id : "",
                 });
               });
               let res1 = await produceCompleteEdit({
@@ -3227,7 +3311,7 @@ export default {
             });
           });
       } else {
-        this.$message.error("请输入尺码数量");
+        this.$message.error("请输入尺码数量和选择仓库");
       }
     },
     // 删除
@@ -3279,6 +3363,7 @@ export default {
             produce_no: data[this.active].produce_no,
           });
           let data1 = res1.data.data;
+          console.log(res1);
           // console.log(this.t_size);
           // console.log(this.complete);
           if (this.t_size.length != 0) {
@@ -3385,12 +3470,20 @@ export default {
               arr_b.map((j, k) => {
                 total_bb += j.sizeNum;
               });
+
+              this.wares.map((j, k) => {
+                if (v.storehouse_id == j.id) {
+                  v.storehouse_id = j.storehouse_name;
+                }
+              });
               // 往表内加数据
               this.complete.push({
                 total_a: total_aa,
                 total_b: total_bb,
                 t_size: this.t_size,
                 id_c: v.id,
+                storehouse_id: v.storehouse_id,
+                shipping_type: v.shipping_type,
                 produce_complete_size_a_data: arr_a,
                 produce_complete_size_b_data: arr_b,
               });
@@ -3401,6 +3494,7 @@ export default {
             this.ascertain4 = true;
             this.vb2 = true;
             this.edit2 = true;
+            this.showhide5 = true;
           } else {
             this.ascertain4 = false;
             this.goDownAdd();
@@ -3418,6 +3512,10 @@ export default {
     //   let {data} = res.data;
     //   this.logDatas = data;
     // }
+    // 客户仓库单选框
+    radioChange(item, index) {
+      console.log(item, index);
+    },
   },
   async mounted() {
     let { id } = this.$route.query;
@@ -3428,7 +3526,6 @@ export default {
     let res1 = await produceInfo({ style_id: Number(id) });
     let { data } = res1.data;
 
-    console.log(data);
     if (data.length > 0) {
       this.ob = [];
       data.map((v, i) => {
@@ -3446,7 +3543,6 @@ export default {
     } else {
       this.home = true;
     }
-    console.log(this.ob);
 
     // console.log(this.obj);
     // console.log(this.obj.style_materials_color_data)
@@ -3460,11 +3556,12 @@ export default {
     this.westList();
     this.styleColorSelect();
     this.ProcureList();
+    this.ware(); //仓库
     // this.logData();
     this.TL = this.$route.query.TL - 0;
 
     this.power = localStorage.getItem("power");
-    console.log(this.power);
+    // console.log(this.power);
   },
 };
 </script>

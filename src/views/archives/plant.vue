@@ -134,7 +134,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="page"
-          :page-sizes="[9, 18, 27, 36]"
+          :page-sizes="[10, 20, 30, 40]"
           :page-size="page_size"
           layout="total, sizes, prev, pager, next, jumper"
           :total="count"
@@ -333,7 +333,7 @@ export default {
       item: {},
       getMaterialsClassInfoObj: {},
       page: 1,
-      page_size: 9,
+      page_size:10,
       count: 0,
       TL: "",
       row_mode: {}
@@ -343,12 +343,12 @@ export default {
     handleSizeChange(val) {
       // console.log(val)
       this.page_size = val;
-      // this.init(this.form);
+      this.init(this.form);
     },
     handleCurrentChange(val) {
       // console.log(val)
       this.page = val;
-      // this.init(this.form);
+      this.init(this.form);
     },
     // 编辑工厂指派方式保存
     async handleEdit() {
@@ -356,7 +356,7 @@ export default {
         mode_name: this.row_mode.mode_name,
         id: this.row_mode.id
       });
-      console.log(res);
+      // console.log(res);
       this.init();
 
       this.centerDialogVisible1 = false;
@@ -372,7 +372,7 @@ export default {
           let res = await factoryModeDel({
             id: this.row_mode.id
           });
-          console.log(res);
+          // console.log(res);
           this.init();
           this.$message({
             type: "success",
@@ -389,7 +389,7 @@ export default {
     },
     // 编辑工厂方式
     async aa(item) {
-      console.log(item);
+      // console.log(item);
       this.row_mode = item;
       this.centerDialogVisible1 = true;
     },
@@ -418,7 +418,7 @@ export default {
       let res = await factoryModeAdd({
         mode_name: this.value
       });
-      console.log(res);
+      // console.log(res);
       this.value = "";
       this.init();
       this.centerDialogVisible = false;
@@ -454,7 +454,7 @@ export default {
       this.centerDialogVisible3 = true;
     },
     onSubmit() {
-      console.log(this.form);
+      // console.log(this.form);
       this.init(this.form);
     },
     // 点击menu

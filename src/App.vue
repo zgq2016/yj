@@ -20,6 +20,6 @@
   }
 }
 .el-select-dropdown {
-  width: 170px !important;
+  width: 200px !important;
 }
 </style>
