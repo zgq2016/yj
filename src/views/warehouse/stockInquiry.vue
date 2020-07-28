@@ -277,6 +277,7 @@
                     v-model="scope.row.commodity"
                     filterable
                     @blur="bblur(scope.row,scope.column)"
+                    @visible-change="visibleChange($event,scope.row)"
                     @change="handleSelect($event,scope.column, scope.row,scope.$index)"
                     placeholder="请选择"
                     size="mini"
@@ -552,27 +553,9 @@ export default {
       dialogFormVisible: false,
       //选择商品
 
-      restaurants: [
-        { value: "三全鲜食1", item_no: "121356", bar_code: "a1213516" },
-        { value: "三全鲜食2", item_no: "121356", bar_code: "b121355" },
-        { value: "三全鲜食4", item_no: "121356", bar_code: "d121353" },
-        { value: "三全鲜食4", item_no: "121356", bar_code: "d121353" },
-        { value: "三全鲜食3", item_no: "121a36", bar_code: "c121354" },
-        { value: "三全鲜食3", item_no: "121a36", bar_code: "c121354" },
-        { value: "三全鲜食3", item_no: "121a36", bar_code: "c121354" },
-        { value: "三全鲜食3", item_no: "121a36", bar_code: "c121354" },
-        { value: "三全鲜食3", item_no: "121a36", bar_code: "c121354" },
-        { value: "三全鲜食3", item_no: "121a36", bar_code: "c121354" },
-        { value: "三全鲜食3", item_no: "121a36", bar_code: "c121354" },
-        { value: "三全鲜食4", item_no: "121356", bar_code: "d121353" },
-        { value: "三全鲜食3", item_no: "121a36", bar_code: "c121354" },
-      ],
-      colors: [
-        { value: "红色", quantitys: [] },
-        { value: "白色", quantitys: [] },
-        { value: "浅绿色", quantitys: [] },
-      ],
-      sizes: [{ value: "L" }, { value: "XL" }, { value: "M" }],
+      restaurants: [],
+      colors: [],
+      sizes: [],
 
       // table数据
       weretable: [
@@ -580,30 +563,7 @@ export default {
           commodity: "",
           item_no: "",
           bar_code: "",
-          monad: "件",
-          color: "",
-          size: "",
-          quantity: "0",
-          univalence: "100.00",
-          discount: "100",
-          discountPrice: "0.00",
-          sum: "0.00",
-          sumed: "0.00",
-          remark: "",
-          showHidden1: false,
-          showHidden2: false,
-          showHidden3: false,
-          showHidden4: false,
-          showHidden5: false,
-          showHidden6: false,
-          showHidden7: false,
-          showHidden8: false,
-        },
-        {
-          commodity: "",
-          item_no: "",
-          bar_code: "",
-          monad: "件",
+          monad: "",
           color: "",
           size: "",
           quantity: "0",
@@ -626,7 +586,7 @@ export default {
           commodity: "",
           item_no: "",
           bar_code: "",
-          monad: "件",
+          monad: "",
           color: "",
           size: "",
           quantity: "0",
@@ -649,7 +609,7 @@ export default {
           commodity: "",
           item_no: "",
           bar_code: "",
-          monad: "件",
+          monad: "",
           color: "",
           size: "",
           quantity: "0",
@@ -672,7 +632,7 @@ export default {
           commodity: "",
           item_no: "",
           bar_code: "",
-          monad: "件",
+          monad: "",
           color: "",
           size: "",
           quantity: "0",
@@ -695,7 +655,30 @@ export default {
           commodity: "",
           item_no: "",
           bar_code: "",
-          monad: "件",
+          monad: "",
+          color: "",
+          size: "",
+          quantity: "0",
+          univalence: "0.00",
+          discount: "100",
+          discountPrice: "0.00",
+          sum: "0.00",
+          sumed: "0.00",
+          remark: "",
+          showHidden1: false,
+          showHidden2: false,
+          showHidden3: false,
+          showHidden4: false,
+          showHidden5: false,
+          showHidden6: false,
+          showHidden7: false,
+          showHidden8: false,
+        },
+        {
+          commodity: "",
+          item_no: "",
+          bar_code: "",
+          monad: "",
           color: "",
           size: "",
           quantity: "0",
@@ -882,26 +865,7 @@ export default {
       this.pageIndex = val;
       this.init(this.obj);
     },
-    async getYear() {
-      let res = await getYearList();
-      let { data } = res.data;
-      this.years = data;
-    },
-    async getSeason() {
-      let res = await getSeasonList();
-      let { data } = res.data;
-      this.seasons = data;
-    },
-    async getStylist() {
-      let res = await getStylistList();
-      let { data } = res.data;
-      this.stylists = data;
-    },
-    async getCategory() {
-      let res = await getCategoryList();
-      let { data } = res.data;
-      this.categorys = data;
-    },
+
     // 多选
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -914,6 +878,28 @@ export default {
       });
       let { data } = res.data;
       this.form = data;
+      console.log(this.form);
+      this.weretable = [{}];
+      if (this.form.size_data.length > 0) {
+        this.weretable = [];
+        this.form.size_data.map((v, i) => {
+          this.weretable.push({
+            commodity: v.stylename,
+            item_no: v.produce_no,
+            bar_code: "",
+            monad: v.unit, //单位
+            color: v.style_color_name,
+            size: v.size,
+            quantity: v.quantity,
+            univalence: v.price,
+            discount: "100",
+            discountPrice: v.discount_price,
+            sum:v.money,
+            sumed: v.discount_money,
+            remark: v.remark,
+          });
+        });
+      }
       if (this.form.state == 0) {
         this.actionsLenght = 0;
         this.vh1 = true;
@@ -936,7 +922,6 @@ export default {
         this.vh4 = true;
         this.vh5 = true;
       }
-      console.log(res);
     },
     //右边单元格被点击
     cellClick1(row, column, cell, event) {
@@ -967,7 +952,7 @@ export default {
       } else if (column.label == "备注") {
         row.showHidden8 = true;
       }
-      this.shopping()
+      this.shopping();
       this.dow = document.getElementsByClassName("el-input__inner");
       let arr = [];
       this.dow.forEach((el, index) => {
@@ -975,7 +960,6 @@ export default {
           arr.push(el);
         }
       });
-      console.log(arr);
       arr.map((v, i) => {
         v.oninput = () => {
           this.shopping(v.value);
@@ -1089,27 +1073,48 @@ export default {
     handleSelect(v, column, row, index) {
       // console.log(v,idnex,row);
       // console.log(column.label);
-      console.log(v, column, row, index);
+      // console.log(v, this.shopppings);
       if (column.label == "商品") {
+        // console.log(v);
+        this.sizes = [];
+        this.colors = [];
+        let arr = [];
+        this.shopppings.map((item, i) => {
+          if (v == item.id) {
+            v = item;
+            item.style_data.forEach((item1, index) => {
+              for (let dd in item1.type_data) {
+                arr.push(dd);
+              }
+              this.colors.push({
+                value: item1.style_color_name,
+                quantitys: [],
+              });
+            });
+          }
+        });
+        arr = [...new Set(arr)];
+        arr.map((j, k) => {
+          this.sizes.push({ value: j });
+        });
+
         row.commodity = v.stylename;
         row.item_no = v.styleno;
         row.bar_code = v.bar_code;
         row.showHidden1 = false;
         this.dialogFormVisible = true;
-        this.colors.forEach((item) => {
-          item.quantitys = [];
-        });
 
-        // console.log(index);
         this.indexk = index;
       } else if (column.label == "颜色") {
         row.color = v.value;
         row.showHidden2 = false;
       } else if (column.label == "尺码") {
+        console.log(v);
         row.size = v.value;
         row.showHidden3 = false;
       }
       // console.log(row);
+      // console.log(this.sizes, this.colors);
     },
     // 刷新新增入库单
     addCreateWare() {
@@ -1127,7 +1132,7 @@ export default {
           commodity: "",
           item_no: "",
           bar_code: "",
-          monad: "件",
+          monad: "",
           color: "",
           size: "",
           quantity: "0",
@@ -1168,7 +1173,7 @@ export default {
                 commodity: this.weretable[this.indexk].commodity,
                 item_no: this.weretable[this.indexk].item_no,
                 bar_code: this.weretable[this.indexk].bar_code,
-                monad: "件",
+                monad: "",
                 color: v.value,
                 size: this.sizes[k].value,
                 quantity: j,
@@ -1221,13 +1226,12 @@ export default {
     },
     // 商品
     async shopping(item) {
-      
       let res1 = await getProjectStyleList({
-        keyword: item == undefined ? "a" : item,
+        keyword: item == undefined ? "" : item,
         page: this.pageIndex3,
         page_size: this.pageSize3,
       });
-      console.log(res1);
+      // console.log(res1);
       this.shopppings = res1.data.data;
       this.total3 = res1.data.count;
     },
@@ -1341,6 +1345,12 @@ export default {
       this.form = {};
       this.init(this.obj);
     },
+    // 商品信息下拉框显示隐藏
+    visibleChange(item, row) {
+      if (item == false) {
+        row.showHidden1 = false;
+      }
+    },
     async init(obj) {
       // 数据类型 0草稿 1已入库 4已撤销
       let res = await bookStockOrderList({
@@ -1362,13 +1372,9 @@ export default {
     },
   },
   async mounted() {
-    this.shopping();
     this.init();
+    this.shopping();
     this.information();
-    this.getYear();
-    this.getSeason();
-    this.getStylist();
-    this.getCategory();
   },
 };
 </script>
@@ -1463,7 +1469,6 @@ export default {
       }
       .right_main {
         .right_form {
-         
           /deep/.cssa {
             .el-steps {
               position: relative;

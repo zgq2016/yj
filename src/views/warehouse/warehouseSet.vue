@@ -143,7 +143,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="Submit1">提交</el-button>
-        <el-button @click="dialogFormVisible1 = false">返回</el-button>
+        <el-button @click="backtrack">返回</el-button>
       </div>
     </el-dialog>
   </div>
@@ -156,14 +156,14 @@ import {
   storehouseAdd, //新增仓库接口
   storehouseEdit, //编辑仓库接口
   storehouseDel, //删除仓库接口
-  storehouseList // 查看仓库接口
+  storehouseList, // 查看仓库接口
 } from "@/api/warehouse.js";
 export default {
   data() {
     return {
       // 数据表
       form: {
-        name: ""
+        name: "",
       },
       // 新建
       form1: {},
@@ -172,48 +172,48 @@ export default {
       // 新建校对
       rules1: {
         storehouse_name: [
-          { required: true, message: "请输入仓库名称", trigger: "blur" }
+          { required: true, message: "请输入仓库名称", trigger: "blur" },
         ],
         contacts: [
-          { required: true, message: "请选择仓库负责人", trigger: "change" }
+          { required: true, message: "请选择仓库负责人", trigger: "change" },
         ],
         storehouse_type: [
-          { required: true, message: "请选择仓库类型", trigger: "change" }
+          { required: true, message: "请选择仓库类型", trigger: "change" },
         ],
         state: [
-          { required: true, message: "请选择是否启用", trigger: "change" }
-        ]
+          { required: true, message: "请选择是否启用", trigger: "change" },
+        ],
       },
       // 编辑校对
       rules2: {
         storehouse_name: [
-          { required: true, message: "请输入仓库名称", trigger: "blur" }
+          { required: true, message: "请输入仓库名称", trigger: "blur" },
         ],
         contacts: [
-          { required: true, message: "请选择仓库负责人", trigger: "change" }
+          { required: true, message: "请选择仓库负责人", trigger: "change" },
         ],
         storehouse_type: [
-          { required: true, message: "请选择仓库类型", trigger: "change" }
+          { required: true, message: "请选择仓库类型", trigger: "change" },
         ],
         state: [
-          { required: true, message: "请选择是否启用", trigger: "change" }
-        ]
+          { required: true, message: "请选择是否启用", trigger: "change" },
+        ],
       },
       ware: [],
       dialogFormVisible: false,
       dialogFormVisible1: false,
       invoke: [
         { name: "启用", id: 1 },
-        { name: "关闭", id: 0 }
+        { name: "关闭", id: 0 },
       ],
       genre: [
         { name: "产品仓库", id: 0 },
-        { name: "物料仓库", id: 1 }
+        { name: "物料仓库", id: 1 },
       ],
       user: [],
       page: 1,
       page_size: 9,
-      count: 0
+      count: 0,
     };
   },
   methods: {
@@ -228,23 +228,23 @@ export default {
       this.$confirm("此操作将永久删除该行数据, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           let res = await storehouseDel({
-            id: row.id
+            id: row.id,
           });
           // console.log(res);
           this.init();
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
@@ -254,7 +254,7 @@ export default {
     },
     // 新增仓库
     Submit() {
-      this.$refs["form1"].validate(async valid => {
+      this.$refs["form1"].validate(async (valid) => {
         if (!valid) return;
         this.dialogFormVisible = false;
         let res = await storehouseAdd({
@@ -263,7 +263,7 @@ export default {
           storehouse_type: this.form1.storehouse_type,
           state: this.form1.state,
           sort: this.form1.sort,
-          remarks: this.form1.remarks
+          remarks: this.form1.remarks,
         });
         // console.log(res);
         this.init();
@@ -271,7 +271,7 @@ export default {
     },
     // 编辑库存设置
     Submit1() {
-      this.$refs["form2"].validate(async valid => {
+      this.$refs["form2"].validate(async (valid) => {
         if (!valid) return;
         this.dialogFormVisible1 = false;
         let cont1 = "";
@@ -300,10 +300,36 @@ export default {
           state: cont3 === "" ? this.form2.state : cont3,
           sort: this.form2.sort,
           remarks: this.form2.remarks,
-          id: this.form2.id
+          id: this.form2.id,
         });
         this.init();
       });
+    },
+    // 编辑返回
+    backtrack() {
+      this.dialogFormVisible1 = false;
+      // this.user.map((v, i) => {
+      //   this.ware.map((j, k) => {
+      //     if (v.id == j.contacts) {
+      //       j.contacts = v.name;
+      //     }
+      //   });
+      // });
+      // this.genre.map((v, i) => {
+      //   this.ware.map((j, k) => {
+      //     if (v.id == j.storehouse_type) {
+      //       j.storehouse_type = v.name;
+      //     }
+      //   });
+      // });
+      // this.invoke.map((v, i) => {
+      //   this.ware.map((j, k) => {
+      //     if (v.id == j.state) {
+      //       j.state = v.name;
+      //     }
+      //   });
+      // });
+      this.init()
     },
     handleSizeChange(val) {
       // console.log(val)
@@ -327,7 +353,7 @@ export default {
       let res = await storehouseList({
         page: this.page,
         page_size: this.page_size,
-        ...obj
+        ...obj,
       });
       console.log(res);
       let { data } = res.data;
@@ -356,12 +382,12 @@ export default {
       });
 
       // console.log(res);
-    }
+    },
   },
   async mounted() {
     this.getStylist();
     this.init();
-  }
+  },
 };
 </script>
 
