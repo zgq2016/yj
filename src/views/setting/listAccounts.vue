@@ -11,17 +11,16 @@
     <!-- <el-button type="primary">增加账户</el-button> -->
     <el-table :data="tableData" style="width: 100%;margin: 20px 0;" row-key="id" border>
       <el-table-column prop="name" label="用户名"></el-table-column>
+      <el-table-column prop="role_name" label="权限角色"></el-table-column>
       <el-table-column prop="username" label="账号"></el-table-column>
+      <el-table-column prop="Access" label="权限等级"></el-table-column>
       <el-table-column align="center" width="100" label="操作">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
             <div class="el-icon-s-tools btn" @click="handleEdit(scope.$index, scope.row)"></div>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="设置权限" placement="top-start">
-            <div
-              class="el-icon-edit btn"
-              @click="handleEditUser(scope.$index, scope.row)"
-            ></div>
+            <div class="el-icon-edit btn" @click="handleEditUser(scope.$index, scope.row)"></div>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -60,16 +59,31 @@
       </span>
     </el-dialog>
     <el-dialog title="添加权限" :visible.sync="centerDialogVisible2" width="30%" center>
-      <el-select v-model="userRole" placeholder="请选择">
-        <el-option
-          v-for="item in userRoleList"
-          :key="item.id"
-          :label="item.role_name"
-          :value="item.role_name"
-        ></el-option>
-      </el-select>
+      <el-form ref="form1" :model="form1" :rules="rules1" label-width="80px">
+        <el-form-item label="权限角色" prop="role_name">
+          <el-select v-model="form1.role_name" placeholder="请选择">
+            <el-option
+              v-for="item in userRoleList"
+              :key="item.id"
+              :label="item.role_name"
+              :value="item.role_name"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="权限等级" prop="level">
+          <el-select v-model="form1.level" placeholder="请选择">
+            <el-option
+              v-for="item in Access_level"
+              :key="item.id"
+              :label="item.access"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+
       <span slot="footer" class="dialog-footer">
-        <el-button @click="centerDialogVisible1 = false">取 消</el-button>
+        <el-button @click="centerDialogVisible2 = false">取 消</el-button>
         <el-button type="primary" @click="handleEditUserList">确 定</el-button>
       </span>
     </el-dialog>
@@ -96,7 +110,7 @@ import {
   userList,
   userPassEdit,
   getRoleSelect,
-  userEdit
+  userEdit,
 } from "@/api/setting.js";
 export default {
   data() {
@@ -109,8 +123,9 @@ export default {
       form: {
         goods_category_name: "",
         describe: "",
-        sort: ""
+        sort: "",
       },
+      form1: { role_name: "", Access: "" },
       options: [],
       pageIndex: 1,
       pageSize: 10,
@@ -120,31 +135,42 @@ export default {
       rules: {
         pwd: [{ required: true, message: "请输入原密码", trigger: "blur" }],
         passworded: [
-          { required: true, message: "请输入修改后密码", trigger: "blur" }
-        ]
+          { required: true, message: "请输入修改后密码", trigger: "blur" },
+        ],
       },
       vb: false,
       userRoleList: [],
       row: {},
-      userRole: ""
+
+      Access_level: [
+        // {
+        //   id: 0,
+        //   access: "注册人",
+        // },
+        {
+          id: 1,
+          access: "管理",
+        },
+        {
+          id: 2,
+          access: "普通",
+        },
+      ],
+      rules1: {},
     };
   },
   methods: {
     async handleEditUserList() {
-      let res = await userEdit({
-        role_name: this.userRole,
-        name: this.row.name,
-        id: this.row.id
-      });
+      let res = await userEdit(this.form1);
       console.log(res);
-
       this.centerDialogVisible2 = false;
       this.init();
     },
     async handleEditUser(index, row) {
-      console.log(row);
-      this.row = row;
+      this.form1.name = row.name;
+      this.form1.id = row.id;
       let res = await getRoleSelect();
+      console.log(res);
       this.userRoleList = res.data.data;
       this.centerDialogVisible2 = true;
     },
@@ -163,12 +189,12 @@ export default {
       }
     },
     handleEditList() {
-      this.$refs["form"].validate(async valid => {
+      this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         if (!this.vb) {
           let res = await userPassEdit({
             id: this.form.id,
-            newpass: this.form.passworded
+            newpass: this.form.passworded,
           });
           console.log(res);
 
@@ -195,17 +221,29 @@ export default {
     async init() {
       let res = await userList({
         page: this.pageIndex,
-        page_size: this.pageSize
+        page_size: this.pageSize,
       });
       console.log(res);
+      res.data.data.map((v) => {
+        if (v.level === "0") {
+          v["Access"] = "注册人";
+        }
+        if (v.level === "1") {
+          v["Access"] = "管理";
+        }
+        if (v.level === "2") {
+          v["Access"] = "普通";
+        }
+        console.log(v);
+      });
       let { data, count } = res.data;
       this.tableData = data;
       this.total = count;
-    }
+    },
   },
   mounted() {
     this.init();
-  }
+  },
 };
 </script>
 

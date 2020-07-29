@@ -263,8 +263,9 @@ import {
   getPower,
   getRole,
   roleEdit,
-  roleDel
+  roleDel,
 } from "@/api/setting.js";
+import loginVue from "../login.vue";
 export default {
   data() {
     return {
@@ -272,24 +273,24 @@ export default {
       form: {
         role_name: "",
         remarks: "",
-        power: []
+        power: [],
       },
       obj: {},
       // 表单规则
       rules: {
         role_name: [
-          { required: true, message: "请输入项目名称", trigger: "blur" }
-        ]
+          { required: true, message: "请输入项目名称", trigger: "blur" },
+        ],
       },
       // 表单规则
       rules1: {
         role_name: [
-          { required: true, message: "请输入项目名称", trigger: "blur" }
-        ]
+          { required: true, message: "请输入项目名称", trigger: "blur" },
+        ],
       },
       checked: false,
       height: "100px",
-      status: 1
+      status: 1,
     };
   },
   methods: {
@@ -519,7 +520,7 @@ export default {
       });
     },
     cellclick(row, column, cell, event) {
-      getRole({ id: row.id }).then(res => {
+      getRole({ id: row.id }).then((res) => {
         let obj = {};
         obj["power"] = JSON.parse(res.data.data[0].power);
         obj["remarks"] = res.data.data[0].remarks;
@@ -534,7 +535,7 @@ export default {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           let res = await roleDel({ id: row.id });
@@ -542,18 +543,18 @@ export default {
           this.init();
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
     handleEdit(index, row) {
-      getRole({ id: row.id }).then(res => {
+      getRole({ id: row.id }).then((res) => {
         // console.log(res);
         let obj = {};
         obj["power"] = JSON.parse(res.data.data[0].power);
@@ -589,7 +590,7 @@ export default {
       this.status = 1;
     },
     async handleAddRole() {
-      this.$refs["form"].validate(async valid => {
+      this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
         let res = await roleAdd(this.form);
@@ -610,7 +611,7 @@ export default {
       });
     },
     async handleEditRole() {
-      this.$refs["obj"].validate(async valid => {
+      this.$refs["obj"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
         let obj = {};
@@ -661,12 +662,12 @@ export default {
       let res = await roleList();
       let { data } = res.data;
       this.role_list = data;
-    }
+    },
   },
   mounted() {
     this.init();
     this.getPowerList();
-  }
+  },
 };
 </script>
 

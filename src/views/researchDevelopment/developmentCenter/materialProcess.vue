@@ -303,11 +303,11 @@ import {
   styleMaterialsListColorEdit,
   projectStyleMaterialsListAdd,
   stylePurchaseAdd,
-  getColorSelect
+  getColorSelect,
 } from "@/api/researchDevelopment";
 import {
   getMaterialsInfo, //物料
-  getSupplierInfo //供应商
+  getSupplierInfo, //供应商
 } from "@/api/archives";
 export default {
   data() {
@@ -321,20 +321,20 @@ export default {
       cardList: [
         {
           materialsCard: "主料卡",
-          materials: "主料"
+          materials: "主料",
         },
         {
           materialsCard: "里料卡",
-          materials: "里料"
+          materials: "里料",
         },
         {
           materialsCard: "辅料卡",
-          materials: "辅料"
+          materials: "辅料",
         },
         {
           materialsCard: "工艺卡",
-          materials: "工艺"
-        }
+          materials: "工艺",
+        },
       ], //首页大数据
       card: [], //首页数据
       searchCard: [], //搜索数据
@@ -367,7 +367,7 @@ export default {
       isAllCheck: false,
       checkNum: 0,
       card_length: 0,
-      isCheckList1: [] //复选框数组1
+      isCheckList1: [], //复选框数组1
     };
   },
   methods: {
@@ -384,7 +384,7 @@ export default {
         this.style_color_name = this.obj.style_color_data[0].style_color_name;
         let res1 = await getStyleMaterialsList({
           style_id: this.style_id,
-          style_color_name: this.style_color_name
+          style_color_name: this.style_color_name,
         });
         res1.data.data.forEach((v, i) => {
           v.style_materials_data.forEach((v, i) => {
@@ -403,7 +403,7 @@ export default {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           let res = await projectStyleMaterialsDel({ id: item.id });
@@ -412,13 +412,13 @@ export default {
           this.delListInit();
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
@@ -426,7 +426,7 @@ export default {
       this.$confirm("确定选择", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       }).then(async () => {
         let style_id =
           this.activeItem.style_id || this.obj.style_color_data[0].style_id;
@@ -442,7 +442,7 @@ export default {
           style_color_name,
           mainclass,
           materials_id,
-          materials_color_id
+          materials_color_id,
         });
         console.log(res);
         this.active = 0;
@@ -468,7 +468,7 @@ export default {
       item2["color_no"] = item3.color_no;
       let res = await styleMaterialsListColorEdit({
         id: item2.id,
-        materials_color_id: item3.id
+        materials_color_id: item3.id,
       });
       this.visible2 = false;
     },
@@ -488,7 +488,7 @@ export default {
       let res = await getMaterialsList({
         keyword: this.searchInput,
         page: this.pageIndex,
-        page_size: this.pageSize
+        page_size: this.pageSize,
       });
       let { data, count } = res.data;
       this.MaterialsList = data;
@@ -501,7 +501,7 @@ export default {
       let res = await getMaterialsList({
         keyword: "",
         page: this.pageIndex,
-        page_size: this.pageSize
+        page_size: this.pageSize,
       });
       let { data, count } = res.data;
       this.MaterialsList = data;
@@ -511,24 +511,24 @@ export default {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           let { id } = this.$route.query;
           let res = await projectStyleColorDel({
             style_id: id,
-            style_color_name: item.style_color_name
+            style_color_name: item.style_color_name,
           });
           this.init();
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
@@ -538,7 +538,7 @@ export default {
       if (this.isCheckListBoxEvent.isCheckList !== true) {
         let res = await projectStyleColorAdd({
           style_id: id,
-          style_color_name: this.designColor
+          style_color_name: this.designColor,
         });
         this.init();
         this.centerDialogVisible = false;
@@ -551,6 +551,7 @@ export default {
         obj["style_materials_list_data"] = this.isCheckList;
 
         let res = await projectStyleMaterialsListAdd(obj);
+        console.log(res);
         this.init();
         this.active = 0;
         this.centerDialogVisible = false;
@@ -563,7 +564,7 @@ export default {
           mainclass: e1.mainclass,
           id: e.id,
           materials_color_id: this.materials_color_id1 || e1.style_color_id,
-          materials_id: e.materials_id
+          materials_id: e.materials_id,
         });
       }
       if (e.isCheckList === false) {
@@ -608,7 +609,7 @@ export default {
       this.activeItem = item;
       let res = await getStyleMaterialsList({
         style_id: item.style_id,
-        style_color_name: item.style_color_name
+        style_color_name: item.style_color_name,
       });
       console.log(res);
       if (res.data.data.length !== 0) {
@@ -634,7 +635,7 @@ export default {
         v.style_materials_data.map((v1, i1) => {
           if (v1.isCheckList1 === true) {
             style_materials_list_id_data.push({
-              id: v1.id
+              id: v1.id,
             });
           }
         });
@@ -645,11 +646,11 @@ export default {
         this.$confirm("确认生成采购单?", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning"
+          type: "warning",
         }).then(async () => {
           let res = await stylePurchaseAdd({
             style_id: id,
-            style_materials_list_id_data
+            style_materials_list_id_data,
           });
           console.log(res);
           this.$router.push({ path: `/materialPurchasing?id=${id}` });
@@ -664,7 +665,7 @@ export default {
       if (this.obj.style_color_data.length > 0) {
         let res1 = await getStyleMaterialsList({
           style_id: this.obj.style_color_data[0].style_id,
-          style_color_name: this.obj.style_color_data[0].style_color_name
+          style_color_name: this.obj.style_color_data[0].style_color_name,
         });
         res1.data.data.forEach((v, i) => {
           v.style_materials_data.forEach((v1, i1) => {
@@ -690,7 +691,7 @@ export default {
       if (this.delListData[0].style_materials_data.length > 0) {
         this.delListData[0].style_materials_data.map(async (f, j) => {
           let ress = await getMaterialsInfo({
-            id: f.materials_id
+            id: f.materials_id,
           });
           let data1 = ress.data.data;
 
@@ -707,14 +708,14 @@ export default {
     handleCurrentChange(val) {
       this.pageIndex = val;
       this.handleSearchInput();
-    }
+    },
   },
   mounted() {
     this.init();
     this.delListInit();
     this.power = localStorage.getItem("power");
     console.log(this.power);
-  }
+  },
 };
 </script>
 

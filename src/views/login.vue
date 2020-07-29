@@ -46,27 +46,27 @@ export default {
       },
       rules: {
         username: [{ validator: validateUsername, trigger: "blur" }],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
-      }
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
+      },
     };
   },
   methods: {
     login() {
-      this.$refs["form"].validate(valid => {
+      this.$refs["form"].validate((valid) => {
         if (!valid) return;
         // 调用actions的登录方法
-        this.$store.dispatch("login", this.form).then(res => {
+        this.$store.dispatch("login", this.form).then((res) => {
           if (res === true) {
             this.$message({
               showClose: true,
               message: "登录成功",
-              type: "success"
+              type: "success",
             });
           }
         });
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

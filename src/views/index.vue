@@ -25,7 +25,7 @@
           <el-submenu index="3" v-if="power.indexOf('B')!=-1">
             <template slot="title" v-if="power.indexOf('B')!=-1">生产</template>
             <el-menu-item index="/productionOrders" v-if="power.indexOf('A1000')!=-1">生产下单</el-menu-item>
-            <el-menu-item index="/purchase" v-if="power.indexOf('A2000')!=-1">采购</el-menu-item>
+            <el-menu-item index="/purchase" v-if="power.indexOf('A2000')!=-1">生产采购</el-menu-item>
             <el-menu-item index="/productionScheduling" v-if="power.indexOf('A3000')!=-1">生产排期</el-menu-item>
             <el-menu-item index="/tailor" v-if="power.indexOf('A4000')!=-1">裁剪</el-menu-item>
             <el-menu-item index="/shipment" v-if="power.indexOf('A5000')!=-1">生产出货</el-menu-item>
@@ -118,7 +118,7 @@ export default {
   data() {
     return {
       power: "",
-      activeIndex: "2"
+      activeIndex: "2",
     };
   },
   methods: {},
@@ -126,7 +126,7 @@ export default {
     this.power = localStorage.getItem("power");
     // console.log(this.power);
     // console.log(localStorage.getItem("user_id"));
-  }
+  },
 };
 </script>
 

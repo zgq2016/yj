@@ -8,7 +8,7 @@
     <div class="form">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="客户：">
-          <el-select v-model="formInline.customer_id" placeholder="- 全部 -">
+          <el-select clearable v-model="formInline.customer_id" placeholder="- 全部 -">
             <el-option
               v-for="item in wests"
               :key="item.id"
@@ -25,10 +25,11 @@
             :start-placeholder="ctime_start"
             :end-placeholder="ctime_end"
             style="width:100%"
+            clearable
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="账目类型：">
-          <el-select v-model="formInline.account_type_id">
+          <el-select v-model="formInline.account_type_id" clearable>
             <el-option
               v-for="item in BalanceAccountType"
               :key="item.id"
@@ -38,7 +39,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="结算账户：">
-          <el-select v-model="formInline.balance_account_id">
+          <el-select v-model="formInline.balance_account_id" clearable>
             <el-option
               v-for="item in BalanceAccount"
               :key="item.id"
@@ -48,11 +49,11 @@
           </el-select>
         </el-form-item>
         <el-form-item label="操作者：">
-          <el-select v-model="formInline.user_id">
+          <el-select v-model="formInline.user_id" clearable>
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="单号：">
+        <el-form-item label="单号：" clearable>
           <el-input placeholder="单据编号" v-model="formInline.account_no" clearable></el-input>
         </el-form-item>
         <el-form-item>

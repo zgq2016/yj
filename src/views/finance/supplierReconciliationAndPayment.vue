@@ -1,5 +1,5 @@
 <template>
-  <div class="supplierReconciliationAndPayment">
+  <div class="supplierReconciliationAndPayment" v-if="power.indexOf('F4000100')!=-1">
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>财务</el-breadcrumb-item>
@@ -8,7 +8,7 @@
     <div class="form">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="供应商：">
-          <el-select v-model="formInline.Supplier" placeholder="- 全部 -">
+          <el-select v-model="formInline.Supplier" placeholder="- 全部 -" clearable>
             <el-option
               v-for="item in SupplierList"
               :key="item.address"
@@ -25,10 +25,11 @@
             :start-placeholder="ctime_start"
             :end-placeholder="ctime_end"
             style="width:100%"
+            clearable
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="账目类型：">
-          <el-select v-model="formInline.account_type_id">
+          <el-select v-model="formInline.account_type_id" clearable>
             <el-option
               v-for="item in BalanceAccountType"
               :key="item.id"
@@ -38,7 +39,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="结算账户：">
-          <el-select v-model="formInline.balance_account_id">
+          <el-select v-model="formInline.balance_account_id" clearable>
             <el-option
               v-for="item in BalanceAccount"
               :key="item.id"
@@ -48,19 +49,28 @@
           </el-select>
         </el-form-item>
         <el-form-item label="操作者：">
-          <el-select v-model="formInline.user_id">
+          <el-select v-model="formInline.user_id" clearable>
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="单号：">
+        <el-form-item label="单号：" clearable>
           <el-input placeholder="单据编号" v-model="formInline.account_no" clearable></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">查询</el-button>
-          <el-button type="primary" @click="handlePayment">付款</el-button>
-          <el-button type="primary" @click="beginninGbalanceAdjustment">期初调整</el-button>
-          <el-button type="primary" v-print="'#printTest'" icon="el-icon-printer">打印</el-button>
-          <el-button type="primary" icon="el-icon-upload2">导出</el-button>
+          <el-button v-if="power.indexOf('F4000200')!=-1" type="primary" @click="handlePayment">付款</el-button>
+          <el-button
+            v-if="power.indexOf('F4000300')!=-1"
+            type="primary"
+            @click="beginninGbalanceAdjustment"
+          >期初调整</el-button>
+          <el-button
+            v-if="power.indexOf('F4000400')!=-1"
+            type="primary"
+            v-print="'#printTest'"
+            icon="el-icon-printer"
+          >打印</el-button>
+          <el-button v-if="power.indexOf('F4000500')!=-1" type="primary" icon="el-icon-upload2">导出</el-button>
         </el-form-item>
         <!-- <el-form-item>
         </el-form-item>
@@ -296,6 +306,7 @@ import { getSupplierSelect } from "@/api/archives";
 export default {
   data() {
     return {
+      power: "",
       cope_price: 999,
       pay_price: 999,
       opay_price: 999,
@@ -534,6 +545,7 @@ export default {
     this.getStylist();
     this.getBalanceAccount();
     this.getBalanceAccountType();
+    this.power = localStorage.getItem("power");
   },
 };
 </script>

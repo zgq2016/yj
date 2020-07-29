@@ -1,5 +1,5 @@
 <template>
-  <div class="accountFlowAndBookkeeping">
+  <div class="accountFlowAndBookkeeping" v-if="power.indexOf('F2000100')!=-1">
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>财务</el-breadcrumb-item>
@@ -15,10 +15,11 @@
             :start-placeholder="formInline.ctime_start"
             :end-placeholder="formInline.ctime_end"
             style="width:100%"
+            clearable
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="账目类型:" prop="account_type_name">
-          <el-select v-model="formInline.account_type_name">
+          <el-select v-model="formInline.account_type_name" clearable>
             <el-option
               v-for="item in BalanceAccountType"
               :key="item.id"
@@ -28,7 +29,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="结算账户:" prop="account_name">
-          <el-select v-model="formInline.account_name">
+          <el-select v-model="formInline.account_name" clearable>
             <el-option
               v-for="item in BalanceAccount"
               :key="item.id"
@@ -38,24 +39,37 @@
           </el-select>
         </el-form-item>
         <el-form-item label="操作者：">
-          <el-select v-model="formInline.user_id">
+          <el-select v-model="formInline.user_id" clearable>
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="单号：">
+        <el-form-item label="单号：" clearable>
           <el-input placeholder="单据编号" v-model="formInline.account_no" clearable></el-input>
         </el-form-item>
-        <el-form-item label="备注：">
+        <el-form-item label="备注：" clearable>
           <el-input placeholder="备注" v-model="formInline.remark" clearable></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="onsearch">搜索</el-button>
-          <el-button type="primary" @click="onincome">收入</el-button>
-          <el-button type="primary" @click="onexpend">支出</el-button>
-          <el-button type="primary" @click="onAccounttransfers">账户互转</el-button>
-          <el-button type="primary" @click="onbalanceadjustment">期初调整</el-button>
-          <el-button type="primary" v-print="'#printTest'" icon="el-icon-printer">打印</el-button>
-          <el-button type="primary" icon="el-icon-upload2">导出</el-button>
+          <el-button v-if="power.indexOf('F2000200')!=-1" type="primary" @click="onincome">收入</el-button>
+          <el-button v-if="power.indexOf('F2000300')!=-1" type="primary" @click="onexpend">支出</el-button>
+          <el-button
+            v-if="power.indexOf('F2000400')!=-1"
+            type="primary"
+            @click="onAccounttransfers"
+          >账户互转</el-button>
+          <el-button
+            v-if="power.indexOf('F2000500')!=-1"
+            type="primary"
+            @click="onbalanceadjustment"
+          >期初调整</el-button>
+          <el-button
+            v-if="power.indexOf('F2000600')!=-1"
+            type="primary"
+            v-print="'#printTest'"
+            icon="el-icon-printer"
+          >打印</el-button>
+          <el-button v-if="power.indexOf('F2000700')!=-1" type="primary" icon="el-icon-upload2">导出</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -401,6 +415,7 @@ import {
 export default {
   data() {
     return {
+      power: "",
       expend_price: "",
       in_price: "",
       ctime_start: "",
@@ -745,6 +760,7 @@ export default {
     this.getBalanceAccountType();
     this.getSettlementModes();
     this.getTransactionType();
+    this.power = localStorage.getItem("power");
   },
 };
 </script>
