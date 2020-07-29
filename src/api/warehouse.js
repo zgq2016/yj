@@ -111,3 +111,11 @@ export const bookStockOrderDel = data => {
         data: data
     });
 };
+// 删除产品入库订单指定商品接口
+export const bookStockOrderSizeDel = data => {
+    return axios({
+        url: "?g=book_stock_order_size_del",
+        method: "post",
+        data: data
+    });
+};

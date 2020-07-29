@@ -3177,7 +3177,7 @@ export default {
       console.log(this.complete);
       let blo = true;
       this.complete.map((v, i) => {
-        if (v.total_a == 0 || v.total_b == 0) {
+        if (v.total_a == 0 && v.total_b == 0) {
           blo = false;
           return;
         }
