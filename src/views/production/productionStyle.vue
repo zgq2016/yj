@@ -1498,6 +1498,7 @@ export default {
             this.showhide5 = false;
           }
           this.$message({
+            showClose: true,
             type: "success",
             message: "删除成功!",
           });
@@ -1506,6 +1507,7 @@ export default {
           console.log(err);
 
           this.$message({
+            showClose: true,
             type: "info",
             message: "已取消删除",
           });
@@ -1761,6 +1763,7 @@ export default {
             this.showhide5 = false;
           }
           this.$message({
+            showClose: true,
             type: "success",
             message: "删除成功!",
           });
@@ -1768,6 +1771,7 @@ export default {
         })
         .catch(() => {
           this.$message({
+            showClose: true,
             type: "info",
             message: "已取消删除",
           });
@@ -1976,11 +1980,11 @@ export default {
             }
             v.produce_order_size_date.map((a, b) => {
               q.push(a.quantity);
-              r.push(a.ratio);
+              r.push(Number(a.ratio));
               z.push(a.size);
               ids.push(a.id);
               this.quantity[i].push(a.quantity);
-              this.ratio[i].push(a.ratio);
+              this.ratio[i].push(Number(a.ratio));
               this.size_name[i].push(a.size);
             });
             let arrNew1 = [];
@@ -2431,6 +2435,7 @@ export default {
           console.log(res.data.data);
           this.int_i(this.active1);
           this.$message({
+            showClose: true,
             type: "success",
             message: "删除成功!",
           });
@@ -2439,6 +2444,7 @@ export default {
           console.log(err);
 
           this.$message({
+            showClose: true,
             type: "info",
             message: "已取消删除",
           });
@@ -2659,6 +2665,7 @@ export default {
             this.showhide5 = false;
           }
           this.$message({
+            showClose: true,
             type: "success",
             message: "删除成功!",
           });
@@ -2667,6 +2674,7 @@ export default {
           console.log(err);
 
           this.$message({
+            showClose: true,
             type: "info",
             message: "已取消删除",
           });
@@ -2936,6 +2944,7 @@ export default {
             this.showhide5 = false;
           }
           this.$message({
+            showClose: true,
             type: "success",
             message: "删除成功!",
           });
@@ -2944,6 +2953,7 @@ export default {
           console.log(err);
 
           this.$message({
+            showClose: true,
             type: "info",
             message: "已取消删除",
           });
@@ -3229,8 +3239,8 @@ export default {
                   style_id: id,
                   produce_no: data[this.active].produce_no,
                   produce_complete_size: arr,
-                  shipping_type:v.shipping_type,
-                  storehouse_id: v.shipping_type == 1 ? v.storehouse_id : '',
+                  shipping_type: v.shipping_type,
+                  storehouse_id: v.shipping_type == 1 ? v.storehouse_id : "",
                 });
               });
               let res1 = await produceCompleteAdd({
@@ -3285,7 +3295,7 @@ export default {
                   produce_no: data[this.active].produce_no,
                   id: v.id_c,
                   produce_complete_size: arr,
-                  shipping_type:v.shipping_type,
+                  shipping_type: v.shipping_type,
                   storehouse_id:
                     v.shipping_type == 1 ? str || v.storehouse_id : "",
                 });
@@ -3330,6 +3340,7 @@ export default {
           }
           this.complete.splice(index, 1);
           this.$message({
+            showClose: true,
             type: "success",
             message: "删除成功!",
           });
@@ -3338,6 +3349,7 @@ export default {
           console.log(err);
 
           this.$message({
+            showClose: true,
             type: "info",
             message: "已取消删除",
           });
@@ -3482,8 +3494,8 @@ export default {
                 total_b: total_bb,
                 t_size: this.t_size,
                 id_c: v.id,
-                storehouse_id: v.storehouse_id,
-                shipping_type: v.shipping_type,
+                storehouse_id: v.storehouse_id == 0 ? "" : v.storehouse_id,
+                shipping_type: Number(v.shipping_type),
                 produce_complete_size_a_data: arr_a,
                 produce_complete_size_b_data: arr_b,
               });
