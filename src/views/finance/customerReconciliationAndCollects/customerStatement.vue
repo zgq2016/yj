@@ -33,7 +33,7 @@
             <el-option
               v-for="item in BalanceAccountType"
               :key="item.id"
-              :label="item.balance_account_type"
+              :label="item.account_type_name"
               :value="item.id"
             ></el-option>
           </el-select>
@@ -178,7 +178,7 @@
             <el-option
               v-for="item in BalanceAccountType"
               :key="item.id"
-              :label="item.balance_account_type"
+              :label="item.account_type_name"
               :value="item.id"
             ></el-option>
           </el-select>
@@ -282,6 +282,7 @@ import {
   // supplierAccountList,
   balanceAccountSelect,
   // supplierAccountAdd,
+  accountTypeSelect,
   customerAccountList,
   customerAccountAdd,
   balanceAccountTypeSelect,
@@ -470,7 +471,7 @@ export default {
       this.BalanceAccount = data;
     },
     async getBalanceAccountType() {
-      let res = await balanceAccountTypeSelect();
+      let res = await accountTypeSelect();
       let { data } = res.data;
       this.BalanceAccountType = data;
     },
@@ -495,8 +496,8 @@ export default {
         page: this.pageIndex,
         page_size: this.pageSize,
       });
+        console.log(res);
       res.data.data.map((v) => {
-        console.log(v);
         if (v.pay_price !== 0) {
           v.opay_price = v.cope_price - v.pay_price;
         }

@@ -33,7 +33,7 @@
             <el-option
               v-for="item in BalanceAccountType"
               :key="item.id"
-              :label="item.balance_account_type"
+              :label="item.account_type_name"
               :value="item.id"
             ></el-option>
           </el-select>
@@ -72,22 +72,14 @@
           >打印</el-button>
           <el-button v-if="power.indexOf('F4000500')!=-1" type="primary" icon="el-icon-upload2">导出</el-button>
         </el-form-item>
-        <!-- <el-form-item>
-        </el-form-item>
-        <el-form-item>
-        </el-form-item>
-        <el-form-item>
-        </el-form-item>
-        <el-form-item>
-        </el-form-item>-->
       </el-form>
     </div>
     <el-divider></el-divider>
     <div id="printTest">
       <div class="header">
-        <h2 style="text-align:center;height:40px;">供应商对账单</h2>
+        <h2 style="text-align:center;height:40px;">工厂对账单</h2>
         <div class="cont">
-          <span>供应商：{{formInline.Supplier}}</span>
+          <span>工厂：{{formInline.Supplier}}</span>
           <span>日期：{{this.ctime_start}} 至 {{this.ctime_end}}</span>
         </div>
         <div class="tb">
@@ -153,7 +145,7 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
     ></el-pagination>
-    <!-- 供应商前期调整 -->
+    <!-- 工厂前期调整 -->
     <el-dialog
       title="账目类型信息"
       :visible.sync="dialogVisible"
@@ -195,7 +187,7 @@
             <el-option
               v-for="item in BalanceAccountType"
               :key="item.id"
-              :label="item.balance_account_type"
+              :label="item.account_type_name"
               :value="item.id"
             ></el-option>
           </el-select>
@@ -283,6 +275,8 @@ import {
   balanceAccountSelect,
   factoryAccountAdd,
   balanceAccountTypeSelect,
+  accountTypeSelect,
+  factoryAccountList,
 } from "@/api/finance";
 import { getFactorySelect } from "@/api/production";
 // import { getSupplierSelect } from "@/api/archives";
@@ -325,7 +319,7 @@ export default {
         remarks: "",
       },
       rules1: {
-        factory_id: [{ required: true, message: "供应商", trigger: "change" }],
+        factory_id: [{ required: true, message: "工厂", trigger: "change" }],
         user_id: [{ required: true, message: "操作人", trigger: "change" }],
         pay_price: [{ required: true, message: "实付金额", trigger: "change" }],
         service_time: [
@@ -333,7 +327,7 @@ export default {
         ],
       },
       rules: {
-        factory_id: [{ required: true, message: "供应商", trigger: "change" }],
+        factory_id: [{ required: true, message: "工厂", trigger: "change" }],
         user_id: [{ required: true, message: "操作人", trigger: "change" }],
         balance_account_id: [
           { required: true, message: "结算账户", trigger: "change" },
@@ -349,7 +343,6 @@ export default {
         account_type_id: "",
         balance_account_id: "",
         user_id: "",
-        odd: "",
       },
       GetFactory: [],
       Suppliers: [],
@@ -442,7 +435,7 @@ export default {
       this.GetFactory = data;
     },
     async getBalanceAccountType() {
-      let res = await balanceAccountTypeSelect();
+      let res = await accountTypeSelect();
       let { data } = res.data;
       this.BalanceAccountType = data;
     },
@@ -454,17 +447,19 @@ export default {
       this.pageIndex = val;
       this.supplierInit();
     },
-    async init() {
-      this.ctime_start = moment(this.formInline.date[0]).format("YYYY-MM-DD");
-      this.ctime_end = moment(this.formInline.date[1]).format("YYYY-MM-DD");
-    },
     async supplierInit() {
-      let res = await bookStockOrderList({
-        page: this.pageIndex,
-        page_size: this.pageSize,
-      });
+      this.formInline.ctime_start = moment(this.formInline.date[0]).format(
+        "YYYY-MM-DD"
+      );
+      this.formInline.ctime_end = moment(this.formInline.date[1]).format(
+        "YYYY-MM-DD"
+      );
+      this.formInline.page = this.pageIndex;
+      this.formInline.page_size = this.pageSize;
+      delete this.formInline.date;
+      let res = await factoryAccountList(this.formInline);
+      console.log(res);
       res.data.data.map((v) => {
-        // console.log(v);
         if (v.pay_price !== 0) {
           v.opay_price = v.cope_price - v.pay_price;
         }
@@ -472,13 +467,11 @@ export default {
       let { data, count } = res.data;
       this.tableData = data;
       this.total = count;
-      this.ctime_start = moment(this.formInline.date[0]).format("YYYY-MM-DD");
-      this.ctime_end = moment(this.formInline.date[1]).format("YYYY-MM-DD");
     },
   },
   async mounted() {
-    this.init();
-    this.supplierInit();
+    // this.init();
+    // this.supplierInit();
     this.getStylist();
     this.getBalanceAccount();
     this.getBalanceAccountType();

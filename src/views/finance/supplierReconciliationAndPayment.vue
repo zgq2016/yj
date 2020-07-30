@@ -33,7 +33,7 @@
             <el-option
               v-for="item in BalanceAccountType"
               :key="item.id"
-              :label="item.balance_account_type"
+              :label="item.account_type_name"
               :value="item.id"
             ></el-option>
           </el-select>
@@ -195,7 +195,7 @@
             <el-option
               v-for="item in BalanceAccountType"
               :key="item.id"
-              :label="item.balance_account_type"
+              :label="item.account_type_name"
               :value="item.id"
             ></el-option>
           </el-select>
@@ -488,7 +488,7 @@ export default {
       this.BalanceAccount = data;
     },
     async getBalanceAccountType() {
-      let res = await balanceAccountTypeSelect();
+      let res = await accountTypeSelect();
       let { data } = res.data;
       this.BalanceAccountType = data;
     },

@@ -48,7 +48,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="状态:">
-          <el-select v-model="formInline.state" clearable placeholder="状态" style="width:120px">
+          <el-select v-model="formInline.complete_status" clearable placeholder="状态" style="width:120px">
             <el-option v-for="item in states" :key="item.id" :label="item.v" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -128,9 +128,9 @@ import {
   getProjectStyleList,
   getCategoryList,
   getWestList,
-  getProduceOrderList
+  getProduceOrderList,
 } from "@/api/researchDevelopment";
-import { getProduceCompleteList } from "@/api/production";
+import { getProduceList } from "@/api/production";
 export default {
   data() {
     return {
@@ -140,7 +140,8 @@ export default {
         year: "",
         season: "",
         user_id: "",
-        style_type: ""
+        complete_status: "",
+        style_type: "",
       },
       page: 1,
       page_size: 9,
@@ -159,24 +160,24 @@ export default {
       states: [
         {
           v: "全部",
-          id: 3
+          id: 3,
         },
         {
           v: "未出货",
-          id: 0
+          id: 0,
         },
         {
           v: "出货中",
-          id: 1
+          id: 1,
         },
         {
           v: "已完成",
-          id: 2
-        }
+          id: 2,
+        },
       ],
       tableData: [],
       count: 0,
-      number: 123
+      number: 123,
     };
   },
   methods: {
@@ -190,7 +191,7 @@ export default {
       this.$router.push({
         path: `/productionStyle?id=${
           row.style_id
-        }&activeNames=${5}&TL=${4}&produce_no=${row.produce_no}`
+        }&activeNames=${5}&TL=${4}&produce_no=${row.produce_no}`,
       });
     },
     onSubmit() {
@@ -237,11 +238,9 @@ export default {
       this.formInline.user_id = e;
     },
     async init(obj) {
-      let res = await getProduceCompleteList({
-        page: this.page,
-        page_size: this.page_size,
-        ...obj
-      });
+      this.formInline.page = this.page;
+      this.formInline.page_size = this.page_size;
+      let res = await getProduceList(this.formInline);
       console.log(res);
       this.count = res.data.count;
       let { data } = res.data;
@@ -269,7 +268,7 @@ export default {
       // console.log(val)
       this.page = val;
       this.init(this.formInline);
-    }
+    },
   },
   mounted() {
     this.getYear();
@@ -280,7 +279,7 @@ export default {
     this.init();
     this.power = localStorage.getItem("power");
     console.log(this.power);
-  }
+  },
 };
 </script>
 

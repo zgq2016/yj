@@ -54,7 +54,7 @@
         </el-form-item>
 
         <el-form-item label="状态:">
-          <el-select v-model="formInline.state" clearable placeholder="状态" style="width:120px">
+          <el-select v-model="formInline.order_status" clearable placeholder="状态" style="width:120px">
             <el-option v-for="item in states" :key="item.id" :label="item.v" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -138,7 +138,7 @@ import {
   getCategoryList,
   getProjectStyleList,
   getWestList,
-  getProduceOrderList
+  getProduceOrderList,
 } from "@/api/researchDevelopment";
 import { produceAdd, getProduceList } from "@/api/production";
 export default {
@@ -151,7 +151,7 @@ export default {
         season: "",
         user_id: "",
         style_type: "",
-        state: ""
+        order_status: "",
       },
       years: [],
       seasons: [],
@@ -172,22 +172,22 @@ export default {
       states: [
         {
           v: "全部",
-          id: 3
+          id: 3,
         },
         {
           v: "未下单",
-          id: 0
+          id: 0,
         },
         {
           v: "已下单",
-          id: 1
+          id: 1,
         },
         {
           v: "已完成",
-          id: 2
-        }
+          id: 2,
+        },
       ],
-      tableData: []
+      tableData: [],
     };
   },
   methods: {
@@ -211,7 +211,7 @@ export default {
       this.$router.push({
         path: `/productionStyle?id=${
           row.style_id
-        }&activeNames=1&TL=${0}&produce_no=${row.produce_no}`
+        }&activeNames=1&TL=${0}&produce_no=${row.produce_no}`,
       });
     },
     // 下单
@@ -222,14 +222,14 @@ export default {
       this.$router.push({
         path: `/productionStyle?id=${
           row.style_id
-        }&activeNames=1&TL=${0}&produce_no=${row.produce_no}`
+        }&activeNames=1&TL=${0}&produce_no=${row.produce_no}`,
       });
     },
     // 查询
     async onSubmit() {
       // console.log(this.formInline);
 
-      this.init(this.formInline);
+      this.init();
     },
     handleUser_id(v) {
       console.log(v);
@@ -268,11 +268,9 @@ export default {
       this.wests = data;
     },
     async init(obj) {
-      let res = await getProduceList({
-        page: this.page,
-        page_size: this.page_size,
-        ...obj
-      });
+      this.formInline.page = this.page;
+      this.formInline.page_size = this.page_size;
+      let res = await getProduceList(this.formInline);
       console.log(res);
       this.count = res.data.count;
       let { data } = res.data;
@@ -295,12 +293,12 @@ export default {
     },
     handleSizeChange(val) {
       this.page_size = val;
-      this.init(this.formInline);
+      this.init();
     },
     handleCurrentChange(val) {
       this.page = val;
-      this.init(this.formInline);
-    }
+      this.init();
+    },
   },
   mounted() {
     this.getYear();
@@ -311,7 +309,7 @@ export default {
     this.init();
     this.power = localStorage.getItem("power");
     console.log(this.power);
-  }
+  },
 };
 </script>
 

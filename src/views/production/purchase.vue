@@ -48,7 +48,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="状态:">
-          <el-select v-model="formInline.state" clearable placeholder="状态" style="width:120px">
+          <el-select v-model="formInline.procure_status" clearable placeholder="状态" style="width:120px">
             <el-option v-for="item in states" :key="item.id" :label="item.v" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -128,9 +128,9 @@ import {
   getCategoryList,
   getProjectStyleList,
   getWestList,
-  getProduceOrderList
+  getProduceOrderList,
 } from "@/api/researchDevelopment";
-import { getProduceProcureList } from "@/api/production";
+import { getProduceProcureList, getProduceList } from "@/api/production";
 export default {
   data() {
     return {
@@ -140,7 +140,8 @@ export default {
         year: "",
         season: "",
         user_id: "",
-        style_type: ""
+        style_type: "",
+        procure_status: "",
       },
       years: [],
       seasons: [],
@@ -161,22 +162,22 @@ export default {
       states: [
         {
           v: "全部",
-          id: 3
+          id: 3,
         },
         {
           v: "未采购",
-          id: 0
+          id: 0,
         },
         {
           v: "采购中",
-          id: 1
+          id: 1,
         },
         {
           v: "已完成",
-          id: 2
-        }
+          id: 2,
+        },
       ],
-      tableData: []
+      tableData: [],
     };
   },
   methods: {
@@ -184,7 +185,7 @@ export default {
       this.$router.push({
         path: `/productionStyle?id=${
           row.style_id
-        }&activeNames=${2}&TL=${1}&produce_no=${row.produce_no}`
+        }&activeNames=${2}&TL=${1}&produce_no=${row.produce_no}`,
       });
     },
     onSubmit() {
@@ -228,11 +229,9 @@ export default {
       this.wests = data;
     },
     async init(obj) {
-      let res = await getProduceProcureList({
-        page: this.page,
-        page_size: this.page_size,
-        ...obj
-      });
+      this.formInline.page = this.page;
+      this.formInline.page_size = this.page_size;
+      let res = await getProduceList(this.formInline);
       console.log(res);
       this.count = res.data.count;
       let { data } = res.data;
@@ -244,12 +243,12 @@ export default {
             v.stylist = j.name;
           }
         });
-        if(v.procure_status == 0){
-          v.state = '未采购'
-        }else if(v.procure_status == 1){
-          v.state = '采购中'
-        }else if(v.procure_status == 2){
-          v.state = '已采购'
+        if (v.procure_status == 0) {
+          v.state = "未采购";
+        } else if (v.procure_status == 1) {
+          v.state = "采购中";
+        } else if (v.procure_status == 2) {
+          v.state = "已采购";
         }
       });
     },
@@ -265,7 +264,7 @@ export default {
       // console.log(val)
       this.page = val;
       this.init(this.formInline);
-    }
+    },
   },
   mounted() {
     this.getYear();
@@ -276,7 +275,7 @@ export default {
     this.init();
     this.power = localStorage.getItem("power");
     console.log(this.power);
-  }
+  },
 };
 </script>
 

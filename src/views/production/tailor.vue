@@ -48,7 +48,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="状态:">
-          <el-select v-model="formInline.state" clearable placeholder="状态" style="width:120px">
+          <el-select v-model="formInline.cut_status" clearable placeholder="状态" style="width:120px">
             <el-option v-for="item in states" :key="item.id" :label="item.v" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -128,9 +128,9 @@ import {
   getProjectStyleList,
   getCategoryList,
   getWestList,
-  getProduceOrderList
+  getProduceOrderList,
 } from "@/api/researchDevelopment";
-import { getProduceCutList } from "@/api/production";
+import { getProduceList } from "@/api/production";
 export default {
   data() {
     return {
@@ -140,7 +140,8 @@ export default {
         year: "",
         season: "",
         user_id: "",
-        style_type: ""
+        cut_status: "",
+        style_type: "",
       },
       page: 1,
       page_size: 9,
@@ -159,20 +160,20 @@ export default {
       states: [
         {
           v: "全部",
-          id: 3
+          id: 3,
         },
         {
           v: "未裁剪",
-          id: 0
+          id: 0,
         },
         {
           v: "已裁剪",
-          id: 1
-        }
+          id: 1,
+        },
       ],
       tableData: [],
       count: 0,
-      number: 123
+      number: 123,
     };
   },
   methods: {
@@ -186,7 +187,7 @@ export default {
       this.$router.push({
         path: `/productionStyle?id=${
           row.style_id
-        }&activeNames=${4}&TL=${3}&produce_no=${row.produce_no}`
+        }&activeNames=${4}&TL=${3}&produce_no=${row.produce_no}`,
       });
     },
     onSubmit() {
@@ -231,12 +232,10 @@ export default {
     },
 
     async init(obj) {
-      let res = await getProduceCutList({
-        page: this.page,
-        page_size: this.page_size,
-        ...obj
-      });
-      console.log(res);
+      this.formInline.page = this.page;
+      this.formInline.page_size = this.page_size;
+      let res = await getProduceList(this.formInline);
+      console.log(res)
       this.count = res.data.count;
       let { data } = res.data;
       this.tableData = data;
@@ -263,7 +262,7 @@ export default {
       // console.log(val)
       this.page = val;
       this.init(this.formInline);
-    }
+    },
   },
   mounted() {
     this.getYear();
@@ -274,7 +273,7 @@ export default {
     this.init();
     this.power = localStorage.getItem("power");
     console.log(this.power);
-  }
+  },
 };
 </script>
 

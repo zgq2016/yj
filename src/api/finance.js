@@ -123,7 +123,7 @@ export const factoryAccountAdd = (data) => {
 // 客户账目list接口;
 export const customerAccountList = (data) => {
   return axios({
-    url: "?g=customer_account_list",
+    url: "?g=customer_account_list1",
     method: "post",
     data: data,
   });
@@ -180,6 +180,14 @@ export const settlementModesSelect = (data) => {
 export const transactionTypeSelect = (data) => {
   return axios({
     url: "?g=transaction_type_select",
+    method: "post",
+    data: data,
+  });
+};
+// 交易类型select接口;
+export const factoryAccountList = (data) => {
+  return axios({
+    url: "?g=factory_account_list",
     method: "post",
     data: data,
   });
