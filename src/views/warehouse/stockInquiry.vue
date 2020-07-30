@@ -51,7 +51,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="单号:">
-              <el-input size="mini" v-model="ruleForm.name"></el-input>
+              <el-input size="mini" v-model="ruleForm.no"></el-input>
             </el-form-item>
             <el-form-item class="sub">
               <el-button size="mini" type="primary" @click="onSubmit">查询</el-button>
@@ -101,7 +101,7 @@
       <div class="right">
         <div class="right_header">
           <div class="rh_left">
-            <h4>入库单--{{'zaan'}}</h4>
+            <h4>入库单-{{form.no}}-{{'zaan'}}</h4>
           </div>
           <div class="rh_right">
             <el-button size="mini" type="primary">扫码</el-button>
@@ -261,17 +261,6 @@
               </el-table-column>
               <el-table-column prop="commodity" width="90" align="center" label="商品">
                 <template slot-scope="scope">
-                  <!-- <el-autocomplete
-                    class="inline-input"
-                    size="mini"
-                    v-if="scope.row.showHidden1"
-                    :title="scope.row.commodity"
-                    v-model="scope.row.commodity"
-                    :fetch-suggestions="querySearch"
-                    placeholder="点击选择"
-                    @blur="bblur(scope.row,scope.column)"
-                    @select="handleSelect($event,scope.column, scope.row,scope.$index)"
-                  ></el-autocomplete>-->
                   <el-select
                     v-show="scope.row.showHidden1"
                     v-model="scope.row.commodity"
@@ -297,7 +286,7 @@
                       :total="total3"
                     ></el-pagination>
                   </el-select>
-                  <span v-if="!scope.row.showHidden1&&!vh5">{{scope.row.commodity || "点击选择"}}</span>
+                  <span v-if="!scope.row.showHidden1 && !vh5">{{scope.row.commodity || "点击选择"}}</span>
                 </template>
               </el-table-column>
               <el-table-column prop="item_no" align="center" width="80" sum-text label="货号"></el-table-column>
@@ -439,44 +428,32 @@
                   list-type="picture"
                   style="float:left;"
                 >
-                  <el-button size="mini" type="primary">点击上传</el-button>
+                  <el-button size="mini" v-if="vh" type="primary">点击上传</el-button>
                 </el-upload>
               </el-form-item>
             </div>
             <div v-if="vh5" style="position: absolute;width:190px;right:10px;">
-              <el-form-item label-width="100px" label="费用金额:">
-                <span>&yen;{{ruleForm.money1||'0.00'}}</span>
+              <el-form-item label-width="80px" label="费用金额:">
+                <span>&yen;{{total_price}}</span>
               </el-form-item>
-              <el-form-item label-width="100px" label="抹零:">
-                <span>&yen;{{ruleForm.money2||'0.00'}}</span>
-              </el-form-item>
-              <el-form-item label-width="100px" label="总合计:">
-                <span style="color:red;font-size:16px;">&yen;{{'0.00'}}</span>
+
+              <el-form-item label-width="80px" label="总合计:">
+                <span style="color:red;font-size:16px;">&yen;{{total_price}}</span>
               </el-form-item>
             </div>
-            <div v-if="!vh5" style="position: absolute;right:-40px;width:540px;">
-              <el-form-item label="其他费用账目类型:">
-                <el-select size="mini" v-model="ruleForm.region" clearable placeholder="账目类型">
-                  <el-option label="区域一" value="shanghai"></el-option>
-                  <el-option label="区域二" value="beijing"></el-option>
-                </el-select>
+            <div v-if="!vh5" style="position: absolute;width:250px;right:10px;">
+              <el-form-item label-width="80px" label="费用金额:">
+                <el-input size="mini" v-model="total_price" placeholder="请输入金额"></el-input>
               </el-form-item>
-              <el-form-item label="费用金额:">
-                <el-input size="mini" v-model="ruleForm.money1" placeholder="请输入金额"></el-input>
-                <span>{{ruleForm.money1}}</span>
-              </el-form-item>
-              <el-form-item label="抹零:">
-                <el-input size="mini" v-model="ruleForm.name2" placeholder="请输入金额"></el-input>
-                <span>{{ruleForm.money2}}</span>
-              </el-form-item>
-              <el-form-item label="总合计:">
-                <span>&yen;{{'0.00'}}</span>
+
+              <el-form-item label-width="80px" label="总合计:">
+                <span>&yen;{{total_price}}</span>
               </el-form-item>
             </div>
-            <div style="position: absolute;bottom:5px;left:30%;">
+            <div style="position: absolute;bottom:5px;left:32%;">
               <el-form-item v-if="!vh4">
-                <el-button size="mini" v-if="!vh3" type="primary" @click="sketch">草稿</el-button>
-                <el-button size="mini" v-if="!vh3" type="primary">入库</el-button>
+                <el-button size="mini" v-if="!vh3" type="primary" @click="sketch(0)">草稿</el-button>
+                <el-button size="mini" v-if="!vh3" type="primary" @click="sketch(1)">入库</el-button>
                 <el-button size="mini" v-if="vh2 && !vh3" @click="delStock" type="primary">删除</el-button>
                 <el-button size="mini" v-if="vh3" @click="backout" type="primary">撤销</el-button>
               </el-form-item>
@@ -486,33 +463,35 @@
       </div>
     </div>
     <!-- 填尺码 -->
-    <el-dialog
-      :title="this.weretable[indexk].commodity+'  '+this.weretable[indexk].item_no"
-      :visible.sync="dialogFormVisible"
-    >
-      <el-form :model="form1">
-        <div>
-          <div class="table_nav">
-            <span></span>
-            <span v-for="(item_t,index_t) in sizes" :key="index_t">{{item_t.value}}</span>
+    <div v-if="this.weretable.length > 0">
+      <el-dialog
+        :title="this.weretable[indexk].commodity+'  '+this.weretable[indexk].item_no"
+        :visible.sync="dialogFormVisible"
+      >
+        <el-form :model="form1">
+          <div>
+            <div class="table_nav">
+              <span></span>
+              <span v-for="(item_t,index_t) in sizes" :key="index_t">{{item_t.value}}</span>
+            </div>
+            <br />
+            <div v-for="(item_c,index_c) in colors" :key="index_c" class="table_list">
+              <span>{{item_c.value}}</span>
+              <el-input
+                size="mini"
+                v-for="(item_t,index_t) in sizes"
+                v-model="item_c.quantitys[index_t]"
+                :key="index_t"
+              ></el-input>
+            </div>
           </div>
-          <br />
-          <div v-for="(item_c,index_c) in colors" :key="index_c" class="table_list">
-            <span>{{item_c.value}}</span>
-            <el-input
-              size="mini"
-              v-for="(item_t,index_t) in sizes"
-              v-model="item_c.quantitys[index_t]"
-              :key="index_t"
-            ></el-input>
-          </div>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="determine">确 定</el-button>
         </div>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="determine">确 定</el-button>
-      </div>
-    </el-dialog>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -532,11 +511,13 @@ import {
   bookStockOrderAdd,
   bookStockOrderEdit,
   bookStockOrderDel,
+  bookStockOrderSizeDel,
 } from "@/api/warehouse.js";
 import { factoryList } from "@/api/archives";
 export default {
   data() {
     return {
+      total_price: 0, //结算总金额
       shopppings: [], //商品
       settlement: [], //结算账户
       fileList: [],
@@ -558,147 +539,8 @@ export default {
       sizes: [],
 
       // table数据
-      weretable: [
-        {
-          commodity: "",
-          item_no: "",
-          bar_code: "",
-          monad: "",
-          color: "",
-          size: "",
-          quantity: "0",
-          univalence: "0.00",
-          discount: "100",
-          discountPrice: "0.00",
-          sum: "0.00",
-          sumed: "0.00",
-          remark: "",
-          showHidden1: false,
-          showHidden2: false,
-          showHidden3: false,
-          showHidden4: false,
-          showHidden5: false,
-          showHidden6: false,
-          showHidden7: false,
-          showHidden8: false,
-        },
-        {
-          commodity: "",
-          item_no: "",
-          bar_code: "",
-          monad: "",
-          color: "",
-          size: "",
-          quantity: "0",
-          univalence: "0.00",
-          discount: "100",
-          discountPrice: "0.00",
-          sum: "0.00",
-          sumed: "0.00",
-          remark: "",
-          showHidden1: false,
-          showHidden2: false,
-          showHidden3: false,
-          showHidden4: false,
-          showHidden5: false,
-          showHidden6: false,
-          showHidden7: false,
-          showHidden8: false,
-        },
-        {
-          commodity: "",
-          item_no: "",
-          bar_code: "",
-          monad: "",
-          color: "",
-          size: "",
-          quantity: "0",
-          univalence: "0.00",
-          discount: "100",
-          discountPrice: "0.00",
-          sum: "0.00",
-          sumed: "0.00",
-          remark: "",
-          showHidden1: false,
-          showHidden2: false,
-          showHidden3: false,
-          showHidden4: false,
-          showHidden5: false,
-          showHidden6: false,
-          showHidden7: false,
-          showHidden8: false,
-        },
-        {
-          commodity: "",
-          item_no: "",
-          bar_code: "",
-          monad: "",
-          color: "",
-          size: "",
-          quantity: "0",
-          univalence: "0.00",
-          discount: "100",
-          discountPrice: "0.00",
-          sum: "0.00",
-          sumed: "0.00",
-          remark: "",
-          showHidden1: false,
-          showHidden2: false,
-          showHidden3: false,
-          showHidden4: false,
-          showHidden5: false,
-          showHidden6: false,
-          showHidden7: false,
-          showHidden8: false,
-        },
-        {
-          commodity: "",
-          item_no: "",
-          bar_code: "",
-          monad: "",
-          color: "",
-          size: "",
-          quantity: "0",
-          univalence: "0.00",
-          discount: "100",
-          discountPrice: "0.00",
-          sum: "0.00",
-          sumed: "0.00",
-          remark: "",
-          showHidden1: false,
-          showHidden2: false,
-          showHidden3: false,
-          showHidden4: false,
-          showHidden5: false,
-          showHidden6: false,
-          showHidden7: false,
-          showHidden8: false,
-        },
-        {
-          commodity: "",
-          item_no: "",
-          bar_code: "",
-          monad: "",
-          color: "",
-          size: "",
-          quantity: "0",
-          univalence: "0.00",
-          discount: "100",
-          discountPrice: "0.00",
-          sum: "0.00",
-          sumed: "0.00",
-          remark: "",
-          showHidden1: false,
-          showHidden2: false,
-          showHidden3: false,
-          showHidden4: false,
-          showHidden5: false,
-          showHidden6: false,
-          showHidden7: false,
-          showHidden8: false,
-        },
-      ],
-      weretable1: [{}],
+      weretable: [],
+      weretable1: [],
       rules: {
         factory_name: [
           { required: true, message: "请选择厂商", trigger: "change" },
@@ -757,13 +599,14 @@ export default {
   },
   methods: {
     successFile(response, file, fileList) {
+      this.fileList = fileList;
       if (fileList.length >= 3) {
         this.vh = false;
       }
     },
     // 右边上传图片==>删除
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      this.fileList = fileList;
       this.vh = true;
     },
     handlePreview(file) {
@@ -804,8 +647,14 @@ export default {
               sums[index] = values.reduce((prev, curr) => {
                 const value = Number(curr);
                 if (!isNaN(value)) {
+                  if (index === 13) {
+                    this.total_price = prev + curr;
+                  }
                   return prev + curr;
                 } else {
+                  if (index === 13) {
+                    this.total_price = prev;
+                  }
                   return prev;
                 }
               }, 0);
@@ -826,8 +675,14 @@ export default {
                 if (!isNaN(value)) {
                   // console.log(prev,curr);
                   // let a = prev.toFixed(2) + curr.toFixed(2);
+                  if (index === 12) {
+                    this.total_price = prev + curr;
+                  }
                   return prev + curr;
                 } else {
+                  if (index === 12) {
+                    this.total_price = prev;
+                  }
                   return prev;
                 }
               }, 0);
@@ -848,6 +703,7 @@ export default {
       this.obj = {
         factory_id: this.ruleForm.factory_name,
         state: this.stated.state,
+        no: this.ruleForm.no,
       };
       if (this.ruleForm.ctime) {
         this.obj.ctimea = this.ruleForm.ctime[0];
@@ -878,27 +734,67 @@ export default {
       });
       let { data } = res.data;
       this.form = data;
-      console.log(this.form);
-      this.weretable = [{}];
-      if (this.form.size_data.length > 0) {
-        this.weretable = [];
-        this.form.size_data.map((v, i) => {
-          this.weretable.push({
-            commodity: v.stylename,
-            item_no: v.produce_no,
-            bar_code: "",
-            monad: v.unit, //单位
-            color: v.style_color_name,
-            size: v.size,
-            quantity: v.quantity,
-            univalence: v.price,
-            discount: "100",
-            discountPrice: v.discount_price,
-            sum:v.money,
-            sumed: v.discount_money,
-            remark: v.remark,
-          });
+      // console.log(this.form.images);
+      this.fileList = [];
+      this.form.images.map((v, i) => {
+        this.fileList.push({
+          name: "图" + i,
+          url: v,
         });
+      });
+      if (this.fileList.length >= 3) {
+        this.vh = false;
+      } else {
+        this.vh = true;
+      }
+      console.log(this.form);
+      if (this.form.state == 0) {
+        this.weretable = [];
+        this.tables();
+        if (this.form.size_data.length > 0) {
+          this.weretable = [];
+          this.form.size_data.map((v, i) => {
+            this.weretable.push({
+              commodity: v.stylename,
+              item_no: v.produce_no,
+              bar_code: "",
+              monad: v.unit, //单位
+              color: v.style_color_name,
+              size: v.size,
+              quantity: v.quantity,
+              univalence: v.price,
+              discount: v.discount,
+              discountPrice: v.discount_price,
+              sum: v.money,
+              sumed: v.discount_money,
+              remark: v.remark,
+              style_id: v.style_id,
+              id: v.id,
+            });
+          });
+        }
+      } else {
+        if (this.form.size_data.length > 0) {
+          this.weretable1 = [];
+          this.form.size_data.map((v, i) => {
+            this.weretable1.push({
+              commodity: v.stylename,
+              item_no: v.produce_no,
+              bar_code: "",
+              monad: v.unit, //单位
+              color: v.style_color_name,
+              size: v.size,
+              quantity: v.quantity,
+              univalence: v.price,
+              discount: v.discount,
+              discountPrice: v.discount_price,
+              sum: v.money,
+              sumed: v.discount_money,
+              remark: v.remark,
+              style_id: v.style_id,
+            });
+          });
+        }
       }
       if (this.form.state == 0) {
         this.actionsLenght = 0;
@@ -1032,9 +928,34 @@ export default {
       };
       this.weretable.splice(index, 0, obj);
     },
-    handleDelete(index, row) {
-      // console.log(index, row);
-      this.weretable.splice(index, 1);
+    // 右边删除
+    async handleDelete(index, row) {
+      if (row.id == undefined) {
+        this.weretable.splice(index, 1);
+      } else {
+        this.$confirm("此操作将永久删除该行数据, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+          .then(async () => {
+            let res = await bookStockOrderSizeDel({
+              id: row.id,
+            });
+            console.log(res);
+            this.weretable.splice(index, 1);
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消删除",
+            });
+          });
+      }
     },
 
     querySearch(queryString, cb) {
@@ -1075,7 +996,6 @@ export default {
       // console.log(column.label);
       // console.log(v, this.shopppings);
       if (column.label == "商品") {
-        // console.log(v);
         this.sizes = [];
         this.colors = [];
         let arr = [];
@@ -1097,23 +1017,26 @@ export default {
         arr.map((j, k) => {
           this.sizes.push({ value: j });
         });
-
+        console.log(v);
         row.commodity = v.stylename;
         row.item_no = v.styleno;
         row.bar_code = v.bar_code;
+        row.monad = v.unit;
+        row.univalence = v.price;
+        row.discountPrice = v.discount_price;
+        row.style_id = v.style_data[0].style_id;
+
         row.showHidden1 = false;
         this.dialogFormVisible = true;
-
         this.indexk = index;
       } else if (column.label == "颜色") {
         row.color = v.value;
         row.showHidden2 = false;
       } else if (column.label == "尺码") {
-        console.log(v);
         row.size = v.value;
         row.showHidden3 = false;
       }
-      // console.log(row);
+      console.log(row);
       // console.log(this.sizes, this.colors);
     },
     // 刷新新增入库单
@@ -1125,35 +1048,10 @@ export default {
       this.vh3 = false;
       this.vh4 = false;
       this.vh5 = false;
+      this.fileList = [];
 
       this.form = {};
-      for (let i = 0; i < 6; i++) {
-        let obj = {
-          commodity: "",
-          item_no: "",
-          bar_code: "",
-          monad: "",
-          color: "",
-          size: "",
-          quantity: "0",
-          univalence: "0.00",
-          discount: "100",
-          discountPrice: "0.00",
-          sum: "0.00",
-          sumed: "0.00",
-          remark: "",
-          showHidden1: false,
-          showHidden2: false,
-          showHidden3: false,
-          showHidden4: false,
-          showHidden5: false,
-          showHidden6: false,
-          showHidden7: false,
-          showHidden8: false,
-        };
-
-        this.weretable.push(obj);
-      }
+      this.tables();
     },
     //新增入库单数据
     determine() {
@@ -1166,23 +1064,30 @@ export default {
               this.weretable[this.indexk].color = v.value;
               this.weretable[this.indexk].size = this.sizes[k].value;
               this.weretable[this.indexk].quantity = j;
+              this.weretable[this.indexk].sum =
+                j * this.weretable[this.indexk].univalence;
+              this.weretable[this.indexk].sumed =
+                j * this.weretable[this.indexk].discountPrice;
               bl = false;
+
               return;
             } else if (j != undefined && j != "") {
               let obj = {
                 commodity: this.weretable[this.indexk].commodity,
                 item_no: this.weretable[this.indexk].item_no,
                 bar_code: this.weretable[this.indexk].bar_code,
-                monad: "",
+                monad: this.weretable[this.indexk].monad,
                 color: v.value,
                 size: this.sizes[k].value,
                 quantity: j,
-                univalence: "0.00",
+                univalence: this.weretable[this.indexk].univalence,
                 discount: "100",
-                discountPrice: "0.00",
-                sum: "0.00",
-                sumed: "0.00",
+                discountPrice: this.weretable[this.indexk].discountPrice,
+                sum: j * this.weretable[this.indexk].univalence,
+                sumed: j * this.weretable[this.indexk].discountPrice,
                 remark: "",
+                style_id: this.weretable[this.indexk].style_id,
+
                 showHidden1: false,
                 showHidden2: false,
                 showHidden3: false,
@@ -1260,57 +1165,113 @@ export default {
       // console.log(res3);
     },
     // 采购
-    async sketch() {
-      console.log(this.weretable);
-      // 新增
-      if (!this.form.id) {
-        let res = await bookStockOrderAdd({
-          factory_id: this.form.factory_name,
-          storehouse_id: this.form.storehouse_name,
-          balance_account_id: this.form.account_name,
-          pay_price: this.form.pay_price,
-          remarks: this.form.remarks,
+    async sketch(state) {
+      // console.log(this.weretable);
+      let size_data = [];
+      this.weretable.map((v, i) => {
+        // console.log(v);
+        if (v.color != "" && v.size != "" && v.quantity != "") {
+          size_data.push({
+            stylename: v.commodity,
+            produce_no: v.item_no,
+            style_color_name: v.color,
+            size: v.size,
+            unit: v.monad,
+            quantity: v.quantity,
+            price: v.univalence,
+            discount: v.discount,
+            discount_price: v.discountPrice,
+            money: v.sum,
+            discount_money: v.sumed,
+            id: v.id || 0,
+            style_id: v.style_id,
+          });
+        }
+      });
+      let images = [];
+      this.fileList.map((v, i) => {
+        if (v.response) {
+          images.push(v.response.data.pic_file_url);
+        } else {
+          images.push(v.url);
+        }
+      });
+      console.log(this.form);
+      //********* */
+      if (
+        this.form.factory_name == undefined ||
+        this.form.factory_name == "" ||
+        this.form.storehouse_name == undefined ||
+        this.form.account_name == undefined
+      ) {
+        let str = '请填写完整数据'
+        if( this.form.factory_name == undefined ||
+        this.form.factory_name == "" ){ str = '请选择厂商'}
+        this.$message({
+          showClose: true,
+          message: "请填写完整数据",
+          type: "error",
         });
-        console.log(res);
-        this.form = {};
-        this.init(this.obj);
       } else {
-        // 编辑
-        let id1 = "";
-        let id2 = "";
-        let id3 = "";
-        if (typeof this.form.factory_name == "string") {
-          this.factorys.map((v, i) => {
-            if (this.form.factory_name == v.factory_name) {
-              id1 = v.id;
-            }
+        //******* */
+        if (!this.form.id) {
+          // 新增
+          let res = await bookStockOrderAdd({
+            factory_id: this.form.factory_name,
+            storehouse_id: this.form.storehouse_name,
+            balance_account_id: this.form.account_name,
+            pay_price: this.form.pay_price,
+            remarks: this.form.remarks,
+            size_data,
+            images,
+            state,
+            total_price: this.total_price,
           });
-        }
-        if (typeof this.form.storehouse_name == "string") {
-          this.ware.map((v, i) => {
-            if (this.form.storehouse_name == v.storehouse_name) {
-              id2 = v.id;
-            }
+          console.log(res);
+        } else {
+          // 编辑
+          let id1 = "";
+          let id2 = "";
+          let id3 = "";
+          if (typeof this.form.factory_name == "string") {
+            this.factorys.map((v, i) => {
+              if (this.form.factory_name == v.factory_name) {
+                id1 = v.id;
+              }
+            });
+          }
+          if (typeof this.form.storehouse_name == "string") {
+            this.ware.map((v, i) => {
+              if (this.form.storehouse_name == v.storehouse_name) {
+                id2 = v.id;
+              }
+            });
+          }
+          if (typeof this.form.account_name == "string") {
+            this.settlement.map((v, i) => {
+              if (this.form.account_name == v.account_name) {
+                id3 = v.id;
+              }
+            });
+          }
+          let res = await bookStockOrderEdit({
+            factory_id: id1 || this.form.factory_name,
+            storehouse_id: id2 || this.form.storehouse_name,
+            balance_account_id: id3 || this.form.account_name,
+            pay_price: this.form.pay_price,
+            remarks: this.form.remarks,
+            id: this.form.id,
+            size_data,
+            images,
+            state,
+            total_price: this.total_price,
           });
+          console.log(res);
         }
-        if (typeof this.form.account_name == "string") {
-          this.settlement.map((v, i) => {
-            if (this.form.account_name == v.account_name) {
-              id3 = v.id;
-            }
-          });
-        }
-        let res = await bookStockOrderEdit({
-          factory_id: id1 || this.form.factory_name,
-          storehouse_id: id2 || this.form.storehouse_name,
-          balance_account_id: id3 || this.form.account_name,
-          pay_price: this.form.pay_price,
-          remarks: this.form.remarks,
-          id: this.form.id,
-        });
-        console.log(res);
         this.form = {};
+        this.fileList = [];
         this.init(this.obj);
+        this.addCreateWare();
       }
     },
     // 删除草稿
@@ -1342,6 +1303,7 @@ export default {
     // 撤销
     async backout() {
       this.vh3 = false;
+      this.sketch(4);
       this.form = {};
       this.init(this.obj);
     },
@@ -1360,6 +1322,7 @@ export default {
       });
       this.tableData = res.data.data;
       this.total = res.data.count;
+      console.log(res);
       this.tableData.map((v, i) => {
         if (v.state == 0) {
           v.state_name = "草稿";
@@ -1370,11 +1333,40 @@ export default {
         }
       });
     },
+    // 初始化表格
+    tables() {
+      for (let i = 0; i < 6; i++) {
+        this.weretable.push({
+          commodity: "",
+          item_no: "",
+          bar_code: "",
+          monad: "",
+          color: "",
+          size: "",
+          quantity: "0",
+          univalence: "0.00",
+          discount: "100",
+          discountPrice: "0.00",
+          sum: "0.00",
+          sumed: "0.00",
+          remark: "",
+          showHidden1: false,
+          showHidden2: false,
+          showHidden3: false,
+          showHidden4: false,
+          showHidden5: false,
+          showHidden6: false,
+          showHidden7: false,
+          showHidden8: false,
+        });
+      }
+    },
   },
   async mounted() {
     this.init();
     this.shopping();
     this.information();
+    this.tables();
   },
 };
 </script>
@@ -1523,7 +1515,7 @@ export default {
           height: 250px;
           overflow: hidden;
           /deep/.el-form-item {
-            float: left;
+            // float: left;
             margin-bottom: 8px;
             margin-right: 0;
             .el-form-item__content {
@@ -1536,20 +1528,16 @@ export default {
               }
             }
           }
-          /deep/.el-form-item:nth-child(3) {
-            float: right;
-          }
-          /deep/.el-form-item:nth-child(4) {
-            float: right;
-            width: 100%;
-            text-align: right;
-            margin-right: 60px;
+          // /deep/.el-form-item:nth-child(3) {
+          //   float: right;
+          // }
+          /deep/.el-form-item:nth-child(2) {
             .el-form-item__content {
               span {
                 display: block;
                 width: 100px;
                 color: red;
-                font-size: 16px;
+                font-size: 18px;
               }
             }
           }
