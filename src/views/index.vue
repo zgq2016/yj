@@ -67,6 +67,8 @@
               index="/supplierReconciliationAndPayment"
               v-if="power.indexOf('F4000')!=-1"
             >供应商对账及付款</el-menu-item>
+            <!-- v-if="power.indexOf('F4000')!=-1" -->
+            <el-menu-item index="/plantReconciliationAndPayment">加工厂对账及付款</el-menu-item>
             <el-menu-item index="/accounter" v-if="power.indexOf('F5000')!=-1">结算帐户</el-menu-item>
             <el-menu-item index="/accountType" v-if="power.indexOf('F6000')!=-1">账目类型</el-menu-item>
           </el-submenu>

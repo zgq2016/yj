@@ -83,8 +83,8 @@
       </el-form>
 
       <span slot="footer" class="dialog-footer">
-        <el-button @click="centerDialogVisible2 = false">取 消</el-button>
-        <el-button type="primary" @click="handleEditUserList">确 定</el-button>
+        <el-button @click="handleEditUserListClose('form1')">取 消</el-button>
+        <el-button type="primary" @click="handleEditUserList('form1')">确 定</el-button>
       </span>
     </el-dialog>
     <!-- 分页 -->
@@ -125,7 +125,7 @@ export default {
         describe: "",
         sort: "",
       },
-      form1: { role_name: "", Access: "" },
+      form1: { role_name: "", level: "" },
       options: [],
       pageIndex: 1,
       pageSize: 10,
@@ -160,9 +160,14 @@ export default {
     };
   },
   methods: {
-    async handleEditUserList() {
+    handleEditUserListClose(form) {
+      this.$refs[form].resetFields();
+      this.centerDialogVisible2 = false;
+    },
+    async handleEditUserList(form) {
       let res = await userEdit(this.form1);
       console.log(res);
+      this.$refs[form].resetFields();
       this.centerDialogVisible2 = false;
       this.init();
     },

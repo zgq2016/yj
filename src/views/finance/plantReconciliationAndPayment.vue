@@ -1,18 +1,18 @@
 <template>
-  <div class="supplierReconciliationAndPayment">
+  <div class="supplierReconciliationAndPayment" v-if="power.indexOf('F4000100')!=-1">
     <el-breadcrumb separator="/" class="breadcrumb">
-      <img src="../../../assets/mbxlogo.svg" alt class="mbxlogo" />
+      <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>财务</el-breadcrumb-item>
-      <el-breadcrumb-item>客户对账及收款</el-breadcrumb-item>
+      <el-breadcrumb-item>加工厂对账及付款</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="form">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="客户：">
-          <el-select clearable v-model="formInline.customer_id" placeholder="- 全部 -">
+        <el-form-item label="指派工厂：">
+          <el-select v-model="formInline.factory_id" clearable>
             <el-option
-              v-for="item in wests"
+              v-for="item in GetFactory"
               :key="item.id"
-              :label="item.companyname"
+              :label="item.factory_name"
               :value="item.id"
             ></el-option>
           </el-select>
@@ -58,11 +58,28 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">查询</el-button>
-          <el-button type="primary" @click="handlePayment">付款</el-button>
-          <el-button type="primary" @click="beginninGbalanceAdjustment">期初调整</el-button>
-          <el-button type="primary" v-print="'#printTest'" icon="el-icon-printer">打印</el-button>
-          <el-button type="primary" icon="el-icon-upload2">导出</el-button>
+          <el-button v-if="power.indexOf('F4000200')!=-1" type="primary" @click="handlePayment">付款</el-button>
+          <el-button
+            v-if="power.indexOf('F4000300')!=-1"
+            type="primary"
+            @click="beginninGbalanceAdjustment"
+          >期初调整</el-button>
+          <el-button
+            v-if="power.indexOf('F4000400')!=-1"
+            type="primary"
+            v-print="'#printTest'"
+            icon="el-icon-printer"
+          >打印</el-button>
+          <el-button v-if="power.indexOf('F4000500')!=-1" type="primary" icon="el-icon-upload2">导出</el-button>
         </el-form-item>
+        <!-- <el-form-item>
+        </el-form-item>
+        <el-form-item>
+        </el-form-item>
+        <el-form-item>
+        </el-form-item>
+        <el-form-item>
+        </el-form-item>-->
       </el-form>
     </div>
     <el-divider></el-divider>
@@ -96,21 +113,21 @@
           <el-table-column :show-overflow-tooltip="true" width="80" prop="user_name" label="操作人"></el-table-column>
           <el-table-column
             :show-overflow-tooltip="true"
-            width="100"
+            width="110"
             prop="account_name"
             label="结算账户"
           ></el-table-column>
           <el-table-column
             :show-overflow-tooltip="true"
-            width="90"
+            width="110"
             prop="account_type_name"
             label="账目类型"
           ></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="90" prop="cope_price" label="应付金额"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="90" prop="pay_price" label="实付金额"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" width="110" prop="cope_price" label="应付金额"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" width="110" prop="pay_price" label="实付金额"></el-table-column>
           <el-table-column
             :show-overflow-tooltip="true"
-            width="100"
+            width="110"
             prop="opay_price"
             label="本单应付余额"
           ></el-table-column>
@@ -120,7 +137,7 @@
             prop="total_price"
             label="累计应付款余额"
           ></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="130" prop="remarks" label="备注"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" width="110" prop="remarks" label="备注"></el-table-column>
           <el-table-column prop="data" label="操作"></el-table-column>
         </el-table>
       </div>
@@ -148,12 +165,12 @@
       :close-on-press-escape="false"
     >
       <el-form :model="form" :rules="rules" ref="form" label-width="140px" class="demo-form">
-        <el-form-item label="客户：" prop="customer_id">
-          <el-select v-model="form.customer_id" placeholder="- 全部 -" style="width:70%;">
+        <el-form-item label="指派工厂：" prop="factory_id">
+          <el-select v-model="form.factory_id" clearable style="width:70%;">
             <el-option
-              v-for="item in wests"
+              v-for="item in GetFactory"
               :key="item.id"
-              :label="item.companyname"
+              :label="item.factory_name"
               :value="item.id"
             ></el-option>
           </el-select>
@@ -183,18 +200,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <!-- <el-form-item label="应付金额" prop="cope_price">
-          <el-input v-model="form.cope_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>-->
         <el-form-item label="实付金额" prop="pay_price">
           <el-input v-model="form.pay_price" placeholder="请输入内容" style="width:70%;"></el-input>
         </el-form-item>
-        <!-- <el-form-item label="本单应付余额" prop="opay_price">
-          <el-input v-model="form.opay_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>-->
-        <!-- <el-form-item label="累计应付余额" prop="total_price">
-          <el-input v-model="form.total_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>-->
         <el-form-item label="备注" prop="remarks">
           <el-input type="textarea" v-model="form.remarks" placeholder="请输入内容" style="width:70%;"></el-input>
         </el-form-item>
@@ -211,6 +219,7 @@
           </el-upload>
         </el-form-item>
       </el-form>
+
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleAddForm('form')">提 交</el-button>
         <el-button @click="handleClose('form')">取 消</el-button>
@@ -227,12 +236,12 @@
       :close-on-press-escape="false"
     >
       <el-form :model="form1" :rules="rules1" ref="form1" label-width="140px" class="demo-form">
-        <el-form-item label="客户：" prop="customer_id">
-          <el-select v-model="form1.customer_id" placeholder="- 全部 -" style="width:70%;">
+        <el-form-item label="指派工厂：" prop="factory_id">
+          <el-select v-model="form1.factory_id" clearable style="width:70%;">
             <el-option
-              v-for="item in wests"
+              v-for="item in GetFactory"
               :key="item.id"
-              :label="item.companyname"
+              :label="item.factory_name"
               :value="item.id"
             ></el-option>
           </el-select>
@@ -242,18 +251,9 @@
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <!-- <el-form-item label="应付金额" prop="cope_price">
-          <el-input v-model="form1.cope_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>-->
         <el-form-item label="实付金额" prop="pay_price">
           <el-input v-model="form1.pay_price" placeholder="请输入内容" style="width:70%;"></el-input>
         </el-form-item>
-        <!-- <el-form-item label="本单应付余额" prop="opay_price">
-          <el-input v-model="form1.opay_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>-->
-        <!-- <el-form-item label="累计应付余额" prop="total_price">
-          <el-input v-model="form1.total_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>-->
         <el-form-item label="业务时间" prop="service_time">
           <el-date-picker
             v-model="form1.service_time"
@@ -277,19 +277,20 @@
 
 <script>
 import moment from "moment";
-import { getWestList, getStylistList } from "@/api/researchDevelopment";
+import { getStylistList } from "@/api/researchDevelopment";
 import {
-  // supplierAccountList,
+  supplierAccountList,
   balanceAccountSelect,
-  // supplierAccountAdd,
-  customerAccountList,
-  customerAccountAdd,
+  factoryAccountAdd,
   balanceAccountTypeSelect,
 } from "@/api/finance";
-import { getSupplierSelect } from "@/api/archives";
+import { getFactorySelect } from "@/api/production";
+// import { getSupplierSelect } from "@/api/archives";
+import { bookStockOrderList } from "@/api/warehouse";
 export default {
   data() {
     return {
+      power: "",
       cope_price: 999,
       pay_price: 999,
       opay_price: 999,
@@ -299,11 +300,10 @@ export default {
       pageSize: 9,
       total: 0,
       tableData: [],
-      money: "999999999",
       dialogVisible: false,
       dialogVisible1: false,
       form: {
-        customer_id: "",
+        factory_id: "",
         user_id: "",
         balance_account_id: "",
         cope_price: 0,
@@ -315,7 +315,7 @@ export default {
         picurl: "",
       },
       form1: {
-        customer_id: "",
+        factory_id: "",
         user_id: "",
         cope_price: 0,
         pay_price: "",
@@ -325,7 +325,7 @@ export default {
         remarks: "",
       },
       rules1: {
-        customer_id: [{ required: true, message: "客户", trigger: "change" }],
+        factory_id: [{ required: true, message: "供应商", trigger: "change" }],
         user_id: [{ required: true, message: "操作人", trigger: "change" }],
         pay_price: [{ required: true, message: "实付金额", trigger: "change" }],
         service_time: [
@@ -333,7 +333,7 @@ export default {
         ],
       },
       rules: {
-        customer_id: [{ required: true, message: "供应商", trigger: "change" }],
+        factory_id: [{ required: true, message: "供应商", trigger: "change" }],
         user_id: [{ required: true, message: "操作人", trigger: "change" }],
         balance_account_id: [
           { required: true, message: "结算账户", trigger: "change" },
@@ -344,19 +344,19 @@ export default {
         pay_price: [{ required: true, message: "实付金额", trigger: "change" }],
       },
       formInline: {
-        Supplier: "",
+        factory_id: "",
         date: "",
         account_type_id: "",
         balance_account_id: "",
         user_id: "",
         odd: "",
       },
+      GetFactory: [],
       Suppliers: [],
       BalanceAccount: [],
       BalanceAccountType: [],
       SupplierList: [],
       stylists: [],
-      wests: [],
       status: "",
     };
   },
@@ -367,39 +367,9 @@ export default {
     beforeUpload(file) {
       return this.$elUploadBeforeUpload(file);
     },
-    async getWest() {
-      let res = await getWestList();
-      let { data } = res.data;
-      this.wests = data;
-    },
     async onSubmit() {
       this.supplierInit();
     },
-    // async querySearch(value, cb) {
-    //   this.form.supplier_companyname = value;
-    //   console.log(value);
-    //   let res = await getSupplierSelect({
-    //     keyword: this.form.supplier_companyname
-    //   });
-    //   let { data } = res.data;
-    //   cb(data);
-    // },
-    // async querySearch1(value, cb) {
-    //   this.form1.supplier_companyname = value;
-    //   let res = await getSupplierSelect({
-    //     keyword: this.form1.supplier_companyname
-    //   });
-    //   let { data } = res.data;
-    //   cb(data);
-    // },
-    // handleSelect(item) {
-    //   this.form.customer_id = item.address;
-    //   this.form.supplier_companyname = item.value;
-    // },
-    // handleSelect1(item) {
-    //   this.form1.customer_id = item.address;
-    //   this.form1.supplier_companyname = item.value;
-    // },
     handlePayment() {
       this.dialogVisible = true;
     },
@@ -414,16 +384,15 @@ export default {
           "YYYY-MM-DD"
         );
         this.form1.cope_price = Number(this.form1.cope_price);
-        this.form1.customer_id = Number(this.form1.customer_id);
         this.form1.opay_price = Number(this.form1.opay_price);
         this.form1.pay_price = Number(this.form1.pay_price);
         this.form1.total_price = Number(this.form1.total_price);
         this.form1.account_type_id = 0;
         this.form1.balance_account_id = 0;
-        let res = await customerAccountAdd(this.form1);
+        delete this.form1.supplier_companyname;
+        let res = await factoryAccountAdd(this.form1);
         console.log(res);
         this.$refs[form].resetFields();
-        // this.form1.customer_id = "";
         this.supplierInit();
 
         this.dialogVisible1 = false;
@@ -431,7 +400,6 @@ export default {
     },
     handleClose1(form) {
       this.$refs[form].resetFields();
-      // this.form1.customer_id = "";
       console.log(this.form1);
       this.dialogVisible1 = false;
     },
@@ -440,23 +408,21 @@ export default {
         if (!valid) return;
         // 调用actions的登录方法
         this.form.cope_price = Number(this.form.cope_price);
-        this.form.customer_id = Number(this.form.customer_id);
         this.form.opay_price = Number(this.form.opay_price);
         this.form.pay_price = Number(this.form.pay_price);
         this.form.total_price = Number(this.form.total_price);
         this.form.account_type_id = Number(this.form.account_type_id);
         this.form.balance_account_id = Number(this.form.balance_account_id);
-        let res = await customerAccountAdd(this.form);
+        delete this.form.supplier_companyname;
+        let res = await factoryAccountAdd(this.form);
         console.log(res);
         this.$refs[form].resetFields();
-        // this.form.customer_id = "";
         this.supplierInit();
         this.dialogVisible = false;
       });
     },
     handleClose(form) {
       this.$refs[form].resetFields();
-      // this.form.customer_id = "";
       this.dialogVisible = false;
     },
     async getStylist() {
@@ -468,6 +434,12 @@ export default {
       let res = await balanceAccountSelect();
       let { data } = res.data;
       this.BalanceAccount = data;
+    },
+    async getGetFactory() {
+      let res = await getFactorySelect();
+      let { data } = res.data;
+      console.log(data);
+      this.GetFactory = data;
     },
     async getBalanceAccountType() {
       let res = await balanceAccountTypeSelect();
@@ -485,24 +457,19 @@ export default {
     async init() {
       this.ctime_start = moment(this.formInline.date[0]).format("YYYY-MM-DD");
       this.ctime_end = moment(this.formInline.date[1]).format("YYYY-MM-DD");
-      let res1 = await getSupplierSelect({
-        keyword: "",
-      });
-      this.SupplierList = res1.data.data;
     },
     async supplierInit() {
-      let res = await customerAccountList({
+      let res = await bookStockOrderList({
         page: this.pageIndex,
         page_size: this.pageSize,
       });
       res.data.data.map((v) => {
-        console.log(v);
+        // console.log(v);
         if (v.pay_price !== 0) {
           v.opay_price = v.cope_price - v.pay_price;
         }
       });
       let { data, count } = res.data;
-      // let { cope_price, pay_price, opay_price } = res.data.data;
       this.tableData = data;
       this.total = count;
       this.ctime_start = moment(this.formInline.date[0]).format("YYYY-MM-DD");
@@ -512,10 +479,11 @@ export default {
   async mounted() {
     this.init();
     this.supplierInit();
-    this.getWest();
     this.getStylist();
     this.getBalanceAccount();
     this.getBalanceAccountType();
+    this.getGetFactory();
+    this.power = localStorage.getItem("power");
   },
 };
 </script>

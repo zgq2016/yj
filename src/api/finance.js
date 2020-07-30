@@ -112,6 +112,14 @@ export const supplierAccountAdd = (data) => {
     data: data,
   });
 };
+// 新增供应商账目接口;
+export const factoryAccountAdd = (data) => {
+  return axios({
+    url: "?g=factory_account_add",
+    method: "post",
+    data: data,
+  });
+};
 // 客户账目list接口;
 export const customerAccountList = (data) => {
   return axios({
@@ -176,8 +184,6 @@ export const transactionTypeSelect = (data) => {
     data: data,
   });
 };
-
-
 
 // supplier_account_add;
 // 新增供应商账目接口;

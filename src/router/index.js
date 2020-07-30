@@ -66,6 +66,7 @@ import CustomerReconciliationAndCollection from "@/views/finance/customerReconci
 import CustomerStatement from "@/views/finance/customerReconciliationAndCollects/customerStatement.vue";
 import SummaryParagraph from "@/views/finance/customerReconciliationAndCollects/summaryParagraph.vue";
 import SupplierReconciliationAndPayment from "@/views/finance/supplierReconciliationAndPayment.vue";
+import PlantReconciliationAndPayment from "@/views/finance/plantReconciliationAndPayment.vue";
 import Accounter from "@/views/finance/accounter.vue";
 import AccountType from "@/views/finance/accountType.vue";
 import PaymentReimbursement from "@/views/finance/paymentReimbursement.vue";
@@ -354,6 +355,11 @@ const routes = [
         path: "/supplierReconciliationAndPayment",
         name: "SupplierReconciliationAndPayment",
         component: SupplierReconciliationAndPayment,
+      },
+      {
+        path: "/plantReconciliationAndPayment",
+        name: "PlantReconciliationAndPayment",
+        component: PlantReconciliationAndPayment,
       },
       { path: "/accounter", name: "Accounter", component: Accounter },
       { path: "/accountType", name: "AccountType", component: AccountType },

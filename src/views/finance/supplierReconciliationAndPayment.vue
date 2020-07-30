@@ -200,18 +200,18 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="应付金额" prop="cope_price">
+        <!-- <el-form-item label="应付金额" prop="cope_price">
           <el-input v-model="form.cope_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="实付金额" prop="pay_price">
           <el-input v-model="form.pay_price" placeholder="请输入内容" style="width:70%;"></el-input>
         </el-form-item>
-        <el-form-item label="本单应付余额" prop="opay_price">
+        <!-- <el-form-item label="本单应付余额" prop="opay_price">
           <el-input v-model="form.opay_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>
-        <el-form-item label="累计应付余额" prop="total_price">
+        </el-form-item>-->
+        <!-- <el-form-item label="累计应付余额" prop="total_price">
           <el-input v-model="form.total_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="备注" prop="remarks">
           <el-input type="textarea" v-model="form.remarks" placeholder="请输入内容" style="width:70%;"></el-input>
         </el-form-item>
@@ -260,18 +260,18 @@
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="应付金额" prop="cope_price">
+        <!-- <el-form-item label="应付金额" prop="cope_price">
           <el-input v-model="form1.cope_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="实付金额" prop="pay_price">
           <el-input v-model="form1.pay_price" placeholder="请输入内容" style="width:70%;"></el-input>
         </el-form-item>
-        <el-form-item label="本单应付余额" prop="opay_price">
+        <!-- <el-form-item label="本单应付余额" prop="opay_price">
           <el-input v-model="form1.opay_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>
-        <el-form-item label="累计应付余额" prop="total_price">
+        </el-form-item>-->
+        <!-- <el-form-item label="累计应付余额" prop="total_price">
           <el-input v-model="form1.total_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="业务时间" prop="service_time">
           <el-date-picker
             v-model="form1.service_time"
@@ -323,10 +323,10 @@ export default {
         supplier_id: "",
         user_id: "",
         balance_account_id: "",
-        cope_price: "",
+        cope_price: 0,
         pay_price: "",
-        opay_price: "",
-        total_price: "",
+        opay_price: 0,
+        total_price: 0,
         remarks: "",
         account_type_id: "",
         picurl: "",
@@ -335,10 +335,10 @@ export default {
         supplier_id: "",
         supplier_companyname: "",
         user_id: "",
-        cope_price: "",
+        cope_price: 0,
         pay_price: "",
-        opay_price: "",
-        total_price: "",
+        opay_price: 0,
+        total_price: 0,
         service_time: "",
         remarks: "",
       },
@@ -347,18 +347,9 @@ export default {
           { required: true, message: "供应商", trigger: "change" },
         ],
         user_id: [{ required: true, message: "操作人", trigger: "change" }],
-        cope_price: [
-          { required: true, message: "应付金额", trigger: "change" },
-        ],
-        opay_price: [
-          { required: true, message: "本单应付余额", trigger: "change" },
-        ],
         pay_price: [{ required: true, message: "实付金额", trigger: "change" }],
         service_time: [
           { required: true, message: "业务时间", trigger: "change" },
-        ],
-        total_price: [
-          { required: true, message: "累计应付余额", trigger: "change" },
         ],
       },
       rules: {
@@ -372,16 +363,7 @@ export default {
         account_type_id: [
           { required: true, message: "账目类型", trigger: "change" },
         ],
-        cope_price: [
-          { required: true, message: "应付金额", trigger: "change" },
-        ],
-        opay_price: [
-          { required: true, message: "本单应付余额", trigger: "change" },
-        ],
         pay_price: [{ required: true, message: "实付金额", trigger: "change" }],
-        total_price: [
-          { required: true, message: "累计应付余额", trigger: "change" },
-        ],
       },
       formInline: {
         Supplier: "",
@@ -530,6 +512,12 @@ export default {
       let res = await supplierAccountList({
         page: this.pageIndex,
         page_size: this.pageSize,
+      });
+      res.data.data.map((v) => {
+        console.log(v);
+        if (v.pay_price !== 0) {
+          v.opay_price = v.cope_price - v.pay_price;
+        }
       });
       let { data, count } = res.data;
       // let { cope_price, pay_price, opay_price } = res.data.data;
