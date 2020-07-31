@@ -119,3 +119,11 @@ export const bookStockOrderSizeDel = data => {
         data: data
     });
 };
+// 产品库存查询
+export const bookStockList = data => {
+    return axios({
+        url: "?g=book_stock_list",
+        method: "post",
+        data: data
+    });
+};

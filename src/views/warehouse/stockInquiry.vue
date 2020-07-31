@@ -70,9 +70,9 @@
             @cell-click="cellClick"
             @selection-change="handleSelectionChange"
           >
-            <el-table-column align="center" type="selection" width="25"></el-table-column>
-            <el-table-column align="center" prop="state_name" label="状态" width="70"></el-table-column>
-            <el-table-column align="center" label="日期" width="90">
+            <el-table-column align="center" type="selection" width="30"></el-table-column>
+            <el-table-column align="center" prop="state_name" label="状态" width="67"></el-table-column>
+            <el-table-column align="center" label="日期" width="88">
               <template slot-scope="scope">{{ scope.row.ctime }}</template>
             </el-table-column>
             <el-table-column
@@ -233,6 +233,7 @@
             </el-form>
           </div>
           <!-- 草稿 -->
+
           <div class="right_table" v-if="!vh5">
             <el-table
               :data="weretable"
@@ -260,18 +261,17 @@
                 </template>
               </el-table-column>
               <el-table-column prop="commodity" width="90" align="center" label="商品">
-                <template slot-scope="scope">
+                <template slot-scope="scope" v-if="!vh5">
                   <el-select
-                    v-show="scope.row.showHidden1"
                     v-model="scope.row.commodity"
                     filterable
+                    v-if="scope.row.showHidden1"
                     @blur="bblur(scope.row,scope.column)"
                     @visible-change="visibleChange($event,scope.row)"
                     @change="handleSelect($event,scope.column, scope.row,scope.$index)"
                     placeholder="请选择"
                     size="mini"
                   >
-                    <!-- style="width:120px" -->
                     <el-option
                       v-for="item in shopppings"
                       :key="item.value"
@@ -286,21 +286,25 @@
                       :total="total3"
                     ></el-pagination>
                   </el-select>
-                  <span v-if="!scope.row.showHidden1 && !vh5">{{scope.row.commodity || "点击选择"}}</span>
+                  <span v-if="!scope.row.showHidden1">{{scope.row.commodity|| "点击选择"}}</span>
                 </template>
+                <!-- <template v-if="!scope.row.showHidden1 && !vh5" slot-scope="scope">
+                  <span>{{scope.row.commodity || "点击选择"}}</span>
+                </template>-->
               </el-table-column>
               <el-table-column prop="item_no" align="center" width="80" sum-text label="货号"></el-table-column>
               <el-table-column prop="bar_code" align="center" width="80" label="条码"></el-table-column>
               <el-table-column prop="color" width="70" align="center" label="颜色">
-                <template slot-scope="scope">
+                <template slot-scope="scope" v-if="!vh5">
+                  <!-- :disabled="scope.row.commodity==''? true : false" -->
                   <el-autocomplete
                     class="inline-input"
                     size="mini"
-                    :disabled="scope.row.commodity==''? true : false"
                     v-if="scope.row.showHidden2"
                     :title="scope.row.color"
                     v-model="scope.row.color"
                     :fetch-suggestions="querySearch1"
+                    @focus="focuss($event,scope.column, scope.row,scope.$index)"
                     @blur="bblur(scope.row,scope.column)"
                     @select="handleSelect($event,scope.column, scope.row,scope.$index)"
                   ></el-autocomplete>
@@ -308,13 +312,14 @@
                 </template>
               </el-table-column>
               <el-table-column prop="size" width="60" align="center" label="尺码">
-                <template slot-scope="scope">
+                <template slot-scope="scope" v-if="!vh5">
                   <el-autocomplete
                     class="inline-input"
                     size="mini"
                     v-if="scope.row.showHidden3"
                     :title="scope.row.size"
                     v-model="scope.row.size"
+                    @focus="focuss($event,scope.column, scope.row,scope.$index)"
                     :fetch-suggestions="querySearch2"
                     @blur="bblur(scope.row,scope.column)"
                     @select="handleSelect($event,scope.column, scope.row,scope.$index)"
@@ -324,7 +329,7 @@
               </el-table-column>
               <el-table-column prop="monad" width="50" align="center" label="单位"></el-table-column>
               <el-table-column prop="quantity" width="60" align="center" label="数量">
-                <template slot-scope="scope">
+                <template slot-scope="scope" v-if="!vh5">
                   <input
                     v-model="scope.row.quantity"
                     @blur="bblur(scope.row,scope.column,scope.row.quantity)"
@@ -335,7 +340,7 @@
                 </template>
               </el-table-column>
               <el-table-column prop="univalence" align="center" label="单价">
-                <template slot-scope="scope">
+                <template slot-scope="scope" v-if="!vh5">
                   <input
                     v-model="scope.row.univalence"
                     @blur="bblur(scope.row,scope.column,scope.row.univalence)"
@@ -346,7 +351,7 @@
                 </template>
               </el-table-column>
               <el-table-column prop="discount" align="center" width="70" label="折扣(%)">
-                <template slot-scope="scope">
+                <template slot-scope="scope" v-if="!vh5">
                   <input
                     v-model="scope.row.discount"
                     @blur="bblur(scope.row,scope.column,scope.row.discount)"
@@ -357,7 +362,7 @@
                 </template>
               </el-table-column>
               <el-table-column prop="discountPrice" align="center" label="折后价">
-                <template slot-scope="scope">
+                <template slot-scope="scope" v-if="!vh5">
                   <input
                     v-model="scope.row.discountPrice"
                     @blur="bblur(scope.row,scope.column,scope.row.discountPrice)"
@@ -370,7 +375,7 @@
               <el-table-column prop="sum" align="center" label="金额"></el-table-column>
               <el-table-column prop="sumed" align="center" label="折后金额"></el-table-column>
               <el-table-column prop="remark" width="100" align="center" label="备注">
-                <template slot-scope="scope">
+                <template slot-scope="scope" v-if="!vh5">
                   <el-input
                     type="text"
                     maxlength="20"
@@ -391,14 +396,13 @@
               :data="weretable1"
               show-summary
               :summary-method="getSummaries"
-              row-key="id"
               size="mini"
               style="cursor: pointer;"
               :header-cell-style="{background:'#eef1f6',color:'#606266'}"
             >
               <el-table-column type="index" width="35"></el-table-column>
               <el-table-column prop="commodity" width="90" align="center" label="商品"></el-table-column>
-              <el-table-column prop="item_no" align="center" width="80" sum-text label="货号"></el-table-column>
+              <el-table-column property="item_no" align="center" width="80" label="货号"></el-table-column>
               <el-table-column prop="bar_code" align="center" width="80" label="条码"></el-table-column>
               <el-table-column prop="color" width="70" align="center" label="颜色"></el-table-column>
               <el-table-column prop="size" width="70" align="center" label="尺码"></el-table-column>
@@ -428,7 +432,11 @@
                   list-type="picture"
                   style="float:left;"
                 >
-                  <el-button size="mini" v-if="vh" type="primary">点击上传</el-button>
+                  <el-button
+                    size="mini"
+                    v-if="vh && form.state!=1&&form.state!=4"
+                    type="primary"
+                  >点击上传</el-button>
                 </el-upload>
               </el-form-item>
             </div>
@@ -749,6 +757,7 @@ export default {
       }
       console.log(this.form);
       if (this.form.state == 0) {
+        //采购
         this.weretable = [];
         this.tables();
         if (this.form.size_data.length > 0) {
@@ -770,10 +779,19 @@ export default {
               remark: v.remark,
               style_id: v.style_id,
               id: v.id,
+              showHidden1: false,
+              showHidden2: false,
+              showHidden3: false,
+              showHidden4: false,
+              showHidden5: false,
+              showHidden6: false,
+              showHidden7: false,
+              showHidden8: false,
             });
           });
         }
       } else {
+        //已入库  已销毁
         if (this.form.size_data.length > 0) {
           this.weretable1 = [];
           this.form.size_data.map((v, i) => {
@@ -990,7 +1008,30 @@ export default {
         );
       };
     },
-    // 提示选框
+    // 获取焦点
+    async focuss(v, column, row, index) {
+      this.shopppings.map((item, i) => {
+        if (row.item_no == item.styleno) {
+          this.sizes = [];
+          this.colors = [];
+          let arr = [];
+          item.style_data.forEach((item1, index) => {
+            for (let dd in item1.type_data) {
+              arr.push(dd);
+            }
+            this.colors.push({
+              value: item1.style_color_name,
+              quantitys: [],
+            });
+          });
+          arr = [...new Set(arr)];
+          arr.map((j, k) => {
+            this.sizes.push({ value: j });
+          });
+        }
+      });
+    },
+    // 选择提示选框
     handleSelect(v, column, row, index) {
       // console.log(v,idnex,row);
       // console.log(column.label);
@@ -1017,7 +1058,6 @@ export default {
         arr.map((j, k) => {
           this.sizes.push({ value: j });
         });
-        console.log(v);
         row.commodity = v.stylename;
         row.item_no = v.styleno;
         row.bar_code = v.bar_code;
@@ -1063,7 +1103,7 @@ export default {
             if (bl && j != undefined && j != "") {
               this.weretable[this.indexk].color = v.value;
               this.weretable[this.indexk].size = this.sizes[k].value;
-              this.weretable[this.indexk].quantity = j;
+              this.weretable[this.indexk].quantity = Number(j);
               this.weretable[this.indexk].sum =
                 j * this.weretable[this.indexk].univalence;
               this.weretable[this.indexk].sumed =
@@ -1079,7 +1119,7 @@ export default {
                 monad: this.weretable[this.indexk].monad,
                 color: v.value,
                 size: this.sizes[k].value,
-                quantity: j,
+                quantity: Number(j),
                 univalence: this.weretable[this.indexk].univalence,
                 discount: "100",
                 discountPrice: this.weretable[this.indexk].discountPrice,
@@ -1169,7 +1209,7 @@ export default {
       // console.log(this.weretable);
       let size_data = [];
       this.weretable.map((v, i) => {
-        // console.log(v);
+        console.log(v);
         if (v.color != "" && v.size != "" && v.quantity != "") {
           size_data.push({
             stylename: v.commodity,
@@ -1202,11 +1242,17 @@ export default {
         this.form.factory_name == undefined ||
         this.form.factory_name == "" ||
         this.form.storehouse_name == undefined ||
-        this.form.account_name == undefined
+        this.form.account_name == undefined ||
+        size_data.length <= 0
       ) {
-        let str = '请填写完整数据'
-        if( this.form.factory_name == undefined ||
-        this.form.factory_name == "" ){ str = '请选择厂商'}
+        console.log(size_data);
+        let str = "请填写完整数据";
+        if (
+          this.form.factory_name == undefined ||
+          this.form.factory_name == ""
+        ) {
+          str = "请选择厂商";
+        }
         this.$message({
           showClose: true,
           message: "请填写完整数据",
@@ -1460,6 +1506,11 @@ export default {
         }
       }
       .right_main {
+        .right_table {
+          /deep/.el-input__inner {
+            padding: 0 !important;
+          }
+        }
         .right_form {
           /deep/.cssa {
             .el-steps {

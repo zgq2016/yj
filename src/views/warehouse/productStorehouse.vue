@@ -10,7 +10,12 @@
       <div class="searchInput">
         <el-form :inline="true" :model="form">
           <el-form-item label="仓库:">
-            <el-select v-model="form.warehouse" clearable placeholder="请选择仓库" style="width:120px">
+            <el-select
+              v-model="form.storehouse_id"
+              clearable
+              placeholder="请选择仓库"
+              style="width:120px"
+            >
               <el-option
                 v-for="item in ware"
                 :key="item.id"
@@ -28,11 +33,11 @@
           </el-form-item>
 
           <el-form-item label="商品:">
-            <el-input style="width:130px" v-model="form.commodity" placeholder="请输入商品名称"></el-input>
+            <el-input style="width:130px" v-model="form.stylename" placeholder="请输入商品名称"></el-input>
           </el-form-item>
 
           <el-form-item label="分类:">
-            <el-select v-model="form.warehouse" clearable placeholder="请选择分类" style="width:120px">
+            <el-select v-model="form.style_type" clearable placeholder="请选择分类" style="width:120px">
               <el-option
                 v-for="item in cate"
                 :key="item.id"
@@ -43,8 +48,8 @@
           </el-form-item>
 
           <el-form-item label="数量:">
-            <el-input style="width:100px" v-model="form.beforenumber" placeholder="请输入数量"></el-input>&nbsp;至
-            <el-input style="width:100px" v-model="form.afternumber" placeholder="请输入数量"></el-input>
+            <el-input style="width:100px" v-model="form.min" placeholder="请输入数量"></el-input>&nbsp;至
+            <el-input style="width:100px" v-model="form.max" placeholder="请输入数量"></el-input>
           </el-form-item>
 
           <el-form-item>
@@ -62,35 +67,32 @@
       <div class="table">
         <el-table
           id="printTest"
-          ref="singleTable"
+          ref="tableData"
           :data="tableData"
+          size='mini'
           :header-cell-style="{background:'#eef1f6',color:'#606266'}"
           highlight-current-row
           style="width: 100%"
         >
-          <el-table-column align="center" type="index" width="50"></el-table-column>
-          <el-table-column align="center" property="username" label="名称"></el-table-column>
+          <el-table-column align="center" type="index" width="50" label="序号"></el-table-column>
+          <el-table-column align="center" prop="stylename" label="名称"></el-table-column>
           <el-table-column align="center" width="70" label="图片">
             <template slot-scope="scope">
-              <img :src="scope.row.picimg" class="img" alt />
+              <img :src="scope.row.image" class="img" alt />
             </template>
           </el-table-column>
-          <el-table-column align="center" property="stylenumber" label="货号"></el-table-column>
-          <el-table-column align="center" property="stylenumber" label="条码"></el-table-column>
-          <!-- <el-table-column :property="scope.row.color" label="条码"></el-table-column> -->
+          <el-table-column align="center" prop="styleno" label="货号"></el-table-column>
+          <el-table-column align="center" prop="stylenumber" label="条码"></el-table-column>
           <el-table-column
             align="center"
-            v-for="(item,index) in color"
+            v-for="(item,index) in colors"
             :key="index"
-            :prop="'color.'+index"
+            :prop="'sizes.'+index"
             :label="item"
           ></el-table-column>
-
-          <el-table-column align="center" property="category1" label="F"></el-table-column>
-          <el-table-column align="center" property="category" label="品牌"></el-table-column>
-          <el-table-column align="center" property="inventorynum" label="仓库"></el-table-column>
-          <el-table-column align="center" property="unit" label="单位"></el-table-column>
-          <el-table-column align="center" property="num" label="当前库存"></el-table-column>
+          <el-table-column align="center" prop="storehouse_name" label="仓库"></el-table-column>
+          <el-table-column align="center" prop="unit" label="单位"></el-table-column>
+          <el-table-column align="center" prop="total_quantity" label="当前库存"></el-table-column>
         </el-table>
       </div>
     </div>
@@ -111,7 +113,7 @@
 </template>
 
 <script>
-import { storehouseList } from "@/api/warehouse.js";
+import { storehouseList, bookStockList } from "@/api/warehouse.js";
 import { getCategoryList } from "@/api/researchDevelopment.js";
 
 export default {
@@ -121,28 +123,14 @@ export default {
       form: {
         checked: true,
       },
-      tableData: [
-        {
-          picimg:
-            "https://axure-file.lanhuapp.com/b0e7ed9c-a55b-4903-972b-002bbf42cf81__9baf896cacfe3438e33a5434b694f14c.svg",
-          username: "阿斯顿",
-          stylenumber: "品牌",
-          color: ["100", "200", "200"],
-          category: "西所",
-          inventorynum: "仓库1",
-          unit: "件",
-          operation: "0",
-          category1: 0,
-          num: 0,
-        },
-      ],
+      tableData: [],
       pageIndex: 1,
-      pageSize: 9,
+      pageSize: 10,
       pageIndex2: 1,
-      pageSize2: 9,
+      pageSize2: 10,
       total: 0,
       total2: 0,
-      color: ["X", "L", "XXL"],
+      colors: [],
       ware: [],
       cate: [],
     };
@@ -157,16 +145,22 @@ export default {
       this.init(this.form);
     },
     onSubmit() {
+      if (this.form.checked == true) {
+        this.form.hide_empty = 1;
+      } else {
+        this.form.hide_empty = 0;
+      }
       console.log(this.form);
+
       this.init(this.form);
     },
     handleSize(val) {
       this.pageSize2 = val;
-      this.store()
+      this.store();
     },
     handleCurrent(val) {
       this.pageIndex2 = val;
-      this.store()
+      this.store();
     },
     // 仓库
     async store() {
@@ -182,7 +176,25 @@ export default {
       // 分类
       let res = await getCategoryList();
       this.cate = res.data.data;
-      console.log(res);
+      // console.log(res);
+      let res1 = await bookStockList({
+        page: this.pageIndex,
+        page_size: this.pageSize,
+        ...obj,
+      });
+      this.tableData = res1.data.data;
+      this.total = res1.data.count
+      console.log(this.tableData);
+      console.log(res1);
+      this.tableData.map((v, i) => {
+        v.sizes = [];
+        this.colors =[]
+        for (let key in v.size_data) {
+          // console.log(key, v.size_data[key]);
+          this.colors.push(key);
+          v.sizes.push(v.size_data[key]);
+        }
+      });
     },
   },
   mounted() {

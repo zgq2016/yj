@@ -84,114 +84,6 @@
           <div class="child" @click="toMaterial()">
             <div class="left">
               <img
-                src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1594963650563&di=ee9edf3ea2950aa9a99a7d0b5ca6fe5f&imgtype=0&src=http%3A%2F%2Fc.hiphotos.baidu.com%2Fzhidao%2Fwh%3D450%2C600%2Fsign%3D1d3f4efd8126cffc697fb7b68c3166a6%2F241f95cad1c8a786636d726a6409c93d70cf500a.jpg"
-                alt
-              />
-              <div class="left_n">
-                <span>主料</span>
-                <span>粉红色</span>
-                <span>内部编号:001</span>
-                <span>大事噶是</span>
-              </div>
-            </div>
-            <div class="right">
-              <h5>库存量</h5>
-              <em>500000</em>
-            </div>
-          </div>
-          <div class="child">
-            <div class="left">
-              <img
-                src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1594963650563&di=ee9edf3ea2950aa9a99a7d0b5ca6fe5f&imgtype=0&src=http%3A%2F%2Fc.hiphotos.baidu.com%2Fzhidao%2Fwh%3D450%2C600%2Fsign%3D1d3f4efd8126cffc697fb7b68c3166a6%2F241f95cad1c8a786636d726a6409c93d70cf500a.jpg"
-                alt
-              />
-              <div class="left_n">
-                <span>主料</span>
-                <span>粉红色</span>
-                <span>内部编号:001</span>
-                <span>大事噶是</span>
-              </div>
-            </div>
-            <div class="right">
-              <h5>库存量</h5>
-              <em>500000</em>
-            </div>
-          </div>
-          <div class="child">
-            <div class="left">
-              <img
-                src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1594963650563&di=ee9edf3ea2950aa9a99a7d0b5ca6fe5f&imgtype=0&src=http%3A%2F%2Fc.hiphotos.baidu.com%2Fzhidao%2Fwh%3D450%2C600%2Fsign%3D1d3f4efd8126cffc697fb7b68c3166a6%2F241f95cad1c8a786636d726a6409c93d70cf500a.jpg"
-                alt
-              />
-              <div class="left_n">
-                <span>主料</span>
-                <span>粉红色</span>
-                <span>内部编号:001</span>
-                <span>大事噶是</span>
-              </div>
-            </div>
-            <div class="right">
-              <h5>库存量</h5>
-              <em>500000</em>
-            </div>
-          </div>
-          <div class="child">
-            <div class="left">
-              <img
-                src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1594963650563&di=ee9edf3ea2950aa9a99a7d0b5ca6fe5f&imgtype=0&src=http%3A%2F%2Fc.hiphotos.baidu.com%2Fzhidao%2Fwh%3D450%2C600%2Fsign%3D1d3f4efd8126cffc697fb7b68c3166a6%2F241f95cad1c8a786636d726a6409c93d70cf500a.jpg"
-                alt
-              />
-              <div class="left_n">
-                <span>主料</span>
-                <span>粉红色</span>
-                <span>内部编号:001</span>
-                <span>大事噶是</span>
-              </div>
-            </div>
-            <div class="right">
-              <h5>库存量</h5>
-              <em>500000</em>
-            </div>
-          </div>
-          <div class="child">
-            <div class="left">
-              <img
-                src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1594963650563&di=ee9edf3ea2950aa9a99a7d0b5ca6fe5f&imgtype=0&src=http%3A%2F%2Fc.hiphotos.baidu.com%2Fzhidao%2Fwh%3D450%2C600%2Fsign%3D1d3f4efd8126cffc697fb7b68c3166a6%2F241f95cad1c8a786636d726a6409c93d70cf500a.jpg"
-                alt
-              />
-              <div class="left_n">
-                <span>主料</span>
-                <span>粉红色</span>
-                <span>内部编号:001</span>
-                <span>大事噶是</span>
-              </div>
-            </div>
-            <div class="right">
-              <h5>库存量</h5>
-              <em>500000</em>
-            </div>
-          </div>
-          <div class="child">
-            <div class="left">
-              <img
-                src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1594963650563&di=ee9edf3ea2950aa9a99a7d0b5ca6fe5f&imgtype=0&src=http%3A%2F%2Fc.hiphotos.baidu.com%2Fzhidao%2Fwh%3D450%2C600%2Fsign%3D1d3f4efd8126cffc697fb7b68c3166a6%2F241f95cad1c8a786636d726a6409c93d70cf500a.jpg"
-                alt
-              />
-              <div class="left_n">
-                <span>主料</span>
-                <span>粉红色</span>
-                <span>内部编号:001</span>
-                <span>大事噶是</span>
-              </div>
-            </div>
-            <div class="right">
-              <h5>库存量</h5>
-              <em>500000</em>
-            </div>
-          </div>
-          <div class="child">
-            <div class="left">
-              <img
                 src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1594964476331&di=3f3573c4fd9b0f2ca185560428315961&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fforum%2Fw%3D580%2Fsign%3Dde32eec79e13b07ebdbd50003cd59113%2F90ef76c6a7efce1bb8d6a12ca251f3deb58f6552.jpg"
                 alt
               />
@@ -207,42 +99,7 @@
               <em>500000</em>
             </div>
           </div>
-          <div class="child">
-            <div class="left">
-              <img
-                src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1594963650563&di=ee9edf3ea2950aa9a99a7d0b5ca6fe5f&imgtype=0&src=http%3A%2F%2Fc.hiphotos.baidu.com%2Fzhidao%2Fwh%3D450%2C600%2Fsign%3D1d3f4efd8126cffc697fb7b68c3166a6%2F241f95cad1c8a786636d726a6409c93d70cf500a.jpg"
-                alt
-              />
-              <div class="left_n">
-                <span>主料</span>
-                <span>粉红色</span>
-                <span>内部编号:001</span>
-                <span>大事噶是</span>
-              </div>
-            </div>
-            <div class="right">
-              <h5>库存量</h5>
-              <em>500000</em>
-            </div>
-          </div>
-          <div class="child">
-            <div class="left">
-              <img
-                src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1594964476331&di=3f3573c4fd9b0f2ca185560428315961&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fforum%2Fw%3D580%2Fsign%3Dde32eec79e13b07ebdbd50003cd59113%2F90ef76c6a7efce1bb8d6a12ca251f3deb58f6552.jpg"
-                alt
-              />
-              <div class="left_n">
-                <span>主料</span>
-                <span>粉红色</span>
-                <span>内部编号:001</span>
-                <span>大事噶是</span>
-              </div>
-            </div>
-            <div class="right">
-              <h5>库存量</h5>
-              <em>500000</em>
-            </div>
-          </div>
+         
         </div>
       </div>
 
@@ -373,7 +230,12 @@
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload"
             >
-              <img v-if="form1.picurl" :src="form1.picurl" style="width:150px;height:150px;" class="avatar" />
+              <img
+                v-if="form1.picurl"
+                :src="form1.picurl"
+                style="width:150px;height:150px;"
+                class="avatar"
+              />
               <i v-else class="el-icon-upload avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item>
@@ -406,7 +268,7 @@
 <script>
 import {
   getMaterialsList,
-  projectStyleMaterialsAdd
+  projectStyleMaterialsAdd,
 } from "@/api/researchDevelopment";
 import { storehouseList } from "@/api/warehouse.js";
 import { getMaterialsClass, getMaterialsClassInfo } from "@/api/archives.js";
@@ -418,20 +280,20 @@ export default {
         //选择支付方式
         {
           value: "中国农业银行",
-          label: "中国农业银行"
+          label: "中国农业银行",
         },
         {
           value: "中国工商银行",
-          label: "中国工商银行"
+          label: "中国工商银行",
         },
         {
           value: "微信",
-          label: "微信"
+          label: "微信",
         },
         {
           value: "支付宝",
-          label: "支付宝"
-        }
+          label: "支付宝",
+        },
       ],
       popoverId: "",
       visible: false,
@@ -441,7 +303,7 @@ export default {
       centerDialogVisible2: false,
       input: "",
       form: {
-        checked: true
+        checked: true,
       },
       pageIndex: 1,
       pageSize: 9,
@@ -455,23 +317,23 @@ export default {
       form1: { picurl: "" },
       rules: {
         amountPurchased: [
-          { required: true, message: "请输入采购量", trigger: "blur" }
+          { required: true, message: "请输入采购量", trigger: "blur" },
         ],
         purchasePrice: [
-          { required: true, message: "请输入采购单价", trigger: "blur" }
+          { required: true, message: "请输入采购单价", trigger: "blur" },
         ],
         money: [{ required: true, message: "请输入金额", trigger: "blur" }],
         payManneItem: [
-          { required: true, message: "请选择支付方式", trigger: "change" }
+          { required: true, message: "请选择支付方式", trigger: "change" },
         ],
         entrepot: [
-          { required: true, message: "请选择仓库类型", trigger: "change" }
-        ]
+          { required: true, message: "请选择仓库类型", trigger: "change" },
+        ],
       },
       classData: [],
       class_datas: [],
       classDatasId: "",
-      ware: []
+      ware: [],
     };
   },
   methods: {
@@ -484,7 +346,7 @@ export default {
     async handleClassDatasId(e) {
       this.classDatasId = e;
       let res = await getMaterialsClassInfo({
-        id: this.classDatasId
+        id: this.classDatasId,
       });
       let { data } = res.data;
       this.class_datas = data;
@@ -497,7 +359,7 @@ export default {
     },
     toMaterial(item) {
       this.$router.push({
-        path: `/materialTable?materials_id=${112}`
+        path: `/materialTable?materials_id=${112}`,
       });
     },
     handleSizeChange(val) {
@@ -539,7 +401,7 @@ export default {
       let res = await getMaterialsList({
         keyword: this.searchInput,
         page: this.pageIndex,
-        page_size: this.pageSize
+        page_size: this.pageSize,
       });
       let { data, count } = res.data;
       this.MaterialsList = data;
@@ -550,7 +412,7 @@ export default {
       this.$confirm("确定选择", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       }).then(async () => {
         this.centerDialogVisible1 = false;
         this.centerDialogVisible2 = true;
@@ -574,7 +436,7 @@ export default {
       let res = await getMaterialsList({
         keyword: "",
         page: this.pageIndex,
-        page_size: this.pageSize
+        page_size: this.pageSize,
       });
       let { data, count } = res.data;
       this.MaterialsList = data;
@@ -587,31 +449,29 @@ export default {
     },
     // 采购信息保存
     conserve() {
-      this.$refs["form1"].validate(valid => {
+      this.$refs["form1"].validate((valid) => {
         if (!valid) return;
         this.centerDialogVisible2 = false;
         console.log(this.form1);
       });
     },
-    async init() {
-     
-    },
-    async stock(){
-       // 仓库
+    async init() {},
+    async stock() {
+      // 仓库
       let res = await storehouseList({
         page: this.pageIndex2,
-        page_size: this.pageSize2
+        page_size: this.pageSize2,
       });
       let { data } = res.data;
       this.ware = data;
       this.total2 = res.data.count;
-    }
+    },
   },
   mounted() {
     this.getClassData();
     this.init();
     this.stock();
-  }
+  },
 };
 </script>
 <style lang="less" scoped>
