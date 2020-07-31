@@ -476,6 +476,30 @@
                 center
               >
                 <el-form ref="form2" :rules="rules1" :model="form2" label-width="100px">
+                  <div style="width:350px;margin:0 auto">
+                    <el-form-item label="仓库:" prop="storehouse_id">
+                      <el-select v-model="form2.storehouse_id" placeholder="请选择仓库" clearable>
+                        <el-option
+                          v-for="items in wares"
+                          :key="items.id"
+                          :label="items.storehouse_name"
+                          :value="items.id"
+                        ></el-option>
+                        <el-pagination
+                          small
+                          layout="prev, pager, next"
+                          @size-change="handleSize"
+                          @current-change="handleCurrent"
+                          :total="total2"
+                        ></el-pagination>
+                      </el-select>
+                    </el-form-item>
+                  </div>
+                  <div style="width:350px;margin:0 auto">
+                    <el-form-item label="结算金额:" prop="amount">
+                      <el-input style="width:200px;" placeholder="请输入金额" v-model="form2.amount"></el-input>
+                    </el-form-item>
+                  </div>
                   <el-form-item prop="imageUrl">
                     <el-input v-model="form2.imageUrl" v-if="false"></el-input>
                   </el-form-item>
@@ -497,7 +521,7 @@
               </el-dialog>
               <!-- 部分回料 -->
               <el-dialog
-                width="30%"
+                width="36%"
                 title="部分回料"
                 :visible.sync="innerVisible"
                 append-to-body
@@ -512,6 +536,24 @@
                   </el-form-item>
                   <el-form-item prop="date" label="部分回料时间">
                     <el-date-picker v-model="form3.date" type="date" placeholder="选择日期"></el-date-picker>
+                  </el-form-item>
+                  <el-form-item label="仓库:" prop="storehouse_id">
+                    <!-- style="width:250px;margin-left:120px;font-size:16px;" -->
+                    <el-select v-model="form3.storehouse_id" placeholder="请选择仓库" clearable>
+                      <el-option
+                        v-for="items in wares"
+                        :key="items.id"
+                        :label="items.storehouse_name"
+                        :value="items.id"
+                      ></el-option>
+                      <el-pagination
+                        small
+                        layout="prev, pager, next"
+                        @size-change="handleSize"
+                        @current-change="handleCurrent"
+                        :total="total2"
+                      ></el-pagination>
+                    </el-select>
                   </el-form-item>
                   <el-form-item label="余结金额">
                     <span style="width:200px" :model="form3.money1"></span>
@@ -1157,6 +1199,20 @@ export default {
             trigger: "blur",
           },
         ],
+        amount: [
+          {
+            required: true,
+            message: "请输入金额",
+            trigger: "blur",
+          },
+        ],
+        storehouse_id: [
+          {
+            required: true,
+            message: "请选择仓库",
+            trigger: "change",
+          },
+        ],
       },
       rules2: {
         number: [
@@ -1179,6 +1235,13 @@ export default {
           {
             required: true,
             message: "请选择回料时间",
+            trigger: "change",
+          },
+        ],
+        storehouse_id: [
+          {
+            required: true,
+            message: "请选择仓库",
             trigger: "change",
           },
         ],
@@ -2240,7 +2303,14 @@ export default {
     async seeDetails(item) {
       // console.log(item.materials_id);
       // this.itemList = item
-      let obj = JSON.stringify(item);
+      let a = {
+        id: item.id,
+        style_id: item.style_id,
+        produce_no: item.produce_no,
+        style_color_name: item.style_color_name,
+        mainclass: item.mainclass,
+      };
+      let obj = JSON.stringify(a);
       this.$router.push({
         path: `/PanelPurchase?tabName=${"采购"}&materials_id=${
           item.materials_id
@@ -2271,11 +2341,13 @@ export default {
           state: "3", //回料状态 1部份回料 2延时回料 3全部回料
           picurl: this.form2.imageUrl, //凭证图片
           quantity: 0, //回料数量
-          amount: 0, //结算金额
+          amount: this.form2.amount, //结算金额
           remarks: "", //原因备注
+          storehouse_id: this.form2.storehouse_id,
         });
+        console.log(res);
+        this.int_i();
       });
-      this.int_i();
     },
     // 部分回料
     async partBack() {
@@ -2292,6 +2364,7 @@ export default {
           quantity: Number(this.form3.number), //回料数量
           amount: Number(this.form3.money), //结算金额
           remarks: "", //原因备注
+          storehouse_id: this.form3.storehouse_id,
         });
         this.int_i();
         console.log(res);

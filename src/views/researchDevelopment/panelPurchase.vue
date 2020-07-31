@@ -195,9 +195,11 @@ import moment from "moment";
 import {
   getMaterialsInfo, //物料
   getSupplierInfo, //供应商
+  getMaterialsList,
 } from "@/api/archives";
 import {
   produceOrderProcureEdit, //编辑物料
+  produceOrderInfo,
 } from "@/api/production";
 import {
   purchaseEdit, //编辑物料
@@ -315,10 +317,12 @@ export default {
             produce_no: e.produce_no,
             style_color_name: e.style_color_name,
             mainclass: e.mainclass,
-            materials_id: e.materials_id,
-            color: e.color,
-            color_no: e.color_no,
-            picurl: e.picurl,
+
+            materials_id: this.colors.materials_id,
+            color: this.colors.color,
+            color_no: this.colors.color_no,
+            picurl: this.colors.picurl,
+            //
             amountPurchased: this.form.amountPurchased,
             deposit: this.form.deposit,
             dosage: this.form.dosage,
@@ -375,10 +379,11 @@ export default {
       console.log(res);
       let { data } = res.data;
       this.header = data;
-      this.colors = {
-        color: this.header.color_data[0].color,
-        color_no: this.header.color_data[0].color_no,
-      };
+      this.colors =this.header.color_data[0]
+      //  {
+      //   color: this.header.color_data[0].color,
+      //   color_no: this.header.color_data[0].color_no,
+      // };
 
       // 供应商
       let res1 = await getSupplierInfo({
@@ -397,7 +402,7 @@ export default {
       }
     },
   },
-  mounted() {
+  async mounted() {
     this.init();
   },
 };

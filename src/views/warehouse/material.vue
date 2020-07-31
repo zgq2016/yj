@@ -99,7 +99,6 @@
               <em>500000</em>
             </div>
           </div>
-         
         </div>
       </div>
 
@@ -215,11 +214,18 @@
           <el-form-item prop="entrepot" label="仓库:">
             <el-select v-model="form1.entrepot" style="width:60%;" placeholder="请选择仓库类型">
               <el-option
-                v-for="item in entrepots"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="item in ware"
+                :key="item.id"
+                :label="item.storehouse_name"
+                :value="item.id"
               ></el-option>
+              <el-pagination
+                small
+                layout="prev, pager, next"
+                @size-change="handleSize"
+                @current-change="handleCurrent"
+                :total="total2"
+              ></el-pagination>
             </el-select>
           </el-form-item>
           <el-form-item label="上传凭证:">
