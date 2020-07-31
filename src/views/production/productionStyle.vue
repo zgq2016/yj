@@ -2385,6 +2385,7 @@ export default {
           quantity: 0, //回料数量
           amount: 0, //结算金额
           remarks: this.form4.reason, //原因备注
+          storehouse_id: '',
         });
         this.int_i();
         console.log(res);

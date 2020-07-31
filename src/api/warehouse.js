@@ -127,3 +127,19 @@ export const bookStockList = data => {
         data: data
     });
 };
+// 物料查询
+export const materialStoreList = data => {
+    return axios({
+        url: "?g=material_store_list",
+        method: "post",
+        data: data
+    });
+};
+// 物料采购查询
+export const materialStoreRecord = data => {
+    return axios({
+        url: "?g=material_store_record",
+        method: "post",
+        data: data
+    });
+};

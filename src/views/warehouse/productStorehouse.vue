@@ -48,8 +48,8 @@
           </el-form-item>
 
           <el-form-item label="数量:">
-            <el-input style="width:100px" v-model="form.min" placeholder="请输入数量"></el-input>&nbsp;至
-            <el-input style="width:100px" v-model="form.max" placeholder="请输入数量"></el-input>
+            <el-input style="width:120px" type='number' v-model="form.min" placeholder="请输入数量"></el-input>&nbsp;至
+            <el-input style="width:120px" type='number' v-model="form.max" placeholder="请输入数量"></el-input>
           </el-form-item>
 
           <el-form-item>
@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import { storehouseList, bookStockList } from "@/api/warehouse.js";
+import { storehouseList, bookStockList ,materialStoreList} from "@/api/warehouse.js";
 import { getCategoryList } from "@/api/researchDevelopment.js";
 
 export default {
@@ -195,11 +195,13 @@ export default {
           v.sizes.push(v.size_data[key]);
         }
       });
+      
     },
   },
   mounted() {
     this.init();
     this.store();
+    
   },
 };
 </script>

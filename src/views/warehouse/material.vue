@@ -10,7 +10,12 @@
       <div class="searchInput">
         <el-form :inline="true" :model="form">
           <el-form-item label="仓库:">
-            <el-select v-model="form.warehouse" placeholder="请选择仓库" clearable style="width:120px">
+            <el-select
+              v-model="form.storehouse_id"
+              placeholder="请选择仓库"
+              clearable
+              style="width:110px"
+            >
               <el-option
                 v-for="item in ware"
                 :key="item.id"
@@ -28,12 +33,12 @@
           </el-form-item>
 
           <el-form-item label="物料名称:">
-            <el-input style="width:130px" v-model="form.commodity" placeholder="请输入商品名称"></el-input>
+            <el-input style="width:100px" v-model="form.materialsname" placeholder="请输入商品名称"></el-input>
           </el-form-item>
 
           <el-form-item label="物料分类:">
             <el-select
-              v-model="form.materials_class"
+              v-model="form.materials_class_name"
               placeholder="请选择物料分类"
               style="width:120px;margin-right:10px;"
               @change="handleClassDatasId($event)"
@@ -47,10 +52,10 @@
               ></el-option>
             </el-select>
             <el-select
-              v-model="form.materials_class_name"
+              v-model="form.materials_class"
               placeholder="请选择物料分类"
               style="width:120px"
-              clearable
+              @change="handleClassDatasId1($event)"
             >
               <el-option
                 v-for="item in class_datas.class_data"
@@ -62,8 +67,8 @@
           </el-form-item>
 
           <el-form-item label="数量:">
-            <el-input style="width:100px" v-model="form.beforenumber" placeholder="请输入数量"></el-input>&nbsp;至
-            <el-input style="width:100px" v-model="form.afternumber" placeholder="请输入数量"></el-input>
+            <el-input style="width:115px" type="number" v-model="form.min" placeholder="请输入数量"></el-input>&nbsp;至
+            <el-input style="width:115px" type="number" v-model="form.max" placeholder="请输入数量"></el-input>
           </el-form-item>
 
           <el-form-item>
@@ -71,9 +76,11 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">查询</el-button>
+            <!-- <el-button type="primary">导出</el-button> -->
+            <!-- <el-button v-print="'#printTest'" type="primary">打印</el-button> -->
+          </el-form-item>
+          <el-form-item>
             <el-button type="primary">展示统计数据</el-button>
-            <el-button type="primary">导出</el-button>
-            <el-button v-print="'#printTest'" type="primary">打印</el-button>
           </el-form-item>
           <el-button type="primary" style="float:right;margin-right:35px;" @click="handleCard">采购</el-button>
         </el-form>
@@ -81,22 +88,24 @@
       <hr style="border:1px dashed #ccc" />
       <div class="table">
         <div class="box">
-          <div class="child" @click="toMaterial()">
+          <div
+            class="child"
+            v-for="(item,index) in materials"
+            :key="index"
+            @click.stop="toMaterial(item)"
+          >
             <div class="left">
-              <img
-                src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1594964476331&di=3f3573c4fd9b0f2ca185560428315961&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fforum%2Fw%3D580%2Fsign%3Dde32eec79e13b07ebdbd50003cd59113%2F90ef76c6a7efce1bb8d6a12ca251f3deb58f6552.jpg"
-                alt
-              />
+              <img :src="item.picurl" alt />
               <div class="left_n">
-                <span>主料</span>
-                <span>粉红色</span>
-                <span>内部编号:001</span>
-                <span>大事噶是</span>
+                <span>{{item.classname}}({{item.materials_class_name}})</span>
+                <span>{{item.color}}</span>
+                <span>内部编号:{{item.materialsno}}</span>
+                <span>{{item.companyname}}</span>
               </div>
             </div>
             <div class="right">
               <h5>库存量</h5>
-              <em>500000</em>
+              <em>{{item.quantity}}</em>
             </div>
           </div>
         </div>
@@ -276,11 +285,12 @@ import {
   getMaterialsList,
   projectStyleMaterialsAdd,
 } from "@/api/researchDevelopment";
-import { storehouseList } from "@/api/warehouse.js";
+import { storehouseList, materialStoreList } from "@/api/warehouse.js";
 import { getMaterialsClass, getMaterialsClassInfo } from "@/api/archives.js";
 export default {
   data() {
     return {
+      materials: [],
       entrepots: [],
       options: [
         //选择支付方式
@@ -309,15 +319,15 @@ export default {
       centerDialogVisible2: false,
       input: "",
       form: {
-        checked: true,
+        checked: false,
       },
       pageIndex: 1,
-      pageSize: 9,
+      pageSize: 10,
       total: 0,
       pageIndex1: 1,
       pageSize1: 9,
       pageIndex2: 1,
-      pageSize2: 9,
+      pageSize2: 10,
       total1: 0,
       total2: 0,
       form1: { picurl: "" },
@@ -350,31 +360,52 @@ export default {
       this.classData = data;
     },
     async handleClassDatasId(e) {
+      // console.log(e);
       this.classDatasId = e;
       let res = await getMaterialsClassInfo({
         id: this.classDatasId,
       });
       let { data } = res.data;
       this.class_datas = data;
-      this.form.materials_class_name = "";
+      this.form.materials_class = "";
       this.form.materials_class_id = "";
-      if (data.class_data.length > 0) {
-        this.form.materials_class_name = this.class_datas.class_data[0].classname;
-        // this.form.materials_class_id = this.class_datas.class_data[0].id;
+      if (e != "") {
+        if (data.class_data.length > 0) {
+          this.form.materials_class = this.class_datas.class_data[0].classname;
+          this.form.materials_class_id = this.class_datas.class_data[0].id;
+        }
       }
     },
+    async handleClassDatasId1(e) {
+      // console.log(this.class_datas);
+      this.form.materials_class = "";
+      this.form.materials_class_id = "";
+      this.class_datas.class_data.map((v, i) => {
+        if (e == v.id) {
+          this.form = Object.assign({}, this.form, {
+            materials_class: v.classname,
+            materials_class_id: v.id,
+          });
+          // this.$set(this.form,'materials_class_id',v.id)
+          // this.form.materials_class = v.classname;
+          // this.form.materials_class_id = v.id;
+        }
+      });
+      console.log(this.form);
+    },
     toMaterial(item) {
+      console.log(item);
       this.$router.push({
-        path: `/materialTable?materials_id=${112}`,
+        path: `/materialTable?materials_id=${item.id}`,
       });
     },
     handleSizeChange(val) {
       this.pageSize = val;
-      this.init();
+      this.init(this.form);
     },
     handleCurrentChange(val) {
       this.pageIndex = val;
-      this.init();
+      this.init(this.form);
     },
     handleSize(val) {
       this.pageSize2 = val;
@@ -386,14 +417,20 @@ export default {
     },
     handleSizeChang(val) {
       this.pageSize1 = val;
-      this.init();
+      this.handleSearchInput();
     },
     handleCurrentChang(val) {
       this.pageIndex1 = val;
-      this.init();
+      this.handleSearchInput();
     },
     onSubmit() {
+      if (this.form.checked == true) {
+        this.form.hide_empty = 1;
+      } else {
+        this.form.hide_empty = 0;
+      }
       console.log(this.form);
+      this.init(this.form);
     },
     handleAvatarSuccess(res, file) {
       this.form1.picurl = res.data.pic_file_url;
@@ -461,7 +498,17 @@ export default {
         console.log(this.form1);
       });
     },
-    async init() {},
+    async init(obj) {
+      let res = await materialStoreList({
+        page: this.pageIndex,
+        page_size: this.pageSize,
+        ...obj,
+      });
+      console.log(res);
+      let { data } = res.data;
+      this.materials = data;
+      this.total = res.data.count;
+    },
     async stock() {
       // 仓库
       let res = await storehouseList({

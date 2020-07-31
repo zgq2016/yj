@@ -89,27 +89,39 @@
               width="90"
               label="采购批次"
             ></el-table-column>
-            <el-table-column align="center" prop="purchaseTime" label="采购时间"></el-table-column>
-            <el-table-column align="center" prop="pantone" label="色卡"></el-table-column>
+            <el-table-column align="center" prop="create_time" label="采购时间"></el-table-column>
+            <el-table-column align="center" prop="color_no" label="色卡"></el-table-column>
             <el-table-column align="center" prop="amountPurchased" label="采购量"></el-table-column>
-            <el-table-column align="center" prop="univalence" label="单价"></el-table-column>
-            <el-table-column align="center" prop="subscription" label="订金"></el-table-column>
-            <el-table-column align="center" prop="cargo" label="回货量"></el-table-column>
-            <el-table-column align="center" prop="cargoTime" label="回货时间"></el-table-column>
+            <el-table-column align="center" prop="price" label="单价"></el-table-column>
+            <el-table-column align="center" prop="deposit" label="订金"></el-table-column>
+            <el-table-column align="center" prop="quantity" label="回货量"></el-table-column>
+            <el-table-column align="center" prop="returntime" label="回货时间"></el-table-column>
             <!-- <el-table-column align="center" prop="scheduledReceipt" label="入库量"></el-table-column> -->
-            <el-table-column align="center" prop="inventory" label="库存量"></el-table-column>
-            <el-table-column align="center" prop="settlementAmount" label="结算金额"></el-table-column>
-            <el-table-column align="center" prop="amount" label="余结金额"></el-table-column>
+            <el-table-column align="center" prop="stock_quantity" label="库存量"></el-table-column>
+            <el-table-column align="center" prop="amount" label="结算金额"></el-table-column>
+            <el-table-column align="center" prop="balance" label="余结金额"></el-table-column>
           </el-table>
         </div>
+        <el-pagination
+          class="pagination"
+          style="float:right"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pageIndex"
+          :page-sizes="[9, 18, 27, 36]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+        ></el-pagination>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { materialStoreRecord } from "@/api/warehouse";
 import {
   getMaterialsInfo, //物料
-  getSupplierInfo //供应商
+  getSupplierInfo, //供应商
 } from "@/api/archives";
 export default {
   data() {
@@ -117,51 +129,61 @@ export default {
       header: [], //物料信息
       supplier: [], //供应商
       colors: {},
-      tableData: [
-        {
-          purchaseBatch: "",
-          purchaseTime: "",
-          pantone: "",
-          amountPurchased: "",
-          univalence: "",
-          subscription: "",
-          cargo: "",
-          cargoTime: "",
-          scheduledReceipt: "",
-          inventory: "",
-          settlementAmount: "",
-          amount: ""
-        }
-      ]
+      tableData: [],
+      pageIndex: 1,
+      pageSize: 9,
+      total: 0,
     };
   },
   methods: {
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.materials();
+    },
+    handleCurrentChange(val) {
+      this.pageIndex = val;
+      this.materials();
+    },
     async init() {
+      this.colors = [];
+      this.supplier = [];
       // 物料
       let { materials_id } = this.$route.query;
       let res = await getMaterialsInfo({
-        id: Number(materials_id)
+        id: Number(materials_id),
       });
-      console.log(res);
       let { data } = res.data;
       this.header = data;
-      this.colors = {
-        color: this.header.color_data[0].color,
-        color_no: this.header.color_data[0].color_no
-      };
+      this.colors = this.header.color_data[0];
+      //  {
+      //   color: this.header.color_data[0].color,
+      //   color_no: this.header.color_data[0].color_no
+      // };
 
       // 供应商
       let res1 = await getSupplierInfo({
-        id: Number(data.materials_supplier_data[0].supplier_id)
+        id: Number(data.materials_supplier_data[0].supplier_id),
       });
       let data1 = res1.data.data;
       this.supplier = data1;
-      console.log(this.header, this.supplier);
-    }
+      // console.log(this.header, this.supplier);
+    },
+    async materials() {
+      let id = this.$route.query.materials_id;
+      let res2 = await materialStoreRecord({
+        page: this.pageIndex,
+        page_size: this.pageSize,
+        materials_id: id,
+      });
+      console.log(res2);
+      this.tableData = res2.data.data;
+      this.total = res2.data.count;
+    },
   },
   mounted() {
     this.init();
-  }
+    this.materials();
+  },
 };
 </script>
 <style lang="less" scoped>
