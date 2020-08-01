@@ -82,6 +82,24 @@
             style="width: 100%;margin-top:15px;"
           >
             <!-- <el-table-column align="center" type="index" label="采购批次" width="50"></el-table-column> -->
+
+            <el-table-column type="expand">
+              <template slot-scope="props">
+                <el-table
+                  ref="singleTable"
+                  :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+                  :data="props.row.details"
+                  border
+                  highlight-current-row
+                  style="width: 100%"
+                >
+                  <el-table-column prop="returntime" label="回料时间"></el-table-column>
+                  <el-table-column prop="quantity" label="回货量"></el-table-column>
+                  <el-table-column prop="amount" label="结算金额"></el-table-column>
+                  <el-table-column prop="balance" label="预结金额"></el-table-column>
+                </el-table>
+              </template>
+            </el-table-column>
             <el-table-column
               align="center"
               type="index"
@@ -89,13 +107,13 @@
               width="90"
               label="采购批次"
             ></el-table-column>
-            <el-table-column align="center" prop="create_time" label="采购时间"></el-table-column>
+            <el-table-column align="center" width="100px" prop="create_time" label="采购时间"></el-table-column>
             <el-table-column align="center" prop="color_no" label="色卡"></el-table-column>
             <el-table-column align="center" prop="amountPurchased" label="采购量"></el-table-column>
             <el-table-column align="center" prop="price" label="单价"></el-table-column>
             <el-table-column align="center" prop="deposit" label="订金"></el-table-column>
-            <el-table-column align="center" prop="quantity" label="回货量"></el-table-column>
-            <el-table-column align="center" prop="returntime" label="回货时间"></el-table-column>
+            <el-table-column align="center" prop="stock_quantity" label="回货量"></el-table-column>
+            <el-table-column align="center" width="100px" prop="create_time" label="预计回料时间"></el-table-column>
             <!-- <el-table-column align="center" prop="scheduledReceipt" label="入库量"></el-table-column> -->
             <el-table-column align="center" prop="stock_quantity" label="库存量"></el-table-column>
             <el-table-column align="center" prop="amount" label="结算金额"></el-table-column>
@@ -118,7 +136,7 @@
   </div>
 </template>
 <script>
-import { materialStoreRecord } from "@/api/warehouse";
+import { materialStoreRecord,materialStoreDetail } from "@/api/warehouse";
 import {
   getMaterialsInfo, //物料
   getSupplierInfo, //供应商
@@ -170,7 +188,7 @@ export default {
     },
     async materials() {
       let id = this.$route.query.materials_id;
-      let res2 = await materialStoreRecord({
+      let res2 = await materialStoreDetail({
         page: this.pageIndex,
         page_size: this.pageSize,
         materials_id: id,

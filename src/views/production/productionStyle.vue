@@ -476,7 +476,7 @@
                 center
               >
                 <el-form ref="form2" :rules="rules1" :model="form2" label-width="100px">
-                  <div style="width:350px;margin:0 auto">
+                  <!-- <div style="width:350px;margin:0 auto">
                     <el-form-item label="仓库:" prop="storehouse_id">
                       <el-select v-model="form2.storehouse_id" placeholder="请选择仓库" clearable>
                         <el-option
@@ -494,7 +494,7 @@
                         ></el-pagination>
                       </el-select>
                     </el-form-item>
-                  </div>
+                  </div> -->
                   <div style="width:350px;margin:0 auto">
                     <el-form-item label="结算金额:" prop="amount">
                       <el-input style="width:200px;" placeholder="请输入金额" v-model="form2.amount"></el-input>
@@ -537,8 +537,7 @@
                   <el-form-item prop="date" label="部分回料时间">
                     <el-date-picker v-model="form3.date" type="date" placeholder="选择日期"></el-date-picker>
                   </el-form-item>
-                  <el-form-item label="仓库:" prop="storehouse_id">
-                    <!-- style="width:250px;margin-left:120px;font-size:16px;" -->
+                  <!-- <el-form-item label="仓库:" prop="storehouse_id">
                     <el-select v-model="form3.storehouse_id" placeholder="请选择仓库" clearable>
                       <el-option
                         v-for="items in wares"
@@ -554,7 +553,7 @@
                         :total="total2"
                       ></el-pagination>
                     </el-select>
-                  </el-form-item>
+                  </el-form-item> -->
                   <el-form-item label="余结金额">
                     <span style="width:200px" :model="form3.money1"></span>
                   </el-form-item>
@@ -1147,6 +1146,7 @@ import {
   getMaterialsInfo, //物料
   getSupplierInfo, //供应商
   getFactoryModeSelect,
+  factoryList
 } from "@/api/archives";
 import { storehouseList } from "@/api/warehouse.js";
 export default {
@@ -2343,7 +2343,6 @@ export default {
           quantity: 0, //回料数量
           amount: this.form2.amount, //结算金额
           remarks: "", //原因备注
-          storehouse_id: this.form2.storehouse_id,
         });
         console.log(res);
         this.int_i();
@@ -2364,7 +2363,6 @@ export default {
           quantity: Number(this.form3.number), //回料数量
           amount: Number(this.form3.money), //结算金额
           remarks: "", //原因备注
-          storehouse_id: this.form3.storehouse_id,
         });
         this.int_i();
         console.log(res);
@@ -2385,7 +2383,6 @@ export default {
           quantity: 0, //回料数量
           amount: 0, //结算金额
           remarks: this.form4.reason, //原因备注
-          storehouse_id: '',
         });
         this.int_i();
         console.log(res);
@@ -2595,7 +2592,13 @@ export default {
     //新增指派工厂
     async regionadd(value) {
       // console.log(value,this.regions);
-
+      console.log(this.regions);
+      this.regions.map((v,i)=>{
+        if(v.factory_name == value){
+        console.log(v,i);
+          this.modes = v.modes
+        }
+      })
       this.ascertain2 = true;
       let { id } = this.$route.query;
       let res1 = await produceInfo({
@@ -2759,15 +2762,19 @@ export default {
       let { id } = this.$route.query;
       let des = await getFactoryModeSelect();
       this.modes = des.data.data;
+      // console.log(des);
       let res = await produceInfo({
         //批次
         style_id: id,
       });
       let { data } = res.data;
-      let res1 = await getFactorySelect(); //生产排单select工厂
+      // let res1 = await getFactorySelect(); //生产排单select工厂
+      let res1 = await factoryList({
+        page:1,
+        page_size:999
+      }); //生产排单select工厂
       let data1 = res1.data.data;
       this.regions = data1;
-      // console.log(data,this.regions);
       this.formInline = [];
       if (data.length > 0) {
         let res2 = await produceFactoryOrderList({
@@ -2795,6 +2802,7 @@ export default {
             this.showhide5 = true;
             this.showhide4 = false;
           }
+          
           this.modes.map((j, k) => {
             if (v.mode == j.id) {
               this.mode.push(j.mode_name);
@@ -3196,6 +3204,8 @@ export default {
       let res = await storehouseList({
         page: this.pageIndex2,
         page_size: this.pageSize2,
+         state:1,
+        storehouse_type:1
       });
       let { data } = res.data;
       this.wares = data;

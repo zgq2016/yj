@@ -200,15 +200,15 @@
             自动生成
           </span>
         </div>
-        <el-form ref="form1" :model="form1" :rules="rules" label-width="100px">
+        <el-form ref="form1" :model="form1" :rules="rules" label-width="110px">
           <el-form-item prop="amountPurchased" label="采购量:">
-            <el-input style="width:60%;" v-model="form1.amountPurchased"></el-input>
+            <el-input style="width:60%;" @input="sum" v-model.number="form1.amountPurchased"></el-input>
           </el-form-item>
           <el-form-item prop="purchasePrice" label="采购单价:">
-            <el-input style="width:60%;" v-model="form1.purchasePrice"></el-input>
+            <el-input style="width:60%;" @input="sum" v-model.number="form1.purchasePrice"></el-input>
           </el-form-item>
           <el-form-item prop="money" label="金额:">
-            <el-input style="width:60%;" v-model="form1.money"></el-input>
+            <el-input style="width:60%;" v-model.number="form1.money"></el-input>
           </el-form-item>
           <el-form-item prop="payManneItem" label="支付方式:">
             <el-select v-model="form1.payManneItem" style="width:60%;" placeholder="请选择支付方式">
@@ -220,8 +220,8 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item prop="entrepot" label="仓库:">
-            <el-select v-model="form1.entrepot" style="width:60%;" placeholder="请选择仓库类型">
+          <el-form-item prop="storehouse_id" label="仓库:">
+            <el-select v-model="form1.storehouse_id" style="width:60%;" placeholder="请选择仓库类型">
               <el-option
                 v-for="item in ware"
                 :key="item.id"
@@ -237,6 +237,9 @@
               ></el-pagination>
             </el-select>
           </el-form-item>
+          <el-form-item label="预计回料时间" prop="finishTime">
+            <el-date-picker v-model="form1.finishTime" type="date" placeholder="选择日期"></el-date-picker>
+          </el-form-item>
           <el-form-item label="上传凭证:">
             <el-upload
               class="avatar-uploader"
@@ -246,8 +249,8 @@
               :before-upload="beforeAvatarUpload"
             >
               <img
-                v-if="form1.picurl"
-                :src="form1.picurl"
+                v-if="form1.uploadDocuments"
+                :src="form1.uploadDocuments"
                 style="width:150px;height:150px;"
                 class="avatar"
               />
@@ -285,11 +288,16 @@ import {
   getMaterialsList,
   projectStyleMaterialsAdd,
 } from "@/api/researchDevelopment";
-import { storehouseList, materialStoreList } from "@/api/warehouse.js";
+import {
+  storehouseList,
+  materialStoreList,
+  materialsPurchase,
+} from "@/api/warehouse.js";
 import { getMaterialsClass, getMaterialsClassInfo } from "@/api/archives.js";
 export default {
   data() {
     return {
+      materials: 0,
       materials: [],
       entrepots: [],
       options: [
@@ -330,20 +338,33 @@ export default {
       pageSize2: 10,
       total1: 0,
       total2: 0,
-      form1: { picurl: "" },
+      form1: { uploadDocuments: "" },
       rules: {
         amountPurchased: [
           { required: true, message: "请输入采购量", trigger: "blur" },
+          { type: "number", message: "采购量必须为数字值" },
         ],
         purchasePrice: [
           { required: true, message: "请输入采购单价", trigger: "blur" },
+          { type: "number", message: "采购必须为数字值" },
         ],
-        money: [{ required: true, message: "请输入金额", trigger: "blur" }],
+        money: [
+          { required: true, message: "请输入金额", trigger: "blur" },
+          { type: "number", message: "金额必须为数字值" },
+        ],
         payManneItem: [
           { required: true, message: "请选择支付方式", trigger: "change" },
         ],
-        entrepot: [
+        storehouse_id: [
           { required: true, message: "请选择仓库类型", trigger: "change" },
+        ],
+        finishTime: [
+          {
+            type: "date",
+            required: true,
+            message: "请输入时间",
+            trigger: "blur",
+          },
         ],
       },
       classData: [],
@@ -386,9 +407,6 @@ export default {
             materials_class: v.classname,
             materials_class_id: v.id,
           });
-          // this.$set(this.form,'materials_class_id',v.id)
-          // this.form.materials_class = v.classname;
-          // this.form.materials_class_id = v.id;
         }
       });
       console.log(this.form);
@@ -433,7 +451,7 @@ export default {
       this.init(this.form);
     },
     handleAvatarSuccess(res, file) {
-      this.form1.picurl = res.data.pic_file_url;
+      this.form1.uploadDocuments = res.data.pic_file_url;
       // console.log(this.picurl);
     },
     beforeAvatarUpload(file) {
@@ -451,7 +469,6 @@ export default {
     },
     // 增加物料
     async addMaterialsList(item) {
-      console.log(item);
       this.$confirm("确定选择", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -459,7 +476,9 @@ export default {
       }).then(async () => {
         this.centerDialogVisible1 = false;
         this.centerDialogVisible2 = true;
-        this.form1 = { picurl: "" };
+        this.form1 = {}
+        this.form1.uploadDocuments = "";
+        this.materials_id = item.id;
       });
     },
     handlePopoverId(item) {
@@ -490,12 +509,39 @@ export default {
       this.centerDialogVisible1 = true;
       this.centerDialogVisible2 = false;
     },
+    // 输入计算
+    sum(value) {
+      console.log(this.form1.amountPurchased, this.form1.purchasePrice);
+      if (
+        this.form1.amountPurchased != undefined &&
+        this.form1.purchasePrice != undefined &&
+        this.form1.amountPurchased != "" &&
+        this.form1.purchasePrice != ""
+      ) {
+        this.form1.money =
+          this.form1.amountPurchased * this.form1.purchasePrice;
+      } else {
+        this.form1.money = 0;
+      }
+    },
     // 采购信息保存
     conserve() {
-      this.$refs["form1"].validate((valid) => {
+      console.log(this.form1);
+      this.$refs["form1"].validate(async (valid) => {
         if (!valid) return;
         this.centerDialogVisible2 = false;
-        console.log(this.form1);
+        let res = await materialsPurchase({
+          materials_id: this.materials_id,
+          amountPurchased: this.form1.amountPurchased,
+          money: this.form1.money,
+          payManneItem: this.form1.payManneItem,
+          purchasePrice: this.form1.purchasePrice,
+          storehouse_id: this.form1.storehouse_id,
+          uploadDocuments: this.form1.picurl,
+          finishTime: this.form1.finishTime,
+          remark: this.form1.remark,
+        });
+        console.log(res);
       });
     },
     async init(obj) {
@@ -514,6 +560,8 @@ export default {
       let res = await storehouseList({
         page: this.pageIndex2,
         page_size: this.pageSize2,
+        state: 1,
+        storehouse_type: 0,
       });
       let { data } = res.data;
       this.ware = data;

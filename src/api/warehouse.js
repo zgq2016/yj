@@ -135,7 +135,24 @@ export const materialStoreList = data => {
         data: data
     });
 };
+
 // 物料采购查询
+export const materialStoreDetail = data => {
+    return axios({
+        url: "?g=material_store_detail",
+        method: "post",
+        data: data
+    });
+};
+// 物料库存的采购接口
+export const materialsPurchase = data => {
+    return axios({
+        url: "?g=materials_purchase",
+        method: "post",
+        data: data
+    });
+};
+// 物料流水
 export const materialStoreRecord = data => {
     return axios({
         url: "?g=material_store_record",

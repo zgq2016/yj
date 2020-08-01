@@ -42,7 +42,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="尺码:">
-            <el-select v-model="form.warehouse"  clearable placeholder="请选择分类" style="width:120px">
+            <el-select v-model="form.warehouse" clearable placeholder="请选择分类" style="width:120px">
               <el-option
                 v-for="item in sizes"
                 :key="item.id"
@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import { storehouseList } from "@/api/warehouse.js";
+import { storehouseList, materialStoreRecord } from "@/api/warehouse.js";
 import { getColorSelect } from "@/api/researchDevelopment";
 import { getSizeSelect } from "@/api/production";
 export default {
@@ -148,19 +148,28 @@ export default {
     onSubmit() {
       console.log(this.form);
     },
-      // 尺码
+    // 尺码
     async sized() {
       let res1 = await getSizeSelect();
       let data1 = res1.data.data;
       this.sizes = data1;
-      console.log(res1);
     },
-    async init() {},
+    async init() {
+      let res = await materialStoreRecord({
+        page: this.pageIndex,
+        page_size: this.page_size,
+      });
+      console.log(res);
+      this.tableData = res.data.data;
+      this.total = res.data.count;
+    },
     // 仓库
     async stock() {
       let res = await storehouseList({
         page: this.pageIndex2,
         page_size: this.pageSize2,
+        state: 1,
+        storehouse_type: 0,
       });
       let { data } = res.data;
       this.ware = data;

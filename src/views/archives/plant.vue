@@ -95,12 +95,12 @@
               <el-input v-model="form.phone" style="width:125px" placeholder="电话"></el-input>
             </el-form-item>
             <el-form-item label="指派方式:">
-              <el-select v-model="form.mode_name" clearable placeholder="请选择指派方式">
+              <el-select v-model="form.mode_id" clearable placeholder="请选择指派方式">
                 <el-option
                   v-for="item in menuList"
                   :key="item.value"
                   :label="item.mode_name"
-                  :value="item.mode_name"
+                  :value="item.id"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -201,12 +201,12 @@
           <el-input v-model="form1.phone" style="width:75%" placeholder="电话"></el-input>
         </el-form-item>
         <el-form-item prop="mode_name" label="指派方式:">
-          <el-select v-model="form1.mode_name" placeholder="请选择指派方式">
+          <el-select v-model="form1.mode_id" style="width:75%" multiple placeholder="请选择指派方式">
             <el-option
               v-for="item in menuList"
               :key="item.value"
               :label="item.mode_name"
-              :value="item.mode_name"
+              :value="item.id"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -216,7 +216,15 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <el-dialog title="工厂信息" :visible.sync="centerDialogVisible3" width="450px" center>
+    <el-dialog
+      title="工厂信息"
+      :visible.sync="centerDialogVisible3"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      width="450px"
+      center
+    >
       <el-form
         ref="form2"
         :rules="rules2"
@@ -234,12 +242,12 @@
           <el-input v-model="form2.phone" style="width:75%" placeholder="电话"></el-input>
         </el-form-item>
         <el-form-item prop="mode_name" label="指派方式:">
-          <el-select v-model="form2.mode_name" placeholder="请选择指派方式">
+          <el-select v-model="form2.mode_name" style="width:75%" multiple placeholder="请选择指派方式">
             <el-option
               v-for="item in menuList"
               :key="item.value"
               :label="item.mode_name"
-              :value="item.mode_name"
+              :value="item.id"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -266,7 +274,7 @@ import {
   getFactoryModeSelect, //左边栏
   factoryModeAdd, //工厂加工方式
   factoryModeEdit, //工厂加工方式编辑接口
-  factoryModeDel //工厂加工方式删除接口
+  factoryModeDel, //工厂加工方式删除接口
 } from "@/api/archives";
 export default {
   data() {
@@ -278,43 +286,43 @@ export default {
       form2: {},
       rules1: {
         factory_name: [
-          { required: true, message: "请输入工厂名称", trigger: "blur" }
+          { required: true, message: "请输入工厂名称", trigger: "blur" },
         ],
         contacts: [
-          { required: true, message: "请输入联系人", trigger: "blur" }
+          { required: true, message: "请输入联系人", trigger: "blur" },
         ],
-        mode_name: [
-          { required: true, message: "请选择指派方式", trigger: "change" }
+        mode_id: [
+          { required: true, message: "请选择指派方式", trigger: "change" },
         ],
         phone: [
-          { required: true, message: "请输入手机号码", trigger: "blur" },
+          { required: true, message: "请输入电话号码", trigger: "blur" },
           {
             min: 11,
-            max: 11,
-            message: "请输入长度为 11 的手机号码",
-            trigger: "blur"
-          }
-        ]
+            max: 12,
+            message: "请输入长度为 11-12 的电话号码",
+            trigger: "blur",
+          },
+        ],
       },
       rules2: {
         factory_name: [
-          { required: true, message: "请输入工厂名称", trigger: "blur" }
+          { required: true, message: "请输入工厂名称", trigger: "blur" },
         ],
         contacts: [
-          { required: true, message: "请输入联系人", trigger: "blur" }
+          { required: true, message: "请输入联系人", trigger: "blur" },
         ],
-        mode_name: [
-          { required: true, message: "请选择指派方式", trigger: "change" }
+        mode_id: [
+          { required: true, message: "请选择指派方式", trigger: "change" },
         ],
         phone: [
-          { required: true, message: "请输入手机号码", trigger: "blur" },
+          { required: true, message: "请输入电话号码", trigger: "blur" },
           {
             min: 11,
-            max: 11,
-            message: "请输入长度为 11 的手机号码",
-            trigger: "blur"
-          }
-        ]
+            max: 12,
+            message: "请输入长度为 11-12 的电话号码",
+            trigger: "blur",
+          },
+        ],
       },
       tableData: [],
       menuList: [], //导航项
@@ -333,10 +341,10 @@ export default {
       item: {},
       getMaterialsClassInfoObj: {},
       page: 1,
-      page_size:10,
+      page_size: 10,
       count: 0,
       TL: "",
-      row_mode: {}
+      row_mode: {},
     };
   },
   methods: {
@@ -354,7 +362,7 @@ export default {
     async handleEdit() {
       let res = await factoryModeEdit({
         mode_name: this.row_mode.mode_name,
-        id: this.row_mode.id
+        id: this.row_mode.id,
       });
       // console.log(res);
       this.init();
@@ -366,23 +374,23 @@ export default {
       this.$confirm("此操作将永久删除该指派方式, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           let res = await factoryModeDel({
-            id: this.row_mode.id
+            id: this.row_mode.id,
           });
           // console.log(res);
           this.init();
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
       this.centerDialogVisible1 = false;
@@ -416,7 +424,7 @@ export default {
     // 新增分类
     async addLevel() {
       let res = await factoryModeAdd({
-        mode_name: this.value
+        mode_name: this.value,
       });
       // console.log(res);
       this.value = "";
@@ -437,20 +445,29 @@ export default {
       let res = await factoryList({
         page_size: this.page_size,
         page: this.page,
-        ...obj
+        ...obj,
       });
       let { data } = res.data;
       this.tableData = data;
       this.count = res.data.count;
-      // console.log(this.tableData);
-      // console.log(res);
+      console.log(res);
       let res1 = await getFactoryModeSelect();
       this.menuList = res1.data.data;
       // console.log(res1);
     },
+    // 点击查看
     handleEdit1(row) {
-      //   console.log(row);
       this.form2 = row;
+      console.log(row);
+      let arr = row.mode_name.split(",");
+      this.form2.mode_name = [];
+      arr.map((v, i) => {
+        this.menuList.map((j, k) => {
+          if (v == j.mode_name) {
+            this.form2.mode_name.push(j.id);
+          }
+        });
+      });
       this.centerDialogVisible3 = true;
     },
     onSubmit() {
@@ -467,16 +484,18 @@ export default {
       this.centerDialogVisible2 = true;
       this.form1 = {};
     },
+
     // 新增工厂
-    addfrot() {
-      this.$refs["form1"].validate(async valid => {
+    addfrot(item) {
+      console.log(item);
+      this.$refs["form1"].validate(async (valid) => {
         if (!valid) return;
         this.centerDialogVisible2 = false;
         let res = await factoryAdd({
           factory_name: this.form1.factory_name,
           contacts: this.form1.contacts,
           phone: this.form1.phone,
-          mode_name: this.form1.mode_name
+          mode_id: this.form1.mode_id,
         });
         console.log(res);
         this.init();
@@ -484,17 +503,29 @@ export default {
     },
     // 编辑工厂
     editadd() {
-      this.$refs["form2"].validate(async valid => {
+      this.$refs["form2"].validate(async (valid) => {
         if (!valid) return;
         this.centerDialogVisible3 = false;
+        // this.form2.mode_id = [];
+        // this.form2.mode_name.map((v, i) => {
+        //   if (typeof v != "number") {
+        //     this.menuList.map((j, k) => {
+        //       if (v == j.mode_name) {
+        //         this.form2.mode_id.push(j.id);
+        //       }
+        //     });
+        //   } else {
+        //     this.form2.mode_id.push(v);
+        //   }
+        // });
         let res = await factoryEdit({
           factory_name: this.form2.factory_name,
           contacts: this.form2.contacts,
           phone: this.form2.phone,
           id: this.form2.id,
-          mode_name: this.form2.mode_name
+          mode_id: this.form2.mode_name,
         });
-        // console.log(res);
+        console.log(res);
         this.init();
       });
     },
@@ -504,7 +535,7 @@ export default {
       let res = await factoryDel({ id: this.form2.id });
       //   console.log(res);
       this.init();
-    }
+    },
   },
   mounted() {
     this.init();
@@ -515,8 +546,8 @@ export default {
     },
     $route() {
       this.init();
-    }
-  }
+    },
+  },
 };
 </script>
 
