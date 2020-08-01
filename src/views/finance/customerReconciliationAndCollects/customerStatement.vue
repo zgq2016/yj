@@ -484,8 +484,8 @@ export default {
       this.supplierInit();
     },
     async init() {
-      this.ctime_start = moment(this.formInline.date[0]).format("YYYY-MM-DD");
-      this.ctime_end = moment(this.formInline.date[1]).format("YYYY-MM-DD");
+      // this.ctime_start = moment(this.formInline.date[0]).format("YYYY-MM-DD");
+      // this.ctime_end = moment(this.formInline.date[1]).format("YYYY-MM-DD");
       let res1 = await getSupplierSelect({
         keyword: "",
       });
@@ -496,7 +496,7 @@ export default {
         page: this.pageIndex,
         page_size: this.pageSize,
       });
-        console.log(res);
+      console.log(res);
       res.data.data.map((v) => {
         if (v.pay_price !== 0) {
           v.opay_price = v.cope_price - v.pay_price;

@@ -165,6 +165,7 @@ export default {
       this.centerDialogVisible2 = false;
     },
     async handleEditUserList(form) {
+      console.log(this.form1)
       let res = await userEdit(this.form1);
       console.log(res);
       this.$refs[form].resetFields();

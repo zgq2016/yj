@@ -301,6 +301,7 @@ import {
   balanceAccountSelect,
   supplierAccountAdd,
   balanceAccountTypeSelect,
+  accountTypeSelect,
 } from "@/api/finance";
 import { getSupplierSelect } from "@/api/archives";
 export default {
@@ -501,8 +502,8 @@ export default {
       this.supplierInit();
     },
     async init() {
-      this.ctime_start = moment(this.formInline.date[0]).format("YYYY-MM-DD");
-      this.ctime_end = moment(this.formInline.date[1]).format("YYYY-MM-DD");
+      // this.ctime_start = moment(this.formInline.date[0]).format("YYYY-MM-DD");
+      // this.ctime_end = moment(this.formInline.date[1]).format("YYYY-MM-DD");
       let res1 = await getSupplierSelect({
         keyword: "",
       });
@@ -513,14 +514,13 @@ export default {
         page: this.pageIndex,
         page_size: this.pageSize,
       });
+      console.log(res);
       res.data.data.map((v) => {
-        console.log(v);
         if (v.pay_price !== 0) {
           v.opay_price = v.cope_price - v.pay_price;
         }
       });
       let { data, count } = res.data;
-      // let { cope_price, pay_price, opay_price } = res.data.data;
       this.tableData = data;
       this.total = count;
       this.ctime_start = moment(this.formInline.date[0]).format("YYYY-MM-DD");

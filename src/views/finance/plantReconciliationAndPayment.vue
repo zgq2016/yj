@@ -1,5 +1,5 @@
 <template>
-  <div class="supplierReconciliationAndPayment" v-if="power.indexOf('F4000100')!=-1">
+  <div class="supplierReconciliationAndPayment" v-if="power.indexOf('F7000100')!=-1">
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>财务</el-breadcrumb-item>
@@ -22,8 +22,8 @@
             v-model="formInline.date"
             type="daterange"
             range-separator="至"
-            :start-placeholder="ctime_start"
-            :end-placeholder="ctime_end"
+            :start-placeholder="formInline.ctime_start"
+            :end-placeholder="formInline.ctime_end"
             style="width:100%"
             clearable
           ></el-date-picker>
@@ -58,19 +58,19 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">查询</el-button>
-          <el-button v-if="power.indexOf('F4000200')!=-1" type="primary" @click="handlePayment">付款</el-button>
+          <el-button v-if="power.indexOf('F7000200')!=-1" type="primary" @click="handlePayment">付款</el-button>
           <el-button
-            v-if="power.indexOf('F4000300')!=-1"
+            v-if="power.indexOf('F7000300')!=-1"
             type="primary"
             @click="beginninGbalanceAdjustment"
           >期初调整</el-button>
           <el-button
-            v-if="power.indexOf('F4000400')!=-1"
+            v-if="power.indexOf('F7000400')!=-1"
             type="primary"
             v-print="'#printTest'"
             icon="el-icon-printer"
           >打印</el-button>
-          <el-button v-if="power.indexOf('F4000500')!=-1" type="primary" icon="el-icon-upload2">导出</el-button>
+          <el-button v-if="power.indexOf('F7000500')!=-1" type="primary" icon="el-icon-upload2">导出</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -448,12 +448,20 @@ export default {
       this.supplierInit();
     },
     async supplierInit() {
-      this.formInline.ctime_start = moment(this.formInline.date[0]).format(
-        "YYYY-MM-DD"
-      );
-      this.formInline.ctime_end = moment(this.formInline.date[1]).format(
-        "YYYY-MM-DD"
-      );
+
+      if (this.formInline.date === "") {
+        this.formInline["ctime_start"] = "";
+        this.formInline["ctime_end"] = "";
+      }
+      if (this.formInline.date !== "") {
+        this.formInline["ctime_start"] = moment(this.formInline.date[0]).format(
+          "YYYY-MM-DD"
+        );
+        this.formInline["ctime_end"] = moment(this.formInline.date[1]).format(
+          "YYYY-MM-DD"
+        );
+      }
+      console.log(this.formInline["ctime_start"]);
       this.formInline.page = this.pageIndex;
       this.formInline.page_size = this.pageSize;
       delete this.formInline.date;
@@ -471,7 +479,7 @@ export default {
   },
   async mounted() {
     // this.init();
-    // this.supplierInit();
+    this.supplierInit();
     this.getStylist();
     this.getBalanceAccount();
     this.getBalanceAccountType();
