@@ -1,5 +1,5 @@
 <template>
-  <div class="materialStorage">
+  <div class="materialStorage" v-if="power.indexOf('C4000100')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
@@ -121,6 +121,7 @@ import { getSizeSelect } from "@/api/production";
 export default {
   data() {
     return {
+      power: "",
       input: "",
       form: {},
       tableData: [],
@@ -196,6 +197,7 @@ export default {
     this.init();
     this.stock();
     this.sized();
+    this.power = localStorage.getItem("power");
   },
 };
 </script>

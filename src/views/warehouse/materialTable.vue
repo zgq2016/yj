@@ -1,5 +1,5 @@
 <template>
-  <div class="materialTable">
+  <div class="materialTable" v-if="power.indexOf('C3000300')!=-1">
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>仓库</el-breadcrumb-item>
@@ -136,7 +136,7 @@
   </div>
 </template>
 <script>
-import { materialStoreRecord,materialStoreDetail } from "@/api/warehouse";
+import { materialStoreRecord, materialStoreDetail } from "@/api/warehouse";
 import {
   getMaterialsInfo, //物料
   getSupplierInfo, //供应商
@@ -144,6 +144,7 @@ import {
 export default {
   data() {
     return {
+      power: "",
       header: [], //物料信息
       supplier: [], //供应商
       colors: {},
@@ -199,6 +200,7 @@ export default {
     },
   },
   mounted() {
+    this.power = localStorage.getItem("power");
     this.init();
     this.materials();
   },

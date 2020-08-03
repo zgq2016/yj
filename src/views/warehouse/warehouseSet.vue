@@ -1,5 +1,5 @@
 <template>
-  <div class="warehouseSet">
+  <div class="warehouseSet" v-if="power.indexOf('C5000400')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
@@ -17,7 +17,7 @@
           </el-form-item>
         </el-form>
         <el-form style="float:right">
-          <el-button type="primary" @click="addWarehouse">+增加仓库</el-button>
+          <el-button type="primary" @click="addWarehouse" v-if="power.indexOf('C5000100')!=-1">+增加仓库</el-button>
         </el-form>
       </div>
       <hr style="border:1px dashed #ccc" />
@@ -35,11 +35,13 @@
               style="width:20px;float:left"
               class="el-icon-edit btn"
               @click="handleEdit(scope.$index, scope.row)"
+              v-if="power.indexOf('C5000300')!=-1"
             ></div>
             <div
               style="width:20px;float:right"
               class="el-icon-delete btn"
               @click="handleDelete(scope.$index, scope.row)"
+              v-if="power.indexOf('C5000200')!=-1"
             ></div>
           </template>
         </el-table-column>
@@ -161,6 +163,7 @@ import {
 export default {
   data() {
     return {
+      power: "",
       // 数据表
       form: {
         name: "",
@@ -329,7 +332,7 @@ export default {
       //     }
       //   });
       // });
-      this.init()
+      this.init();
     },
     handleSizeChange(val) {
       // console.log(val)
@@ -387,6 +390,7 @@ export default {
   async mounted() {
     this.getStylist();
     this.init();
+    this.power = localStorage.getItem("power");
   },
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="material">
+  <div class="material" v-if="power.indexOf('C3000100')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
@@ -82,7 +82,7 @@
           <el-form-item>
             <el-button type="primary">展示统计数据</el-button>
           </el-form-item>
-          <el-button type="primary" style="float:right;margin-right:35px;" @click="handleCard">采购</el-button>
+          <el-button type="primary" style="float:right;margin-right:35px;" @click="handleCard"  v-if="power.indexOf('C3000200')!=-1">采购</el-button>
         </el-form>
       </div>
       <hr style="border:1px dashed #ccc" />
@@ -126,7 +126,7 @@
             placeholder="查找"
             style="width:300px"
           ></el-input>
-          <router-link :to="`/addRouteCard?`" style="margin-left:30px">新增主料卡</router-link>
+          <router-link :to="`/addRouteCard?`" style="margin-left:30px"  v-if="power.indexOf('C3000400')!=-1">新增主料卡</router-link>
         </div>
         <div class="searchCard">
           <div class="card" v-for="(item, index) in MaterialsList" :key="index">
@@ -297,6 +297,7 @@ import { getMaterialsClass, getMaterialsClassInfo } from "@/api/archives.js";
 export default {
   data() {
     return {
+      power: "",
       materials: 0,
       materials: [],
       entrepots: [],
@@ -476,7 +477,7 @@ export default {
       }).then(async () => {
         this.centerDialogVisible1 = false;
         this.centerDialogVisible2 = true;
-        this.form1 = {}
+        this.form1 = {};
         this.form1.uploadDocuments = "";
         this.materials_id = item.id;
       });
@@ -572,6 +573,7 @@ export default {
     this.getClassData();
     this.init();
     this.stock();
+    this.power = localStorage.getItem("power");
   },
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="productStorehouse">
+  <div class="productStorehouse" v-if="power.indexOf('C1000100')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
@@ -48,8 +48,8 @@
           </el-form-item>
 
           <el-form-item label="数量:">
-            <el-input style="width:120px" type='number' v-model="form.min" placeholder="请输入数量"></el-input>&nbsp;至
-            <el-input style="width:120px" type='number' v-model="form.max" placeholder="请输入数量"></el-input>
+            <el-input style="width:120px" type="number" v-model="form.min" placeholder="请输入数量"></el-input>&nbsp;至
+            <el-input style="width:120px" type="number" v-model="form.max" placeholder="请输入数量"></el-input>
           </el-form-item>
 
           <el-form-item>
@@ -60,8 +60,8 @@
           </el-form-item>
         </el-form>
         <el-button type="primary">展示统计数据</el-button>
-        <el-button type="primary">导出</el-button>
-        <el-button v-print="'#printTest'" type="primary">打印</el-button>
+        <el-button type="primary" v-if="power.indexOf('C1000200')!=-1">导出</el-button>
+        <el-button v-print="'#printTest'" type="primary" v-if="power.indexOf('C1000300')!=-1">打印</el-button>
       </div>
       <hr style="border:1px dashed #ccc" />
       <div class="table">
@@ -69,7 +69,7 @@
           id="printTest"
           ref="tableData"
           :data="tableData"
-          size='mini'
+          size="mini"
           :header-cell-style="{background:'#eef1f6',color:'#606266'}"
           highlight-current-row
           style="width: 100%"
@@ -113,12 +113,17 @@
 </template>
 
 <script>
-import { storehouseList, bookStockList ,materialStoreList} from "@/api/warehouse.js";
+import {
+  storehouseList,
+  bookStockList,
+  materialStoreList,
+} from "@/api/warehouse.js";
 import { getCategoryList } from "@/api/researchDevelopment.js";
 
 export default {
   data() {
     return {
+      power: "",
       input: "",
       form: {
         checked: true,
@@ -167,8 +172,8 @@ export default {
       let res = await storehouseList({
         page: this.pageIndex2,
         page_size: this.pageSize2,
-        state:1,
-        storehouse_type:1
+        state: 1,
+        storehouse_type: 1,
       });
       let { data } = res.data;
       this.ware = data;
@@ -185,25 +190,24 @@ export default {
         ...obj,
       });
       this.tableData = res1.data.data;
-      this.total = res1.data.count
+      this.total = res1.data.count;
       console.log(this.tableData);
       console.log(res1);
       this.tableData.map((v, i) => {
         v.sizes = [];
-        this.colors =[]
+        this.colors = [];
         for (let key in v.size_data) {
           // console.log(key, v.size_data[key]);
           this.colors.push(key);
           v.sizes.push(v.size_data[key]);
         }
       });
-      
     },
   },
   mounted() {
     this.init();
     this.store();
-    
+    this.power = localStorage.getItem("power");
   },
 };
 </script>

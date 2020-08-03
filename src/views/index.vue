@@ -11,7 +11,6 @@
           <el-menu-item>
             <div class="logo">
               <img src="../assets/logo.jpg" alt />
-              <div class="logoName">衣家 YIJIA</div>
             </div>
           </el-menu-item>
           <el-menu-item index="/homepage" v-if="power.indexOf('Z')!=-1">首页</el-menu-item>
@@ -116,6 +115,9 @@
 </template>
 
 <script>
+//  v-if="power.indexOf('C2000500')!=-1"
+// v-if="power.indexOf('C2000600')!=-1"
+//  v-if="power.indexOf('C20001000')!=-1"
 export default {
   data() {
     return {
