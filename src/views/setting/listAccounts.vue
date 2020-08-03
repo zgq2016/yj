@@ -70,13 +70,13 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="权限等级" prop="level">
-          <el-select v-model="form1.level" placeholder="请选择">
+        <el-form-item label="权限等级" prop="Access">
+          <el-select v-model="form1.Access" placeholder="请选择">
             <el-option
               v-for="item in Access_level"
               :key="item.id"
               :label="item.access"
-              :value="item.id"
+              :value="item.access"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -125,7 +125,7 @@ export default {
         describe: "",
         sort: "",
       },
-      form1: { role_name: "", level: "" },
+      form1: { role_name: "", Access: "" },
       options: [],
       pageIndex: 1,
       pageSize: 10,
@@ -165,7 +165,13 @@ export default {
       this.centerDialogVisible2 = false;
     },
     async handleEditUserList(form) {
-      // this.form1.level = this.form1.Access;
+      console.log(this.form1);
+      if (this.form1.Access === "管理") {
+        this.form1.level = 1;
+      }
+      if (this.form1.Access === "普通") {
+        this.form1.level = 2;
+      }
       delete this.form1.Access;
       let res = await userEdit(this.form1);
       this.$refs[form].resetFields();
@@ -175,8 +181,7 @@ export default {
     },
     async handleEditUser(index, row) {
       this.form1.role_name = row.role_name;
-      // this.form1.Access = row.Access;
-      this.form1.level = row.level;
+      this.form1.Access = row.Access;
       this.form1.name = row.name;
       this.form1.id = row.id;
       let res = await getRoleSelect();
