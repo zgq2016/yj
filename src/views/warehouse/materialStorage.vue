@@ -10,7 +10,12 @@
       <div class="searchInput">
         <el-form :inline="true" :model="form">
           <el-form-item label="仓库:">
-            <el-select v-model="form.warehouse" clearable placeholder="请选择仓库" style="width:120px">
+            <el-select
+              v-model="form.storehouse_id"
+              clearable
+              placeholder="请选择仓库"
+              style="width:120px"
+            >
               <el-option
                 v-for="item in ware"
                 :key="item.id"
@@ -28,11 +33,11 @@
           </el-form-item>
 
           <el-form-item label="商品:">
-            <el-input style="width:130px" v-model="form.commodity" placeholder="请输入商品名称"></el-input>
+            <el-input style="width:130px" v-model="form.materials_name" placeholder="请输入商品名称"></el-input>
           </el-form-item>
 
           <el-form-item label="颜色:">
-            <el-select v-model="form.warehouse" clearable placeholder="请选择分类" style="width:120px">
+            <el-select v-model="form.color" clearable placeholder="请选择分类" style="width:120px">
               <el-option
                 v-for="(item,index) in options"
                 :key="index"
@@ -41,7 +46,8 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="尺码:">
+
+          <!-- <el-form-item label="尺码:">
             <el-select v-model="form.warehouse" clearable placeholder="请选择分类" style="width:120px">
               <el-option
                 v-for="item in sizes"
@@ -50,16 +56,18 @@
                 :value="item.size_name"
               ></el-option>
             </el-select>
-          </el-form-item>
+          </el-form-item>-->
 
           <el-form-item label="日期:">
             <el-date-picker
               style="width:300px;"
-              v-model="form.date"
+              v-model="form.business_time"
               type="daterange"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
+              format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd"
             ></el-date-picker>
           </el-form-item>
           <el-form-item>
@@ -77,16 +85,16 @@
           style="width: 100%"
           border
         >
-          <el-table-column align="center" property="username" label="业务时间"></el-table-column>
-          <el-table-column align="center" property="username" label="货号"></el-table-column>
-          <el-table-column align="center" property="stylenumber" label="名称"></el-table-column>
-          <el-table-column align="center" property="stylenumber" label="颜色"></el-table-column>
-          <el-table-column align="center" property="category1" label="尺码"></el-table-column>
-          <el-table-column align="center" property="category" label="仓库"></el-table-column>
-          <el-table-column align="center" property="inventorynum" label="业务类别"></el-table-column>
-          <el-table-column align="center" property="unit" label="业务单号"></el-table-column>
-          <el-table-column align="center" property="num" label="库存增加数量"></el-table-column>
-          <el-table-column align="center" property="num" label="剩余数量"></el-table-column>
+          <el-table-column align="center" property="business_time" width="100" label="业务时间"></el-table-column>
+          <el-table-column align="center" property="business_type" label="业务类别"></el-table-column>
+          <el-table-column align="center" property="business_no" label="业务单号"></el-table-column>
+          <el-table-column align="center" property="materials_name" label="名称"></el-table-column>
+          <el-table-column align="center" property="materials_id" label="货号"></el-table-column>
+          <el-table-column align="center" property="color" label="颜色"></el-table-column>
+          <!-- <el-table-column align="center" property="category1" label="尺码"></el-table-column> -->
+          <el-table-column align="center" property="storehouse_name" label="仓库"></el-table-column>
+          <el-table-column align="center" property="add_quantity" label="库存增加数量"></el-table-column>
+          <el-table-column align="center" property="quantity" label="剩余数量"></el-table-column>
         </el-table>
       </div>
     </div>
@@ -114,10 +122,8 @@ export default {
   data() {
     return {
       input: "",
-      form: {
-        checked: true,
-      },
-      tableData: [{ num: 0 }],
+      form: {},
+      tableData: [],
       pageIndex: 1,
       pageSize: 9,
       pageIndex2: 1,
@@ -146,7 +152,14 @@ export default {
       this.stock();
     },
     onSubmit() {
+      this.form.ctime_start = "";
+      this.form.ctime_end = "";
+      if (this.form.business_time) {
+        this.form.ctime_start = this.form.business_time[0];
+        this.form.ctime_end = this.form.business_time[1];
+      }
       console.log(this.form);
+      this.init(this.form);
     },
     // 尺码
     async sized() {
@@ -154,10 +167,11 @@ export default {
       let data1 = res1.data.data;
       this.sizes = data1;
     },
-    async init() {
+    async init(obj) {
       let res = await materialStoreRecord({
         page: this.pageIndex,
         page_size: this.page_size,
+        ...obj,
       });
       console.log(res);
       this.tableData = res.data.data;

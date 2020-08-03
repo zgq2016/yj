@@ -68,17 +68,18 @@
             stripe
             :header-cell-style="{background:'#eef1f6',color:'#606266'}"
             @cell-click="cellClick"
+            width="100%"
             @selection-change="handleSelectionChange"
           >
             <el-table-column align="center" type="selection" width="30"></el-table-column>
-            <el-table-column align="center" prop="state_name" label="状态" width="67"></el-table-column>
-            <el-table-column align="center" label="日期" width="88">
+            <el-table-column align="center" prop="state_name" label="状态" width="70"></el-table-column>
+            <el-table-column align="center" label="日期" width="90">
               <template slot-scope="scope">{{ scope.row.ctime }}</template>
             </el-table-column>
             <el-table-column
               align="center"
               prop="factory_name"
-              width="75"
+              width="85"
               label="厂商名称"
               show-overflow-tooltip
             ></el-table-column>
@@ -1186,8 +1187,8 @@ export default {
       let res = await storehouseList({
         page: this.pageIndex2,
         page_size: this.pageSize2,
-        state:1,
-        storehouse_type:1
+        state: 1,
+        storehouse_type: 1,
       });
       let { data } = res.data;
       this.ware = data;
@@ -1433,7 +1434,7 @@ export default {
       border: 1px solid #cccccc;
       float: left;
       background: #fff;
-      width: 22%;
+      width: 23%;
       .left_nav {
         border-bottom: 1px solid #cccccc;
         margin-bottom: 10px;
@@ -1490,7 +1491,7 @@ export default {
       margin: 10px 1% 50px 0;
       border: 1px solid #cccccc;
       background: #fff;
-      width: 75%;
+      width: 74%;
       float: right;
       .right_header {
         overflow: hidden;
