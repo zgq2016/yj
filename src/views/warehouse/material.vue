@@ -562,7 +562,7 @@ export default {
         page: this.pageIndex2,
         page_size: this.pageSize2,
         state: 1,
-        storehouse_type: 0,
+        storehouse_type: 1,
       });
       let { data } = res.data;
       this.ware = data;

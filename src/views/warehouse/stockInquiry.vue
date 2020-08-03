@@ -129,7 +129,7 @@
                   <el-steps :space="110" align-center :active="actionsLenght" finish-status="wait">
                     <el-step icon="el-icon-success" title="草稿"></el-step>
                     <el-step icon="el-icon-success" title="已入库"></el-step>
-                    <el-step icon="el-icon-success" title="已撤销"></el-step>
+                    <el-step icon="el-icon-success" v-if="form.state==4" title="已撤销"></el-step>
                   </el-steps>
                 </div>
               </el-form-item>
@@ -833,6 +833,7 @@ export default {
               sumed: v.discount_money,
               remark: v.remark,
               style_id: v.style_id,
+              id: v.id,
             });
           });
         }
@@ -1210,7 +1211,7 @@ export default {
         page: this.pageIndex2,
         page_size: this.pageSize2,
         state: 1,
-        storehouse_type: 1,
+        storehouse_type: 0,
       });
       let { data } = res.data;
       this.ware = data;
@@ -1233,26 +1234,51 @@ export default {
     async sketch(state) {
       // console.log(this.weretable);
       let size_data = [];
-      this.weretable.map((v, i) => {
-        console.log(v);
-        if (v.color != "" && v.size != "" && v.quantity != "") {
-          size_data.push({
-            stylename: v.commodity,
-            produce_no: v.item_no,
-            style_color_name: v.color,
-            size: v.size,
-            unit: v.monad,
-            quantity: v.quantity,
-            price: v.univalence,
-            discount: v.discount,
-            discount_price: v.discountPrice,
-            money: v.sum,
-            discount_money: v.sumed,
-            id: v.id || 0,
-            style_id: v.style_id,
-          });
-        }
-      });
+      if (state == 0 || state == 1) {
+        this.weretable.map((v, i) => {
+          // console.log(v);
+          if (v.color != "" && v.size != "" && v.quantity != "") {
+            size_data.push({
+              stylename: v.commodity,
+              produce_no: v.item_no,
+              style_color_name: v.color,
+              size: v.size,
+              unit: v.monad,
+              quantity: v.quantity,
+              price: v.univalence,
+              discount: v.discount,
+              discount_price: v.discountPrice,
+              money: v.sum,
+              discount_money: v.sumed,
+              id: v.id || 0,
+              style_id: v.style_id,
+            });
+          }
+        });
+      } else {
+        this.weretable1.map((v, i) => {
+          console.log(1);
+          // console.log(v);
+          if (v.color != "" && v.size != "" && v.quantity != "") {
+            size_data.push({
+              stylename: v.commodity,
+              produce_no: v.item_no,
+              style_color_name: v.color,
+              size: v.size,
+              unit: v.monad,
+              quantity: v.quantity,
+              price: v.univalence,
+              discount: v.discount,
+              discount_price: v.discountPrice,
+              money: v.sum,
+              discount_money: v.sumed,
+              id: v.id || 0,
+              style_id: v.style_id,
+            });
+          }
+        });
+      }
+
       let images = [];
       this.fileList.map((v, i) => {
         if (v.response) {
@@ -1270,7 +1296,6 @@ export default {
         this.form.account_name == undefined ||
         size_data.length <= 0
       ) {
-        console.log(size_data);
         let str = "请填写完整数据";
         if (
           this.form.factory_name == undefined ||
@@ -1375,7 +1400,7 @@ export default {
     async backout() {
       this.vh3 = false;
       this.sketch(4);
-      this.form = {};
+      // this.form = {};
       this.init(this.obj);
     },
     // 商品信息下拉框显示隐藏

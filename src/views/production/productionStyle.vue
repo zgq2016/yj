@@ -494,7 +494,7 @@
                         ></el-pagination>
                       </el-select>
                     </el-form-item>
-                  </div> -->
+                  </div>-->
                   <div style="width:350px;margin:0 auto">
                     <el-form-item label="结算金额:" prop="amount">
                       <el-input style="width:200px;" placeholder="请输入金额" v-model="form2.amount"></el-input>
@@ -553,7 +553,7 @@
                         :total="total2"
                       ></el-pagination>
                     </el-select>
-                  </el-form-item> -->
+                  </el-form-item>-->
                   <el-form-item label="余结金额">
                     <span style="width:200px" :model="form3.money1"></span>
                   </el-form-item>
@@ -1146,7 +1146,7 @@ import {
   getMaterialsInfo, //物料
   getSupplierInfo, //供应商
   getFactoryModeSelect,
-  factoryList
+  factoryList,
 } from "@/api/archives";
 import { storehouseList } from "@/api/warehouse.js";
 export default {
@@ -2593,12 +2593,12 @@ export default {
     async regionadd(value) {
       // console.log(value,this.regions);
       console.log(this.regions);
-      this.regions.map((v,i)=>{
-        if(v.factory_name == value){
-        console.log(v,i);
-          this.modes = v.modes
+      this.regions.map((v, i) => {
+        if (v.factory_name == value) {
+          console.log(v, i);
+          this.modes = v.modes;
         }
-      })
+      });
       this.ascertain2 = true;
       let { id } = this.$route.query;
       let res1 = await produceInfo({
@@ -2770,8 +2770,8 @@ export default {
       let { data } = res.data;
       // let res1 = await getFactorySelect(); //生产排单select工厂
       let res1 = await factoryList({
-        page:1,
-        page_size:999
+        page: 1,
+        page_size: 999,
       }); //生产排单select工厂
       let data1 = res1.data.data;
       this.regions = data1;
@@ -2802,7 +2802,7 @@ export default {
             this.showhide5 = true;
             this.showhide4 = false;
           }
-          
+
           this.modes.map((j, k) => {
             if (v.mode == j.id) {
               this.mode.push(j.mode_name);
@@ -3204,8 +3204,8 @@ export default {
       let res = await storehouseList({
         page: this.pageIndex2,
         page_size: this.pageSize2,
-         state:1,
-        storehouse_type:1
+        state: 1,
+        storehouse_type: 1,
       });
       let { data } = res.data;
       this.wares = data;
