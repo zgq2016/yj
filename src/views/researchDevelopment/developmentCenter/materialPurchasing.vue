@@ -116,7 +116,7 @@
           <el-form-item label="结算金额" prop="money">
             <el-input placeholder="请输入内容" style="width:50%" v-model="form2.money"></el-input>
           </el-form-item>
-          <el-form-item label="仓库:" prop="storehouse_id">
+          <!-- <el-form-item label="仓库:" prop="storehouse_id">
             <el-select
               clearable
               v-model="form2.storehouse_id"
@@ -137,7 +137,7 @@
                 :total="total1"
               ></el-pagination>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <el-upload
             class="avatar-uploader1"
             action="https://yj.ppp-pay.top/uploadpic.php"
@@ -167,7 +167,7 @@
             <el-date-picker v-model="form3.date" type="date" style="width:50%" placeholder="选择日期"></el-date-picker>
           </el-form-item>
 
-          <el-form-item label="仓库:" prop="storehouse_id">
+          <!-- <el-form-item label="仓库:" prop="storehouse_id">
             <el-select
               clearable
               v-model="form3.storehouse_id"
@@ -188,7 +188,7 @@
                 :total="total1"
               ></el-pagination>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="余结金额">
             <span style="width:50%" :model="form3.money1"></span>
           </el-form-item>
@@ -296,7 +296,7 @@ export default {
       innerVisibled1: false,
       form2: {
         imageUrl: "",
-        storehouse_id: "",
+        // storehouse_id: "",
         money: "",
       },
       ware: [],
@@ -306,7 +306,7 @@ export default {
         money1: "",
         date: "",
         imageUrl: "",
-        storehouse_id: "",
+        // storehouse_id: "",
       },
       form4: {
         date: "",
@@ -317,9 +317,9 @@ export default {
         number: [{ required: true, message: "请输入数量", trigger: "blur" }],
         money: [{ required: true, message: "请输入金额", trigger: "blur" }],
         date: [{ required: true, message: "请输入日期", trigger: "blur" }],
-        storehouse_id: [
-          { required: true, message: "请输入仓库", trigger: "blur" },
-        ],
+        // storehouse_id: [
+        //   { required: true, message: "请输入仓库", trigger: "blur" },
+        // ],
       },
       rules1: {
         date: [{ required: true, message: "请输入日期", trigger: "blur" }],
@@ -327,9 +327,9 @@ export default {
       },
       rules2: {
         money: [{ required: true, message: "请输入金额", trigger: "blur" }],
-        storehouse_id: [
-          { required: true, message: "请输入仓库", trigger: "blur" },
-        ],
+        // storehouse_id: [
+        //   { required: true, message: "请输入仓库", trigger: "blur" },
+        // ],
       },
     };
   },
@@ -347,7 +347,7 @@ export default {
         quantity: 0, //回料数量
         amount: Number(this.form2.money), //结算金额
         remarks: "", //原因备注
-        storehouse_id: Number(this.form2.storehouse_id), //原因备注
+        // storehouse_id: Number(this.form2.storehouse_id), //原因备注
       });
       console.log(res);
       this.init();
@@ -368,7 +368,7 @@ export default {
           quantity: Number(this.form3.number), //回料数量
           amount: Number(this.form3.money), //结算金额
           remarks: "", //原因备注
-          storehouse_id: Number(this.form3.storehouse_id), //原因备注
+          // storehouse_id: Number(this.form3.storehouse_id), //原因备注
         });
         this.init();
         console.log(res);

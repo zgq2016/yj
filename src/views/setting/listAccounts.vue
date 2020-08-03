@@ -165,18 +165,21 @@ export default {
       this.centerDialogVisible2 = false;
     },
     async handleEditUserList(form) {
-      console.log(this.form1)
+      // this.form1.level = this.form1.Access;
+      delete this.form1.Access;
       let res = await userEdit(this.form1);
-      console.log(res);
       this.$refs[form].resetFields();
+      console.log(res);
       this.centerDialogVisible2 = false;
       this.init();
     },
     async handleEditUser(index, row) {
+      this.form1.role_name = row.role_name;
+      // this.form1.Access = row.Access;
+      this.form1.level = row.level;
       this.form1.name = row.name;
       this.form1.id = row.id;
       let res = await getRoleSelect();
-      console.log(res);
       this.userRoleList = res.data.data;
       this.centerDialogVisible2 = true;
     },
@@ -202,7 +205,6 @@ export default {
             id: this.form.id,
             newpass: this.form.passworded,
           });
-          console.log(res);
 
           this.centerDialogVisible1 = false;
         }
@@ -229,7 +231,6 @@ export default {
         page: this.pageIndex,
         page_size: this.pageSize,
       });
-      console.log(res);
       res.data.data.map((v) => {
         if (v.level === "0") {
           v["Access"] = "注册人";
@@ -240,7 +241,6 @@ export default {
         if (v.level === "2") {
           v["Access"] = "普通";
         }
-        console.log(v);
       });
       let { data, count } = res.data;
       this.tableData = data;
