@@ -119,7 +119,8 @@ import {
   shortcutKeyUserDel,
   shortcutKeyUserList,
   noticeIndexList,
-  warnList
+  warnList,
+  mouthWorkStatus,
 } from "@/api/home.js";
 import moment from "moment";
 export default {
@@ -134,82 +135,19 @@ export default {
       cut: "",
       feature: [],
       date1: "",
-      xA: [
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "20",
-        "21",
-        "22",
-        "23",
-        "24",
-        "25",
-        "26",
-        "27",
-        "28",
-        "29",
-        "30",
-        "31"
-      ],
-      yA: [
-        1020,
-        20,
-        150,
-        80,
-        70,
-        110,
-        130,
-        50,
-        150,
-        80,
-        70,
-        110,
-        10,
-        20,
-        100,
-        80,
-        70,
-        110,
-        130,
-        40,
-        150,
-        80,
-        70,
-        110,
-        50,
-        10,
-        150,
-        80,
-        70,
-        110,
-        130
-      ],
+      xA: [],
+      yA: [],
       nav_list: [],
       nav_list1: [],
       form: {},
       form1: {},
-      yearMonth: ""
+      yearMonth: "",
     };
   },
   mounted() {
     this.drawLine();
     this.init();
+    this.mouthWork();
   },
   methods: {
     // 查看公告
@@ -222,24 +160,24 @@ export default {
       this.$confirm("删除快捷功能, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           let res = await shortcutKeyUserDel({
-            id: item.id
+            id: item.id,
           });
           console.log(res);
           this.feature.splice(index, 1);
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
@@ -255,7 +193,7 @@ export default {
       let res = await shortcutKeyUserAdd({
         user_id: localStorage.getItem("user_id"),
         title: this.cut,
-        url: str
+        url: str,
       });
       //   console.log(res);
       this.init();
@@ -290,67 +228,55 @@ export default {
         xAxis: {
           name: "日期",
           type: "category",
-          data: this.xA
+          data: this.xA,
         },
         yAxis: {
           name: "款式数量",
-          type: "value"
+          type: "value",
         },
         series: [
           {
             name: "款式数量",
             data: this.yA,
-            type: "bar"
-          }
-        ]
+            type: "bar",
+          },
+        ],
       });
     },
     // 选择月份
-    changedDate(item) {
-      this.date1 = moment(item).format("YYYY-MM");
-      console.log(this.date1);
-      let times = this.date1.split('-')
-      console.log(this.getDaysInMonth(times[0],times[1]));
-      this.xA = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
-      this.yA = [
-        1020,
-        0,
-        150,
-        80,
-        70,
-        110,
-        130,
-        50,
-        150,
-        80,
-        1020,
-        110,
-        10,
-        1020,
-        100,
-        80,
-        70,
-        110,
-        130,
-        40,
-        1500,
-        80,
-        70,
-        110,
-        50,
-        10,
-        150,
-        80,
-        70,
-        110,
-        130
-      ];
-      this.drawLine();
+    async changedDate(item) {
+      if (item != null) {
+        this.date1 = moment(item).format("YYYY-MM");
+        // console.log(this.date1);
+        let times = this.date1.split("-");
+        this.xA = [];
+        this.yA = [];
+        // console.log(this.getDaysInMonth(times[0], times[1]));
+        this.xA = this.getDaysInMonth(times[0], times[1]);
+        let res = await mouthWorkStatus({
+          user_id: localStorage.getItem("user_id"),
+          date: this.date1,
+        });
+        let { data } = res.data;
+        this.xA.forEach((element) => {
+          this.yA.push(0);
+        });
+        this.xA.map((j, k) => {
+          data.map((v, i) => {
+            if (v.day == j) {
+              this.yA.splice(i, 1, v.total);
+            }
+          });
+        });
+        this.drawLine();
+      } else {
+        this.mouthWork();
+      }
     },
     // 快捷跳转
     skip(item) {
       this.$router.push({
-        path: `/${item.url}`
+        path: `/${item.url}`,
       });
     },
     // 提醒信息
@@ -358,6 +284,43 @@ export default {
       // console.log(item);
       this.dialogVisible2 = true;
       this.form1 = item;
+    },
+    //
+    // 获取当前年月
+    async mouthWork() {
+      let myDate = new Date();
+      let year = myDate.getFullYear();
+      let month = myDate.getMonth();
+      let mh = month + 1;
+      if (mh.toString().length == 1) {
+        mh = "0" + mh;
+      }
+      this.yearMonth = year + "-" + mh;
+      this.xA = [];
+      this.yA = [];
+      // console.log(this.yearMonth.split('-'));
+      // 计算某月的具体日期
+      let month_i = parseInt(mh, 10);
+      // console.log(this.getDaysInMonth(year,month_i));
+      this.xA = this.getDaysInMonth(year, month_i);
+      let res = await mouthWorkStatus({
+        user_id: localStorage.getItem("user_id"),
+        date: this.yearMonth,
+      });
+      let { data } = res.data;
+      this.xA.forEach((element) => {
+        this.yA.push(0);
+      });
+      this.xA.map((j, k) => {
+        data.map((v, i) => {
+          if (v.day == j) {
+            this.yA.splice(i, 1, v.total);
+          }
+        });
+      });
+      this.date1 = this.yearMonth;
+      this.drawLine();
+      // console.log(res);
     },
     async init() {
       // 快捷方式list
@@ -367,30 +330,17 @@ export default {
       // 公司公告
       let res1 = await noticeIndexList({
         page_size: 10,
-        page: 1
+        page: 1,
       });
       let data1 = res1.data.data;
       this.nav_list = data1;
       // 提醒信息
       let res2 = await warnList({
         page_size: 10,
-        page: 1
+        page: 1,
       });
       let data2 = res2.data.data;
       this.list2 = data2;
-      // 获取当前年月
-      let myDate = new Date();
-      let year = myDate.getFullYear();
-      let month = myDate.getMonth();
-      let mh = month + 1;
-      if (mh.toString().length == 1) {
-        mh = "0" + mh;
-      }
-      this.yearMonth = year + "-" + mh;
-      console.log(this.yearMonth.split('-'));
-      // 计算某月的具体日期
-      let month_i = parseInt(mh, 10);
-      console.log(this.getDaysInMonth(year,month_i)); 
     },
     //根据某年某月计算出具体日期
     getDaysInMonth(year, month) {
@@ -405,8 +355,8 @@ export default {
         }
       }
       return daysOfMonth;
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="less" scoped>

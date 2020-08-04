@@ -140,9 +140,11 @@ export default {
   methods: {
     handleSizeChange(val) {
       this.pageSize = val;
+      this.init(this.form);
     },
     handleCurrentChange(val) {
       this.pageIndex = val;
+      this.init(this.form);
     },
     handleSize(val) {
       this.pageSize2 = val;
