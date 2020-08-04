@@ -2,7 +2,6 @@
   <div class="distributor">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
-      <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>档案库</el-breadcrumb-item>
       <!-- <el-breadcrumb-item>物料工艺卡</el-breadcrumb-item> -->
       <el-breadcrumb-item>工厂</el-breadcrumb-item>

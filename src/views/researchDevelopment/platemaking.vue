@@ -2,7 +2,6 @@
   <div class="platemaking" v-if="power.indexOf('A8000300')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
-      <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>研发</el-breadcrumb-item>
       <el-breadcrumb-item>制版</el-breadcrumb-item>
     </el-breadcrumb>

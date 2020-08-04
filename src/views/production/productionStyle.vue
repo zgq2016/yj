@@ -2,7 +2,6 @@
   <div class="productionStyle">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
-      <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>生产</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===0" :to="{ path: '/productionOrders' }">生产下单</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===1" :to="{ path: '/purchase' }">采购列表</el-breadcrumb-item>

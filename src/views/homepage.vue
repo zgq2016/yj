@@ -1,7 +1,6 @@
 <template>
   <div class="homepage">
     <el-breadcrumb separator="/" class="breadcrumb">
-      <img src="./../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>首页</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main">

@@ -1,12 +1,13 @@
 <template>
   <div class="designCheck">
     <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
-      <el-breadcrumb-item>研发</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/itemDesign' }">设计项目</el-breadcrumb-item>
-      <el-breadcrumb-item>项目详细</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>研发</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/itemDesign' }">设计项目</el-breadcrumb-item>
+        <el-breadcrumb-item>项目详细</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <!-- 详情 -->
     <div class="detail">
       <div class="left_img">
@@ -18,32 +19,45 @@
           <img v-if="obj.projecttype==='1'" src="../../assets/阶段.jpg" alt />
           <img v-if="obj.projecttype==='2'" src="../../assets/系列.jpg" alt />
         </div>
-        <!-- <img :src="obj.picurl" style="border-radius: 10px;" alt /> -->
       </div>
       <div class="right_content">
-        <div class="name">项目名称：{{obj.projectname}}</div>
-        <div class="client">客户：{{obj.customer_companyname}}</div>
-        <div class="year">年份：{{obj.year}}</div>
-        <div class="season">季节：{{obj.season}}</div>
-        <div class="claim">要求：{{obj.detailed}}</div>
+        <div style="height:160px">
+          <div class="name">{{obj.projectname}}</div>
+          <div class="client">客户：{{obj.customer_companyname}}</div>
+          <div class="year">年份：{{obj.year}}</div>
+          <div class="season">季节：{{obj.season}}</div>
+          <div class="claim">要求：{{obj.detailed}}</div>
+        </div>
+        <div style="display:flex">
+          <div
+            @click="editOutline"
+            class="edit"
+            style="margin-right: 12px;background-color: #f2f2f2;"
+            v-if="power.indexOf('A1000300')!=-1||power.indexOf('A1000400')!=-1"
+          >
+            <svg viewBox="0 0 32 32" width="20" height="20">
+              <path
+                d="M17.2 9.144l5.656 5.657-13.2 13.199h-5.656v-5.657l13.2-13.2zM19.085 7.259l2.828-2.829c0.241-0.241 0.575-0.39 0.943-0.39s0.701 0.149 0.943 0.39l3.772 3.772c0.241 0.241 0.39 0.575 0.39 0.943s-0.149 0.701-0.39 0.943l-2.829 2.828-5.656-5.656z"
+                fill="#5e5e5e"
+              />
+            </svg>
+          </div>
+          <div class="add">
+            <span
+              style="background-color: #f2f2f2;color: #5e5e5e;"
+              class="addStyle"
+              @click="addTheStyle"
+              v-if="power.indexOf('A2000200')!=-1"
+            >添加款式</span>
+            <span class="addStyle" @click="newTheStyle" v-if="power.indexOf('A2000200')!=-1">新增款式</span>
+          </div>
+        </div>
       </div>
-      <div
-        class="edit el-icon-edit-outline"
-        @click="editOutline"
-        v-if="power.indexOf('A1000300')!=-1||power.indexOf('A1000400')!=-1"
-      ></div>
     </div>
     <!-- add -->
-    <div class="addStyle" v-if="power.indexOf('A2000100')!=-1">
-      <span class="add" @click="addTheStyle" v-if="power.indexOf('A2000200')!=-1">添加款式</span>
-      <span
-        class="el-dropdown-link el-icon-plus"
-        @click="newTheStyle"
-        v-if="power.indexOf('A2000200')!=-1"
-      >新增款式</span>
-    </div>
+
     <!-- table -->
-    <div class="table">
+    <div class="table" v-if="power.indexOf('A2000100')!=-1">
       <el-table ref="singleTable" :data="tableData" highlight-current-row>
         <el-table-column type="index" width="50"></el-table-column>
         <el-table-column label="图片" width="70">
@@ -127,7 +141,7 @@
 import {
   getProject,
   getProjectStyleList,
-  projectStyleAddto
+  projectStyleAddto,
 } from "@/api/researchDevelopment";
 export default {
   data() {
@@ -141,7 +155,7 @@ export default {
       total: 0,
       styleList: [],
 
-      power: ""
+      power: "",
     };
   },
   methods: {
@@ -149,11 +163,11 @@ export default {
       this.$confirm("确定选择", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       }).then(async () => {
         console.log(item);
         this.$router.push({
-          path: `/newTheStyle?id=${this.$route.query.id}&oldId=${item.id}`
+          path: `/newTheStyle?id=${this.$route.query.id}&oldId=${item.id}`,
         });
       });
     },
@@ -161,7 +175,7 @@ export default {
       let res = await getProjectStyleList({
         keyword: this.input,
         page: this.pageIndex,
-        page_size: this.pageSize
+        page_size: this.pageSize,
       });
       console.log(res);
       let { data, count } = res.data;
@@ -179,7 +193,7 @@ export default {
       console.log(e);
       let { id } = e;
       this.$router.push({
-        path: `/development?id=${id}&TL=${30}&project_id=${this.obj.id}`
+        path: `/development?id=${id}&TL=${30}&project_id=${this.obj.id}`,
       });
     },
     editOutline() {
@@ -200,24 +214,41 @@ export default {
       this.obj = res.data.data;
       this.tableData = res.data.data.style_data;
       console.log(res);
-    }
+    },
   },
   async mounted() {
     this.init();
     this.power = localStorage.getItem("power");
-    console.log(this.power);
-  }
+  },
 };
 </script>
 
 <style lang="less" scoped>
 .designCheck {
+  .add {
+    display: flex;
+    .addStyle {
+      margin-right: 12px;
+      border-radius: 15px;
+      width: 120px;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      background-color: #000;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
   .detail {
-    padding: 40px 20px;
+    padding: 0 0 15px 0;
     display: flex;
     img {
       width: 200px;
       height: 200px;
+      border-radius: 15px;
       margin-right: 20px;
     }
     .right_content {
@@ -235,41 +266,22 @@ export default {
       }
       div {
         font-size: 14px;
-        margin: 10px 0;
+        margin: 0 0 10px 0;
       }
     }
     .edit {
-      font-size: 40px;
-      text-align: right;
+      width: 30px;
+      height: 30px;
+      background-color: #000;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       cursor: pointer;
-      color: orange;
+      margin-right: 15px;
     }
   }
-  .addStyle {
-    margin: 0 30px 30px 0;
-    text-align: right;
-    .add {
-      border-radius: 12px;
-      padding: 8px 30px;
-      color: #fff;
-      background-color: orange;
-      margin-right: 10px;
-      &:hover {
-        background-color: rgb(16, 182, 182);
-        cursor: pointer;
-      }
-    }
-    .el-dropdown-link {
-      border-radius: 12px;
-      padding: 10px 40px;
-      color: #fff;
-      background-color: orange;
-      &:hover {
-        background-color: rgb(16, 182, 182);
-        cursor: pointer;
-      }
-    }
-  }
+
   .check {
     cursor: pointer;
   }
@@ -308,14 +320,24 @@ export default {
     }
   }
   .table {
+    // margin-top: -40px;
     .img {
-      width: 40px;
-      height: 40px;
+      width: 60px;
+      height: 60px;
+      border-radius: 5px;
     }
-    .color {
-      width: 40px;
-      height: 40px;
-    }
+  }
+  .el-table th,
+  .el-table tr {
+    background-color: #fff;
+    height: 72px;
+  }
+  /deep/ .el-table th > .cell {
+    font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
+      \\5b8b\4f53, sans-serif;
+  }
+  /deep/ .el-table tr {
+    height: 10px;
   }
 }
 </style>

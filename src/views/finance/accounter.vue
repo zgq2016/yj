@@ -1,7 +1,6 @@
 <template>
   <div class="accounter">
     <el-breadcrumb separator="/" class="breadcrumb" v-if="power.indexOf('F5000400')!=-1">
-      <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>财务</el-breadcrumb-item>
       <el-breadcrumb-item>结算帐户</el-breadcrumb-item>
     </el-breadcrumb>

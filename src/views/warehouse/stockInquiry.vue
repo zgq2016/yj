@@ -3,7 +3,6 @@
   <div class="stockInquiry">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
-      <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>仓库</el-breadcrumb-item>
       <el-breadcrumb-item>产品入库</el-breadcrumb-item>
     </el-breadcrumb>

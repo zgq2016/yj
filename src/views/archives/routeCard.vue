@@ -2,7 +2,6 @@
   <div class="distributor" v-if="power.indexOf('E2000400')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
-      <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>档案库</el-breadcrumb-item>
       <el-breadcrumb-item :to="{ path: '/routeCard_list' }">物料工艺卡</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===0">新增物料工艺卡</el-breadcrumb-item>

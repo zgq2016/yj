@@ -2,7 +2,6 @@
   <div class="materialStorage" v-if="power.indexOf('C4000100')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
-      <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>仓库</el-breadcrumb-item>
       <el-breadcrumb-item>物料库存流水</el-breadcrumb-item>
     </el-breadcrumb>

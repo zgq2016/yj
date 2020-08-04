@@ -1,33 +1,24 @@
 <template>
   <div class="itemDesign" v-if="power.indexOf('A1000200')!=-1">
-    <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
-      <el-breadcrumb-item>研发</el-breadcrumb-item>
-      <el-breadcrumb-item>设计项目</el-breadcrumb-item>
-    </el-breadcrumb>
-
+    <div class="aa">
+      <!-- 面包屑 -->
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>研发</el-breadcrumb-item>
+        <el-breadcrumb-item>设计项目</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <div class="form">
       <el-form :inline="true" class="demo-form-inline">
-        <el-form-item label="创建时间">
-          <el-date-picker
-            v-model="date"
-            type="daterange"
-            range-separator="至"
-            :start-placeholder="ctime_start"
-            :end-placeholder="ctime_end"
-          ></el-date-picker>
+        <el-form-item>
+          <el-input v-model="name" placeholder="项目" class="project" style="width:200px"></el-input>
         </el-form-item>
-        <el-form-item label="项目">
-          <el-input v-model="name" placeholder="项目"></el-input>
-        </el-form-item>
-        <el-form-item label="年份">
-          <el-select v-model="year" clearable placeholder="年份">
+        <el-form-item>
+          <el-select v-model="year" clearable placeholder="年份" style="width:100px">
             <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="季节">
-          <el-select v-model="season" clearable placeholder="季节">
+        <el-form-item>
+          <el-select v-model="season" clearable placeholder="季节" style="width:100px">
             <el-option
               v-for="item in seasons"
               :key="item.id"
@@ -36,13 +27,19 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="设计师">
-          <el-select v-model="stylist" clearable placeholder="设计师" @change="handleUser_id($event)">
+        <el-form-item>
+          <el-select
+            v-model="stylist"
+            clearable
+            placeholder="设计师"
+            @change="handleUser_id($event)"
+            style="width:100px"
+          >
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="类别">
-          <el-select v-model="category" clearable placeholder="类别">
+        <el-form-item>
+          <el-select v-model="category" clearable placeholder="类别" style="width:100px">
             <el-option
               v-for="item in categorys"
               :key="item.id"
@@ -51,8 +48,14 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="西所">
-          <el-select v-model="west" clearable placeholder="西所" @change="handleCustomer_id($event)">
+        <el-form-item>
+          <el-select
+            v-model="west"
+            clearable
+            placeholder="西所"
+            @change="handleCustomer_id($event)"
+            style="width:100px"
+          >
             <el-option
               v-for="item in wests"
               :key="item.id"
@@ -61,21 +64,33 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="状态">
-          <el-select v-model="state" clearable placeholder="状态" @change="handelState($event)">
+        <el-form-item>
+          <el-select
+            v-model="state"
+            clearable
+            placeholder="状态"
+            @change="handelState($event)"
+            style="width:100px"
+          >
             <el-option v-for="item in states" :key="item.id" :label="item.v" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handlesearch">查询</el-button>
+          <!-- <el-button type="primary" @click="handlesearch">查询</el-button> -->
+          <el-button
+            icon="el-icon-search"
+            size="mini"
+            circle
+            class="search_button"
+            @click="handlesearch"
+          ></el-button>
         </el-form-item>
       </el-form>
     </div>
     <!-- 新增项目 -->
-
     <div class="addStyle" v-if="power.indexOf('A1000100')!=-1">
       <el-dropdown trigger="click" @command="handleCommand">
-        <span class="el-dropdown-link el-icon-plus">新增项目</span>
+        <span class="el-dropdown-link">新增项目</span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="a">新增意向订单</el-dropdown-item>
           <el-dropdown-item command="b">新增阶段工作</el-dropdown-item>
@@ -128,7 +143,7 @@ import {
   getSeasonList,
   getStylistList,
   getCategoryList,
-  getWestList
+  getWestList,
 } from "@/api/researchDevelopment";
 export default {
   data() {
@@ -158,15 +173,15 @@ export default {
       states: [
         {
           v: "未下单",
-          id: 0
+          id: 0,
         },
         {
           v: "已下单",
-          id: 1
-        }
+          id: 1,
+        },
       ],
       obj: {},
-      power: ""
+      power: "",
     };
   },
   methods: {
@@ -257,7 +272,7 @@ export default {
       let res = await getDataList({
         page: this.pageIndex,
         page_size: this.pageSize,
-        ...object
+        ...object,
       });
       let { data, count } = res.data;
       this.data = data;
@@ -276,7 +291,7 @@ export default {
       this.total = count;
       this.ctime_start = moment(this.date[0]).format("YYYY-MM-DD");
       this.ctime_end = moment(this.date[1]).format("YYYY-MM-DD");
-    }
+    },
   },
   mounted() {
     this.init();
@@ -288,28 +303,45 @@ export default {
 
     this.power = localStorage.getItem("power");
     console.log(this.power);
-  }
+  },
 };
 </script>
 
 <style lang="less" scoped>
 .itemDesign {
-  label {
-    width: 40px;
-    margin-right: 10px;
+  /deep/ .el-input__inner {
+    width: 100%;
+    height: 30px;
+    background-color: #f2f2f2;
+    border-radius: 15px;
+    border: none;
+    color: #5e5e5e;
+    font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
+      \\5b8b\4f53, sans-serif;
   }
-
+  .search_button {
+    background-color: #000;
+  }
+  /deep/ .el-icon-search {
+    color: #fff;
+  }
+  /deep/.el-button {
+    border: none;
+  }
   .addStyle {
     margin: 0 30px 30px 0;
-    text-align: right;
+    // text-align: right;
 
     .el-dropdown-link {
-      border-radius: 12px;
-      padding: 10px 40px;
+      border-radius: 15px;
+      width: 120px;
+      height: 30px;
       color: #fff;
-      background-color: #ccc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #000;
       &:hover {
-        background-color: #000;
         cursor: pointer;
       }
     }
@@ -319,7 +351,7 @@ export default {
     flex-wrap: wrap;
     .list {
       display: flex;
-      width: 33%;
+      width: 350px;
       margin: 20px 0;
       img {
         width: 130px;
@@ -355,6 +387,8 @@ export default {
     line-height: 32px;
     width: 5%;
     color: #303133;
+
+    // style="width:120px;border-radius: 20px;overflow: hidden;height: 600px;"
   }
 }
 </style>

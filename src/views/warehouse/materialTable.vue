@@ -1,7 +1,6 @@
 <template>
   <div class="materialTable" v-if="power.indexOf('C3000300')!=-1">
     <el-breadcrumb separator="/" class="breadcrumb">
-      <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>仓库</el-breadcrumb-item>
       <el-breadcrumb-item>物料库存查询</el-breadcrumb-item>
       <el-breadcrumb-item>物料库存详情</el-breadcrumb-item>

@@ -163,22 +163,29 @@ body {
   margin: auto;
   width: 1210px;
 }
-.breadcrumb {
-  margin: -10px 20px;
+.svg {
+  width: 100px;
+  height: 100px;
+}
+.aa {
+  height: 80px;
+}
+.aa .breadcrumb {
+  margin-top: 25px;
   display: inline-block;
-  background-color: #000;
+  background-color: #f2f2f2;
   height: 30px;
   border-radius: 15px;
   padding: 8px 20px;
 }
-.breadcrumb /deep/ .el-breadcrumb__inner {
-  color: #fff;
+.aa .breadcrumb /deep/ .el-breadcrumb__inner {
+  color: #5e5e5e;
 }
-.breadcrumb /deep/ .el-breadcrumb__item:last-child .el-breadcrumb__inner,
-.breadcrumb .el-breadcrumb__item:last-child .el-breadcrumb__inner a,
-.breadcrumb .el-breadcrumb__item:last-child .el-breadcrumb__inner a:hover,
-.breadcrumb .el-breadcrumb__item:last-child .el-breadcrumb__inner:hover {
-  color: #fff;
+.aa .breadcrumb /deep/ .el-breadcrumb__item:last-child .el-breadcrumb__inner,
+.aa .breadcrumb .el-breadcrumb__item:last-child .el-breadcrumb__inner a,
+.aa .breadcrumb .el-breadcrumb__item:last-child .el-breadcrumb__inner a:hover,
+.aa .breadcrumb .el-breadcrumb__item:last-child .el-breadcrumb__inner:hover {
+  color: #5e5e5e;
 }
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;

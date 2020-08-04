@@ -2,7 +2,6 @@
   <div class="colorManagement" v-if="power.indexOf('H6000400')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
-      <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>设置</el-breadcrumb-item>
       <el-breadcrumb-item>单位管理</el-breadcrumb-item>
     </el-breadcrumb>

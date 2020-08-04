@@ -1,8 +1,7 @@
 <template>
-  <div class="tailor">
+  <div class="tailor" v-if="power.indexOf('B4000300')!=-1">
     <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb" v-if="power.indexOf('B4000300')!=-1">
-      <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
+    <el-breadcrumb separator="/" class="breadcrumb">
       <el-breadcrumb-item>生产</el-breadcrumb-item>
       <el-breadcrumb-item>裁剪</el-breadcrumb-item>
     </el-breadcrumb>
@@ -235,7 +234,7 @@ export default {
       this.formInline.page = this.page;
       this.formInline.page_size = this.page_size;
       let res = await getProduceList(this.formInline);
-      console.log(res)
+      console.log(res);
       this.count = res.data.count;
       let { data } = res.data;
       this.tableData = data;

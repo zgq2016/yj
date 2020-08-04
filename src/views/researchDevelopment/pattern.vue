@@ -2,7 +2,6 @@
   <div class="pattern" v-if="power.indexOf('A7000300')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
-      <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>研发</el-breadcrumb-item>
       <el-breadcrumb-item>纸样</el-breadcrumb-item>
     </el-breadcrumb>

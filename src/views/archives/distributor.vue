@@ -2,7 +2,6 @@
   <div class="distributor" v-if="power.indexOf('E1000400')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
-      <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>档案库</el-breadcrumb-item>
       <el-breadcrumb-item :to="{ path: '/distributor_list' }">供应商</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===0">新增供应商</el-breadcrumb-item>

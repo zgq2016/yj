@@ -1,11 +1,13 @@
 <template>
   <div class="designFile" v-if="power.indexOf('E3000100')!=-1">
     <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>档案库</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="TL===1" :to="{ path: '/productionOrders' }">生产下单</el-breadcrumb-item>
-      <el-breadcrumb-item>款式档案</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>档案库</el-breadcrumb-item>
+        <el-breadcrumb-item v-if="TL===1" :to="{ path: '/productionOrders' }">生产下单</el-breadcrumb-item>
+        <el-breadcrumb-item>款式档案</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <div class="main">
       <el-form
         :inline="true"
@@ -325,10 +327,13 @@ export default {
   //   margin-right: -40px;
   // }
   .search_button {
-    background-color: #aaa;
+    background-color: #000;
   }
   /deep/ .el-icon-search {
     color: #fff;
+  }
+  /deep/.el-button {
+    border: none;
   }
   .el-table th,
   .el-table tr {
@@ -341,8 +346,6 @@ export default {
   }
   /deep/ .el-table tr {
     height: 10px;
-    
-    
   }
 }
 </style>

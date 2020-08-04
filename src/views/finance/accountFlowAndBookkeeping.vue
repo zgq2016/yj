@@ -1,7 +1,6 @@
 <template>
   <div class="accountFlowAndBookkeeping" v-if="power.indexOf('F2000100')!=-1">
     <el-breadcrumb separator="/" class="breadcrumb">
-      <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>财务</el-breadcrumb-item>
       <el-breadcrumb-item>账户流水及记账</el-breadcrumb-item>
     </el-breadcrumb>

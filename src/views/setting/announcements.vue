@@ -1,7 +1,6 @@
 <template>
   <div class="announcements">
     <el-breadcrumb separator="/" class="breadcrumb">
-      <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>设置</el-breadcrumb-item>
       <el-breadcrumb-item>公司公告</el-breadcrumb-item>
     </el-breadcrumb>

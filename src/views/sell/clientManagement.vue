@@ -2,7 +2,6 @@
   <div class="clientManagement" v-if="power.indexOf('D1000400')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
-      <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>销售</el-breadcrumb-item>
       <el-breadcrumb-item>客户管理</el-breadcrumb-item>
     </el-breadcrumb>

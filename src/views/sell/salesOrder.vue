@@ -2,7 +2,6 @@
   <div class="salesOrder" v-if="power.indexOf('D2000100')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
-      <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>销售</el-breadcrumb-item>
       <el-breadcrumb-item>销售订单</el-breadcrumb-item>
     </el-breadcrumb>
