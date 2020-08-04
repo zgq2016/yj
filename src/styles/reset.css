@@ -161,22 +161,24 @@ body {
 /*版心 居中对齐*/
 .w {
   margin: auto;
-  /* width: 80vw; */
   width: 1210px;
 }
 .breadcrumb {
-  padding: 0 40px 10px;
-  border-bottom: 1px solid #eee;
-  position: relative;
-  display: flex;
-  align-items: center;
+  margin: -10px 20px;
+  display: inline-block;
+  background-color: #000;
+  height: 30px;
+  border-radius: 15px;
+  padding: 8px 20px;
 }
-.breadcrumb .mbxlogo {
-  position: absolute;
-  left: 0px;
-  top: 0;
-  width: 15px;
-  height: 15px;
+.breadcrumb /deep/ .el-breadcrumb__inner {
+  color: #fff;
+}
+.breadcrumb /deep/ .el-breadcrumb__item:last-child .el-breadcrumb__inner,
+.breadcrumb .el-breadcrumb__item:last-child .el-breadcrumb__inner a,
+.breadcrumb .el-breadcrumb__item:last-child .el-breadcrumb__inner a:hover,
+.breadcrumb .el-breadcrumb__item:last-child .el-breadcrumb__inner:hover {
+  color: #fff;
 }
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;

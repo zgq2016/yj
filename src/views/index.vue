@@ -1,17 +1,19 @@
 <template>
   <div class="index">
     <el-container>
-      <el-header style="border-bottom:1px solid #eee;">
+      <el-header style="padding:0;">
         <el-menu
           :router="true"
           :default-active="activeIndex"
           class="el-menu-demo w"
           mode="horizontal"
+          background-color="#000"
+          text-color="#fff"
+          active-text-color="red"
+          style="display: flex;justify-content: space-around;"
         >
           <el-menu-item>
-            <div class="logo">
-              <img src="../assets/logo.jpg" alt />
-            </div>
+            <div class="logo">AAA</div>
           </el-menu-item>
           <el-menu-item index="/homepage" v-if="power.indexOf('Z')!=-1">首页</el-menu-item>
           <el-submenu index="2" style="width:100px;overflow:hidden" v-if="power.indexOf('A')!=-1">
@@ -136,22 +138,21 @@ export default {
 
 <style lang="less" scoped>
 .index {
-  .logo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    img {
-      width: 40px;
-      height: 40px;
-      margin-right: 10px;
-    }
-    .logoName {
-      font-size: 20px;
-      color: #000;
-    }
+  /deep/ .el-menu--horizontal > .el-menu-item {
+    border-bottom: none;
   }
-  // /deep/.el-submenu__title{
-  //   width: 120px;
-  // }
+  /deep/ .el-menu--horizontal > .el-menu-item.is-active {
+    border-bottom: none;
+  }
+  /deep/ .el-submenu__title {
+    border-bottom-color: #000 !important;
+  }
+  .el-menu-demo {
+    overflow: hidden;
+    border-radius: 15px;
+  }
+  .logo{
+    font-size: 20px;
+  }
 }
 </style>

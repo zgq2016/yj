@@ -2,7 +2,6 @@
   <div class="designFile" v-if="power.indexOf('E3000100')!=-1">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
-      <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
       <el-breadcrumb-item>档案库</el-breadcrumb-item>
       <el-breadcrumb-item v-if="TL===1" :to="{ path: '/productionOrders' }">生产下单</el-breadcrumb-item>
       <el-breadcrumb-item>款式档案</el-breadcrumb-item>
@@ -14,16 +13,16 @@
         class="demo-form-inline"
         style="position: relative;"
       >
-        <el-form-item label="款号">
+        <el-form-item>
           <el-input v-model="formInline.styleno" placeholder="款号"></el-input>
         </el-form-item>
-        <el-form-item label="年份">
-          <el-select v-model="formInline.year" clearable placeholder="年份" style="width:120px">
+        <el-form-item>
+          <el-select v-model="formInline.year" clearable placeholder="年份">
             <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="季节">
-          <el-select v-model="formInline.season" clearable placeholder="季节" style="width:120px">
+        <el-form-item>
+          <el-select v-model="formInline.season" clearable placeholder="季节">
             <el-option
               v-for="item in seasons"
               :key="item.id"
@@ -32,19 +31,13 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="设计师">
-          <el-select
-            v-model="stylist"
-            placeholder="设计师"
-            clearable
-            @change="handleUser_id($event)"
-            style="width:120px"
-          >
+        <el-form-item>
+          <el-select v-model="stylist" placeholder="设计师" clearable @change="handleUser_id($event)">
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="类别">
-          <el-select v-model="formInline.style_type" clearable placeholder="类别" style="width:120px">
+        <el-form-item>
+          <el-select v-model="formInline.style_type" clearable placeholder="类别">
             <el-option
               v-for="item in categorys"
               :key="item.id"
@@ -55,7 +48,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">查询</el-button>
+          <el-button icon="el-icon-search" size="mini" circle class="search_button"></el-button>
         </el-form-item>
       </el-form>
       <div class="table">
@@ -126,7 +119,7 @@ import {
   getProjectStyleList,
   getWestList,
   getStyleList,
-  produceOrderCreateAdd
+  produceOrderCreateAdd,
 } from "@/api/researchDevelopment";
 import { produceLotAdd } from "@/api/production";
 export default {
@@ -139,7 +132,7 @@ export default {
         year: "",
         season: "",
         user_id: "",
-        style_type: ""
+        style_type: "",
       },
       years: [],
       seasons: [],
@@ -158,7 +151,7 @@ export default {
       number: 123,
       count: 0,
       tableData: [],
-      ids: []
+      ids: [],
     };
   },
   methods: {
@@ -168,11 +161,11 @@ export default {
       if (this.TL === 1) {
         this.$router.push({
           // path: "/development?id=" + row.id
-          path: `/development?id=${row.id}&TL=${20}`
+          path: `/development?id=${row.id}&TL=${20}`,
         });
       } else {
         this.$router.push({
-          path: `/development?id=${row.id}&TL=${21}`
+          path: `/development?id=${row.id}&TL=${21}`,
         });
       }
     },
@@ -212,7 +205,7 @@ export default {
       let res = await getStyleList({
         page: this.page,
         page_size: this.page_size,
-        ...obj
+        ...obj,
       });
       console.log(res);
       this.count = res.data.count;
@@ -258,34 +251,34 @@ export default {
       this.$confirm("提交已选下单, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           // console.log(this.ids);
           let res = await produceOrderCreateAdd({
-            style_id_data: this.ids
+            style_id_data: this.ids,
           });
           let sid = [];
           this.ids.map((v, i) => {
             sid.push({ style_id: v.id });
           });
           let res1 = await produceLotAdd({
-            style_id_data: sid
+            style_id_data: sid,
           });
           console.log(res1);
           this.$router.push({ path: "/productionOrders" });
           this.$message({
             type: "success",
-            message: "提交成功!"
+            message: "提交成功!",
           });
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "提交失败"
+            message: "提交失败",
           });
         });
-    }
+    },
   },
   mounted() {
     this.getYear();
@@ -300,8 +293,8 @@ export default {
   watch: {
     $route() {
       this.init();
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -309,12 +302,47 @@ export default {
 .designFile {
   .main {
     margin: 20px;
+
     .table {
+      // margin-top: -40px;
       .img {
-        width: 40px;
-        height: 40px;
+        width: 60px;
+        height: 60px;
+        border-radius: 5px;
       }
     }
+  }
+  /deep/ .el-input__inner {
+    width: 100px;
+    height: 30px;
+    background-color: #f2f2f2;
+    border-radius: 15px;
+    border: none;
+    font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
+      \\5b8b\4f53, sans-serif;
+  }
+  // /deep/ .el-icon-arrow-up:before {
+  //   margin-right: -40px;
+  // }
+  .search_button {
+    background-color: #aaa;
+  }
+  /deep/ .el-icon-search {
+    color: #fff;
+  }
+  .el-table th,
+  .el-table tr {
+    background-color: #fff;
+    height: 72px;
+  }
+  /deep/ .el-table th > .cell {
+    font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
+      \\5b8b\4f53, sans-serif;
+  }
+  /deep/ .el-table tr {
+    height: 10px;
+    
+    
   }
 }
 </style>
