@@ -50,7 +50,12 @@
             </el-select>
           </el-form-item>
           <el-form-item label="类别">
-            <el-select v-model="formInline.style_type" clearable placeholder="类别" style="width:120px">
+            <el-select
+              v-model="formInline.style_type"
+              clearable
+              placeholder="类别"
+              style="width:120px"
+            >
               <el-option
                 v-for="item in categorys"
                 :key="item.id"
@@ -77,27 +82,52 @@
       </div>
       <div class="table">
         <el-table ref="singleTable" :data="tableData" highlight-current-row style="width: 100%">
-          <el-table-column align="center" label="序号" type="index" width="50"></el-table-column>
-          <el-table-column align="center" label="图片" width="110">
+          <el-table-column label="序号" type="index" width="50"></el-table-column>
+          <el-table-column label="图片" width="110">
             <template slot-scope="scope" property="style_pic_url">
               <img style="float:left" :src="scope.row.style_pic_url" class="img" alt />
               <img style="float:right" :src="scope.row.style_color_pic_url" class="img" alt />
             </template>
           </el-table-column>
-          <el-table-column align="center" property="stylename" label="名称"></el-table-column>
-          <el-table-column align="center" property="styleno" label="款号"></el-table-column>
-          <el-table-column align="center" width="90" property="style_color" label="颜色"></el-table-column>
-          <el-table-column align="center" property="style_type" label="品类"></el-table-column>
-          <el-table-column align="center" property="year" label="年份"></el-table-column>
-          <el-table-column align="center" property="season" label="季节"></el-table-column>
-          <el-table-column align="center" property="stylist" label="设计师"></el-table-column>
-          <el-table-column align="center" label="操作">
+          <el-table-column property="stylename" label="名称"></el-table-column>
+          <el-table-column property="styleno" label="款号"></el-table-column>
+          <el-table-column property="style_color" label="颜色"></el-table-column>
+          <el-table-column property="style_type" label="品类"></el-table-column>
+          <el-table-column property="year" label="年份"></el-table-column>
+          <el-table-column property="season" label="季节"></el-table-column>
+          <el-table-column property="stylist" label="设计师"></el-table-column>
+          <el-table-column property="pattern" label="状态"></el-table-column>
+          <el-table-column label="操作" width="400">
             <template slot-scope="scope">
-              <el-button
-                class="elbtn"
-                size="mini"
-                @click="handleEdit(scope.$index, scope.row)"
-              >{{"查看"}}</el-button>
+              <div style="display: flex;align-items: center;">
+                <el-button
+                  class="elbtn"
+                  size="mini"
+                  v-if="scope.row.pattern_status==='2'||scope.row.pattern_status==='4'"
+                  @click="pattern_apply(scope.$index, scope.row)"
+                >提交审核</el-button>
+                <!-- 2 4 -->
+                <el-button
+                  class="elbtn"
+                  size="mini"
+                  v-if="scope.row.pattern_status==='3'"
+                  @click="cancel_pattern_apply(scope.$index, scope.row)"
+                >撤回审核</el-button>
+                <el-button
+                  class="elbtn"
+                  size="mini"
+                  @click="pattern_agree1(scope.$index, scope.row,1)"
+                  v-if="scope.row.pattern_status==='3'"
+                >通过</el-button>
+                <el-button
+                  class="elbtn"
+                  size="mini"
+                  @click="pattern_agree2(scope.$index, scope.row,0)"
+                  v-if="scope.row.pattern_status==='3'"
+                >不通过</el-button>
+                <!-- 3 -->
+                <el-button class="elbtn" size="mini" @click="handleEdit(scope.$index, scope.row)">查看</el-button>
+              </div>
             </template>
           </el-table-column>
         </el-table>
@@ -125,7 +155,10 @@ import {
   getWestList,
   getStylistList,
   getCategoryList,
-  getStyleList
+  getStyleList,
+  patternApply,
+  cancelPatternApply,
+  patternAgree,
 } from "@/api/researchDevelopment";
 export default {
   data() {
@@ -136,7 +169,7 @@ export default {
         year: "",
         season: "",
         user_id: "",
-        style_type: ""
+        style_type: "",
       },
       user_id: "",
       tableData: [],
@@ -154,11 +187,31 @@ export default {
       states: [
         { name: "未开始", id: 0 },
         { name: "开始画图", id: 1 },
-        { name: "完成上传", id: 2 }
-      ]
+        { name: "完成上传", id: 2 },
+      ],
     };
   },
   methods: {
+    async pattern_apply(index, row) {
+      let res = await patternApply({ style_id: row.id });
+      console.log(res);
+      this.init();
+    },
+    async pattern_agree1(index, row, e) {
+      let res = await patternAgree({ style_id: row.id, agree: e });
+      console.log(res);
+      this.init();
+    },
+    async pattern_agree2(index, row, e) {
+      let res = await patternAgree({ style_id: row.id, agree: e });
+      console.log(res);
+      this.init();
+    },
+    async cancel_pattern_apply(index, row) {
+      let res = await cancelPatternApply({ style_id: row.id });
+      console.log(res);
+      this.init();
+    },
     onSubmit() {
       this.init(this.formInline);
     },
@@ -199,14 +252,37 @@ export default {
       let res = await getStyleList({
         page: this.page,
         page_size: this.page_size,
-        ...obj
+        ...obj,
       });
       console.log(res);
       this.count = res.data.count;
       let { data } = res.data;
       this.tableData = data;
       // console.log(this.tableData);
+      /* 
+      纸样状态 pattern_status: 0: 等待采购  1:等待纸样打版 2.纸样已上传 3 纸样审核中 4.取消审核 5 审阅不通过  6等待制版 */
       this.tableData.map((v, i) => {
+        if (v.pattern_status == "0") {
+          v.pattern = "等待采购";
+        }
+        if (v.pattern_status == "1") {
+          v.pattern = "等待纸样打版";
+        }
+        if (v.pattern_status == "2") {
+          v.pattern = "纸样已上传";
+        }
+        if (v.pattern_status == "3") {
+          v.pattern = "纸样审核中";
+        }
+        if (v.pattern_status == "4") {
+          v.pattern = "取消审核";
+        }
+        if (v.pattern_status == "5") {
+          v.pattern = "审阅不通过";
+        }
+        if (v.pattern_status == "6") {
+          v.pattern = "等待制版";
+        }
         this.stylists.map((j, k) => {
           if (v.user_id == j.id) {
             v.stylist = j.name;
@@ -221,7 +297,7 @@ export default {
     handleCurrentChange(val) {
       this.page = val;
       this.init(this.formInline);
-    }
+    },
   },
   mounted() {
     this.getYear();
@@ -231,8 +307,7 @@ export default {
     this.getWest();
     this.init();
     this.power = localStorage.getItem("power");
-    console.log(this.power);
-  }
+  },
 };
 </script>
 <style lang="less" scoped>

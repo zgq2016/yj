@@ -156,8 +156,8 @@
               <el-form-item label="预计回料时间" prop="finishTime">
                 <el-date-picker v-model="form.finishTime" type="date" placeholder="选择日期"></el-date-picker>
               </el-form-item>
-              <el-form-item prop="storehouse_name" label="仓库:">
-                <el-select v-model="form.storehouse_id"  placeholder="请选择仓库类型">
+              <el-form-item prop="storehouse_id" label="仓库:">
+                <el-select v-model="form.storehouse_id" placeholder="请选择仓库类型">
                   <el-option
                     v-for="item in ware"
                     :key="item.id"
@@ -305,7 +305,7 @@ export default {
           { required: true, message: "请输入全部金额", trigger: "blur" },
           { type: "number", message: "金额必须为数字值" },
         ],
-        storehouse_name: [
+        storehouse_id: [
           { required: true, message: "请选择仓库类型", trigger: "change" },
         ],
       },
@@ -365,8 +365,7 @@ export default {
             purchasePrice: this.form.purchasePrice,
             remark: this.form.remark,
             uploadDocuments: this.form.picurl,
-            storehouse_id:this.form.storehouse_id
-            
+            storehouse_id: this.form.storehouse_id,
           });
           console.log(res);
           this.$router.push({
@@ -389,7 +388,7 @@ export default {
             purchasePrice: this.form.purchasePrice,
             remark: this.form.remark,
             uploadDocuments: this.form.picurl,
-            storehouse_id:this.form.storehouse_id
+            storehouse_id: this.form.storehouse_id,
           });
           console.log(res);
           this.$router.push({
@@ -410,8 +409,8 @@ export default {
       let res = await storehouseList({
         page: this.pageIndex2,
         page_size: this.pageSize2,
-        state:1,
-        storehouse_type:0
+        state: 1,
+        storehouse_type: 1,
       });
       let { data } = res.data;
       this.ware = data;

@@ -420,5 +420,62 @@ export const goodsStylePriceAdd = (data) => {
   });
 };
 
+export const designApply = (data) => {
+  return axios({
+    url: "?g=design_apply",
+    method: "post",
+    data: data,
+  });
+};
+export const cancelDesignApply = (data) => {
+  return axios({
+    url: "?g=cancel_design_apply",
+    method: "post",
+    data: data,
+  });
+};
+export const patternApply = (data) => {
+  return axios({
+    url: "?g=pattern_apply",
+    method: "post",
+    data: data,
+  });
+};
+export const cancelPatternApply = (data) => {
+  return axios({
+    url: "?g=cancel_pattern_apply",
+    method: "post",
+    data: data,
+  });
+};
+export const patternAgree = (data) => {
+  return axios({
+    url: "?g=pattern_agree",
+    method: "post",
+    data: data,
+  });
+};
+export const sampleApply = (data) => {
+  return axios({
+    url: "?g=sample_apply",
+    method: "post",
+    data: data,
+  });
+};
+export const cancelSampleApply = (data) => {
+  return axios({
+    url: "?g=cancel_sample_apply",
+    method: "post",
+    data: data,
+  });
+};
+export const sampleAgree = (data) => {
+  return axios({
+    url: "?g=sample_agree",
+    method: "post",
+    data: data,
+  });
+};
+
 // contacts、phone
 // bank、bankid、name

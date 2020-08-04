@@ -19,8 +19,34 @@
       </el-dialog>
       <el-button size="mini" round @click="handleKeep">保存</el-button>
     </div>
-    <div v-if="designRemark===1" style="display: flex;justify-content: space-between;">
+    <div v-if="designRemark===1">
+      <div style="display:flex;align-items: center;">
+        <el-button
+          style
+          type="primary"
+          @click="design_apply"
+          v-if="obj.design_status==='0'||obj.design_status==='2'||obj.design_status==='3'"
+        >提交审核</el-button>
+        <el-button
+          style
+          type="primary"
+          v-if="obj.design_status==='1'"
+          @click="cancel_design_apply"
+        >取消审核</el-button>
+        <!-- ,0:添加款式,1:设计审核中,2.撤回审核 3设计不通过,4设计通过 -->
+        <span v-if="obj.design_status==='0'">添加款式</span>
+        <span v-if="obj.design_status==='1'">设计审核中</span>
+        <span v-if="obj.design_status==='2'">撤回审核</span>
+        <span v-if="obj.design_status==='3'">设计审核不通过</span>
+        <span v-if="obj.design_status==='4'">设计审核通过</span>
+      </div>
       <div style="width:100%;">
+        <span
+          class="el-icon-edit-outline"
+          style="font-size: 40px;color: #ffa500;cursor: pointer;width:40px;height:40px;margin-left:30px;"
+          @click="handleKeepEdit"
+          v-if="power.indexOf('A4000100')!=-1"
+        ></span>
         <div style="margin:30px 0">
           <div style="font-size:16px;margin: 0px 20px 30px 0;">备注</div>
           <div
@@ -34,12 +60,6 @@
           </div>
         </div>
       </div>
-      <span
-        class="el-icon-edit-outline"
-        style="font-size: 40px;color: #ffa500;cursor: pointer;width:40px;height:40px"
-        @click="handleKeepEdit"
-        v-if="power.indexOf('A4000100')!=-1"
-      ></span>
     </div>
   </div>
 </template>
@@ -49,7 +69,9 @@ import {
   getStyle,
   styleEdit,
   styleDesignideaPicAdd,
-  styleDesignideaPicDel
+  styleDesignideaPicDel,
+  designApply,
+  cancelDesignApply,
 } from "@/api/researchDevelopment";
 export default {
   data() {
@@ -59,10 +81,20 @@ export default {
       designRemark: 1,
       dialogImageUrl: "",
       dialogVisible: false,
-      img_list: [] //图片数据
+      img_list: [], //图片数据
     };
   },
   methods: {
+    async design_apply() {
+      let res = await designApply({ style_id: this.$route.query.id - 0 });
+      console.log(res);
+      this.init();
+    },
+    async cancel_design_apply() {
+      let res = await cancelDesignApply({ style_id: this.$route.query.id - 0 });
+      console.log(res);
+      this.init();
+    },
     handleKeepEdit() {
       this.designRemark = 0;
     },
@@ -95,10 +127,10 @@ export default {
       let { id } = this.$route.query;
       let res = await getStyle({ id });
       this.obj = res.data.data;
-      this.img_list = res.data.data.designidea_pic_data.map(v => {
+      this.img_list = res.data.data.designidea_pic_data.map((v) => {
         return { url: v.designidea_pic_url, id: v.id };
       });
-    }
+    },
   },
   mounted() {
     // console.log(this.$route.query);
@@ -108,8 +140,7 @@ export default {
     }
     this.init();
     this.power = localStorage.getItem("power");
-    console.log(this.power);
-  }
+  },
 };
 </script>
 
