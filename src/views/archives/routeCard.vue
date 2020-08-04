@@ -309,6 +309,7 @@ export default {
     word-wrap: break-word;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
+    
   }
 }
 </style>
