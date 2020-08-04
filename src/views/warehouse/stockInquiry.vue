@@ -7,519 +7,104 @@
       <el-breadcrumb-item>产品入库</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main">
-      <!-- 左边 -->
-      <div class="left">
-        <div class="left_nav">
-          <ul>
-            <li
-              v-for="(item,index) in valueElement"
-              :key="index"
-              :class="active===index?'active':''"
-              @click.stop="changed(item,index)"
-            >{{item.name}}</li>
-          </ul>
-        </div>
-        <div class="left_submit">
-          <el-form :model="ruleForm" ref="ruleForm" class="demo-ruleForm">
-            <el-form-item label="日期:">
-              <el-date-picker
-                v-model="ruleForm.ctime"
-                size="mini"
-                type="daterange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                format="yyyy-MM-dd"
-                value-format="yyyy-MM-dd"
-              ></el-date-picker>
-            </el-form-item>
-            <el-form-item label="厂商:">
-              <el-select size="mini" clearable v-model="ruleForm.factory_name" placeholder="请选择厂商">
-                <el-option
-                  v-for="item in factorys"
-                  :key="item.id"
-                  :label="item.factory_name"
-                  :value="item.id"
-                ></el-option>
-                <el-pagination
-                  small
-                  layout="prev, pager, next"
-                  @size-change="handleSize1"
-                  @current-change="handleCurrent1"
-                  :total="total1"
-                ></el-pagination>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="单号:">
-              <el-input size="mini" v-model="ruleForm.no"></el-input>
-            </el-form-item>
-            <el-form-item class="sub">
-              <el-button size="mini" type="primary" @click="onSubmit">查询</el-button>
-              <el-button size="mini" type="primary" v-if="power.indexOf('C2000900')!=-1">批量打印</el-button>
-            </el-form-item>
-          </el-form>
-        </div>
-        <!-- 表格 -->
-        <div class="left_table">
-          <el-table
-            :data="tableData"
-            tooltip-effect="dark"
-            size="mini"
-            stripe
-            :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-            @cell-click="cellClick"
-            width="100%"
-            @selection-change="handleSelectionChange"
-          >
-            <el-table-column align="center" type="selection" width="30"></el-table-column>
-            <el-table-column align="center" prop="state_name" label="状态" width="70"></el-table-column>
-            <el-table-column align="center" label="日期" width="90">
-              <template slot-scope="scope">{{ scope.row.ctime }}</template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="factory_name"
-              width="85"
-              label="厂商名称"
-              show-overflow-tooltip
-            ></el-table-column>
-          </el-table>
-          <!-- 分页 -->
-          <el-pagination
-            class="pagination"
-            small
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="pageIndex"
-            :page-sizes="[10, 20, 30, 40]"
-            :page-size="pageSize"
-            layout="prev, pager, next"
-            :total="total"
-          ></el-pagination>
-        </div>
-      </div>
-      <!-- 右边边 -->
-      <div class="right">
-        <div class="right_header">
-          <div class="rh_left">
-            <h4>入库单-{{form.no}}-{{'zaan'}}</h4>
-          </div>
-          <div class="rh_right">
-            <el-button size="mini" type="primary" v-if="power.indexOf('C2000200')!=-1">扫码</el-button>
-            <el-button size="mini" type="primary" v-if="power.indexOf('C2000300')!=-1">导入</el-button>
-            <el-button
-              size="mini"
-              @click="addCreateWare"
-              type="primary"
-              v-if="power.indexOf('C2000400')!=-1"
-            >新增入库单</el-button>
-          </div>
-        </div>
-        <hr style="border:1px dashed #ccc;margin:0 10px" />
-        <div class="right_main">
-          <div class="right_form">
-            <el-form :model="form" :rules="rules" ref="form">
-              <el-form-item style="overflow: hidden;width:100%;">
-                <div style="float:left;padding:10px 0 0 15px;">
-                  尚欠厂商款:
-                  <em style="color:red;">&yen;{{'0.00'}}</em>
-                </div>
-                <div class="cssa" style="float:right;padding:10px 15px 0 0;width:210px;">
-                  <el-steps :space="110" align-center :active="actionsLenght" finish-status="wait">
-                    <el-step icon="el-icon-success" title="草稿"></el-step>
-                    <el-step icon="el-icon-success" title="已入库"></el-step>
-                    <el-step icon="el-icon-success" v-if="form.state==4" title="已撤销"></el-step>
-                  </el-steps>
-                </div>
-              </el-form-item>
-
-              <!-- prop="factory_name" -->
-              <el-form-item style="float:left;width:30%;margin-left:3%;" label="厂商:">
-                <el-select
-                  v-if="vh1"
-                  size="mini"
-                  clearable
-                  v-model="form.factory_name"
-                  placeholder="请选择厂商"
-                >
-                  <el-option
-                    v-for="item in factorys"
-                    :key="item.id"
-                    :label="item.factory_name"
-                    :value="item.id"
-                    :disabled="item.factory_name=='全部'? true:false"
-                  ></el-option>
-                  <el-pagination
-                    small
-                    layout="prev, pager, next"
-                    @size-change="handleSize1"
-                    @current-change="handleCurrent1"
-                    :total="total1"
-                  ></el-pagination>
-                </el-select>
-                <span v-if="!vh1">{{form.factory_name}}</span>
-              </el-form-item>
-              <!-- prop="storehouse_name" -->
-              <el-form-item style="float:left;width:30%;margin-left:2%;" label="仓库:">
-                <el-select
-                  v-if="vh1"
-                  size="mini"
-                  v-model="form.storehouse_name"
-                  placeholder="请选择仓库"
-                  clearable
-                >
-                  <el-option
-                    v-for="item in ware"
-                    :key="item.id"
-                    :label="item.storehouse_name"
-                    :value="item.id"
-                  ></el-option>
-                  <el-pagination
-                    small
-                    layout="prev, pager, next"
-                    @size-change="handleSize"
-                    @current-change="handleCurrent"
-                    :total="total2"
-                  ></el-pagination>
-                </el-select>
-                <span v-if="!vh1">{{form.storehouse_name}}</span>
-              </el-form-item>
-              <!-- prop="ctime" -->
-              <el-form-item style="float:left;width:30%;margin-left:1%;" label="日期:">
-                <el-date-picker
-                  type="date"
-                  size="mini"
-                  placeholder="选择日期"
-                  v-model="form.ctime"
-                  style="width: 75%;"
-                  v-if="vh1"
-                  format="yyyy-MM-dd"
-                  value-format="yyyy-MM-dd"
-                ></el-date-picker>
-                <span v-if="!vh1">{{form.ctime}}</span>
-              </el-form-item>
-              <el-form-item style="float:left;width:30%;margin-left:3%;" label="结算账户:">
-                <el-select
-                  v-if="vh1"
-                  size="mini"
-                  clearable
-                  v-model="form.account_name"
-                  placeholder="请选择结账账户"
-                >
-                  <el-option
-                    v-for="item in settlement"
-                    :key="item.id"
-                    :label="item.account_name"
-                    :value="item.id"
-                  ></el-option>
-                </el-select>
-                <span v-if="!vh1">{{form.account_name}}</span>
-              </el-form-item>
-              <el-form-item style="float:left;width:26%;margin-left:2%;" label="实付金额:">
-                <el-input
-                  size="mini"
-                  placeholder="请输入实付金额"
-                  style="width: 60%;"
-                  v-model="form.pay_price"
-                  v-if="vh1"
-                ></el-input>
-                <span v-if="!vh1">{{form.pay_price}}</span>
-              </el-form-item>
-
-              <el-form-item style="float:left;width:35%;margin-left:1%;" label="备注:" prop="desc">
-                <el-input
-                  size="mini"
-                  v-if="vh1"
-                  style="width:75%;"
-                  type="textarea"
-                  v-model="form.remarks"
-                ></el-input>
-                <span v-if="!vh1">{{form.remarks}}</span>
-              </el-form-item>
-            </el-form>
-          </div>
-          <!-- 草稿 -->
-
-          <div class="right_table" v-if="!vh5">
-            <el-table
-              :data="weretable"
-              show-summary
-              :summary-method="getSummaries"
-              row-key="id"
-              size="mini"
-              style="cursor: pointer;"
-              @cell-click="cellClick1"
-              :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-            >
-              <el-table-column type="index" width="35"></el-table-column>
-              <el-table-column align="center" width="60" label="操作">
-                <template slot-scope="scope" v-if="!vh3">
-                  <div
-                    style="width:20px;float:left"
-                    class="el-icon-plus btn"
-                    @click="handleAdd(scope.$index, scope.row)"
-                  ></div>
-                  <div
-                    style="width:20px;float:right"
-                    class="el-icon-delete btn"
-                    @click="handleDelete(scope.$index, scope.row)"
-                  ></div>
-                </template>
-              </el-table-column>
-              <el-table-column prop="commodity" width="90" align="center" label="商品">
-                <template slot-scope="scope" v-if="!vh5">
-                  <el-select
-                    v-model="scope.row.commodity"
-                    filterable
-                    v-if="scope.row.showHidden1"
-                    @blur="bblur(scope.row,scope.column)"
-                    @visible-change="visibleChange($event,scope.row)"
-                    @change="handleSelect($event,scope.column, scope.row,scope.$index)"
-                    placeholder="请选择"
-                    size="mini"
-                  >
-                    <el-option
-                      v-for="item in shopppings"
-                      :key="item.value"
-                      :label="item.stylename+' '+item.styleno"
-                      :value="item.id"
-                    ></el-option>
-                    <el-pagination
-                      small
-                      layout="prev, pager, next"
-                      @size-change="handleSize2"
-                      @current-change="handleCurrent2"
-                      :total="total3"
-                    ></el-pagination>
-                  </el-select>
-                  <span v-if="!scope.row.showHidden1">{{scope.row.commodity|| "点击选择"}}</span>
-                </template>
-                <!-- <template v-if="!scope.row.showHidden1 && !vh5" slot-scope="scope">
-                  <span>{{scope.row.commodity || "点击选择"}}</span>
-                </template>-->
-              </el-table-column>
-              <el-table-column prop="item_no" align="center" width="80" sum-text label="货号"></el-table-column>
-              <el-table-column prop="bar_code" align="center" width="80" label="条码"></el-table-column>
-              <el-table-column prop="color" width="70" align="center" label="颜色">
-                <template slot-scope="scope" v-if="!vh5">
-                  <!-- :disabled="scope.row.commodity==''? true : false" -->
-                  <el-autocomplete
-                    class="inline-input"
-                    size="mini"
-                    v-if="scope.row.showHidden2"
-                    :title="scope.row.color"
-                    v-model="scope.row.color"
-                    :fetch-suggestions="querySearch1"
-                    @focus="focuss($event,scope.column, scope.row,scope.$index)"
-                    @blur="bblur(scope.row,scope.column)"
-                    @select="handleSelect($event,scope.column, scope.row,scope.$index)"
-                  ></el-autocomplete>
-                  <span v-else>{{scope.row.color}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="size" width="60" align="center" label="尺码">
-                <template slot-scope="scope" v-if="!vh5">
-                  <el-autocomplete
-                    class="inline-input"
-                    size="mini"
-                    v-if="scope.row.showHidden3"
-                    :title="scope.row.size"
-                    v-model="scope.row.size"
-                    @focus="focuss($event,scope.column, scope.row,scope.$index)"
-                    :fetch-suggestions="querySearch2"
-                    @blur="bblur(scope.row,scope.column)"
-                    @select="handleSelect($event,scope.column, scope.row,scope.$index)"
-                  ></el-autocomplete>
-                  <span v-else>{{scope.row.size}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="monad" width="50" align="center" label="单位"></el-table-column>
-              <el-table-column prop="quantity" width="60" align="center" label="数量">
-                <template slot-scope="scope" v-if="!vh5">
-                  <input
-                    v-model="scope.row.quantity"
-                    @blur="bblur(scope.row,scope.column,scope.row.quantity)"
-                    v-if="scope.row.showHidden4"
-                    style="border:1px solid #ccc;width:30px;"
-                  />
-                  <span v-else>{{scope.row.quantity}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="univalence" align="center" label="单价">
-                <template slot-scope="scope" v-if="!vh5">
-                  <input
-                    v-model="scope.row.univalence"
-                    @blur="bblur(scope.row,scope.column,scope.row.univalence)"
-                    v-if="scope.row.showHidden5"
-                    style="border:1px solid #ccc;width:40px;"
-                  />
-                  <span v-else>{{scope.row.univalence}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="discount" align="center" width="70" label="折扣(%)">
-                <template slot-scope="scope" v-if="!vh5">
-                  <input
-                    v-model="scope.row.discount"
-                    @blur="bblur(scope.row,scope.column,scope.row.discount)"
-                    v-if="scope.row.showHidden6"
-                    style="border:1px solid #ccc;width:30px;"
-                  />
-                  <span v-else>{{scope.row.discount}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="discountPrice" align="center" label="折后价">
-                <template slot-scope="scope" v-if="!vh5">
-                  <input
-                    v-model="scope.row.discountPrice"
-                    @blur="bblur(scope.row,scope.column,scope.row.discountPrice)"
-                    v-if="scope.row.showHidden7"
-                    style="border:1px solid #ccc;width:40px;"
-                  />
-                  <span v-else>{{scope.row.discountPrice}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="sum" align="center" label="金额"></el-table-column>
-              <el-table-column prop="sumed" align="center" label="折后金额"></el-table-column>
-              <el-table-column prop="remark" width="100" align="center" label="备注">
-                <template slot-scope="scope" v-if="!vh5">
-                  <el-input
-                    type="text"
-                    maxlength="20"
-                    size="mini"
-                    placeholder="最多20字"
-                    v-model="scope.row.remark"
-                    @blur="bblur(scope.row,scope.column,scope.row.remark)"
-                    v-if="scope.row.showHidden8"
-                  ></el-input>
-                  <span v-else>{{scope.row.remark}}</span>
-                </template>
-              </el-table-column>
-            </el-table>
-          </div>
-          <!-- 已入库/已撤销 -->
-          <div class="right_table" v-if="vh5">
-            <el-table
-              :data="weretable1"
-              show-summary
-              :summary-method="getSummaries"
-              size="mini"
-              style="cursor: pointer;"
-              :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-            >
-              <el-table-column type="index" width="35"></el-table-column>
-              <el-table-column prop="commodity" width="90" align="center" label="商品"></el-table-column>
-              <el-table-column property="item_no" align="center" width="80" label="货号"></el-table-column>
-              <el-table-column prop="bar_code" align="center" width="80" label="条码"></el-table-column>
-              <el-table-column prop="color" width="70" align="center" label="颜色"></el-table-column>
-              <el-table-column prop="size" width="70" align="center" label="尺码"></el-table-column>
-              <el-table-column prop="monad" width="50" align="center" label="单位"></el-table-column>
-              <el-table-column prop="quantity" width="60" align="center" label="数量"></el-table-column>
-              <el-table-column prop="univalence" width="60" align="center" label="单价"></el-table-column>
-              <el-table-column prop="discount" align="center" width="65" label="折扣(%)"></el-table-column>
-              <el-table-column prop="discountPrice" align="center" label="折后价"></el-table-column>
-              <el-table-column prop="sum" width="60" align="center" label="金额"></el-table-column>
-              <el-table-column prop="sumed" width="70" align="center" label="折后金额"></el-table-column>
-              <el-table-column prop="remark" width="90" align="center" label="备注"></el-table-column>
-            </el-table>
-          </div>
-        </div>
-        <div class="right_footer">
-          <!-- style="position:realtive" -->
-          <el-form :model="ruleForm" inline ref="ruleForm" class="demo-ruleForm">
-            <div style="position: absolute;left:5px;">
-              <el-form-item label="附图:">
-                <el-upload
-                  class="upload-demo"
-                  action="https://yj.ppp-pay.top/uploadpic.php"
-                  :on-preview="handlePreview"
-                  :on-remove="handleRemove"
-                  :file-list="fileList"
-                  :on-success="successFile"
-                  list-type="picture"
-                  style="float:left;"
-                >
-                  <el-button
-                    size="mini"
-                    v-if="vh && form.state!=1&&form.state!=4"
-                    type="primary"
-                  >点击上传</el-button>
-                </el-upload>
-              </el-form-item>
-            </div>
-            <div v-if="vh5" style="position: absolute;width:190px;right:10px;">
-              <el-form-item label-width="80px" label="费用金额:">
-                <span>&yen;{{total_price}}</span>
-              </el-form-item>
-
-              <el-form-item label-width="80px" label="总合计:">
-                <span style="color:red;font-size:16px;">&yen;{{total_price}}</span>
-              </el-form-item>
-            </div>
-            <div v-if="!vh5" style="position: absolute;width:250px;right:10px;">
-              <el-form-item label-width="80px" label="费用金额:">
-                <el-input size="mini" v-model="total_price" placeholder="请输入金额"></el-input>
-              </el-form-item>
-
-              <el-form-item label-width="80px" label="总合计:">
-                <span>&yen;{{total_price}}</span>
-              </el-form-item>
-            </div>
-            <div style="position: absolute;bottom:5px;left:32%;">
-              <el-form-item v-if="!vh4">
-                <el-button
-                  size="mini"
-                  v-if="!vh3&&power.indexOf('C2000500')!=-1"
-                  type="primary"
-                  @click="sketch(0)"
-                >草稿</el-button>
-                <el-button
-                  size="mini"
-                  v-if="!vh3&&power.indexOf('C2000600')!=-1"
-                  type="primary"
-                  @click="sketch(1)"
-                >入库</el-button>
-                <el-button
-                  size="mini"
-                  v-if="vh2 && !vh3&&power.indexOf('C20001000')!=-1"
-                  @click="delStock"
-                  type="primary"
-                >删除</el-button>
-                <el-button size="mini" v-if="vh3" @click="backout" type="primary">撤销</el-button>
-              </el-form-item>
-            </div>
-          </el-form>
-        </div>
-      </div>
-    </div>
-    <!-- 填尺码 -->
-    <div v-if="this.weretable.length > 0">
-      <el-dialog
-        :title="this.weretable[indexk].commodity+'  '+this.weretable[indexk].item_no"
-        :visible.sync="dialogFormVisible"
-      >
-        <el-form :model="form1">
-          <div>
-            <div class="table_nav">
-              <span></span>
-              <span v-for="(item_t,index_t) in sizes" :key="index_t">{{item_t.value}}</span>
-            </div>
-            <br />
-            <div v-for="(item_c,index_c) in colors" :key="index_c" class="table_list">
-              <span>{{item_c.value}}</span>
-              <el-input
-                size="mini"
-                v-for="(item_t,index_t) in sizes"
-                v-model="item_c.quantitys[index_t]"
-                :key="index_t"
-              ></el-input>
-            </div>
-          </div>
+      <div class="header">
+        <el-form :model="ruleForm" ref="ruleForm" class="demo-ruleForm">
+          <el-form-item label="日期:">
+            <el-date-picker
+              v-model="ruleForm.ctime"
+              size="small"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd"
+            ></el-date-picker>
+          </el-form-item>
+          <el-form-item label="厂商:">
+            <el-select clearable size="small" v-model="ruleForm.factory_name" placeholder="请选择厂商">
+              <el-option
+                v-for="item in factorys"
+                :key="item.id"
+                :label="item.factory_name"
+                :value="item.id"
+              ></el-option>
+              <el-pagination
+                small
+                layout="prev, pager, next"
+                @size-change="handleSize1"
+                @current-change="handleCurrent1"
+                :total="total1"
+              ></el-pagination>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="单号:">
+            <el-input v-model="ruleForm.no" size="small" style="width:170px" placeholder="请输入单号"></el-input>
+          </el-form-item>
+          <el-form-item label="状态:">
+            <el-select clearable v-model="ruleForm.state" size="small" placeholder="请选择状态">
+              <el-option
+                v-for="item in valueElement"
+                :key="item.value"
+                :label="item.name"
+                :value="item.state"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item class="sub">
+            <el-button type="primary" @click="onSubmit">查询</el-button>
+            <el-button type="primary" v-if="power.indexOf('C2000900')!=-1">批量打印</el-button>
+          </el-form-item>
         </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="determine">确 定</el-button>
+        <div class="box" style="margin-bottom:10px;">
+          <el-button
+            size="mini"
+            @click="addCreateWare"
+            type="primary"
+            v-if="power.indexOf('C2000400')!=-1"
+          >新增入库单</el-button>
         </div>
-      </el-dialog>
+      </div>
+      <div class="table">
+        <el-table
+          :data="tableData"
+          tooltip-effect="dark"
+          size="small"
+          :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+          width="100%"
+        >
+          <!-- @selection-change="handleSelectionChange" -->
+          <!-- @cell-click="cellClick" -->
+          <el-table-column align="center" type="selection" width="45"></el-table-column>
+          <el-table-column align="center" prop="state_name" label="状态"></el-table-column>
+          <el-table-column align="center" label="日期" width="90">
+            <template slot-scope="scope">{{ scope.row.ctime }}</template>
+          </el-table-column>
+          <el-table-column align="center" prop="storehouse_name" label="仓库"></el-table-column>
+          <el-table-column align="center" prop="factory_name" label="厂商名称"></el-table-column>
+          <el-table-column align="center" prop="account_name" label="结算账户"></el-table-column>
+          <el-table-column align="center" prop="pay_price" label="实付金额"></el-table-column>
+          <el-table-column align="center" prop="remark" label="备注"></el-table-column>
+          <el-table-column fixed="right" label="操作" width="100">
+            <template slot-scope="scope">
+              <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <!-- 分页 -->
+        <el-pagination
+          class="pagination"
+          style="float: right;"
+          small
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pageIndex"
+          :page-sizes="[10, 20, 30, 40]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+        ></el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -546,202 +131,44 @@ import { factoryList } from "@/api/archives";
 export default {
   data() {
     return {
+      ruleForm: {},
+      factorys: [], //厂商
+      pageIndex1: 1,
+      pageSize1: 10,
+      total1: 0,
+      pageIndex: 1,
+      pageSize: 10,
+      total: 0,
       power: "",
-      total_price: 0, //结算总金额
-      shopppings: [], //商品
-      settlement: [], //结算账户
-      fileList: [],
-      active: 0,
-      form1: {
-        quantitys: [],
-      },
       valueElement: [
-        { name: "默认" },
+        { name: "全部" },
         { name: "已入库", state: 1 },
         { name: "草稿", state: 0 },
         { name: "已撤销", state: 4 },
       ],
-      dialogFormVisible: false,
-      //选择商品
-
-      restaurants: [],
-      colors: [],
-      sizes: [],
-
-      // table数据
-      weretable: [],
-      weretable1: [],
-      rules: {
-        factory_name: [
-          { required: true, message: "请选择厂商", trigger: "change" },
-        ],
-        storehouse_name: [
-          { required: true, message: "请选择仓库", trigger: "change" },
-        ],
-        ctime: [
-          {
-            type: "date",
-            required: true,
-            message: "请选择日期",
-            trigger: "blur",
-          },
-        ],
-      },
-      years: [],
-      seasons: [],
-      stylists: [],
-      categorys: [],
-      stylist: "", //设计师
-      year: "", //年
-      season: "", //季节
-      category: "", //类别
-
-      pageIndex: 1,
-      pageSize: 10,
-      total: 0,
-      pageIndex2: 1,
-      pageSize2: 10,
-      total2: 0,
-      pageIndex3: 1,
-      pageSize3: 10,
-      total3: 0,
-      pageIndex1: 1,
-      pageSize1: 10,
-      total1: 0,
-      factorys: [],
-      ware: [],
-      ruleForm: {}, //查询表单
-      form: {},
-      //选择表单
       tableData: [],
-      indexk: 0,
-      vh: true,
-      vh1: true,
-      vh2: false,
-      vh3: false,
-      vh4: false,
-      vh5: false,
-      stated: 1,
-      obj: {},
-      actionsLenght: 0,
-      dow: [],
     };
   },
   methods: {
-    successFile(response, file, fileList) {
-      this.fileList = fileList;
-      if (fileList.length >= 3) {
-        this.vh = false;
-      }
-    },
-    // 右边上传图片==>删除
-    handleRemove(file, fileList) {
-      this.fileList = fileList;
-      this.vh = true;
-    },
-    handlePreview(file) {
-      console.log(file);
-    },
-    // 左边切换状态
-    async changed(item, index) {
-      this.active = index;
-      this.stated = item;
-      let res = await bookStockOrderList({
-        page: this.pageIndex,
-        page_size: this.pageSize,
-        state: item.state,
+    // 厂商
+    async factory() {
+      let res = await factoryList({
+        page_size: this.pageSize1,
+        page: this.pageIndex1,
       });
-      console.log(res);
-      this.tableData = res.data.data;
-      this.tableData.map((v, i) => {
-        if (v.state == 0) {
-          v.state_name = "草稿";
-        } else if (v.state == 1) {
-          v.state_name = "已入库";
-        } else if (v.state == 4) {
-          v.state_name = "已撤销";
-        }
-      });
+
+      this.factorys = res.data.data;
+      this.total1 = res.data.count;
+      this.factorys.unshift({ factory_name: "全部", id: "" });
     },
-    // table指定列合计
-    getSummaries(param) {
-      const { columns, data } = param;
-      const sums = [];
-      columns.forEach((column, index) => {
-        if (!this.vh5) {
-          if (index === 1) {
-            sums[index] = "总计";
-          } else if (index === 8 || index === 12 || index === 13) {
-            const values = data.map((item) => Number(item[column.property]));
-            if (!values.every((value) => isNaN(value))) {
-              sums[index] = values.reduce((prev, curr) => {
-                const value = Number(curr);
-                if (!isNaN(value)) {
-                  if (index === 13) {
-                    this.total_price = prev + curr;
-                  }
-                  return prev + curr;
-                } else {
-                  if (index === 13) {
-                    this.total_price = prev;
-                  }
-                  return prev;
-                }
-              }, 0);
-            } else {
-              sums[index] = "0";
-            }
-          } else {
-            sums[index] = "-";
-          }
-        } else {
-          if (index === 1) {
-            sums[index] = "总计";
-          } else if (index === 7 || index === 11 || index === 12) {
-            const values = data.map((item) => Number(item[column.property]));
-            if (!values.every((value) => isNaN(value))) {
-              sums[index] = values.reduce((prev, curr) => {
-                const value = Number(curr);
-                if (!isNaN(value)) {
-                  // console.log(prev,curr);
-                  // let a = prev.toFixed(2) + curr.toFixed(2);
-                  if (index === 12) {
-                    this.total_price = prev + curr;
-                  }
-                  return prev + curr;
-                } else {
-                  if (index === 12) {
-                    this.total_price = prev;
-                  }
-                  return prev;
-                }
-              }, 0);
-            } else {
-              sums[index] = "0";
-            }
-          } else {
-            sums[index] = "-";
-          }
-        }
-      });
-      // console.log(sums);
-      return sums;
+    handleSize1(val) {
+      this.pageSize1 = val;
+      this.factory();
     },
-    // 查询
-    onSubmit() {
-      // console.log(this.stated, this.ruleForm);
-      this.obj = {
-        factory_id: this.ruleForm.factory_name,
-        state: this.stated.state,
-        no: this.ruleForm.no,
-      };
-      if (this.ruleForm.ctime) {
-        this.obj.ctimea = this.ruleForm.ctime[0];
-        this.obj.ctimeb = this.ruleForm.ctime[1];
-      }
-      this.init(this.obj);
+    handleCurrent1(val) {
+      this.pageIndex1 = val;
+      this.factory();
     },
-    handleUser_id() {},
     // 点击切换分页
     handleSizeChange(val) {
       this.pageSize = val;
@@ -751,662 +178,21 @@ export default {
       this.pageIndex = val;
       this.init(this.obj);
     },
-
-    // 多选
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-    },
-    //左边单元格被点击
-    async cellClick(row, column, cell, event) {
-      // console.log(row, column, cell, event);
-      let res = await bookStockOrderInfo({
-        id: row.id,
-      });
-      let { data } = res.data;
-      this.form = data;
-      // console.log(this.form.images);
-      this.fileList = [];
-      this.form.images.map((v, i) => {
-        this.fileList.push({
-          name: "图" + i,
-          url: v,
-        });
-      });
-      if (this.fileList.length >= 3) {
-        this.vh = false;
-      } else {
-        this.vh = true;
-      }
-      console.log(this.form);
-      if (this.form.state == 0) {
-        //采购
-        this.weretable = [];
-        this.tables();
-        if (this.form.size_data.length > 0) {
-          this.weretable = [];
-          this.form.size_data.map((v, i) => {
-            this.weretable.push({
-              commodity: v.stylename,
-              item_no: v.produce_no,
-              bar_code: "",
-              monad: v.unit, //单位
-              color: v.style_color_name,
-              size: v.size,
-              quantity: v.quantity,
-              univalence: v.price,
-              discount: v.discount,
-              discountPrice: v.discount_price,
-              sum: v.money,
-              sumed: v.discount_money,
-              remark: v.remark,
-              style_id: v.style_id,
-              id: v.id,
-              showHidden1: false,
-              showHidden2: false,
-              showHidden3: false,
-              showHidden4: false,
-              showHidden5: false,
-              showHidden6: false,
-              showHidden7: false,
-              showHidden8: false,
-            });
-          });
-        }
-      } else {
-        //已入库  已销毁
-        if (this.form.size_data.length > 0) {
-          this.weretable1 = [];
-          this.form.size_data.map((v, i) => {
-            this.weretable1.push({
-              commodity: v.stylename,
-              item_no: v.produce_no,
-              bar_code: "",
-              monad: v.unit, //单位
-              color: v.style_color_name,
-              size: v.size,
-              quantity: v.quantity,
-              univalence: v.price,
-              discount: v.discount,
-              discountPrice: v.discount_price,
-              sum: v.money,
-              sumed: v.discount_money,
-              remark: v.remark,
-              style_id: v.style_id,
-              id: v.id,
-            });
-          });
-        }
-      }
-      if (this.form.state == 0) {
-        this.actionsLenght = 0;
-        this.vh1 = true;
-        this.vh2 = true;
-        this.vh3 = false;
-        this.vh4 = false;
-        this.vh5 = false;
-      } else if (this.form.state == 1) {
-        this.actionsLenght = 1;
-        this.vh1 = false;
-        this.vh2 = false;
-        this.vh4 = false;
-        this.vh3 = true;
-        this.vh5 = true;
-      } else if (this.form.state == 4) {
-        this.actionsLenght = 2;
-        this.vh1 = false;
-        this.vh2 = false;
-        this.vh3 = false;
-        this.vh4 = true;
-        this.vh5 = true;
-      }
-    },
-    //右边单元格被点击
-    cellClick1(row, column, cell, event) {
-      // console.log(row, column, cell, event);
-
-      if (column.label == "商品") {
-        row.showHidden1 = true;
-      } else if (row.commodity == "") {
-        row.showHidden2 = false;
-        row.showHidden3 = false;
-        row.showHidden4 = false;
-        row.showHidden5 = false;
-        row.showHidden6 = false;
-        row.showHidden7 = false;
-        row.showHidden8 = false;
-      } else if (column.label == "颜色") {
-        row.showHidden2 = true;
-      } else if (column.label == "尺码") {
-        row.showHidden3 = true;
-      } else if (column.label == "数量") {
-        row.showHidden4 = true;
-      } else if (column.label == "单价") {
-        row.showHidden5 = true;
-      } else if (column.label == "折扣(%)") {
-        row.showHidden6 = true;
-      } else if (column.label == "折后价") {
-        row.showHidden7 = true;
-      } else if (column.label == "备注") {
-        row.showHidden8 = true;
-      }
-      this.shopping();
-      this.dow = document.getElementsByClassName("el-input__inner");
-      let arr = [];
-      this.dow.forEach((el, index) => {
-        if (el.placeholder == "请选择") {
-          arr.push(el);
-        }
-      });
-      arr.map((v, i) => {
-        v.oninput = () => {
-          this.shopping(v.value);
-        };
+    // 查看
+    handleClick(row) {
+      this.$router.push({
+        path: `/stockInquiryDetails?id=${row.id}&state=${row.state}`,
       });
     },
-    // 鼠标离开
-    bblur(row, v, item) {
-      setTimeout(() => {
-        if (v.label == "商品") {
-          // row.showHidden1 = false;
-        } else if (v.label == "颜色") {
-          row.showHidden2 = false;
-        } else if (v.label == "尺码") {
-          row.showHidden3 = false;
-        } else if (v.label == "数量") {
-          row.quantity = Math.round(Number(item));
-          row.sum = Number(row.quantity * row.univalence).toFixed(2);
-          row.sumed = Number(row.quantity * row.discountPrice).toFixed(2);
-          row.showHidden4 = false;
-        } else if (v.label == "单价") {
-          row.univalence = Number(item).toFixed(2);
-          row.discountPrice = Number(
-            (row.discount / 100) * row.univalence
-          ).toFixed(2);
-          row.sum = Number(row.quantity * row.univalence).toFixed(2);
-          row.sumed = Number(row.quantity * row.discountPrice).toFixed(2);
-          row.showHidden5 = false;
-        } else if (v.label == "折扣(%)") {
-          row.discount = Number(item);
-          row.discountPrice = Number(
-            (row.discount / 100) * row.univalence
-          ).toFixed(2);
-          row.sumed = Number(row.quantity * row.discountPrice).toFixed(2);
-          row.showHidden6 = false;
-        } else if (v.label == "折后价") {
-          row.discountPrice = Number(item).toFixed(2);
-          row.discount = Number(row.discountPrice / row.univalence) * 100;
-          row.showHidden7 = false;
-        } else if (v.label == "备注") {
-          row.showHidden8 = false;
-        }
-      }, 150);
+    // 查询
+    onSubmit() {
+      console.log(this.ruleForm);
     },
-    // 右边新增table行
-    handleAdd(index, row) {
-      // console.log(index, row);
-      let obj = {
-        commodity: "",
-        item_no: "",
-        bar_code: "",
-        monad: "件",
-        color: "",
-        size: "",
-        quantity: "0",
-        univalence: "0.00",
-        discount: "100",
-        discountPrice: "0.00",
-        sum: "0.00",
-        sumed: "0.00",
-        remark: "",
-        showHidden1: false,
-        showHidden2: false,
-        showHidden3: false,
-        showHidden4: false,
-        showHidden5: false,
-        showHidden6: false,
-        showHidden7: false,
-        showHidden8: false,
-      };
-      this.weretable.splice(index, 0, obj);
-    },
-    // 右边删除
-    async handleDelete(index, row) {
-      if (row.id == undefined) {
-        this.weretable.splice(index, 1);
-      } else {
-        this.$confirm("此操作将永久删除该行数据, 是否继续?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        })
-          .then(async () => {
-            let res = await bookStockOrderSizeDel({
-              id: row.id,
-            });
-            console.log(res);
-            this.weretable.splice(index, 1);
-            this.$message({
-              type: "success",
-              message: "删除成功!",
-            });
-          })
-          .catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消删除",
-            });
-          });
-      }
-    },
-
-    querySearch(queryString, cb) {
-      var restaurants = this.restaurants;
-      var results = queryString
-        ? restaurants.filter(this.createFilter(queryString))
-        : restaurants;
-      // 调用 callback 返回建议列表的数据
-      cb(results);
-    },
-    querySearch1(queryString, cb) {
-      var restaurants = this.colors;
-      var results = queryString
-        ? restaurants.filter(this.createFilter(queryString))
-        : restaurants;
-      // 调用 callback 返回建议列表的数据
-      cb(results);
-    },
-    querySearch2(queryString, cb) {
-      var restaurants = this.sizes;
-      var results = queryString
-        ? restaurants.filter(this.createFilter(queryString))
-        : restaurants;
-      // 调用 callback 返回建议列表的数据
-      cb(results);
-    },
-    createFilter(queryString) {
-      return (restaurant) => {
-        return (
-          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) ===
-          0
-        );
-      };
-    },
-    // 获取焦点
-    async focuss(v, column, row, index) {
-      this.shopppings.map((item, i) => {
-        if (row.item_no == item.styleno) {
-          this.sizes = [];
-          this.colors = [];
-          let arr = [];
-          item.style_data.forEach((item1, index) => {
-            for (let dd in item1.type_data) {
-              arr.push(dd);
-            }
-            this.colors.push({
-              value: item1.style_color_name,
-              quantitys: [],
-            });
-          });
-          arr = [...new Set(arr)];
-          arr.map((j, k) => {
-            this.sizes.push({ value: j });
-          });
-        }
-      });
-    },
-    // 选择提示选框
-    handleSelect(v, column, row, index) {
-      // console.log(v,idnex,row);
-      // console.log(column.label);
-      // console.log(v, this.shopppings);
-      if (column.label == "商品") {
-        this.sizes = [];
-        this.colors = [];
-        let arr = [];
-        this.shopppings.map((item, i) => {
-          if (v == item.id) {
-            v = item;
-            item.style_data.forEach((item1, index) => {
-              for (let dd in item1.type_data) {
-                arr.push(dd);
-              }
-              this.colors.push({
-                value: item1.style_color_name,
-                quantitys: [],
-              });
-            });
-          }
-        });
-        arr = [...new Set(arr)];
-        arr.map((j, k) => {
-          this.sizes.push({ value: j });
-        });
-        row.commodity = v.stylename;
-        row.item_no = v.styleno;
-        row.bar_code = v.bar_code;
-        row.monad = v.unit;
-        row.univalence = v.price;
-        row.discountPrice = v.discount_price;
-        row.style_id = v.style_data[0].style_id;
-
-        row.showHidden1 = false;
-        this.dialogFormVisible = true;
-        this.indexk = index;
-      } else if (column.label == "颜色") {
-        row.color = v.value;
-        row.showHidden2 = false;
-      } else if (column.label == "尺码") {
-        row.size = v.value;
-        row.showHidden3 = false;
-      }
-      console.log(row);
-      // console.log(this.sizes, this.colors);
-    },
-    // 刷新新增入库单
+    // 新建入库单
     addCreateWare() {
-      this.weretable = [];
-      this.actionsLenght = 0;
-      this.vh1 = true;
-      this.vh2 = false;
-      this.vh3 = false;
-      this.vh4 = false;
-      this.vh5 = false;
-      this.fileList = [];
-
-      this.form = {};
-      this.tables();
-    },
-    //新增入库单数据
-    determine() {
-      // console.log(this.colors);
-      let bl = true;
-      this.colors.map((v, i) => {
-        if (v.quantitys.length > 0) {
-          v.quantitys.map((j, k) => {
-            if (bl && j != undefined && j != "") {
-              this.weretable[this.indexk].color = v.value;
-              this.weretable[this.indexk].size = this.sizes[k].value;
-              this.weretable[this.indexk].quantity = Number(j);
-              this.weretable[this.indexk].sum =
-                j * this.weretable[this.indexk].univalence;
-              this.weretable[this.indexk].sumed =
-                j * this.weretable[this.indexk].discountPrice;
-              bl = false;
-
-              return;
-            } else if (j != undefined && j != "") {
-              let obj = {
-                commodity: this.weretable[this.indexk].commodity,
-                item_no: this.weretable[this.indexk].item_no,
-                bar_code: this.weretable[this.indexk].bar_code,
-                monad: this.weretable[this.indexk].monad,
-                color: v.value,
-                size: this.sizes[k].value,
-                quantity: Number(j),
-                univalence: this.weretable[this.indexk].univalence,
-                discount: "100",
-                discountPrice: this.weretable[this.indexk].discountPrice,
-                sum: j * this.weretable[this.indexk].univalence,
-                sumed: j * this.weretable[this.indexk].discountPrice,
-                remark: "",
-                style_id: this.weretable[this.indexk].style_id,
-
-                showHidden1: false,
-                showHidden2: false,
-                showHidden3: false,
-                showHidden4: false,
-                showHidden5: false,
-                showHidden6: false,
-                showHidden7: false,
-                showHidden8: false,
-              };
-              this.weretable.splice(this.indexk, 0, obj);
-            }
-          });
-        }
+      this.$router.push({
+        path: `/stockInquiryDetailsAdd`,
       });
-      this.dialogFormVisible = false;
-    },
-    handleSize(val) {
-      this.pageSize2 = val;
-      this.information();
-    },
-    handleCurrent(val) {
-      this.pageIndex2 = val;
-      this.information();
-    },
-    async handleSize2(val) {
-      this.pageSize3 = val;
-      this.shopping();
-    },
-    async handleCurrent2(val) {
-      this.pageIndex3 = val;
-      this.shopping();
-    },
-
-    handleSize1(val) {
-      this.pageSize1 = val;
-      this.information();
-    },
-    handleCurrent1(val) {
-      this.pageIndex1 = val;
-      this.information();
-    },
-    // 商品
-    async shopping(item) {
-      let res1 = await getProjectStyleList({
-        keyword: item == undefined ? "" : item,
-        page: this.pageIndex3,
-        page_size: this.pageSize3,
-      });
-      // console.log(res1);
-      this.shopppings = res1.data.data;
-      this.total3 = res1.data.count;
-    },
-    // 数据
-    async information() {
-      // 仓库
-      let res = await storehouseList({
-        page: this.pageIndex2,
-        page_size: this.pageSize2,
-        state: 1,
-        storehouse_type: 0,
-      });
-      let { data } = res.data;
-      this.ware = data;
-      this.total2 = res.data.count;
-      // 厂商
-      let res2 = await factoryList({
-        page_size: this.pageSize1,
-        page: this.pageIndex1,
-      });
-
-      this.factorys = res2.data.data;
-      this.total1 = res2.data.count;
-      this.factorys.unshift({ factory_name: "全部", id: "" });
-      // 结算账户
-      let res3 = await balanceAccountSelect();
-      this.settlement = res3.data.data;
-      // console.log(res3);
-    },
-    // 采购
-    async sketch(state) {
-      // console.log(this.weretable);
-      let size_data = [];
-      if (state == 0 || state == 1) {
-        this.weretable.map((v, i) => {
-          // console.log(v);
-          if (v.color != "" && v.size != "" && v.quantity != "") {
-            size_data.push({
-              stylename: v.commodity,
-              produce_no: v.item_no,
-              style_color_name: v.color,
-              size: v.size,
-              unit: v.monad,
-              quantity: v.quantity,
-              price: v.univalence,
-              discount: v.discount,
-              discount_price: v.discountPrice,
-              money: v.sum,
-              discount_money: v.sumed,
-              id: v.id || 0,
-              style_id: v.style_id,
-            });
-          }
-        });
-      } else {
-        this.weretable1.map((v, i) => {
-          console.log(1);
-          // console.log(v);
-          if (v.color != "" && v.size != "" && v.quantity != "") {
-            size_data.push({
-              stylename: v.commodity,
-              produce_no: v.item_no,
-              style_color_name: v.color,
-              size: v.size,
-              unit: v.monad,
-              quantity: v.quantity,
-              price: v.univalence,
-              discount: v.discount,
-              discount_price: v.discountPrice,
-              money: v.sum,
-              discount_money: v.sumed,
-              id: v.id || 0,
-              style_id: v.style_id,
-            });
-          }
-        });
-      }
-
-      let images = [];
-      this.fileList.map((v, i) => {
-        if (v.response) {
-          images.push(v.response.data.pic_file_url);
-        } else {
-          images.push(v.url);
-        }
-      });
-      console.log(this.form);
-      //********* */
-      if (
-        this.form.factory_name == undefined ||
-        this.form.factory_name == "" ||
-        this.form.storehouse_name == undefined ||
-        this.form.account_name == undefined ||
-        size_data.length <= 0
-      ) {
-        let str = "请填写完整数据";
-        if (
-          this.form.factory_name == undefined ||
-          this.form.factory_name == ""
-        ) {
-          str = "请选择厂商";
-        }
-        this.$message({
-          showClose: true,
-          message: "请填写完整数据",
-          type: "error",
-        });
-      } else {
-        //******* */
-        if (!this.form.id) {
-          // 新增
-          let res = await bookStockOrderAdd({
-            factory_id: this.form.factory_name,
-            storehouse_id: this.form.storehouse_name,
-            balance_account_id: this.form.account_name,
-            pay_price: this.form.pay_price,
-            remarks: this.form.remarks,
-            size_data,
-            images,
-            state,
-            total_price: this.total_price,
-          });
-          console.log(res);
-        } else {
-          // 编辑
-          let id1 = "";
-          let id2 = "";
-          let id3 = "";
-          if (typeof this.form.factory_name == "string") {
-            this.factorys.map((v, i) => {
-              if (this.form.factory_name == v.factory_name) {
-                id1 = v.id;
-              }
-            });
-          }
-          if (typeof this.form.storehouse_name == "string") {
-            this.ware.map((v, i) => {
-              if (this.form.storehouse_name == v.storehouse_name) {
-                id2 = v.id;
-              }
-            });
-          }
-          if (typeof this.form.account_name == "string") {
-            this.settlement.map((v, i) => {
-              if (this.form.account_name == v.account_name) {
-                id3 = v.id;
-              }
-            });
-          }
-          let res = await bookStockOrderEdit({
-            factory_id: id1 || this.form.factory_name,
-            storehouse_id: id2 || this.form.storehouse_name,
-            balance_account_id: id3 || this.form.account_name,
-            pay_price: this.form.pay_price,
-            remarks: this.form.remarks,
-            id: this.form.id,
-            size_data,
-            images,
-            state,
-            total_price: this.total_price,
-          });
-          console.log(res);
-        }
-        this.form = {};
-        this.fileList = [];
-        this.init(this.obj);
-        this.addCreateWare();
-      }
-    },
-    // 删除草稿
-    delStock() {
-      this.$confirm("此操作将永久删除该草稿, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(async () => {
-          let res = await bookStockOrderDel({
-            id: this.form.id,
-          });
-          this.vh2 = false;
-          this.form = {};
-          this.init(this.obj);
-          this.$message({
-            type: "success",
-            message: "删除成功!",
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除",
-          });
-        });
-    },
-    // 撤销
-    async backout() {
-      this.vh3 = false;
-      this.sketch(4);
-      // this.form = {};
-      this.init(this.obj);
-    },
-    // 商品信息下拉框显示隐藏
-    visibleChange(item, row) {
-      if (item == false) {
-        row.showHidden1 = false;
-      }
     },
     async init(obj) {
       // 数据类型 0草稿 1已入库 4已撤销
@@ -1417,7 +203,7 @@ export default {
       });
       this.tableData = res.data.data;
       this.total = res.data.count;
-      console.log(res);
+      // console.log(res);
       this.tableData.map((v, i) => {
         if (v.state == 0) {
           v.state_name = "草稿";
@@ -1428,285 +214,49 @@ export default {
         }
       });
     },
-    // 初始化表格
-    tables() {
-      for (let i = 0; i < 6; i++) {
-        this.weretable.push({
-          commodity: "",
-          item_no: "",
-          bar_code: "",
-          monad: "",
-          color: "",
-          size: "",
-          quantity: "0",
-          univalence: "0.00",
-          discount: "100",
-          discountPrice: "0.00",
-          sum: "0.00",
-          sumed: "0.00",
-          remark: "",
-          showHidden1: false,
-          showHidden2: false,
-          showHidden3: false,
-          showHidden4: false,
-          showHidden5: false,
-          showHidden6: false,
-          showHidden7: false,
-          showHidden8: false,
-        });
-      }
-    },
   },
-  async mounted() {
-    this.init();
-    this.shopping();
-    this.information();
-    this.tables();
+  mounted() {
     this.power = localStorage.getItem("power");
+    this.factory();
+    this.init();
   },
 };
 </script>
 
 <style lang="less" scoped>
 .stockInquiry {
-  list-style: none;
-  .active {
-    color: royalblue;
-  }
-  .main {
-    overflow: hidden;
-    .left {
+  .header {
+    .el-form {
       overflow: hidden;
-      margin: 10px 1% 10px 1%;
-      border: 1px solid #cccccc;
+    }
+    .el-form-item {
       float: left;
-      background: #fff;
-      width: 23%;
-      .left_nav {
-        border-bottom: 1px solid #cccccc;
-        margin-bottom: 10px;
-        ul {
-          overflow: hidden;
-          li {
-            // width: 25%;
-            list-style: none;
-            float: left;
-            text-align: center;
-            padding: 6px;
-            cursor: pointer;
-          }
-        }
-      }
-      .left_submit {
-        margin-bottom: 10px;
-        .el-form {
-          position: relative;
-          padding: 3px 5px;
-
-          .sub {
-            text-align: center;
-          }
-          .el-form-item {
-            margin-bottom: 5px;
-            .el-form-item__content {
-              .el-input {
-                width: 178px;
-              }
-              .el-date-editor--daterange {
-                width: 210px;
-                position: absolute;
-                top: 5px;
-                /deep/.el-range-separator {
-                  padding: 0 !important;
-                  width: auto;
-                }
-              }
-            }
-          }
-        }
-      }
-      .left_table {
-        cursor: pointer;
-      }
-      .tableStyle {
-        background-color: #1989fa !important;
-        color: #fff;
-        font-weight: 400;
+    }
+    .el-form-item:nth-child(1) {
+      width: 300px;
+    }
+    .el-form-item:nth-child(2) {
+      width: 250px;
+    }
+    .el-form-item:nth-child(3) {
+      width: 220px;
+    }
+    .el-form-item:nth-child(4) {
+      width: 250px;
+    }
+    margin-top: 20px;
+    // /deep/.el-input {
+    //   width: 80%;
+    // }
+    /deep/.el-date-editor--daterange {
+      width: 250px;
+      .el-range-separator {
+        padding: 0;
       }
     }
-    .right {
-      margin: 10px 1% 50px 0;
-      border: 1px solid #cccccc;
-      background: #fff;
-      width: 74%;
-      float: right;
-      .right_header {
-        overflow: hidden;
-
-        .rh_left {
-          float: left;
-          padding: 10px 0 0 10px;
-          font-size: 14px;
-          line-height: 48px;
-        }
-        .rh_right {
-          padding: 10px 10px 0 0;
-          float: right;
-          line-height: 48px;
-        }
-      }
-      .right_main {
-        .right_table {
-          /deep/.el-input__inner {
-            padding: 0 !important;
-          }
-        }
-        .right_form {
-          /deep/.cssa {
-            .el-steps {
-              position: relative;
-              // margin-bottom: 40px;
-              /deep/.el-step__icon {
-                width: 12px;
-              }
-              /deep/.el-step__icon-inner[class*="el-icon"]:not(.is-status) {
-                font-size: 12px;
-                font-weight: 400;
-                position: relative;
-              }
-              /deep/.el-step__title {
-                font-size: 12px;
-                line-height: 14px;
-              }
-              /deep/.el-step__icon {
-                width: 12px;
-              }
-              /deep/.el-step__head {
-                // top: 30px;
-                // color: #000;
-                // border-color: #000;
-              }
-
-              /deep/.el-step__line {
-                // width: auto;
-                // margin-right: 20px;
-                margin-top: 9px;
-              }
-
-              /deep/.el-step {
-                // width: 100px;
-                // display: inline-block;
-              }
-              /deep/.el-step__main {
-                position: relative;
-                bottom: 10px;
-                .el-step__description {
-                  padding-top: 20%;
-                }
-              }
-            }
-          }
-        }
-      }
-      .right_footer {
-        margin-top: 10px;
-        .el-form {
-          position: relative;
-          width: 100%;
-          height: 250px;
-          overflow: hidden;
-          /deep/.el-form-item {
-            // float: left;
-            margin-bottom: 8px;
-            margin-right: 0;
-            .el-form-item__content {
-              span {
-                display: block;
-                width: 90px;
-              }
-              /deep/.el-input {
-                width: 70%;
-              }
-            }
-          }
-          // /deep/.el-form-item:nth-child(3) {
-          //   float: right;
-          // }
-          /deep/.el-form-item:nth-child(2) {
-            .el-form-item__content {
-              span {
-                display: block;
-                width: 100px;
-                color: red;
-                font-size: 18px;
-              }
-            }
-          }
-          /deep/.upload-demo {
-            .el-upload-list {
-              li {
-                width: 105px;
-                float: left !important;
-                margin-right: 10px;
-              }
-            }
-          }
-        }
-      }
+    .table {
+      overflow: hidden;
     }
-  }
-  .el-dialog__wrapper {
-    .el-dialog {
-      .el-dialog__body {
-        .el-form {
-          overflow: hidden;
-          div {
-            overflow: hidden;
-          }
-          /deep/.table_nav {
-            span {
-              display: block;
-              float: left;
-              width: 19.5%;
-              height: 30px;
-              line-height: 30px;
-              text-align: center;
-            }
-          }
-          /deep/.table_list {
-            span {
-              display: block;
-              float: left;
-              width: 20%;
-              height: 30px;
-              line-height: 30px;
-              text-align: center;
-              margin-bottom: 15px;
-            }
-            .el-input {
-              float: left;
-              width: 19%;
-              height: 30px;
-              line-height: 30px;
-              margin-bottom: 15px;
-              input {
-                text-align: center !important;
-              }
-            }
-          }
-        }
-      }
-      .el-dialog__footer {
-        .dialog-footer {
-          text-align: center !important;
-        }
-      }
-    }
-  }
-  .pagination {
-    margin: 10px 0;
-    text-align: center;
-    padding: 2px 0px;
   }
 }
 </style>

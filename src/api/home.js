@@ -52,3 +52,11 @@ export const warnList = data => {
     data: data
   });
 };
+// 提醒信息list接口
+export const mouthWorkStatus = data => {
+  return axios({
+    url: "?g=mouth_work_status",
+    method: "post",
+    data: data
+  });
+};

@@ -142,13 +142,13 @@
                   style="width:200px"
                 ></el-input>
               </el-form-item>
-              <el-form-item label="支付方式" prop="payManneItem">
+              <el-form-item label="结算账户" prop="payManneItem">
                 <el-select v-model="form.payManneItem" placeholder="请选择">
                   <el-option
                     v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
+                    :key="item.id"
+                    :label="item.account_name"
+                    :value="item.account_name"
                   ></el-option>
                 </el-select>
               </el-form-item>
@@ -220,6 +220,7 @@ import {
 import {
   purchaseEdit, //编辑物料
 } from "@/api/researchDevelopment";
+import { balanceAccountSelect } from "@/api/finance";
 export default {
   data() {
     return {
@@ -245,25 +246,7 @@ export default {
       supplier: [], //供应商
       colors: {},
       radio: 0,
-      options: [
-        //选择支付方式
-        {
-          value: "中国农业银行",
-          label: "中国农业银行",
-        },
-        {
-          value: "中国工商银行",
-          label: "中国工商银行",
-        },
-        {
-          value: "微信",
-          label: "微信",
-        },
-        {
-          value: "支付宝",
-          label: "支付宝",
-        },
-      ],
+      options: [], //选择支付方式
       // 表单规则
       rules: {
         dosage: [
@@ -409,7 +392,11 @@ export default {
         page: this.pageIndex2,
         page_size: this.pageSize2,
         state: 1,
+<<<<<<< HEAD
+        storehouse_type: 0,
+=======
         storehouse_type: 1,
+>>>>>>> a700f7bc22803ffd24ce426750f496a2d787377f
       });
       let { data } = res.data;
       this.ware = data;
@@ -446,10 +433,16 @@ export default {
         this.form.deposit = "";
       }
     },
+    async getBalanceAccount() {
+      let res = await balanceAccountSelect();
+      let { data } = res.data;
+      this.options = data;
+    },
   },
   async mounted() {
     this.init();
     this.stock();
+    this.getBalanceAccount();
   },
 };
 </script>
