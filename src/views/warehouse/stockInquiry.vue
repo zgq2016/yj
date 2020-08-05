@@ -73,8 +73,6 @@
           :header-cell-style="{background:'#eef1f6',color:'#606266'}"
           width="100%"
         >
-          <!-- @selection-change="handleSelectionChange" -->
-          <!-- @cell-click="cellClick" -->
           <el-table-column align="center" type="selection" width="45"></el-table-column>
           <el-table-column align="center" prop="state_name" label="状态"></el-table-column>
           <el-table-column align="center" label="日期" width="90">
@@ -159,7 +157,7 @@ export default {
 
       this.factorys = res.data.data;
       this.total1 = res.data.count;
-      this.factorys.unshift({ factory_name: "全部", id: "" });
+      this.factorys.unshift({ factory_name: "全部"});
     },
     handleSize1(val) {
       this.pageSize1 = val;
@@ -172,21 +170,29 @@ export default {
     // 点击切换分页
     handleSizeChange(val) {
       this.pageSize = val;
-      this.init(this.obj);
+      this.init(this.ruleForm);
     },
     handleCurrentChange(val) {
       this.pageIndex = val;
-      this.init(this.obj);
+      this.init(this.ruleForm);
     },
     // 查看
     handleClick(row) {
-      this.$router.push({
-        path: `/stockInquiryDetails?id=${row.id}&state=${row.state}`,
-      });
+      if (row.state == 1 || row.state == 4) {
+        this.$router.push({
+          path: `/stockInquiryDetails?id=${row.id}&state=${row.state}`,
+        });
+      } else {
+        this.$router.push({
+          path: `/stockInquiryDetailsAdd?id=${row.id}&state=${row.state}`,
+        });
+      }
     },
     // 查询
     onSubmit() {
-      console.log(this.ruleForm);
+      // console.log(this.ruleForm);
+      this.pageIndex = 1;
+      this.init(this.ruleForm)
     },
     // 新建入库单
     addCreateWare() {
@@ -203,7 +209,7 @@ export default {
       });
       this.tableData = res.data.data;
       this.total = res.data.count;
-      // console.log(res);
+      console.log(res);
       this.tableData.map((v, i) => {
         if (v.state == 0) {
           v.state_name = "草稿";

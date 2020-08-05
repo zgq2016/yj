@@ -81,7 +81,12 @@
           <el-form-item>
             <el-button type="primary">展示统计数据</el-button>
           </el-form-item>
-          <el-button type="primary" style="float:right;margin-right:35px;" @click="handleCard"  v-if="power.indexOf('C3000200')!=-1">采购</el-button>
+          <el-button
+            type="primary"
+            style="float:right;margin-right:35px;"
+            @click="handleCard"
+            v-if="power.indexOf('C3000200')!=-1"
+          >采购</el-button>
         </el-form>
       </div>
       <hr style="border:1px dashed #ccc" />
@@ -125,7 +130,11 @@
             placeholder="查找"
             style="width:300px"
           ></el-input>
-          <router-link :to="`/addRouteCard?`" style="margin-left:30px"  v-if="power.indexOf('C3000400')!=-1">新增主料卡</router-link>
+          <router-link
+            :to="`/addRouteCard?`"
+            style="margin-left:30px"
+            v-if="power.indexOf('C3000400')!=-1"
+          >新增主料卡</router-link>
         </div>
         <div class="searchCard">
           <div class="card" v-for="(item, index) in MaterialsList" :key="index">
@@ -209,8 +218,8 @@
           <el-form-item prop="money" label="金额:">
             <el-input style="width:60%;" v-model.number="form1.money"></el-input>
           </el-form-item>
-          <el-form-item prop="payManneItem" label="支付方式:">
-            <el-select v-model="form1.payManneItem" style="width:60%;" placeholder="请选择支付方式">
+          <el-form-item prop="payManneItem" label="结算账户:">
+            <el-select v-model="form1.balance_account_id" style="width:60%;" placeholder="请选择支付方式">
               <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -291,6 +300,7 @@ import {
   storehouseList,
   materialStoreList,
   materialsPurchase,
+  balanceAccountSelect
 } from "@/api/warehouse.js";
 import { getMaterialsClass, getMaterialsClassInfo } from "@/api/archives.js";
 export default {
@@ -352,7 +362,7 @@ export default {
           { required: true, message: "请输入金额", trigger: "blur" },
           { type: "number", message: "金额必须为数字值" },
         ],
-        payManneItem: [
+        balance_account_id: [
           { required: true, message: "请选择支付方式", trigger: "change" },
         ],
         storehouse_id: [
@@ -374,6 +384,11 @@ export default {
     };
   },
   methods: {
+    async balanc() {
+      // 结算账户
+      let res3 = await balanceAccountSelect();
+      this.options = res3.data.data;
+    },
     // 获取分类
     async getClassData() {
       let res = await getMaterialsClass();
@@ -534,7 +549,7 @@ export default {
           materials_id: this.materials_id,
           amountPurchased: this.form1.amountPurchased,
           money: this.form1.money,
-          payManneItem: this.form1.payManneItem,
+          balance_account_id: this.form1.balance_account_id,
           purchasePrice: this.form1.purchasePrice,
           storehouse_id: this.form1.storehouse_id,
           uploadDocuments: this.form1.picurl,
@@ -572,6 +587,7 @@ export default {
     this.getClassData();
     this.init();
     this.stock();
+    this.balanc()
     this.power = localStorage.getItem("power");
   },
 };
