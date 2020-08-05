@@ -254,7 +254,7 @@ export default {
     .right_content {
       flex: 1;
       .claim {
-        width: 900px;
+        width: 1200px;
         text-align: justify;
         text-justify: newspaper;
         word-break: break-all;
@@ -327,17 +327,17 @@ export default {
       border-radius: 5px;
     }
   }
-  .el-table th,
-  .el-table tr {
-    background-color: #fff;
-    height: 72px;
-  }
-  /deep/ .el-table th > .cell {
-    font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
-      \\5b8b\4f53, sans-serif;
-  }
-  /deep/ .el-table tr {
-    height: 10px;
-  }
+  // .el-table th,
+  // .el-table tr {
+  //   background-color: #fff;
+  //   height: 72px;
+  // }
+  // /deep/ .el-table th > .cell {
+  //   font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
+  //     \\5b8b\4f53, sans-serif;
+  // }
+  // /deep/ .el-table tr {
+  //   height: 10px;
+  // }
 }
 </style>

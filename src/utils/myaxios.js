@@ -21,7 +21,7 @@ function showLoading(target) {
       lock: true,
       text: "拼命加载中....",
       background: "#eee",
-      target: target || "body",
+      target: target || "html",
     });
   }
   needLoadingRequestCount++;

@@ -392,11 +392,7 @@ export default {
         page: this.pageIndex2,
         page_size: this.pageSize2,
         state: 1,
-<<<<<<< HEAD
         storehouse_type: 0,
-=======
-        storehouse_type: 1,
->>>>>>> a700f7bc22803ffd24ce426750f496a2d787377f
       });
       let { data } = res.data;
       this.ware = data;

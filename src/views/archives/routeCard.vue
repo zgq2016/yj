@@ -126,7 +126,7 @@ import {
   materialsClassAdd,
   getMaterialsClassInfo,
   getMaterialsClassEdit,
-  materialsClassDel
+  materialsClassDel,
 } from "@/api/archives";
 export default {
   data() {
@@ -148,7 +148,7 @@ export default {
       item: {},
       getMaterialsClassInfoObj: {},
 
-      TL: ""
+      TL: "",
     };
   },
   methods: {
@@ -163,7 +163,7 @@ export default {
         console.log(res);
         this.init();
         this.$router.push({
-          path: "routeCard_list"
+          path: "routeCard_list",
         });
         this.centerDialogVisible1 = false;
       } else {
@@ -174,7 +174,7 @@ export default {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           let res = await materialsClassDel({ id: this.item.id });
@@ -182,13 +182,13 @@ export default {
           this.$router.push({ path: "/routeCard_list" });
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
       this.centerDialogVisible1 = false;
@@ -242,7 +242,7 @@ export default {
         this.value = "";
         this.init();
         this.$router.push({
-          path: "routeCard_list"
+          path: "routeCard_list",
         });
         this.centerDialogVisible = false;
       } else {
@@ -265,7 +265,7 @@ export default {
 
       this.TL = this.$route.query.TL - 0;
       this.id_NO = this.$route.query.id - 0;
-    }
+    },
   },
   mounted() {
     this.init();
@@ -278,17 +278,13 @@ export default {
     },
     $route() {
       this.init();
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="less" scoped>
 .distributor {
-  height: 100%;
-  /deep/.el-container {
-    height: 100%;
-  }
   .el-menu-admin:not(.el-menu--collapse) {
     width: 200px;
     min-height: 400px;
@@ -308,7 +304,6 @@ export default {
     word-wrap: break-word;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
-    
   }
 }
 </style>

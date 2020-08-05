@@ -1,15 +1,16 @@
 <template>
   <div class="newTheStyle">
-    <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>研发部</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/itemDesign' }">项目设计</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: `/designCheck?id=${this.$route.query.id}` }">项目详细</el-breadcrumb-item>
-      <el-breadcrumb-item>新增款式</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <!-- 面包屑 -->
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>研发部</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/itemDesign' }">项目设计</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: `/designCheck?id=${this.$route.query.id}` }">项目详细</el-breadcrumb-item>
+        <el-breadcrumb-item>新增款式</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <!-- 没有数据 -->
     <div class="main" v-if="!this.$route.query.oldId">
-      <div class="basicInfo">基本信息</div>
       <div class="styleNumber">
         <div class="upload" @click="handle_style_pic_url">
           <img v-if="form.style_pic_url" :src="form.style_pic_url" alt />
@@ -84,7 +85,6 @@
     </div>
     <!-- 有数据 -->
     <div class="main" v-if="this.$route.query.oldId">
-      <div class="basicInfo">基本信息</div>
       <div class="styleNumber">
         <div class="upload" @click="handle_obj_style_pic_url">
           <img v-if="obj.style_pic_url" :src="obj.style_pic_url" alt />
@@ -337,7 +337,7 @@ import {
   getColorSelect,
   getStyle,
   projectStyleAdd,
-  getProject
+  getProject,
 } from "@/api/researchDevelopment";
 
 import { VueCropper } from "vue-cropper";
@@ -345,7 +345,7 @@ import { Api } from "@/js/api.js"; //接口url配置文件
 
 export default {
   components: {
-    VueCropper
+    VueCropper,
   },
   data() {
     return {
@@ -364,7 +364,7 @@ export default {
         autoCrop: true,
         autoCropWidth: 150,
         autoCropHeight: 150,
-        fixedBox: true
+        fixedBox: true,
       },
       fileName: "", //本机文件地址
       downImg: "#",
@@ -382,7 +382,7 @@ export default {
         style_color: "",
         style_color_pic_url: "",
         user_name: "",
-        color_code: ""
+        color_code: "",
       },
       styleno: "",
       style_color_pic_url: "",
@@ -401,28 +401,28 @@ export default {
       rules: {
         stylename: [{ required: true, message: "请输入名称", trigger: "blur" }],
         style_type: [
-          { required: true, message: "请输入品类", trigger: "blur" }
+          { required: true, message: "请输入品类", trigger: "blur" },
         ],
         style_color: [
-          { required: true, message: "请输入颜色", trigger: "blur" }
-        ]
+          { required: true, message: "请输入颜色", trigger: "blur" },
+        ],
       },
       rules1: {
         stylename: [{ required: true, message: "请输入名称", trigger: "blur" }],
         style_type: [
-          { required: true, message: "请输入品类", trigger: "blur" }
+          { required: true, message: "请输入品类", trigger: "blur" },
         ],
         year: [{ required: true, message: "请输入年份", trigger: "blur" }],
         season: [{ required: true, message: "请输入季节", trigger: "blur" }],
         style_color_name: [
-          { required: true, message: "请输入颜色", trigger: "blur" }
-        ]
+          { required: true, message: "请输入颜色", trigger: "blur" },
+        ],
       },
       Assistant: false,
       checkedList: [],
       arr: [],
       user_id_data_length: "",
-      color_code: ""
+      color_code: "",
     };
   },
   methods: {
@@ -511,12 +511,12 @@ export default {
       let formData = new FormData();
       // 输出
       if (type === "blob") {
-        this.$refs.cropper.getCropBlob(data => {
+        this.$refs.cropper.getCropBlob((data) => {
           let img = window.URL.createObjectURL(data);
           this.model = true;
           this.modelSrc = img;
           formData.append("file", data, this.fileName);
-          Api(formData).then(response => {
+          Api(formData).then((response) => {
             if (this.status == 1) {
               this.form.style_pic_url = response.data.data.pic_file_url;
               this.imgFile = "";
@@ -536,12 +536,12 @@ export default {
             this.$message({
               //element-ui的消息Message消息提示组件
               type: "success",
-              message: "上传成功"
+              message: "上传成功",
             });
           });
         });
       } else {
-        this.$refs.cropper.getCropData(data => {
+        this.$refs.cropper.getCropData((data) => {
           this.model = true;
           this.modelSrc = data;
         });
@@ -564,13 +564,13 @@ export default {
       var aLink = document.createElement("a");
       aLink.download = "author-img";
       if (type === "blob") {
-        this.$refs.cropper.getCropBlob(data => {
+        this.$refs.cropper.getCropBlob((data) => {
           this.downImg = window.URL.createObjectURL(data);
           aLink.href = window.URL.createObjectURL(data);
           aLink.click();
         });
       } else {
-        this.$refs.cropper.getCropData(data => {
+        this.$refs.cropper.getCropData((data) => {
           this.downImg = data;
           aLink.href = data;
           aLink.click();
@@ -588,7 +588,7 @@ export default {
         return false;
       }
       var reader = new FileReader();
-      reader.onload = e => {
+      reader.onload = (e) => {
         let data;
         if (typeof e.target.result === "object") {
           // 把Array Buffer转化为blob 如果是base64不需要
@@ -630,7 +630,7 @@ export default {
       this.centerDialogVisible = true;
     },
     async handleClickEdit() {
-      this.$refs["form"].validate(async valid => {
+      this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
         console.log(this.form);
@@ -650,17 +650,17 @@ export default {
         let res = await projectStyleAdd(obj);
         console.log(res);
         this.$router.push({
-          path: `/designNote?id=${res.data.data[0].id}&designRemark=${0}`
+          path: `/designNote?id=${res.data.data[0].id}&designRemark=${0}`,
         });
       });
     },
     async handleClick() {
-      this.$refs["form"].validate(async valid => {
+      this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
         console.log(this.form);
         console.log(this.defaultData);
-        this.defaultData.user_id_data.map(v => {
+        this.defaultData.user_id_data.map((v) => {
           delete v.id;
           delete v.name;
         });
@@ -684,13 +684,13 @@ export default {
       });
     },
     async handleClick1() {
-      this.$refs["obj"].validate(async valid => {
+      this.$refs["obj"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
         delete this.obj.user_name;
         let { id } = this.$route.query;
         let obj = {};
-        this.obj.user_id_data.map(v => {
+        this.obj.user_id_data.map((v) => {
           v["user_id"] = v.id;
           delete v.checked;
           delete v.ctime;
@@ -744,7 +744,7 @@ export default {
       let res = await getStylistList();
       let { data } = res.data;
       if (oldId === undefined) {
-        this.defaultData.user_id_data.map(v => {
+        this.defaultData.user_id_data.map((v) => {
           data.map((v1, i1) => {
             if (v.user_id == v1.id) {
               v["name"] = v1.name;
@@ -755,7 +755,7 @@ export default {
         this.user_id_data_length = this.defaultData.user_id_data.length;
       }
       if (oldId !== undefined) {
-        this.obj.user_id_data.map(v => {
+        this.obj.user_id_data.map((v) => {
           data.map((v1, i1) => {
             if (v.user_id == v1.id) {
               v["name"] = v1.name;
@@ -793,7 +793,7 @@ export default {
       let res = await getStyleno();
       this.form.styleno = res.data.data.styleno;
       this.styleno = res.data.data.styleno;
-    }
+    },
   },
   async mounted() {
     this.getStylenoData();
@@ -802,18 +802,16 @@ export default {
     this.getCategory();
     this.getColor();
     this.init();
-  }
+  },
 };
 </script>
 
 <style lang="less" scoped>
 .newTheStyle {
   .main {
-    min-height: 800px;
     position: relative;
     .basicInfo {
       font-size: 20px;
-      padding: 30px 10px;
     }
     .styleNumber {
       display: flex;

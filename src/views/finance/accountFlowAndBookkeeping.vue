@@ -85,11 +85,11 @@
           <div class="dv">当前查询统计数据：</div>
           <div class="dv">
             收入
-            <span style="color:orange;">{{expend_price}}</span>
+            <span style="color:orange;">{{expend_money}}</span>
           </div>
           <div class="dv">
             支出
-            <span style="color:orange;">{{in_price}}</span>
+            <span style="color:orange;">{{in_money}}</span>
           </div>
           <div class="dv">
             盈余
@@ -165,8 +165,8 @@
         <el-form-item label="账户余额:" prop="balance">
           <div>{{form3.balance}}</div>
         </el-form-item>
-        <el-form-item label="期初金额:" prop="total_price">
-          <el-input v-model="form3.total_price" placeholder="请输入内容" style="width:70%;"></el-input>
+        <el-form-item label="期初金额:" prop="total_money">
+          <el-input v-model="form3.total_money" placeholder="请输入内容" style="width:70%;"></el-input>
         </el-form-item>
         <el-form-item label="业务时间" prop="service_time">
           <el-date-picker
@@ -224,8 +224,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="收入金额:" prop="total_price">
-          <el-input v-model="form2.total_price" placeholder="请输入内容" style="width:70%;"></el-input>
+        <el-form-item label="收入金额:" prop="total_money">
+          <el-input v-model="form2.total_money" placeholder="请输入内容" style="width:70%;"></el-input>
         </el-form-item>
         <el-form-item label="业务时间" prop="service_time">
           <el-date-picker
@@ -283,8 +283,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="收入金额:" prop="total_price">
-          <el-input v-model="form1.total_price" placeholder="请输入内容" style="width:70%;"></el-input>
+        <el-form-item label="收入金额:" prop="total_money">
+          <el-input v-model="form1.total_money" placeholder="请输入内容" style="width:70%;"></el-input>
         </el-form-item>
         <el-form-item label="业务时间" prop="service_time">
           <el-date-picker
@@ -354,8 +354,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="收入金额:" prop="total_price">
-          <el-input v-model="form.total_price" placeholder="请输入内容" style="width:70%;"></el-input>
+        <el-form-item label="收入金额:" prop="total_money">
+          <el-input v-model="form.total_money" placeholder="请输入内容" style="width:70%;"></el-input>
         </el-form-item>
         <el-form-item label="业务时间" prop="service_time">
           <el-date-picker
@@ -415,8 +415,8 @@ export default {
   data() {
     return {
       power: "",
-      expend_price: "",
-      in_price: "",
+      expend_money: "",
+      in_money: "",
       ctime_start: "",
       ctime_end: "",
       pageIndex: 1,
@@ -444,7 +444,7 @@ export default {
         transaction_type_id: 0,
         balance: "",
         account_type_id: "",
-        total_price: "",
+        total_money: "",
         service_time: "",
         remarks: "",
         picurl: "",
@@ -455,7 +455,7 @@ export default {
         transaction_type_id: 0,
         balance: "",
         account_type_id: "",
-        total_price: "",
+        total_money: "",
         service_time: "",
         remarks: "",
         picurl: "",
@@ -467,7 +467,7 @@ export default {
         transaction_type_id: 0,
         balance: "",
         account_type_id: 0,
-        total_price: "",
+        total_money: "",
         service_time: "",
         remarks: "",
       },
@@ -477,7 +477,7 @@ export default {
         transaction_type_id: 0,
         balance: "",
         account_type_id: 0,
-        total_price: "",
+        total_money: "",
         service_time: "",
         remarks: "",
       },
@@ -488,7 +488,7 @@ export default {
         account_type_id: [
           { required: true, message: "账目类型", trigger: "change" },
         ],
-        total_price: [
+        total_money: [
           { required: true, message: "收入金额", trigger: "change" },
         ],
         service_time: [
@@ -502,7 +502,7 @@ export default {
         account_type_id: [
           { required: true, message: "账目类型", trigger: "change" },
         ],
-        total_price: [
+        total_money: [
           { required: true, message: "收入金额", trigger: "change" },
         ],
         service_time: [
@@ -516,7 +516,7 @@ export default {
         balance_account_id: [
           { required: true, message: "转入账户", trigger: "change" },
         ],
-        total_price: [
+        total_money: [
           { required: true, message: "收入金额", trigger: "change" },
         ],
         service_time: [
@@ -527,7 +527,7 @@ export default {
         balance_account_id: [
           { required: true, message: "账户", trigger: "change" },
         ],
-        total_price: [
+        total_money: [
           { required: true, message: "期初金额", trigger: "change" },
         ],
         service_time: [
@@ -576,10 +576,10 @@ export default {
         this.form3.service_time = moment(this.form3.service_time).format(
           "YYYY-MM-DD"
         );
-        this.form3.total_price = Number(this.form3.total_price);
-        this.form3["opay_price"] = this.form3.total_price;
-        this.form3["cope_price"] = this.form3.total_price;
-        this.form3["pay_price"] = this.form3.total_price;
+        this.form3.total_money = Number(this.form3.total_money);
+        this.form3["opay_money"] = this.form3.total_money;
+        this.form3["cope_money"] = this.form3.total_money;
+        this.form3["pay_money"] = this.form3.total_money;
         this.form3["user_id"] = localStorage.getItem("user_id");
         let res = await myAccountAdd(this.form3);
         this.$refs[form].resetFields();
@@ -599,10 +599,10 @@ export default {
         this.form2.service_time = moment(this.form2.service_time).format(
           "YYYY-MM-DD"
         );
-        this.form2.total_price = Number(this.form2.total_price);
-        this.form2["opay_price"] = this.form2.total_price;
-        this.form2["cope_price"] = this.form2.total_price;
-        this.form2["pay_price"] = this.form2.total_price;
+        this.form2.total_money = Number(this.form2.total_money);
+        this.form2["opay_money"] = this.form2.total_money;
+        this.form2["cope_money"] = this.form2.total_money;
+        this.form2["pay_money"] = this.form2.total_money;
         this.form2["user_id"] = localStorage.getItem("user_id");
         let res = await myAccountAdd(this.form2);
         this.$refs[form].resetFields();
@@ -622,10 +622,10 @@ export default {
         this.form1.service_time = moment(this.form1.service_time).format(
           "YYYY-MM-DD"
         );
-        this.form1.total_price = -Number(this.form1.total_price);
-        this.form1["opay_price"] = this.form1.total_price;
-        this.form1["cope_price"] = this.form1.total_price;
-        this.form1["pay_price"] = this.form1.total_price;
+        this.form1.total_money = -Number(this.form1.total_money);
+        this.form1["opay_money"] = this.form1.total_money;
+        this.form1["cope_money"] = this.form1.total_money;
+        this.form1["pay_money"] = this.form1.total_money;
         this.form1["user_id"] = localStorage.getItem("user_id");
         let res = await myAccountAdd(this.form1);
         this.$refs[form].resetFields();
@@ -645,10 +645,10 @@ export default {
         this.form.service_time = moment(this.form.service_time).format(
           "YYYY-MM-DD"
         );
-        this.form.total_price = Number(this.form.total_price);
-        this.form["opay_price"] = this.form.total_price;
-        this.form["cope_price"] = this.form.total_price;
-        this.form["pay_price"] = this.form.total_price;
+        this.form.total_money = Number(this.form.total_money);
+        this.form["opay_money"] = this.form.total_money;
+        this.form["cope_money"] = this.form.total_money;
+        this.form["pay_money"] = this.form.total_money;
         this.form["user_id"] = localStorage.getItem("user_id");
         let res = await myAccountAdd(this.form);
         this.$refs[form].resetFields();
@@ -727,15 +727,15 @@ export default {
       });
       console.log(res);
       let { data, count } = res.data;
-      // let { expend_price, in_price } = res.data.data;
+      // let { expend_money, in_money } = res.data.data;
       res.data.data.map((v) => {
         // console.log(v);
         if (v.account_type === "0") {
-          v["expend"] = v.total_price;
+          v["expend"] = v.total_money;
           v["income"] = 0;
         }
         if (v.account_type === "1") {
-          v["income"] = v.total_price;
+          v["income"] = v.total_money;
           v["expend"] = 0;
         }
 

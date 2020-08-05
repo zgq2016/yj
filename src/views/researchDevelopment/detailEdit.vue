@@ -1,12 +1,14 @@
 <template>
   <div class="detailEdit">
     <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>研发</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/itemDesign' }">设计项目</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: `/designCheck?id=${obj.id}` }">项目详细</el-breadcrumb-item>
-      <el-breadcrumb-item>编辑{{obj.projecttype}}订单</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>研发</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/itemDesign' }">设计项目</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: `/designCheck?id=${obj.id}` }">项目详细</el-breadcrumb-item>
+        <el-breadcrumb-item>编辑{{obj.projecttype}}订单</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <div class="main">
       <div class="upload" @click="handleImg">
         <img v-if="obj.picurl" :src="obj.picurl" alt />
@@ -269,11 +271,11 @@ import {
   getAddProject,
   projectEdit,
   getProject,
-  projectDel
+  projectDel,
 } from "@/api/researchDevelopment.js";
 export default {
   components: {
-    VueCropper
+    VueCropper,
   },
   data() {
     return {
@@ -291,7 +293,7 @@ export default {
         autoCrop: true,
         autoCropWidth: 150,
         autoCropHeight: 150,
-        fixedBox: true
+        fixedBox: true,
       },
       fileName: "", //本机文件地址
       downImg: "#",
@@ -303,16 +305,16 @@ export default {
       projecttypes: [
         {
           v: "意向",
-          id: "0"
+          id: "0",
         },
         {
           v: "阶段",
-          id: "1"
+          id: "1",
         },
         {
           v: "企划",
-          id: "2"
-        }
+          id: "2",
+        },
       ],
       wests: [],
       years: [],
@@ -326,36 +328,36 @@ export default {
       // 表单规则
       rules: {
         projectname: [
-          { required: true, message: "请输入项目名称", trigger: "blur" }
+          { required: true, message: "请输入项目名称", trigger: "blur" },
         ],
         projecttype: [
-          { required: true, message: "请输入项目类型", trigger: "blur" }
+          { required: true, message: "请输入项目类型", trigger: "blur" },
         ],
         customer_companyname: [
-          { required: true, message: "请输入客户", trigger: "blur" }
+          { required: true, message: "请输入客户", trigger: "blur" },
         ],
         year: [{ required: true, message: "请输入年份", trigger: "blur" }],
         season: [{ required: true, message: "请输入季节", trigger: "blur" }],
         element: [{ required: true, message: "请输入元素", trigger: "blur" }],
         color: [{ required: true, message: "请输入颜色", trigger: "blur" }],
         finishtime: [
-          { required: true, message: "请输入完成时间", trigger: "blur" }
+          { required: true, message: "请输入完成时间", trigger: "blur" },
         ],
         quantity: [
-          { required: true, message: "请输入要求数量", trigger: "blur" }
+          { required: true, message: "请输入要求数量", trigger: "blur" },
         ],
         detailed: [
-          { required: true, message: "请输入详细要求", trigger: "blur" }
+          { required: true, message: "请输入详细要求", trigger: "blur" },
         ],
         user_name: [
-          { required: true, message: "请输入设计师", trigger: "blur" }
-        ]
+          { required: true, message: "请输入设计师", trigger: "blur" },
+        ],
       },
 
       Assistant: false,
       checkedList: [],
       arr: [],
-      user_id_data_length: ""
+      user_id_data_length: "",
     };
   },
   methods: {
@@ -369,7 +371,8 @@ export default {
       this.centerDialogVisible1 = false;
     },
     AssistantCancel() {
-      this.centerDialogVisible1 = false;},
+      this.centerDialogVisible1 = false;
+    },
     isCheckList(e, i) {
       this.arr = [];
       if (e.checked == false) {
@@ -422,23 +425,23 @@ export default {
       let formData = new FormData();
       // 输出
       if (type === "blob") {
-        this.$refs.cropper.getCropBlob(data => {
+        this.$refs.cropper.getCropBlob((data) => {
           let img = window.URL.createObjectURL(data);
           this.model = true;
           this.modelSrc = img;
           formData.append("file", data, this.fileName);
-          Api(formData).then(response => {
+          Api(formData).then((response) => {
             this.obj.picurl = response.data.data.pic_file_url;
             this.imgFile = "";
             this.$message({
               //element-ui的消息Message消息提示组件
               type: "success",
-              message: "上传成功"
+              message: "上传成功",
             });
           });
         });
       } else {
-        this.$refs.cropper.getCropData(data => {
+        this.$refs.cropper.getCropData((data) => {
           this.model = true;
           this.modelSrc = data;
         });
@@ -454,13 +457,13 @@ export default {
       var aLink = document.createElement("a");
       aLink.download = "author-img";
       if (type === "blob") {
-        this.$refs.cropper.getCropBlob(data => {
+        this.$refs.cropper.getCropBlob((data) => {
           this.downImg = window.URL.createObjectURL(data);
           aLink.href = window.URL.createObjectURL(data);
           aLink.click();
         });
       } else {
-        this.$refs.cropper.getCropData(data => {
+        this.$refs.cropper.getCropData((data) => {
           this.downImg = data;
           aLink.href = data;
           aLink.click();
@@ -478,7 +481,7 @@ export default {
         return false;
       }
       var reader = new FileReader();
-      reader.onload = e => {
+      reader.onload = (e) => {
         let data;
         if (typeof e.target.result === "object") {
           // 把Array Buffer转化为blob 如果是base64不需要
@@ -508,20 +511,20 @@ export default {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           let res = await projectDel({ id });
           this.$router.push({ name: "Index" });
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
@@ -529,7 +532,7 @@ export default {
       this.form.quantity = this.form.quantity.replace(/[^0-9-]+/, "");
     },
     async handleKeep() {
-      this.$refs["obj"].validate(async valid => {
+      this.$refs["obj"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
 
@@ -537,7 +540,7 @@ export default {
         if (this.obj.projecttype == "阶段") this.obj.projecttype = "1";
         if (this.obj.projecttype == "企划") this.obj.projecttype = "2";
         console.log(this.obj);
-        this.obj.user_id_data.map(v => {
+        this.obj.user_id_data.map((v) => {
           v["user_id"] = v.id;
           delete v.checked;
           delete v.ctime;
@@ -585,7 +588,7 @@ export default {
     async getstylist() {
       let res = await getStylistList();
       let { data } = res.data;
-      this.obj.user_id_data.map(v => {
+      this.obj.user_id_data.map((v) => {
         data.map((v1, i1) => {
           if (v.user_id == v1.id) {
             v1["checked"] = true;
@@ -595,7 +598,7 @@ export default {
       });
       this.stylists = data;
       this.user_id_data_length = this.obj.user_id_data.length;
-    }
+    },
   },
   async mounted() {
     let { id } = this.$route.query;
@@ -612,7 +615,7 @@ export default {
 
     this.power = localStorage.getItem("power");
     console.log(this.power);
-  }
+  },
 };
 </script>
 
@@ -620,7 +623,7 @@ export default {
 .detailEdit {
   .main {
     display: flex;
-    padding: 40px 40px 40px 30px;
+    // padding: 40px 40px 40px 30px;
     .upload {
       width: 150px;
       height: 150px;

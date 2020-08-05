@@ -7,7 +7,7 @@
     <div class="form">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="供应商：">
-          <el-select v-model="formInline.Supplier" placeholder="- 全部 -" clearable>
+          <el-select v-model="formInline.supplier_id" placeholder="- 全部 -" clearable>
             <el-option
               v-for="item in SupplierList"
               :key="item.address"
@@ -20,15 +20,15 @@
           <el-date-picker
             v-model="formInline.date"
             type="daterange"
+            :start-placeholder="formInline.ctime_start"
             range-separator="至"
-            :start-placeholder="ctime_start"
-            :end-placeholder="ctime_end"
+            :end-placeholder="formInline.ctime_end"
             style="width:100%"
             clearable
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="账目类型：">
-          <el-select v-model="formInline.account_type_id" clearable>
+          <el-select v-model="formInline.account_type" clearable>
             <el-option
               v-for="item in BalanceAccountType"
               :key="item.id"
@@ -71,14 +71,6 @@
           >打印</el-button>
           <el-button v-if="power.indexOf('F4000500')!=-1" type="primary" icon="el-icon-upload2">导出</el-button>
         </el-form-item>
-        <!-- <el-form-item>
-        </el-form-item>
-        <el-form-item>
-        </el-form-item>
-        <el-form-item>
-        </el-form-item>
-        <el-form-item>
-        </el-form-item>-->
       </el-form>
     </div>
     <el-divider></el-divider>
@@ -87,21 +79,21 @@
         <h2 style="text-align:center;height:40px;">供应商对账单</h2>
         <div class="cont">
           <span>供应商：{{formInline.Supplier}}</span>
-          <span>日期：{{this.ctime_start}} 至 {{this.ctime_end}}</span>
+          <span>日期：{{formInline.ctime_start}} 至 {{formInline.ctime_end}}</span>
         </div>
         <div class="tb">
           <div class="dv">当前查询统计数据：</div>
           <div class="dv">
             应付金额
-            <span style="color:orange;">{{cope_price}}</span>
+            <span style="color:orange;">{{cope_money}}</span>
           </div>
           <div class="dv">
             实付金额
-            <span style="color:orange;">{{pay_price}}</span>
+            <span style="color:orange;">{{pay_money}}</span>
           </div>
           <div class="dv">
             应付余额
-            <span style="color:orange;">{{opay_price}}</span>
+            <span style="color:orange;">{{opay_money}}</span>
           </div>
         </div>
       </div>
@@ -122,18 +114,18 @@
             prop="account_type_name"
             label="账目类型"
           ></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="110" prop="cope_price" label="应付金额"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="110" prop="pay_price" label="实付金额"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" width="110" prop="cope_money" label="应付金额"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" width="110" prop="pay_money" label="实付金额"></el-table-column>
           <el-table-column
             :show-overflow-tooltip="true"
             width="110"
-            prop="opay_price"
+            prop="opay_money"
             label="本单应付余额"
           ></el-table-column>
           <el-table-column
             :show-overflow-tooltip="true"
             width="110"
-            prop="total_price"
+            prop="total_money"
             label="累计应付款余额"
           ></el-table-column>
           <el-table-column :show-overflow-tooltip="true" width="110" prop="remarks" label="备注"></el-table-column>
@@ -199,18 +191,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <!-- <el-form-item label="应付金额" prop="cope_price">
-          <el-input v-model="form.cope_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>-->
-        <el-form-item label="实付金额" prop="pay_price">
-          <el-input v-model="form.pay_price" placeholder="请输入内容" style="width:70%;"></el-input>
+        <el-form-item label="实付金额" prop="pay_money">
+          <el-input v-model="form.pay_money" placeholder="请输入内容" style="width:70%;"></el-input>
         </el-form-item>
-        <!-- <el-form-item label="本单应付余额" prop="opay_price">
-          <el-input v-model="form.opay_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>-->
-        <!-- <el-form-item label="累计应付余额" prop="total_price">
-          <el-input v-model="form.total_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>-->
         <el-form-item label="备注" prop="remarks">
           <el-input type="textarea" v-model="form.remarks" placeholder="请输入内容" style="width:70%;"></el-input>
         </el-form-item>
@@ -259,18 +242,9 @@
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <!-- <el-form-item label="应付金额" prop="cope_price">
-          <el-input v-model="form1.cope_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>-->
-        <el-form-item label="实付金额" prop="pay_price">
-          <el-input v-model="form1.pay_price" placeholder="请输入内容" style="width:70%;"></el-input>
+        <el-form-item label="实付金额" prop="pay_money">
+          <el-input v-model="form1.pay_money" placeholder="请输入内容" style="width:70%;"></el-input>
         </el-form-item>
-        <!-- <el-form-item label="本单应付余额" prop="opay_price">
-          <el-input v-model="form1.opay_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>-->
-        <!-- <el-form-item label="累计应付余额" prop="total_price">
-          <el-input v-model="form1.total_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>-->
         <el-form-item label="业务时间" prop="service_time">
           <el-date-picker
             v-model="form1.service_time"
@@ -307,9 +281,9 @@ export default {
   data() {
     return {
       power: "",
-      cope_price: 999,
-      pay_price: 999,
-      opay_price: 999,
+      cope_money: 999,
+      pay_money: 999,
+      opay_money: 999,
       ctime_start: "",
       ctime_end: "",
       pageIndex: 1,
@@ -323,10 +297,10 @@ export default {
         supplier_id: "",
         user_id: "",
         balance_account_id: "",
-        cope_price: 0,
-        pay_price: "",
-        opay_price: 0,
-        total_price: 0,
+        cope_money: 0,
+        pay_money: "",
+        opay_money: 0,
+        total_money: 0,
         remarks: "",
         account_type_id: "",
         picurl: "",
@@ -335,10 +309,10 @@ export default {
         supplier_id: "",
         supplier_companyname: "",
         user_id: "",
-        cope_price: 0,
-        pay_price: "",
-        opay_price: 0,
-        total_price: 0,
+        cope_money: 0,
+        pay_money: "",
+        opay_money: 0,
+        total_money: 0,
         service_time: "",
         remarks: "",
       },
@@ -347,7 +321,7 @@ export default {
           { required: true, message: "供应商", trigger: "change" },
         ],
         user_id: [{ required: true, message: "操作人", trigger: "change" }],
-        pay_price: [{ required: true, message: "实付金额", trigger: "change" }],
+        pay_money: [{ required: true, message: "实付金额", trigger: "change" }],
         service_time: [
           { required: true, message: "业务时间", trigger: "change" },
         ],
@@ -363,15 +337,15 @@ export default {
         account_type_id: [
           { required: true, message: "账目类型", trigger: "change" },
         ],
-        pay_price: [{ required: true, message: "实付金额", trigger: "change" }],
+        pay_money: [{ required: true, message: "实付金额", trigger: "change" }],
       },
       formInline: {
-        Supplier: "",
+        supplier_id: "",
         date: "",
-        account_type_id: "",
+        account_type: "",
         balance_account_id: "",
         user_id: "",
-        odd: "",
+        account_no: "",
       },
       Suppliers: [],
       BalanceAccount: [],
@@ -389,11 +363,13 @@ export default {
       return this.$elUploadBeforeUpload(file);
     },
     async onSubmit() {
+      //
+
       this.supplierInit();
     },
     async querySearch(value, cb) {
       this.form.supplier_companyname = value;
-      console.log(value);
+
       let res = await getSupplierSelect({
         keyword: this.form.supplier_companyname,
       });
@@ -430,15 +406,15 @@ export default {
           "YYYY-MM-DD"
         );
         this.form1.supplier_id = Number(this.form1.supplier_id);
-        this.form1.cope_price = Number(this.form1.cope_price);
-        this.form1.opay_price = Number(this.form1.opay_price);
-        this.form1.pay_price = Number(this.form1.pay_price);
-        this.form1.total_price = Number(this.form1.total_price);
+        this.form1.cope_money = Number(this.form1.cope_money);
+        this.form1.opay_money = Number(this.form1.opay_money);
+        this.form1.pay_money = Number(this.form1.pay_money);
+        this.form1.total_money = Number(this.form1.total_money);
         this.form1.account_type_id = 0;
         this.form1.balance_account_id = 0;
         delete this.form1.supplier_companyname;
         let res = await supplierAccountAdd(this.form1);
-        console.log(res);
+
         this.$refs[form].resetFields();
         this.form1.supplier_id = "";
         this.supplierInit();
@@ -449,23 +425,23 @@ export default {
     handleClose1(form) {
       this.$refs[form].resetFields();
       this.form1.supplier_id = "";
-      console.log(this.form1);
+
       this.dialogVisible1 = false;
     },
     async handleAddForm(form) {
       this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
-        this.form.cope_price = Number(this.form.cope_price);
+        this.form.cope_money = Number(this.form.cope_money);
         this.form.supplier_id = Number(this.form.supplier_id);
-        this.form.opay_price = Number(this.form.opay_price);
-        this.form.pay_price = Number(this.form.pay_price);
-        this.form.total_price = Number(this.form.total_price);
+        this.form.opay_money = Number(this.form.opay_money);
+        this.form.pay_money = Number(this.form.pay_money);
+        this.form.total_money = Number(this.form.total_money);
         this.form.account_type_id = Number(this.form.account_type_id);
         this.form.balance_account_id = Number(this.form.balance_account_id);
         delete this.form.supplier_companyname;
         let res = await supplierAccountAdd(this.form);
-        console.log(res);
+
         this.$refs[form].resetFields();
         this.form.supplier_id = "";
         this.supplierInit();
@@ -501,29 +477,33 @@ export default {
       this.supplierInit();
     },
     async init() {
-      // this.ctime_start = moment(this.formInline.date[0]).format("YYYY-MM-DD");
-      // this.ctime_end = moment(this.formInline.date[1]).format("YYYY-MM-DD");
       let res1 = await getSupplierSelect({
         keyword: "",
       });
       this.SupplierList = res1.data.data;
     },
     async supplierInit() {
-      let res = await supplierAccountList({
-        page: this.pageIndex,
-        page_size: this.pageSize,
-      });
-      console.log(res);
+      this.formInline["ctime_start"] =
+        this.formInline.date === ""
+          ? ""
+          : moment(this.formInline.date[0]).format("YYYY-MM-DD");
+      this.formInline["ctime_end"] =
+        this.formInline.date === ""
+          ? ""
+          : moment(this.formInline.date[1]).format("YYYY-MM-DD");
+      this.formInline["page"] = this.pageIndex;
+      this.formInline["page_size"] = this.pageSize;
+      console.log(this.formInline);
+      let res = await supplierAccountList(this.formInline);
+
       res.data.data.map((v) => {
-        if (v.pay_price !== 0) {
-          v.opay_price = v.cope_price - v.pay_price;
+        if (v.pay_money !== 0) {
+          v.opay_money = v.cope_money - v.pay_money;
         }
       });
       let { data, count } = res.data;
       this.tableData = data;
       this.total = count;
-      this.ctime_start = moment(this.formInline.date[0]).format("YYYY-MM-DD");
-      this.ctime_end = moment(this.formInline.date[1]).format("YYYY-MM-DD");
     },
   },
   async mounted() {

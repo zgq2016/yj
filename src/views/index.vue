@@ -12,6 +12,7 @@
           :collapse="isCollapse"
           background-color="#000"
           text-color="#fff"
+          active-text-color="red"
         >
           <el-menu-item index="/homepage" v-if="power.indexOf('Z')!=-1">
             <div style="display: flex;align-items: center;">

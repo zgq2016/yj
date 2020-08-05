@@ -80,13 +80,13 @@
           prop="account_type_name"
           label="账目类型"
         ></el-table-column>
-        <el-table-column :show-overflow-tooltip="true" width="90" prop="cope_price" label="应付金额"></el-table-column>
-        <el-table-column :show-overflow-tooltip="true" width="90" prop="pay_price" label="实付金额"></el-table-column>
-        <el-table-column :show-overflow-tooltip="true" width="100" prop="opay_price" label="本单应付余额"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" width="90" prop="cope_money" label="应付金额"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" width="90" prop="pay_money" label="实付金额"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" width="100" prop="opay_money" label="本单应付余额"></el-table-column>
         <el-table-column
           :show-overflow-tooltip="true"
           width="110"
-          prop="total_price"
+          prop="total_money"
           label="累计应付款余额"
         ></el-table-column>
         <el-table-column :show-overflow-tooltip="true" width="130" prop="remarks" label="备注"></el-table-column>
@@ -168,7 +168,7 @@ export default {
         page_size: this.pageSize,
       });
       let { data, count } = res.data;
-      // let { cope_price, pay_price, opay_price } = res.data.data;
+      // let { cope_money, pay_money, opay_money } = res.data.data;
       this.tableData = data;
       this.total = count;
       // this.ctime_start = moment(this.formInline.date[0]).format("YYYY-MM-DD");
