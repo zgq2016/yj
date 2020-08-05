@@ -1,7 +1,7 @@
 <template>
   <div class="stockInquiryDetails">
     <el-breadcrumb separator="/" class="breadcrumb">
-      <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" />
+      <!-- <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" /> -->
       <el-breadcrumb-item>仓库</el-breadcrumb-item>
       <el-breadcrumb-item>产品入库</el-breadcrumb-item>
       <el-breadcrumb-item>产品入库详情</el-breadcrumb-item>
@@ -23,6 +23,47 @@
         </div>
       </div>
       <hr style="border:1px dashed #ccc;margin:0 10px" />
+
+      <div class="right_form">
+        <el-form :model="form" ref="form">
+          <el-form-item style="overflow: hidden;width:100%;">
+            <div style="float:left;padding:10px 0 0 15px;">
+              尚欠厂商款:
+              <em style="color:red;">&yen;{{'0.00'}}</em>
+            </div>
+            <div class="cssa" style="float:right;padding:10px 15px 0 0;width:210px;">
+              <el-steps :space="110" align-center :active="actionsLenght" finish-status="wait">
+                <el-step icon="el-icon-success" title="草稿"></el-step>
+                <el-step icon="el-icon-success" title="已入库"></el-step>
+                <el-step icon="el-icon-success" v-if="this.$route.query.state == 4" title="已撤销"></el-step>
+              </el-steps>
+            </div>
+          </el-form-item>
+
+          <!-- prop="factory_name" -->
+          <el-form-item style="float:left;width:30%;margin-left:3%;" label="厂商:">
+            <span>{{form.factory_name}}</span>
+          </el-form-item>
+          <!-- prop="storehouse_name" -->
+          <el-form-item style="float:left;width:30%;margin-left:2%;" label="仓库:">
+            <span>{{form.storehouse_name}}</span>
+          </el-form-item>
+          <!-- prop="ctime" -->
+          <el-form-item style="float:left;width:30%;margin-left:1%;" label="日期:">
+            <span>{{form.ctime}}</span>
+          </el-form-item>
+          <el-form-item style="float:left;width:30%;margin-left:3%;" label="结算账户:">
+            <span>{{form.account_name}}</span>
+          </el-form-item>
+          <el-form-item style="float:left;width:30%;margin-left:2%;" label="实付金额:">
+            <span>{{form.pay_price}}</span>
+          </el-form-item>
+          <el-form-item style="float:left;width:31%;margin-left:1%;" label="备注:" prop="desc">
+            <span>{{form.remarks}}</span>
+          </el-form-item>
+        </el-form>
+      </div>
+
       <!-- 已入库/已撤销 -->
       <div class="table">
         <el-table
@@ -55,19 +96,11 @@
         <el-form :model="ruleForm" inline ref="ruleForm" class="demo-ruleForm">
           <div class="imgs">
             <el-form-item label="附图:">
-              <el-upload
-                class="upload-demo"
-                action="https://yj.ppp-pay.top/uploadpic.php"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
-                :file-list="fileList"
-                :on-success="successFile"
-                list-type="picture"
-                style="float:left;"
-              >
-                <!-- v-if=" form.state!=1&&form.state!=4" -->
-                <el-button size="mini" type="primary">点击上传</el-button>
-              </el-upload>
+              <ul>
+                <li v-for="(item,index) in fileList" :key="index">
+                  <img :src="item.url" alt srcset />
+                </li>
+              </ul>
             </el-form-item>
           </div>
           <div class="texconts">
@@ -79,29 +112,16 @@
               <span style="color:red;font-size:16px;">&yen;{{total_price}}</span>
             </el-form-item>
           </div>
-          <!-- <div style="position: absolute;bottom:5px;left:32%;">
-              <el-form-item v-if="!vh4">
-                <el-button
-                  size="mini"
-                  v-if="!vh3&&power.indexOf('C2000500')!=-1"
-                  type="primary"
-                  @click="sketch(0)"
-                >草稿</el-button>
-                <el-button
-                  size="mini"
-                  v-if="!vh3&&power.indexOf('C2000600')!=-1"
-                  type="primary"
-                  @click="sketch(1)"
-                >入库</el-button>
-                <el-button
-                  size="mini"
-                  v-if="vh2 && !vh3&&power.indexOf('C20001000')!=-1"
-                  @click="delStock"
-                  type="primary"
-                >删除</el-button>
-                <el-button size="mini" v-if="vh3" @click="backout" type="primary">撤销</el-button>
-              </el-form-item>
-          </div>-->
+          <div style="position: absolute;bottom:5px;left:40%;">
+            <el-form-item>
+              <el-button
+                size="small"
+                v-if="this.$route.query.state==1"
+                @click="sketch(4)"
+                type="primary"
+              >撤销</el-button>
+            </el-form-item>
+          </div>
         </el-form>
       </div>
     </div>
@@ -128,6 +148,7 @@ export default {
       fileList: [],
       power: "",
       form: {},
+      actionsLenght: 0,
     };
   },
   methods: {
@@ -140,6 +161,84 @@ export default {
       this.fileList = fileList;
       if (fileList.length >= 3) {
         // this.vh = false;
+      }
+    },
+    // 采购
+    async sketch(state) {
+      // console.log(this.weretable);
+      let size_data = [];
+      if (state == 4) {
+        this.weretable.map((v, i) => {
+          // console.log(v);
+          if (v.color != "" && v.size != "" && v.quantity != "") {
+            size_data.push({
+              stylename: v.stylename,
+              produce_no: v.produce_no,
+              style_color_name: v.style_color_name,
+              size: v.size,
+              unit: v.unit,
+              quantity: v.quantity,
+              price: v.price,
+              discount: v.discount,
+              discount_price: v.discount_price,
+              money: v.money,
+              discount_money: v.discount_money,
+              id: v.id,
+              style_id: v.style_id,
+            });
+          }
+        });
+      }
+      let images = [];
+      this.fileList.map((v, i) => {
+        if (v.response) {
+          images.push(v.response.data.pic_file_url);
+        } else {
+          images.push(v.url);
+        }
+      });
+      //********* */
+      if (
+        this.form.factory_name == undefined ||
+        this.form.factory_name == "" ||
+        this.form.storehouse_name == undefined ||
+        this.form.account_name == undefined ||
+        size_data.length <= 0
+      ) {
+        let str = "请填写完整数据";
+        if (
+          this.form.factory_name == undefined ||
+          this.form.factory_name == ""
+        ) {
+          str = "请选择厂商";
+        }
+        this.$message({
+          showClose: true,
+          message: "请填写完整数据",
+          type: "error",
+        });
+      } else {
+        //******* */
+        console.log(this.form);
+        let res = await bookStockOrderEdit({
+          factory_id: this.form.factory_id,
+          storehouse_id: this.form.storehouse_id,
+          balance_account_id: this.form.account_id,
+          pay_price: this.form.pay_price,
+          remarks: this.form.remarks,
+          id: this.form.id,
+          size_data,
+          images,
+          state,
+          total_price: this.total_price,
+        });
+        console.log(res);
+
+        this.form = {};
+        this.fileList = [];
+        this.$router.push({
+          path: `/stockInquiry`,
+        });
       }
     },
     // 右边上传图片==>删除
@@ -187,13 +286,17 @@ export default {
       return sums;
     },
     async init() {
+      if (this.$route.query.state == 1) {
+        this.actionsLenght = 1;
+      } else if (this.$route.query.state == 4) {
+        this.actionsLenght = 2;
+      }
       let res = await bookStockOrderInfo({
         id: this.$route.query.id,
       });
       let { data } = res.data;
       this.form = data;
       this.weretable = data.size_data;
-      console.log(this.form.images);
       this.fileList = [];
       this.form.images.map((v, i) => {
         this.fileList.push({
@@ -230,14 +333,73 @@ export default {
   .table {
     margin-top: 15px;
   }
+  .right_form {
+    /deep/.cssa {
+      .el-steps {
+        position: relative;
+        // margin-bottom: 40px;
+        /deep/.el-step__icon {
+          width: 12px;
+        }
+        /deep/.el-step__icon-inner[class*="el-icon"]:not(.is-status) {
+          font-size: 12px;
+          font-weight: 400;
+          position: relative;
+        }
+        /deep/.el-step__title {
+          font-size: 12px;
+          line-height: 14px;
+        }
+        /deep/.el-step__icon {
+          width: 12px;
+        }
+        /deep/.el-step__head {
+          // top: 30px;
+          // color: #000;
+          // border-color: #000;
+        }
+
+        /deep/.el-step__line {
+          // width: auto;
+          // margin-right: 20px;
+          margin-top: 9px;
+        }
+
+        /deep/.el-step {
+          // width: 100px;
+          // display: inline-block;
+        }
+        /deep/.el-step__main {
+          position: relative;
+          bottom: 10px;
+          .el-step__description {
+            padding-top: 20%;
+          }
+        }
+      }
+    }
+  }
   .main_footer {
     margin-top: 15px;
-    width: 1210px;
-    height: 200px;
+    // width: 1210px;
+    height: 300px;
     position: relative;
     .imgs {
       position: absolute;
       left: 5px;
+      /deep/.el-form-item__content {
+        ul {
+          overflow: hidden;
+          li {
+            list-style: none;
+            float: left;
+            display: block;
+            width: 10%;
+            margin-right: 10px;
+            height: auto;
+          }
+        }
+      }
     }
     .texconts {
       position: absolute;

@@ -142,8 +142,8 @@
                   style="width:200px"
                 ></el-input>
               </el-form-item>
-              <el-form-item label="结算账户" prop="payManneItem">
-                <el-select v-model="form.payManneItem" placeholder="请选择">
+              <el-form-item label="结算账户" prop="balance_account_id">
+                <el-select v-model="form.balance_account_id" placeholder="请选择">
                   <el-option
                     v-for="item in options"
                     :key="item.id"
@@ -233,7 +233,7 @@ export default {
         amountPurchased: "", //采购量
         purchasePrice: "", //单价
         money: "", //金额
-        payManneItem: "", //支付方式
+        balance_account_id: "", //支付方式
         payment: 0, //付款
         finishTime: "", //预计完成时间
         deposit: "", //订金
@@ -265,7 +265,7 @@ export default {
           { required: true, message: "请输入金额", trigger: "blur" },
           { type: "number", message: "金额必须为数字值" },
         ],
-        payManneItem: [
+        balance_account_id: [
           { required: true, message: "请选择支付方式", trigger: "blur" },
         ],
         payment: [
@@ -341,7 +341,7 @@ export default {
             deposit: this.form.deposit,
             dosage: this.form.dosage,
             finishTime: this.form.finishTime,
-            payManneItem: this.form.payManneItem,
+            balance_account_id: this.form.balance_account_id,
             money: this.form.money,
             payment: this.form.payment,
             purchasePrice: this.form.purchasePrice,
@@ -364,7 +364,7 @@ export default {
             deposit: this.form.deposit,
             dosage: this.form.dosage,
             finishTime: this.form.finishTime,
-            payManneItem: this.form.payManneItem,
+            balance_account_id: this.form.balance_account_id,
             money: this.form.money,
             payment: this.form.payment,
             purchasePrice: this.form.purchasePrice,
@@ -392,7 +392,11 @@ export default {
         page: this.pageIndex2,
         page_size: this.pageSize2,
         state: 1,
+<<<<<<< HEAD
         storehouse_type: 0,
+=======
+        storehouse_type: 1,
+>>>>>>> a9eb8c393654b2fe2b557278ae594a904456490b
       });
       let { data } = res.data;
       this.ware = data;
