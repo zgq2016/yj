@@ -1,15 +1,15 @@
 <template>
-  <div class="stockInquiryDetails">
+  <div class="salesOrderDetails">
     <el-breadcrumb separator="/" class="breadcrumb">
       <!-- <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" /> -->
-      <el-breadcrumb-item>仓库</el-breadcrumb-item>
-      <el-breadcrumb-item>产品入库</el-breadcrumb-item>
-      <el-breadcrumb-item>产品入库详情</el-breadcrumb-item>
+      <el-breadcrumb-item>销售</el-breadcrumb-item>
+      <el-breadcrumb-item>销售订单</el-breadcrumb-item>
+      <el-breadcrumb-item>销售订单详情</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main">
       <div class="top">
         <div class="rh_left">
-          <h4>入库单-{{form.no}}-{{'zaan'}}</h4>
+          <h4>销售订单-{{form.no}}-{{'zaan'}}</h4>
         </div>
         <div class="rh_right">
           <el-button size="mini" type="primary" v-if="power.indexOf('C2000200')!=-1">扫码</el-button>
@@ -19,7 +19,7 @@
             @click="addCreateWare"
             type="primary"
             v-if="power.indexOf('C2000400')!=-1"
-          >新增入库单</el-button>
+          >新增销售订单</el-button>
         </div>
       </div>
       <hr style="border:1px dashed #ccc;margin:0 10px" />
@@ -28,21 +28,21 @@
         <el-form :model="form" ref="form">
           <el-form-item style="overflow: hidden;width:100%;">
             <div style="float:left;padding:10px 0 0 15px;">
-              尚欠厂商款:
+              客户尚欠款:
               <em style="color:red;">&yen;{{'0.00'}}</em>
             </div>
             <div class="cssa" style="float:right;padding:10px 15px 0 0;width:210px;">
               <el-steps :space="110" align-center :active="actionsLenght" finish-status="wait">
                 <el-step icon="el-icon-success" title="草稿"></el-step>
-                <el-step icon="el-icon-success" title="已入库"></el-step>
+                <el-step icon="el-icon-success" title="已售出"></el-step>
                 <el-step icon="el-icon-success" v-if="this.$route.query.state == 4" title="已撤销"></el-step>
               </el-steps>
             </div>
           </el-form-item>
 
           <!-- prop="factory_name" -->
-          <el-form-item style="float:left;width:30%;margin-left:3%;" label="厂商:">
-            <span>{{form.factory_name}}</span>
+          <el-form-item style="float:left;width:30%;margin-left:3%;" label="客户:">
+            <span>{{form.companyname}}</span>
           </el-form-item>
           <!-- prop="storehouse_name" -->
           <el-form-item style="float:left;width:30%;margin-left:2%;" label="仓库:">
@@ -56,7 +56,7 @@
             <span>{{form.account_name}}</span>
           </el-form-item>
           <el-form-item style="float:left;width:30%;margin-left:2%;" label="实付金额:">
-            <span>{{form.pay_price}}</span>
+            <span>{{form.pay_money}}</span>
           </el-form-item>
           <el-form-item style="float:left;width:31%;margin-left:1%;" label="备注:" prop="desc">
             <span>{{form.remarks}}</span>
@@ -98,7 +98,7 @@
             <el-form-item label="附图:">
               <ul>
                 <li v-for="(item,index) in fileList" :key="index">
-                  <img :src="item.url" alt srcset />
+                  <img  :src="item.url" alt srcset />
                 </li>
               </ul>
             </el-form-item>
@@ -130,15 +130,13 @@
 
 <script>
 import {
-  storehouseList,
-  bookStockOrderList,
-  bookStockOrderInfo,
-  balanceAccountSelect,
-  bookStockOrderAdd,
-  bookStockOrderEdit,
-  bookStockOrderDel,
-  bookStockOrderSizeDel,
-} from "@/api/warehouse.js";
+  customerOrderList,
+  customerOrderInfo,
+  customerOrderAdd,
+  customerOrderEdit,
+  customerOrderDel,
+  customerOrderSizeDel,
+} from "@/api/sell";
 export default {
   data() {
     return {
@@ -154,7 +152,7 @@ export default {
   methods: {
     addCreateWare() {
       this.$router.push({
-        path: `/stockInquiryDetailsAdd`,
+        path: `/salesOrderDetailsAdd`,
       });
     },
     successFile(response, file, fileList) {
@@ -199,18 +197,18 @@ export default {
       });
       //********* */
       if (
-        this.form.factory_name == undefined ||
-        this.form.factory_name == "" ||
+        this.form.companyname == undefined ||
+        this.form.companyname == "" ||
         this.form.storehouse_name == undefined ||
         this.form.account_name == undefined ||
         size_data.length <= 0
       ) {
         let str = "请填写完整数据";
         if (
-          this.form.factory_name == undefined ||
-          this.form.factory_name == ""
+          this.form.companyname == undefined ||
+          this.form.companyname == ""
         ) {
-          str = "请选择厂商";
+          str = "请选择客户";
         }
         this.$message({
           showClose: true,
@@ -219,12 +217,11 @@ export default {
         });
       } else {
         //******* */
-        console.log(this.form);
-        let res = await bookStockOrderEdit({
-          factory_id: this.form.factory_id,
+        let res = await customerOrderEdit({
+          factory_id: this.form.companyname,
           storehouse_id: this.form.storehouse_id,
           balance_account_id: this.form.account_id,
-          pay_price: this.form.pay_price,
+          pay_money: this.form.pay_money,
           remarks: this.form.remarks,
           id: this.form.id,
           size_data,
@@ -237,7 +234,7 @@ export default {
         this.form = {};
         this.fileList = [];
         this.$router.push({
-          path: `/stockInquiry`,
+          path: `/salesOrder`,
         });
       }
     },
@@ -291,9 +288,10 @@ export default {
       } else if (this.$route.query.state == 4) {
         this.actionsLenght = 2;
       }
-      let res = await bookStockOrderInfo({
+      let res = await customerOrderInfo({
         id: this.$route.query.id,
       });
+      console.log(res);
       let { data } = res.data;
       this.form = data;
       this.weretable = data.size_data;
@@ -314,7 +312,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.stockInquiryDetails {
+.salesOrderDetails {
   .top {
     overflow: hidden;
 
@@ -397,7 +395,7 @@ export default {
             width: 10%;
             margin-right: 10px;
             height: auto;
-             img{
+            img{
                 width: 100%;
                 height: auto;
                 max-height: 140px;
