@@ -1,14 +1,14 @@
 <template>
-  <div class="index">
+  <div class="index w">
     <el-container>
       <el-aside width="120px">
         <div class="logo">FOS</div>
+        <!--           @open="handleOpen"
+        @close="handleClose"-->
         <el-menu
           :router="true"
           :default-active="activeIndex"
           class="el-menu-vertical-demo"
-          @open="handleOpen"
-          @close="handleClose"
           :collapse="isCollapse"
           background-color="#000"
           text-color="#fff"
@@ -216,17 +216,16 @@ export default {
     };
   },
   methods: {
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
-    },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
-    },
+    // handleOpen(key, keyPath) {
+    //   console.log(key, keyPath);
+    // },
+    // handleClose(key, keyPath) {
+    //   console.log(key, keyPath);
+    // },
   },
   mounted() {
     this.power = localStorage.getItem("power");
-    // console.log(this.power);
-    // console.log(localStorage.getItem("user_id"));
+    console.log()
   },
 };
 </script>

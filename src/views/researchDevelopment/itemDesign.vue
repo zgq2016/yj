@@ -7,11 +7,18 @@
         <el-breadcrumb-item>设计项目</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
+    <div style="margin-bottom:10px">
+      <el-input v-model="name" placeholder="项目" class="project" style="width:200px"></el-input>
+      <el-button
+        icon="el-icon-search"
+        size="mini"
+        circle
+        class="search_button"
+        @click="handlesearch"
+      ></el-button>
+    </div>
     <div class="form">
       <el-form :inline="true" class="demo-form-inline">
-        <el-form-item>
-          <el-input v-model="name" placeholder="项目" class="project" style="width:200px"></el-input>
-        </el-form-item>
         <el-form-item>
           <el-select v-model="year" clearable placeholder="年份" style="width:100px">
             <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
@@ -75,29 +82,21 @@
             <el-option v-for="item in states" :key="item.id" :label="item.v" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item>
-          <!-- <el-button type="primary" @click="handlesearch">查询</el-button> -->
-          <el-button
-            icon="el-icon-search"
-            size="mini"
-            circle
-            class="search_button"
-            @click="handlesearch"
-          ></el-button>
-        </el-form-item>
+        <!-- <el-button type="primary" @click="handlesearch">查询</el-button> -->
       </el-form>
+      <!-- 新增项目 -->
+      <div class="addStyle" v-if="power.indexOf('A1000100')!=-1">
+        <el-dropdown trigger="click" @command="handleCommand">
+          <span class="el-dropdown-link">新增项目</span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="a">新增意向订单</el-dropdown-item>
+            <el-dropdown-item command="b">新增阶段工作</el-dropdown-item>
+            <el-dropdown-item command="c">新增企划系列</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
     </div>
-    <!-- 新增项目 -->
-    <div class="addStyle" v-if="power.indexOf('A1000100')!=-1">
-      <el-dropdown trigger="click" @command="handleCommand">
-        <span class="el-dropdown-link">新增项目</span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="a">新增意向订单</el-dropdown-item>
-          <el-dropdown-item command="b">新增阶段工作</el-dropdown-item>
-          <el-dropdown-item command="c">新增企划系列</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
-    </div>
+
     <!-- 列表 -->
     <div class="dataList">
       <div class="list" v-for="(item, index) in data" :key="index">
@@ -320,6 +319,7 @@ export default {
       \\5b8b\4f53, sans-serif;
   }
   .search_button {
+    margin-left: 10px;
     background-color: #000;
   }
   /deep/ .el-icon-search {
@@ -327,6 +327,12 @@ export default {
   }
   /deep/.el-button {
     border: none;
+  }
+  .form {
+    width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   .addStyle {
     margin: 0 30px 30px 0;
