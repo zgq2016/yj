@@ -157,7 +157,7 @@ export default {
 
       this.factorys = res.data.data;
       this.total1 = res.data.count;
-      this.factorys.unshift({ factory_name: "全部"});
+      this.factorys.unshift({ factory_name: "全部" });
     },
     handleSize1(val) {
       this.pageSize1 = val;
@@ -192,7 +192,13 @@ export default {
     onSubmit() {
       // console.log(this.ruleForm);
       this.pageIndex = 1;
-      this.init(this.ruleForm)
+      this.ruleForm.ctime_start = "";
+      this.ruleForm.ctime_end = "";
+      if (this.ruleForm.ctime) {
+        this.ruleForm.ctime_start = this.ruleForm.ctime[0];
+        this.ruleForm.ctime_end = this.ruleForm.ctime[1];
+      }
+      this.init(this.ruleForm);
     },
     // 新建入库单
     addCreateWare() {
@@ -211,6 +217,7 @@ export default {
       this.total = res.data.count;
       console.log(res);
       this.tableData.map((v, i) => {
+         v.ctime = v.ctime.substring(0, 10);
         if (v.state == 0) {
           v.state_name = "草稿";
         } else if (v.state == 1) {

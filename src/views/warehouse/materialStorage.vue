@@ -10,6 +10,7 @@
         <el-form :inline="true" :model="form">
           <el-form-item label="仓库:">
             <el-select
+              size="small"
               v-model="form.storehouse_id"
               clearable
               placeholder="请选择仓库"
@@ -32,11 +33,22 @@
           </el-form-item>
 
           <el-form-item label="商品:">
-            <el-input style="width:130px" v-model="form.materials_name" placeholder="请输入商品名称"></el-input>
+            <el-input
+              style="width:130px"
+              size="small"
+              v-model="form.materials_name"
+              placeholder="请输入商品名称"
+            ></el-input>
           </el-form-item>
 
           <el-form-item label="颜色:">
-            <el-select v-model="form.color" clearable placeholder="请选择分类" style="width:120px">
+            <el-select
+              v-model="form.color"
+              size="small"
+              clearable
+              placeholder="请选择分类"
+              style="width:120px"
+            >
               <el-option
                 v-for="(item,index) in options"
                 :key="index"
@@ -61,6 +73,7 @@
             <el-date-picker
               style="width:300px;"
               v-model="form.business_time"
+              size="small"
               type="daterange"
               range-separator="至"
               start-placeholder="开始日期"
@@ -70,7 +83,7 @@
             ></el-date-picker>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onSubmit">查询</el-button>
+            <el-button type="primary" size="small" @click="onSubmit">查询</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -130,7 +143,7 @@ export default {
       pageSize2: 9,
       total: 0,
       total2: 0,
-      color: ["X", "L", "XXL"],
+      color: [],
       ware: [],
       options: [],
       sizes: [],

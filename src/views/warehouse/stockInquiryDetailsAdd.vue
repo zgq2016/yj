@@ -869,8 +869,8 @@ export default {
         this.form.factory_name == undefined ||
         this.form.factory_name == "" ||
         this.form.storehouse_name == undefined ||
-        this.form.storehouse_name == '' ||
-        this.form.account_name == '' ||
+        this.form.storehouse_name == "" ||
+        this.form.account_name == "" ||
         this.form.account_name == undefined ||
         size_data.length <= 0
       ) {
@@ -896,6 +896,7 @@ export default {
             balance_account_id: this.form.account_name,
             pay_price: this.form.pay_price,
             remarks: this.form.remarks,
+            ctime: this.form.ctime,
             size_data,
             images,
             state,
@@ -936,6 +937,7 @@ export default {
             pay_price: this.form.pay_price,
             remarks: this.form.remarks,
             id: this.form.id,
+            ctime: this.form.ctime,
             size_data,
             images,
             state,

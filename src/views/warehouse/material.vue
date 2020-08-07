@@ -11,6 +11,7 @@
           <el-form-item label="仓库:">
             <el-select
               v-model="form.storehouse_id"
+              size="small"
               placeholder="请选择仓库"
               clearable
               style="width:110px"
@@ -32,11 +33,17 @@
           </el-form-item>
 
           <el-form-item label="物料名称:">
-            <el-input style="width:100px" v-model="form.materialsname" placeholder="请输入商品名称"></el-input>
+            <el-input
+              style="width:100px"
+              size="small"
+              v-model="form.materialsname"
+              placeholder="请输入商品名称"
+            ></el-input>
           </el-form-item>
 
           <el-form-item label="物料分类:">
             <el-select
+              size="small"
               v-model="form.materials_class_name"
               placeholder="请选择物料分类"
               style="width:120px;margin-right:10px;"
@@ -55,6 +62,7 @@
               placeholder="请选择物料分类"
               style="width:120px"
               @change="handleClassDatasId1($event)"
+              size="small"
             >
               <el-option
                 v-for="item in class_datas.class_data"
@@ -66,23 +74,36 @@
           </el-form-item>
 
           <el-form-item label="数量:">
-            <el-input style="width:115px" type="number" v-model="form.min" placeholder="请输入数量"></el-input>&nbsp;至
-            <el-input style="width:115px" type="number" v-model="form.max" placeholder="请输入数量"></el-input>
+            <el-input
+              style="width:115px"
+              size="small"
+              type="number"
+              v-model="form.min"
+              placeholder="请输入数量"
+            ></el-input>&nbsp;至
+            <el-input
+              style="width:115px"
+              size="small"
+              type="number"
+              v-model="form.max"
+              placeholder="请输入数量"
+            ></el-input>
           </el-form-item>
 
           <el-form-item>
             <el-checkbox v-model="form.checked">过滤无库存</el-checkbox>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onSubmit">查询</el-button>
+            <el-button type="primary"  size="small" @click="onSubmit">查询</el-button>
             <!-- <el-button type="primary">导出</el-button> -->
             <!-- <el-button v-print="'#printTest'" type="primary">打印</el-button> -->
           </el-form-item>
           <el-form-item>
-            <el-button type="primary">展示统计数据</el-button>
+            <el-button  size="small" type="primary">展示统计数据</el-button>
           </el-form-item>
           <el-button
             type="primary"
+             size="small"
             style="float:right;margin-right:35px;"
             @click="handleCard"
             v-if="power.indexOf('C3000200')!=-1"
@@ -300,7 +321,7 @@ import {
   storehouseList,
   materialStoreList,
   materialsPurchase,
-  balanceAccountSelect
+  balanceAccountSelect,
 } from "@/api/warehouse.js";
 import { getMaterialsClass, getMaterialsClassInfo } from "@/api/archives.js";
 export default {
@@ -587,7 +608,7 @@ export default {
     this.getClassData();
     this.init();
     this.stock();
-    this.balanc()
+    this.balanc();
     this.power = localStorage.getItem("power");
   },
 };

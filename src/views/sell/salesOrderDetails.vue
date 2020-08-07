@@ -98,7 +98,7 @@
             <el-form-item label="附图:">
               <ul>
                 <li v-for="(item,index) in fileList" :key="index">
-                  <img  :src="item.url" alt srcset />
+                  <img :src="item.url" alt srcset />
                 </li>
               </ul>
             </el-form-item>
@@ -204,10 +204,7 @@ export default {
         size_data.length <= 0
       ) {
         let str = "请填写完整数据";
-        if (
-          this.form.companyname == undefined ||
-          this.form.companyname == ""
-        ) {
+        if (this.form.companyname == undefined || this.form.companyname == "") {
           str = "请选择客户";
         }
         this.$message({
@@ -218,11 +215,12 @@ export default {
       } else {
         //******* */
         let res = await customerOrderEdit({
-          factory_id: this.form.companyname,
+          customer_id: this.form.customer_id,
           storehouse_id: this.form.storehouse_id,
           balance_account_id: this.form.account_id,
           pay_money: this.form.pay_money,
           remarks: this.form.remarks,
+          ctime: this.form.ctime,
           id: this.form.id,
           size_data,
           images,
@@ -395,10 +393,10 @@ export default {
             width: 10%;
             margin-right: 10px;
             height: auto;
-            img{
-                width: 100%;
-                height: auto;
-                max-height: 140px;
+            img {
+              width: 100%;
+              height: auto;
+              max-height: 140px;
             }
           }
         }

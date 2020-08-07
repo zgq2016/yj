@@ -27,7 +27,7 @@
           </el-form-item>
 
           <el-form-item label="客户:">
-            <el-select v-model="formInline.user" size="small" clearable placeholder="客户">
+            <el-select v-model="formInline.customer_id" size="small" clearable placeholder="客户">
               <el-option
                 v-for="item in wests"
                 :key="item.value"
@@ -125,13 +125,7 @@ export default {
   data() {
     return {
       power: "",
-      formInline: {
-        styleno: "",
-        year: "",
-        season: "",
-        user_id: "",
-        style_type: "",
-      },
+      formInline: {},
       user_id: "",
       tableData: [],
       years: [],
@@ -154,12 +148,16 @@ export default {
   },
   methods: {
     onSubmit() {
+      this.page = 1;
+      this.formInline.ctime_start = "";
+      this.formInline.ctime_end = "";
+      if (this.formInline.ctime) {
+        this.formInline.ctime_start = this.formInline.ctime[0];
+        this.formInline.ctime_end = this.formInline.ctime[1];
+      }
       this.init(this.formInline);
     },
 
-    handleUser_id(e) {
-      this.formInline.user_id = e;
-    },
     async getYear() {
       let res = await getYearList();
       let { data } = res.data;
@@ -216,20 +214,15 @@ export default {
       this.tableData = data;
       // // console.log(this.tableData);
       this.tableData.map((v, i) => {
+        v.ctime = v.ctime.substring(0, 10);
         if (v.state == 0) {
           v.states = "草稿";
         } else if (v.state == 1) {
           v.states = "已出售";
         } else if (v.state === 4) {
           v.states = "已撤销";
-          console.log(1);
         }
-        this.wests.map((j, k) => {
-          if (v.customer_id == j.id) {
-            v.companyname = j.companyname;
-            v.phone = j.phone;
-          }
-        });
+       
       });
     },
     handleSizeChange(val) {

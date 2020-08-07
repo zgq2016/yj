@@ -227,6 +227,7 @@ export default {
           pay_price: this.form.pay_price,
           remarks: this.form.remarks,
           id: this.form.id,
+          ctime: this.form.ctime,
           size_data,
           images,
           state,
@@ -397,10 +398,10 @@ export default {
             width: 10%;
             margin-right: 10px;
             height: auto;
-             img{
-                width: 100%;
-                height: auto;
-                max-height: 140px;
+            img {
+              width: 100%;
+              height: auto;
+              max-height: 140px;
             }
           }
         }

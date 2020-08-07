@@ -305,7 +305,7 @@
                 type="primary"
                 size="small"
                 @click="sketch(1)"
-              >入库</el-button>
+              >出售</el-button>
               <el-button
                 size="small"
                 v-if="this.$route.query.state==0&&power.indexOf('C20001000')!=-1"
@@ -895,6 +895,7 @@ export default {
             balance_account_id: this.form.account_name,
             pay_money: this.form.pay_money,
             remarks: this.form.remarks,
+            ctime: this.form.ctime,
             size_data,
             images,
             state,
@@ -934,6 +935,7 @@ export default {
             pay_money: this.form.pay_money,
             remarks: this.form.remarks,
             id: this.form.id,
+            ctime: this.form.ctime,
             size_data,
             images,
             state,

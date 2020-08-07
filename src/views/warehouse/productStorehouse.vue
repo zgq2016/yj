@@ -11,6 +11,7 @@
           <el-form-item label="仓库:">
             <el-select
               v-model="form.storehouse_id"
+              size="small"
               clearable
               placeholder="请选择仓库"
               style="width:120px"
@@ -32,11 +33,22 @@
           </el-form-item>
 
           <el-form-item label="商品:">
-            <el-input style="width:130px" v-model="form.stylename" placeholder="请输入商品名称"></el-input>
+            <el-input
+              style="width:130px"
+              size="small"
+              v-model="form.stylename"
+              placeholder="请输入商品名称"
+            ></el-input>
           </el-form-item>
 
           <el-form-item label="分类:">
-            <el-select v-model="form.style_type" clearable placeholder="请选择分类" style="width:120px">
+            <el-select
+              v-model="form.style_type"
+              size="small"
+              clearable
+              placeholder="请选择分类"
+              style="width:120px"
+            >
               <el-option
                 v-for="item in cate"
                 :key="item.id"
@@ -47,8 +59,20 @@
           </el-form-item>
 
           <el-form-item label="数量:">
-            <el-input style="width:120px" type="number" v-model="form.min" placeholder="请输入数量"></el-input>&nbsp;至
-            <el-input style="width:120px" type="number" v-model="form.max" placeholder="请输入数量"></el-input>
+            <el-input
+              style="width:120px"
+              size="small"
+              type="number"
+              v-model="form.min"
+              placeholder="请输入数量"
+            ></el-input>&nbsp;至
+            <el-input
+              style="width:120px"
+              size="small"
+              type="number"
+              v-model="form.max"
+              placeholder="请输入数量"
+            ></el-input>
           </el-form-item>
 
           <el-form-item>
