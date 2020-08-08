@@ -1,10 +1,8 @@
 <template>
   <div class="index w">
     <el-container>
-      <el-aside width="120px">
+      <el-aside width="100px">
         <div class="logo">FOS</div>
-        <!--           @open="handleOpen"
-        @close="handleClose"-->
         <el-menu
           :router="true"
           :default-active="activeIndex"
@@ -12,7 +10,6 @@
           :collapse="isCollapse"
           background-color="#000"
           text-color="#fff"
-          active-text-color="red"
         >
           <el-menu-item index="/homepage" v-if="power.indexOf('Z')!=-1">
             <div style="display: flex;align-items: center;">
@@ -107,7 +104,7 @@
                     fill="#fff"
                   />
                 </svg>
-                <div style="margin-left:5px">档案库</div>
+                <div style="margin-left:5px">档案</div>
               </div>
             </template>
             <el-menu-item-group>
@@ -119,6 +116,24 @@
             </el-menu-item-group>
           </el-submenu>
           <el-submenu index="7" v-if="power.indexOf('F')!=-1">
+            <template slot="title" v-if="power.indexOf('F')!=-1">
+              <div style="display: flex;align-items: center;">
+                <svg viewBox="0 0 32 32" width="20" height="20">
+                  <path
+                    d="M29.152 22.848c-0.32-1.344-1.376-2.208-2.72-2.208-1.568 0-3.104-0.032-4.672 0-0.48 0.032-0.832-0.128-1.152-0.448-0.896-0.832-1.472-1.856-1.6-3.104-0.128-1.088 0.032-2.144 0.384-3.168 0.48-1.28 0.992-2.56 1.504-3.84 0.384-0.96 0.736-1.952 0.608-3.040-0.192-1.344-0.64-2.528-1.568-3.456-1.408-1.344-3.104-1.792-4.928-1.504-1.504 0.256-2.752 1.024-3.584 2.4-0.96 1.536-1.248 3.2-0.544 4.96 0.224 0.64 0.512 1.248 0.768 1.888 0.512 1.248 1.056 2.496 1.28 3.84 0.384 2.080-0.096 3.808-1.664 5.184-0.194 0.179-0.453 0.288-0.739 0.288-0.010 0-0.021-0-0.031-0l0.002 0h-4.864c-0.992 0-1.824 0.384-2.368 1.28-0.224 0.352-0.32 0.8-0.512 1.248v4.096c0.224 0.512 0.704 0.384 1.12 0.416v1.568c0 0.576 0.192 0.736 0.704 0.736h22.912c0.448 0 0.64-0.192 0.64-0.672 0.032-0.192 0-0.384 0-0.608v-1.024h0.48c0.448-0.032 0.64-0.224 0.64-0.704v-3.392c0-0.256-0.032-0.512-0.096-0.736zM27.040 28.8h-22.048v-1.12h22.048v1.12z"
+                    fill="#fff"
+                  />
+                </svg>
+                <div style="margin-left:5px">审批</div>
+              </div>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="/advanceReimbursement">预支报销</el-menu-item>
+              <el-menu-item index="/vacationApproval">假期审批</el-menu-item>
+              <el-menu-item index="/ExaminationAndApprovalWork">工作审批</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <el-submenu index="8" v-if="power.indexOf('F')!=-1">
             <template slot="title" v-if="power.indexOf('F')!=-1">
               <div style="display: flex;align-items: center;">
                 <svg viewBox="0 0 32 32" width="20" height="20">
@@ -151,7 +166,7 @@
               <el-menu-item index="/accountType" v-if="power.indexOf('F6000')!=-1">账目类型</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <el-submenu index="8" v-if="power.indexOf('G')!=-1">
+          <el-submenu index="9" v-if="power.indexOf('G')!=-1">
             <template slot="title" v-if="power.indexOf('G')!=-1">
               <div style="display: flex;align-items: center;">
                 <svg viewBox="0 0 32 32" width="20" height="20">
@@ -167,7 +182,7 @@
               <el-menu-item>统计</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
-          <el-submenu index="9" v-if="power.indexOf('H')!=-1">
+          <el-submenu index="10" v-if="power.indexOf('H')!=-1">
             <template slot="title" v-if="power.indexOf('H')!=-1">
               <div style="display: flex;align-items: center;">
                 <svg viewBox="0 0 32 32" width="20" height="20">
@@ -225,7 +240,7 @@ export default {
   },
   mounted() {
     this.power = localStorage.getItem("power");
-    console.log()
+    console.log();
   },
 };
 </script>
@@ -246,7 +261,7 @@ export default {
     border-radius: 15px;
   }
   .logo {
-    width: 120px;
+    width: 100px;
     height: 80px;
     font-size: 20px;
     display: flex;
@@ -256,8 +271,8 @@ export default {
     font-weight: 600;
   }
   .el-menu-vertical-demo {
-    width: 120px;
-    height: 560px;
+    width: 100px;
+    height: 600px;
     border-radius: 20px;
     overflow: hidden;
     padding: 20px 0;

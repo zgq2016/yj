@@ -1,106 +1,98 @@
 <template>
   <div class="materialPurchase" v-if="power.indexOf('A6000200')!=-1">
-    <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>研发</el-breadcrumb-item>
-      <el-breadcrumb-item>版料采购</el-breadcrumb-item>
-    </el-breadcrumb>
-    <div class="main">
-      <!-- search_condition -->
-      <div class="search_condition">
-        <el-form
-          :inline="true"
-          :model="formInline"
-          class="demo-form-inline"
-          style="position: relative;"
-        >
-          <el-form-item label="款号">
-            <el-input v-model="formInline.styleno" placeholder="款号"></el-input>
-          </el-form-item>
-          <el-form-item label="年份">
-            <el-select v-model="formInline.year" clearable placeholder="年份" style="width:120px">
-              <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="季节">
-            <el-select v-model="formInline.season" clearable placeholder="季节" style="width:120px">
-              <el-option
-                v-for="item in seasons"
-                :key="item.id"
-                :label="item.season"
-                :value="item.season"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="设计师">
-            <el-select
-              v-model="stylist"
-              placeholder="设计师"
-              @change="handleUser_id($event)"
-              clearable
-              style="width:120px"
-            >
-              <el-option
-                v-for="item in stylists"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="类别">
-            <el-select v-model="formInline.style_type"  clearable placeholder="类别" style="width:120px">
-              <el-option
-                v-for="item in categorys"
-                :key="item.id"
-                :label="item.style_type"
-                :value="item.style_type"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="状态">
-            <el-select v-model="state" clearable placeholder="类别" style="width:120px">
-              <el-option
-                v-for="item in states"
-                :key="item.id"
-                :label="item.name"
-                :value="item.name"
-              ></el-option>
-            </el-select>
-          </el-form-item>
+    <div class="aa">
+      <!-- 面包屑 -->
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>研发</el-breadcrumb-item>
+        <el-breadcrumb-item>版料采购</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
 
-          <el-form-item>
+    <div style="margin-bottom:10px">
+      <el-input v-model="formInline.styleno" placeholder="款号" style="width:200px"></el-input>
+      <el-button icon="el-icon-search" size="mini" circle class="search_button" @click="onSubmit"></el-button>
+    </div>
+    <el-form
+      :inline="true"
+      :model="formInline"
+      class="demo-form-inline"
+      style="position: relative;"
+    >
+      <!-- <el-form-item label="款号"></el-form-item> -->
+      <el-form-item>
+        <el-select v-model="formInline.year" clearable placeholder="年份" style="width:120px">
+          <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="formInline.season" clearable placeholder="季节" style="width:120px">
+          <el-option
+            v-for="item in seasons"
+            :key="item.id"
+            :label="item.season"
+            :value="item.season"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-select
+          v-model="stylist"
+          placeholder="设计师"
+          @change="handleUser_id($event)"
+          clearable
+          style="width:120px"
+        >
+          <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="formInline.style_type" clearable placeholder="类别" style="width:120px">
+          <el-option
+            v-for="item in categorys"
+            :key="item.id"
+            :label="item.style_type"
+            :value="item.style_type"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="state" clearable placeholder="类别" style="width:120px">
+          <el-option v-for="item in states" :key="item.id" :label="item.name" :value="item.name"></el-option>
+        </el-select>
+      </el-form-item>
+
+      <!-- <el-form-item>
             <el-button type="primary" @click="onSubmit">查询</el-button>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div class="table">
-        <el-table ref="singleTable" :data="tableData" highlight-current-row style="width: 100%">
-          <el-table-column align="center" label="序号" type="index" width="50"></el-table-column>
-          <el-table-column align="center" label="图片" width="110">
-            <template slot-scope="scope" property="style_pic_url">
-              <img style="float:left" :src="scope.row.style_pic_url" class="img" alt />
-              <img style="float:right" :src="scope.row.style_color_pic_url" class="img" alt />
-            </template>
-          </el-table-column>
-          <el-table-column align="center" property="stylename" label="名称"></el-table-column>
-          <el-table-column align="center" property="styleno" label="款号"></el-table-column>
-          <el-table-column align="center" width="90" property="style_color" label="颜色"></el-table-column>
-          <el-table-column align="center" property="style_type" label="品类"></el-table-column>
-          <el-table-column align="center" property="year" label="年份"></el-table-column>
-          <el-table-column align="center" property="season" label="季节"></el-table-column>
-          <el-table-column align="center" property="stylist" label="设计师"></el-table-column>
-          <el-table-column align="center" label="操作">
-            <template slot-scope="scope">
-              <el-button
-                class="elbtn"
-                size="mini"
-                @click="handleEdit(scope.$index, scope.row)"
-              >{{"查看"}}</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
+      </el-form-item>-->
+    </el-form>
+    <div class="table">
+      <el-table ref="singleTable" :data="tableData" highlight-current-row style="width: 100%">
+        <el-table-column align="center" label="序号" type="index" width="50"></el-table-column>
+        <el-table-column align="center" label="图片" width="140">
+          <template slot-scope="scope" property="style_pic_url">
+            <div style="display: flex;">
+              <img style="margin-right: 5px;" :src="scope.row.style_pic_url" class="img" alt />
+              <img :src="scope.row.style_color_pic_url" class="img" alt />
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" property="stylename" label="名称"></el-table-column>
+        <el-table-column align="center" property="styleno" label="款号"></el-table-column>
+        <el-table-column align="center" width="90" property="style_color" label="颜色"></el-table-column>
+        <el-table-column align="center" property="style_type" label="品类"></el-table-column>
+        <el-table-column align="center" property="year" label="年份"></el-table-column>
+        <el-table-column align="center" property="season" label="季节"></el-table-column>
+        <el-table-column align="center" property="stylist" label="设计师"></el-table-column>
+        <el-table-column align="center" label="操作">
+          <template slot-scope="scope">
+            <el-button
+              class="elbtn"
+              size="mini"
+              @click="handleEdit(scope.$index, scope.row)"
+            >{{"查看"}}</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
     <!-- 分页 -->
     <el-pagination
@@ -124,7 +116,7 @@ import {
   getWestList,
   getStylistList,
   getCategoryList,
-  getStyleList
+  getStyleList,
 } from "@/api/researchDevelopment";
 export default {
   data() {
@@ -135,7 +127,7 @@ export default {
         year: "",
         season: "",
         user_id: "",
-        style_type: ""
+        style_type: "",
       },
       user_id: "",
       tableData: [],
@@ -155,8 +147,8 @@ export default {
         { name: "已下单", id: 1 },
         { name: "部份回料", id: 2 },
         { name: "延时回料", id: 3 },
-        { name: "全部回料", id: 4 }
-      ]
+        { name: "全部回料", id: 4 },
+      ],
     };
   },
   methods: {
@@ -200,7 +192,7 @@ export default {
       let res = await getStyleList({
         page: this.page,
         page_size: this.page_size,
-        ...obj
+        ...obj,
       });
       console.log(res);
       this.count = res.data.count;
@@ -222,7 +214,7 @@ export default {
     handleCurrentChange(val) {
       this.page = val;
       this.init(this.formInline);
-    }
+    },
   },
   mounted() {
     this.getYear();
@@ -233,44 +225,47 @@ export default {
     this.init();
     this.power = localStorage.getItem("power");
     console.log(this.power);
-  }
+  },
 };
 </script>
 <style lang="less" scoped>
 .materialPurchase {
-  .main {
-    margin: 20px;
-    .search_condition {
-      .inquire {
-        width: 100px;
-        height: 40px;
-        background-color: #000;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 50px;
-        color: #fff;
-        cursor: pointer;
-        &:hover {
-          background-color: blue;
-        }
-      }
-      // /deep/.el-input__inner {
-      //   width: 150px;
-      // }
-    }
-    // .elbtn {
-    //   padding: 5px 30px;
-    //   border-radius: 10px;
-    // }
-    .table {
-      .img {
-        width: 40px;
-        height: 40px;
-      }
+  /deep/ .el-input__inner {
+    width: 100%;
+    height: 30px;
+    background-color: #f2f2f2;
+    border-radius: 15px;
+    border: none;
+    color: #5e5e5e;
+    font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
+      \\5b8b\4f53, sans-serif;
+  }
+  .search_button {
+    margin-left: 10px;
+    background-color: #000;
+  }
+  /deep/ .el-icon-search {
+    color: #fff;
+  }
+  /deep/.el-button {
+    border: none;
+  }
+  .table {
+    .img {
+      width: 60px;
+      height: 60px;
+      border-radius: 5px;
     }
   }
+  .form {
+    width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
   .el-pagination {
+    margin: 20px;
     text-align: right;
   }
 }

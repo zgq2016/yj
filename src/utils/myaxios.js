@@ -1,4 +1,5 @@
 import axios from "axios";
+import router from "../router/index";
 // axios.defaults.withCredentials = true; //让ajax携带cookie
 import { Loading, Message } from "element-ui";
 import _ from "lodash";
@@ -73,6 +74,18 @@ myaxios.interceptors.request.use(
 //响应拦截器
 myaxios.interceptors.response.use(
   (response) => {
+    if (
+      response.data.error_code == -1000 ||
+      response.data.error_code == -1001
+    ) {
+      let get_time_co = localStorage.getItem("time_co");
+      if (new Date().getTime() - get_time_co > 5000) {
+        localStorage.removeItem("itcast_pro_token");
+        Message.error("登录已失效,请重新登录!");
+        router.push({ name: "Login" });
+        localStorage.setItem("time_co", new Date().getTime());
+      }
+    }
     //判断当前请求是否设置了不显示Loading（不显示自然无需隐藏）
     if (response.config.headers.showLoading !== false) {
       hideLoading();

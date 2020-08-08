@@ -1,14 +1,14 @@
 <template>
   <div class="colorManagement" v-if="power.indexOf('H4000400')!=-1">
-    <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>设置</el-breadcrumb-item>
-      <el-breadcrumb-item>材质管理</el-breadcrumb-item>
-    </el-breadcrumb>
-    <!-- 添加材质 -->
-    <div class="addClassify" v-if="power.indexOf('H4000100')!=-1">
-      <el-button type="primary" @click="addClassify">添加材质</el-button>
+    <div class="aa">
+      <!-- 面包屑 -->
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>设置</el-breadcrumb-item>
+        <el-breadcrumb-item>材质管理</el-breadcrumb-item>
+      </el-breadcrumb>
     </div>
+    <!-- 添加材质 -->
+    <div class="addClassify" v-if="power.indexOf('H4000100')!=-1" @click="addClassify">添加材质</div>
     <el-table :data="tableData" style="width: 100%;margin: 20px 0;">
       <el-table-column prop="material_name" label="材质名称" width="200"></el-table-column>
       <el-table-column
@@ -96,7 +96,7 @@ import {
   materialList,
   materialAdd,
   materialEdit,
-  materialDel
+  materialDel,
 } from "@/api/setting.js";
 // materialList,
 //   materialAdd,
@@ -112,11 +112,11 @@ export default {
       region: "",
       form: {
         material_name: "",
-        id: ""
+        id: "",
       },
       pageIndex: 1,
       pageSize: 10,
-      total: 0
+      total: 0,
     };
   },
   methods: {
@@ -131,7 +131,7 @@ export default {
       this.init();
     },
     handleNewList() {
-      this.$refs["form"].validate(async valid => {
+      this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
 
@@ -142,7 +142,7 @@ export default {
       });
     },
     async handleEditList() {
-      this.$refs["form"].validate(async valid => {
+      this.$refs["form"].validate(async (valid) => {
         let res = await materialEdit(this.form);
         console.log(res);
         this.form.material_name = "";
@@ -164,20 +164,20 @@ export default {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           let res = await materialDel({ id: row.id });
           this.init();
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
@@ -192,27 +192,36 @@ export default {
     async init() {
       let res = await materialList({
         page: this.pageIndex,
-        page_size: this.pageSize
+        page_size: this.pageSize,
       });
       console.log(res);
       let { data, count } = res.data;
       this.tableData = data;
       this.total = count;
-    }
+    },
   },
   mounted() {
     this.init();
     this.power = localStorage.getItem("power");
     console.log(this.power);
-  }
+  },
 };
 </script>
 
 <style lang="less" scoped>
 .colorManagement {
   .addClassify {
-    button {
-      margin: 30px;
+    margin: 0 30px 30px 0;
+    border-radius: 15px;
+    width: 120px;
+    height: 30px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    &:hover {
+      cursor: pointer;
     }
   }
   .btn {

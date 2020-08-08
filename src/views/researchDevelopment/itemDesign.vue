@@ -330,9 +330,7 @@ export default {
   }
   .form {
     width: 1200px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: flex;justify-content: space-between;align-items: center;
   }
   .addStyle {
     margin: 0 30px 30px 0;
@@ -393,8 +391,6 @@ export default {
     line-height: 32px;
     width: 5%;
     color: #303133;
-
-    // style="width:120px;border-radius: 20px;overflow: hidden;height: 600px;"
   }
 }
 </style>

@@ -1,9 +1,11 @@
 <template>
   <div class="announcements">
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>设置</el-breadcrumb-item>
-      <el-breadcrumb-item>公司公告</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>设置</el-breadcrumb-item>
+        <el-breadcrumb-item>公司公告</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <div class="main">
       <el-button type="primary" size="small" @click="bulletin">发公告</el-button>
       <el-table
@@ -12,7 +14,7 @@
         :header-cell-style="{background:'#eef1f6',color:'#606266'}"
         size="small"
       >
-        <el-table-column type="index"  label="序号"></el-table-column>
+        <el-table-column type="index" label="序号"></el-table-column>
         <el-table-column align="center" prop="ctime" width="95" label="时间"></el-table-column>
         <el-table-column prop="title" width="250" label="标题"></el-table-column>
         <el-table-column prop="text" label="内容"></el-table-column>
@@ -91,18 +93,18 @@ export default {
       ruleForm: {},
       rules: {
         title: [{ required: true, message: "请输入标题", trigger: "blur" }],
-        text: [{ required: true, message: "请输入内容", trigger: "blur" }]
+        text: [{ required: true, message: "请输入内容", trigger: "blur" }],
       },
       rules1: {
         title: [{ required: true, message: "请输入标题", trigger: "blur" }],
-        text: [{ required: true, message: "请输入内容", trigger: "blur" }]
+        text: [{ required: true, message: "请输入内容", trigger: "blur" }],
       },
       list: [],
       pageIndex: 1,
       pageSize: 10,
       total: 0,
       dialogVisible: false,
-      dialogVisible1: false
+      dialogVisible1: false,
     };
   },
   methods: {
@@ -122,11 +124,11 @@ export default {
     },
     // 发送
     send() {
-      this.$refs["ruleForm"].validate(async valid => {
+      this.$refs["ruleForm"].validate(async (valid) => {
         if (!valid) return false;
         let res = await noticeAdd({
           title: this.ruleForm.title,
-          text: this.ruleForm.text
+          text: this.ruleForm.text,
         });
         console.log(res);
         this.dialogVisible = false;
@@ -139,34 +141,34 @@ export default {
       this.$confirm("此操作将永久删除该公告, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           let res = await noticeDel({
-            id: row.id
+            id: row.id,
           });
           this.ruleForm = {};
           this.init();
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
     // 编辑该公告
     async editBulletin() {
-      this.$refs["ruleForm"].validate(async valid => {
+      this.$refs["ruleForm"].validate(async (valid) => {
         if (!valid) return false;
         let res = await noticeEdit({
           title: this.ruleForm.title,
           text: this.ruleForm.text,
-          id: this.ruleForm.id
+          id: this.ruleForm.id,
         });
         this.dialogVisible1 = false;
         this.ruleForm = {};
@@ -176,7 +178,7 @@ export default {
     async init() {
       let res = await noticeList({
         page: this.pageIndex,
-        page_size: this.pageSize
+        page_size: this.pageSize,
       });
       let { data } = res.data;
       this.tableData = data;
@@ -190,11 +192,11 @@ export default {
     handleCurrentChange(val) {
       this.pageIndex = val;
       this.init();
-    }
+    },
   },
   mounted() {
     this.init();
-  }
+  },
 };
 </script>
 

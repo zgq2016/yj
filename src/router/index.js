@@ -73,6 +73,10 @@ import Accounter from "@/views/finance/accounter.vue";
 import AccountType from "@/views/finance/accountType.vue";
 import PaymentReimbursement from "@/views/finance/paymentReimbursement.vue";
 
+import AdvanceReimbursement from "@/views/examineAndApprove/advanceReimbursement.vue";
+import VacationApproval from "@/views/examineAndApprove/vacationApproval.vue";
+import ExaminationAndApprovalWork from "@/views/examineAndApprove/examinationAndApprovalWork.vue";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -80,7 +84,7 @@ const routes = [
     name: "default",
     path: "/",
     redirect: {
-      name: "Login",
+      name: "Homepage",
     },
   },
   {
@@ -95,7 +99,21 @@ const routes = [
     redirect: { name: "Homepage" },
     children: [
       { path: "/homepage", name: "Homepage", component: Homepage },
-      { path: "/itemDesign", name: "ItemDesign", component: ItemDesign },
+      {
+        path: "/advanceReimbursement",
+        name: "AdvanceReimbursement",
+        component: AdvanceReimbursement,
+      },
+      {
+        path: "/vacationApproval",
+        name: "VacationApproval",
+        component: VacationApproval,
+      },
+      {
+        path: "/examinationAndApprovalWork",
+        name: "ExaminationAndApprovalWork",
+        component: ExaminationAndApprovalWork,
+      },
       { path: "/addProject", name: "AddProject", component: AddProject },
       {
         path: "/panelPurchase",
@@ -177,7 +195,6 @@ const routes = [
         path: "/stockInquiry",
         name: "StockInquiry",
         component: StockInquiry,
-       
       },
       {
         path: "/stockInquiryDetails",

@@ -1,16 +1,22 @@
 <template>
   <div class="productStorehouse" v-if="power.indexOf('C1000100')!=-1">
-    <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>仓库</el-breadcrumb-item>
-      <el-breadcrumb-item>产品库存查询</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <!-- 面包屑 -->
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>仓库</el-breadcrumb-item>
+        <el-breadcrumb-item>产品库存查询</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
+    <div style="margin-bottom:10px">
+      <el-input style="width:200px" v-model="formInline.stylename" placeholder="请输入商品名称"></el-input>
+      <el-button icon="el-icon-search" size="mini" circle class="search_button" @click="onSubmit"></el-button>
+    </div>
     <div class="main">
-      <div class="searchInput">
-        <el-form :inline="true" :model="form">
-          <el-form-item label="仓库:">
+      <div class="form">
+        <el-form :inline="true" :model="formInline">
+          <el-form-item>
             <el-select
-              v-model="form.storehouse_id"
+              v-model="formInline.storehouse_id"
               clearable
               placeholder="请选择仓库"
               style="width:120px"
@@ -30,13 +36,13 @@
               ></el-pagination>
             </el-select>
           </el-form-item>
-
-          <el-form-item label="商品:">
-            <el-input style="width:130px" v-model="form.stylename" placeholder="请输入商品名称"></el-input>
-          </el-form-item>
-
-          <el-form-item label="分类:">
-            <el-select v-model="form.style_type" clearable placeholder="请选择分类" style="width:120px">
+          <el-form-item>
+            <el-select
+              v-model="formInline.style_type"
+              clearable
+              placeholder="请选择分类"
+              style="width:120px"
+            >
               <el-option
                 v-for="item in cate"
                 :key="item.id"
@@ -46,21 +52,27 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="数量:">
-            <el-input style="width:120px" type="number" v-model="form.min" placeholder="请输入数量"></el-input>&nbsp;至
-            <el-input style="width:120px" type="number" v-model="form.max" placeholder="请输入数量"></el-input>
-          </el-form-item>
-
           <el-form-item>
-            <el-checkbox v-model="form.checked">过滤无库存</el-checkbox>
+            <el-input
+              style="width:120px"
+              type="number"
+              v-model="formInline.min"
+              placeholder="请输入数量"
+            ></el-input>&nbsp;至
+            <el-input
+              style="width:120px"
+              type="number"
+              v-model="formInline.max"
+              placeholder="请输入数量"
+            ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onSubmit">查询</el-button>
+            <el-checkbox v-model="formInline.checked">过滤无库存</el-checkbox>
           </el-form-item>
         </el-form>
-        <el-button type="primary">展示统计数据</el-button>
-        <el-button type="primary" v-if="power.indexOf('C1000200')!=-1">导出</el-button>
-        <el-button v-print="'#printTest'" type="primary" v-if="power.indexOf('C1000300')!=-1">打印</el-button>
+        <div class="addStyle">
+          <div>展示统计数据</div>
+        </div>
       </div>
       <hr style="border:1px dashed #ccc" />
       <div class="table">
@@ -95,7 +107,10 @@
         </el-table>
       </div>
     </div>
-
+    <div class="btn">
+      <el-button size="mini" v-if="power.indexOf('C1000200')!=-1">导出</el-button>
+      <el-button v-print="'#printTest'" size="mini" v-if="power.indexOf('C1000300')!=-1">打印</el-button>
+    </div>
     <!-- 分页 -->
     <el-pagination
       class="pagination"
@@ -124,7 +139,12 @@ export default {
     return {
       power: "",
       input: "",
-      form: {
+      formInline: {
+        stylename: "",
+        storehouse_id: "",
+        style_type: "",
+        min: "",
+        max: "",
         checked: true,
       },
       tableData: [],
@@ -142,21 +162,21 @@ export default {
   methods: {
     handleSizeChange(val) {
       this.pageSize = val;
-      this.init(this.form);
+      this.init(this.formInline);
     },
     handleCurrentChange(val) {
       this.pageIndex = val;
-      this.init(this.form);
+      this.init(this.formInline);
     },
     onSubmit() {
-      if (this.form.checked == true) {
-        this.form.hide_empty = 1;
+      if (this.formInline.checked == true) {
+        this.formInline.hide_empty = 1;
       } else {
-        this.form.hide_empty = 0;
+        this.formInline.hide_empty = 0;
       }
-      console.log(this.form);
+      console.log(this.formInline);
 
-      this.init(this.form);
+      this.init(this.formInline);
     },
     handleSize(val) {
       this.pageSize2 = val;
@@ -212,19 +232,59 @@ export default {
 </script>
 <style lang="less" scoped>
 .productStorehouse {
-  .main {
+  /deep/ .el-input__inner {
+    width: 100%;
+    height: 30px;
+    background-color: #f2f2f2;
+    border-radius: 15px;
+    border: none;
+    color: #5e5e5e;
+    font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
+      \\5b8b\4f53, sans-serif;
+  }
+  .search_button {
+    margin-left: 10px;
+    background-color: #000;
+  }
+  /deep/ .el-icon-search {
+    color: #fff;
+  }
+  /deep/.el-button {
+    border: none;
+  }
+  .table {
+    .img {
+      width: 60px;
+      height: 60px;
+      border-radius: 5px;
+    }
+  }
+  .form {
+    width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .addStyle {
+    margin: 0 30px 30px 0;
+    // text-align: right;
+
+    border-radius: 15px;
+    width: 120px;
+    height: 30px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .el-pagination {
     margin: 20px;
-    /deep/.pagination {
-      float: right;
-    }
-    .searchInput {
-    }
-    .table {
-      .img {
-        width: 40px;
-        height: 40px;
-      }
-    }
+    text-align: right;
   }
 }
 </style>

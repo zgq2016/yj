@@ -1,14 +1,14 @@
 <template>
   <div class="goodsCategory" v-if="power.indexOf('H2000400')!=-1">
-    <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>设置</el-breadcrumb-item>
-      <el-breadcrumb-item>颜色管理</el-breadcrumb-item>
-    </el-breadcrumb>
-    <!-- 添加颜色 -->
-    <div class="addClassify" v-if="power.indexOf('H2000100')!=-1">
-      <el-button type="primary" @click="addClassify">添加颜色</el-button>
+    <div class="aa">
+      <!-- 面包屑 -->
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>设置</el-breadcrumb-item>
+        <el-breadcrumb-item>颜色管理</el-breadcrumb-item>
+      </el-breadcrumb>
     </div>
+    <!-- 添加颜色 -->
+    <div class="addClassify" v-if="power.indexOf('H2000100')!=-1" @click="addClassify">添加颜色</div>
     <el-table
       :data="tableData"
       style="width: 100%;margin: 20px 0;"
@@ -127,7 +127,7 @@ import {
   colorInfo,
   colorAdd,
   colorDel,
-  colorEdit
+  colorEdit,
 } from "@/api/setting.js";
 export default {
   data() {
@@ -135,13 +135,13 @@ export default {
       power: "",
       rules: {
         color_name: [
-          { required: true, message: "请输入颜色名称", trigger: "blur" }
-        ]
+          { required: true, message: "请输入颜色名称", trigger: "blur" },
+        ],
       },
       rules1: {
         color_name: [
-          { required: true, message: "请输入颜色名称", trigger: "blur" }
-        ]
+          { required: true, message: "请输入颜色名称", trigger: "blur" },
+        ],
       },
       tableData: [],
       centerDialogVisible: false, //添加分类
@@ -151,7 +151,7 @@ export default {
         level: 0,
         color_name: "",
         color_id: 0,
-        sort: ""
+        sort: "",
       },
       region: "",
       obj: {},
@@ -160,7 +160,7 @@ export default {
       pageSize: 10,
       total: 0,
       goods_category_id: "",
-      rowLevel: ""
+      rowLevel: "",
     };
   },
   methods: {
@@ -178,7 +178,7 @@ export default {
       this.init();
     },
     async handleEditList() {
-      this.$refs["obj"].validate(async valid => {
+      this.$refs["obj"].validate(async (valid) => {
         if (!valid) return;
         delete this.obj.goods_category_data;
         delete this.obj.region;
@@ -209,20 +209,20 @@ export default {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           let res = await colorDel({ id: row.id });
           this.init();
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
@@ -245,7 +245,7 @@ export default {
       }
     },
     async handleNewList() {
-      this.$refs["form"].validate(async valid => {
+      this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         delete this.form.region;
         console.log(this.form);
@@ -270,7 +270,7 @@ export default {
     async init() {
       let res = await colorList({
         page: this.pageIndex,
-        page_size: this.pageSize
+        page_size: this.pageSize,
       });
       console.log(res);
       let { data, count } = res.data;
@@ -284,21 +284,30 @@ export default {
     handleCurrentChange(val) {
       this.pageIndex = val;
       this.init();
-    }
+    },
   },
   mounted() {
     this.init();
     this.power = localStorage.getItem("power");
     console.log(this.power);
-  }
+  },
 };
 </script>
 
 <style lang="less" scoped>
 .goodsCategory {
   .addClassify {
-    button {
-      margin: 30px;
+    margin: 0 30px 30px 0;
+    border-radius: 15px;
+    width: 120px;
+    height: 30px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    &:hover {
+      cursor: pointer;
     }
   }
   .btn {

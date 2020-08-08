@@ -76,50 +76,30 @@
           <div class="dv">当前查询统计数据：</div>
           <div class="dv">
             应付金额
-            <span style="color:orange;">{{cope_price}}</span>
+            <span style="color:orange;">{{cope_money}}</span>
           </div>
           <div class="dv">
             实付金额
-            <span style="color:orange;">{{pay_price}}</span>
+            <span style="color:orange;">{{pay_money}}</span>
           </div>
           <div class="dv">
             应付余额
-            <span style="color:orange;">{{opay_price}}</span>
+            <span style="color:orange;">{{opay_money}}</span>
           </div>
         </div>
       </div>
       <div class="table">
         <el-table :data="tableData" border size="mini">
-          <el-table-column :show-overflow-tooltip="true" width="140" prop="ctime" label="业务时间"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="120" prop="account_no" label="单据编号"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="80" prop="user_name" label="操作人"></el-table-column>
-          <el-table-column
-            :show-overflow-tooltip="true"
-            width="100"
-            prop="account_name"
-            label="结算账户"
-          ></el-table-column>
-          <el-table-column
-            :show-overflow-tooltip="true"
-            width="90"
-            prop="account_type_name"
-            label="账目类型"
-          ></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="90" prop="cope_price" label="应付金额"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="90" prop="pay_price" label="实付金额"></el-table-column>
-          <el-table-column
-            :show-overflow-tooltip="true"
-            width="100"
-            prop="opay_price"
-            label="本单应付余额"
-          ></el-table-column>
-          <el-table-column
-            :show-overflow-tooltip="true"
-            width="110"
-            prop="total_price"
-            label="累计应付款余额"
-          ></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="130" prop="remarks" label="备注"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="ctime" label="业务时间"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="account_no" label="单据编号"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="user_name" label="操作人"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="account_name" label="结算账户"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="account_type_name" label="账目类型"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="cope_money" label="应付金额"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="pay_money" label="实付金额"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="opay_money" label="本单应付余额"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="total_money" label="累计应付款余额"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="remarks" label="备注"></el-table-column>
           <el-table-column prop="data" label="操作"></el-table-column>
         </el-table>
       </div>
@@ -182,18 +162,10 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <!-- <el-form-item label="应付金额" prop="cope_price">
-          <el-input v-model="form.cope_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>-->
-        <el-form-item label="实付金额" prop="pay_price">
-          <el-input v-model="form.pay_price" placeholder="请输入内容" style="width:70%;"></el-input>
+        <el-form-item label="实付金额" prop="pay_money">
+          <el-input v-model="form.pay_money" placeholder="请输入内容" style="width:70%;"></el-input>
         </el-form-item>
-        <!-- <el-form-item label="本单应付余额" prop="opay_price">
-          <el-input v-model="form.opay_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>-->
-        <!-- <el-form-item label="累计应付余额" prop="total_price">
-          <el-input v-model="form.total_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>-->
+
         <el-form-item label="备注" prop="remarks">
           <el-input type="textarea" v-model="form.remarks" placeholder="请输入内容" style="width:70%;"></el-input>
         </el-form-item>
@@ -241,18 +213,9 @@
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <!-- <el-form-item label="应付金额" prop="cope_price">
-          <el-input v-model="form1.cope_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>-->
-        <el-form-item label="实付金额" prop="pay_price">
-          <el-input v-model="form1.pay_price" placeholder="请输入内容" style="width:70%;"></el-input>
+        <el-form-item label="实付金额" prop="pay_money">
+          <el-input v-model="form1.pay_money" placeholder="请输入内容" style="width:70%;"></el-input>
         </el-form-item>
-        <!-- <el-form-item label="本单应付余额" prop="opay_price">
-          <el-input v-model="form1.opay_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>-->
-        <!-- <el-form-item label="累计应付余额" prop="total_price">
-          <el-input v-model="form1.total_price" placeholder="请输入内容" style="width:70%;"></el-input>
-        </el-form-item>-->
         <el-form-item label="业务时间" prop="service_time">
           <el-date-picker
             v-model="form1.service_time"
@@ -290,9 +253,9 @@ import { getSupplierSelect } from "@/api/archives";
 export default {
   data() {
     return {
-      cope_price: 999,
-      pay_price: 999,
-      opay_price: 999,
+      cope_money: 999,
+      pay_money: 999,
+      opay_money: 999,
       ctime_start: "",
       ctime_end: "",
       pageIndex: 1,
@@ -306,10 +269,10 @@ export default {
         customer_id: "",
         user_id: "",
         balance_account_id: "",
-        cope_price: 0,
-        pay_price: "",
-        opay_price: 0,
-        total_price: 0,
+        cope_money: 0,
+        pay_money: "",
+        opay_money: 0,
+        total_money: 0,
         remarks: "",
         account_type_id: "",
         picurl: "",
@@ -317,17 +280,17 @@ export default {
       form1: {
         customer_id: "",
         user_id: "",
-        cope_price: 0,
-        pay_price: "",
-        opay_price: 0,
-        total_price: 0,
+        cope_money: 0,
+        pay_money: "",
+        opay_money: 0,
+        total_money: 0,
         service_time: "",
         remarks: "",
       },
       rules1: {
         customer_id: [{ required: true, message: "客户", trigger: "change" }],
         user_id: [{ required: true, message: "操作人", trigger: "change" }],
-        pay_price: [{ required: true, message: "实付金额", trigger: "change" }],
+        pay_money: [{ required: true, message: "实付金额", trigger: "change" }],
         service_time: [
           { required: true, message: "业务时间", trigger: "change" },
         ],
@@ -341,7 +304,7 @@ export default {
         account_type_id: [
           { required: true, message: "账目类型", trigger: "change" },
         ],
-        pay_price: [{ required: true, message: "实付金额", trigger: "change" }],
+        pay_money: [{ required: true, message: "实付金额", trigger: "change" }],
       },
       formInline: {
         Supplier: "",
@@ -413,11 +376,11 @@ export default {
         this.form1.service_time = moment(this.form1.service_time).format(
           "YYYY-MM-DD"
         );
-        this.form1.cope_price = Number(this.form1.cope_price);
+        this.form1.cope_money = Number(this.form1.cope_money);
         this.form1.customer_id = Number(this.form1.customer_id);
-        this.form1.opay_price = Number(this.form1.opay_price);
-        this.form1.pay_price = Number(this.form1.pay_price);
-        this.form1.total_price = Number(this.form1.total_price);
+        this.form1.opay_money = Number(this.form1.opay_money);
+        this.form1.pay_money = Number(this.form1.pay_money);
+        this.form1.total_money = Number(this.form1.total_money);
         this.form1.account_type_id = 0;
         this.form1.balance_account_id = 0;
         let res = await customerAccountAdd(this.form1);
@@ -439,11 +402,11 @@ export default {
       this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
-        this.form.cope_price = Number(this.form.cope_price);
+        this.form.cope_money = Number(this.form.cope_money);
         this.form.customer_id = Number(this.form.customer_id);
-        this.form.opay_price = Number(this.form.opay_price);
-        this.form.pay_price = Number(this.form.pay_price);
-        this.form.total_price = Number(this.form.total_price);
+        this.form.opay_money = Number(this.form.opay_money);
+        this.form.pay_money = Number(this.form.pay_money);
+        this.form.total_money = Number(this.form.total_money);
         this.form.account_type_id = Number(this.form.account_type_id);
         this.form.balance_account_id = Number(this.form.balance_account_id);
         let res = await customerAccountAdd(this.form);
@@ -491,22 +454,25 @@ export default {
       this.SupplierList = res1.data.data;
     },
     async supplierInit() {
-      let res = await customerAccountList({
-        page: this.pageIndex,
-        page_size: this.pageSize,
-      });
+      if (this.formInline.date !== "" && this.formInline.date !== null) {
+        this.formInline["ctime_start"] = moment(this.formInline.date[0]).format(
+          "YYYY-MM-DD"
+        );
+        this.formInline["ctime_end"] = moment(this.formInline.date[1]).format(
+          "YYYY-MM-DD"
+        );
+      }
+      if (this.formInline.date === "" || this.formInline.date === null) {
+        this.formInline["ctime_start"] = "";
+        this.formInline["ctime_end"] = "";
+      }
+      this.formInline["page"] = this.pageIndex;
+      this.formInline["page_size"] = this.pageSize;
+      let res = await customerAccountList(this.formInline);
       console.log(res);
-      res.data.data.map((v) => {
-        if (v.pay_price !== 0) {
-          v.opay_price = v.cope_price - v.pay_price;
-        }
-      });
       let { data, count } = res.data;
-      // let { cope_price, pay_price, opay_price } = res.data.data;
       this.tableData = data;
       this.total = count;
-      this.ctime_start = moment(this.formInline.date[0]).format("YYYY-MM-DD");
-      this.ctime_end = moment(this.formInline.date[1]).format("YYYY-MM-DD");
     },
   },
   async mounted() {

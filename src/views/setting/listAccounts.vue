@@ -1,12 +1,13 @@
 <template>
   <div class="listAccounts">
-    <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>设置</el-breadcrumb-item>
-      <el-breadcrumb-item>账户管理</el-breadcrumb-item>
-      <el-breadcrumb-item>账户列表</el-breadcrumb-item>
-    </el-breadcrumb>
-
+    <div class="aa">
+      <!-- 面包屑 -->
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>设置</el-breadcrumb-item>
+        <el-breadcrumb-item>账户管理</el-breadcrumb-item>
+        <el-breadcrumb-item>账户列表</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <!-- <el-button type="primary">增加账户</el-button> -->
     <el-table :data="tableData" style="width: 100%;margin: 20px 0;" row-key="id" border>
       <el-table-column prop="name" label="用户名"></el-table-column>

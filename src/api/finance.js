@@ -123,7 +123,7 @@ export const factoryAccountAdd = (data) => {
 // 客户账目list接口;
 export const customerAccountList = (data) => {
   return axios({
-    url: "?g=customer_account_list1",
+    url: "?g=customer_account_list",
     method: "post",
     data: data,
   });
@@ -192,31 +192,10 @@ export const factoryAccountList = (data) => {
     data: data,
   });
 };
-
-// supplier_account_add;
-// 新增供应商账目接口;
-
-//   supplier_id,
-//   account_no,
-//   `user_id`,
-//   balance_account_id,
-//   account_type_id,
-//   cope_price,
-//   pay_price,
-//   opay_price,
-//   total_price,
-//   remarks;
-
-// 传入数值;
-
-// customer_account_list;
-// 客户账目list接口;
-
-// customer_account_add;
-// 新增客户账目接口;
-
-// my_account_list;
-// 公司账目list接口;
-
-// my_account_add;
-// 新增公司账目接口;
+export const customerBalance = (data) => {
+  return axios({
+    url: "?g=customer_balance",
+    method: "post",
+    data: data,
+  });
+};

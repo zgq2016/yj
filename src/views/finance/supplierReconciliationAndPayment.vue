@@ -20,9 +20,7 @@
           <el-date-picker
             v-model="formInline.date"
             type="daterange"
-            :start-placeholder="formInline.ctime_start"
             range-separator="至"
-            :end-placeholder="formInline.ctime_end"
             style="width:100%"
             clearable
           ></el-date-picker>
@@ -99,36 +97,16 @@
       </div>
       <div class="table">
         <el-table :data="tableData" border size="mini">
-          <el-table-column :show-overflow-tooltip="true" width="140" prop="ctime" label="业务时间"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="120" prop="account_no" label="单据编号"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="80" prop="user_name" label="操作人"></el-table-column>
-          <el-table-column
-            :show-overflow-tooltip="true"
-            width="110"
-            prop="account_name"
-            label="结算账户"
-          ></el-table-column>
-          <el-table-column
-            :show-overflow-tooltip="true"
-            width="110"
-            prop="account_type_name"
-            label="账目类型"
-          ></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="110" prop="cope_money" label="应付金额"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="110" prop="pay_money" label="实付金额"></el-table-column>
-          <el-table-column
-            :show-overflow-tooltip="true"
-            width="110"
-            prop="opay_money"
-            label="本单应付余额"
-          ></el-table-column>
-          <el-table-column
-            :show-overflow-tooltip="true"
-            width="110"
-            prop="total_money"
-            label="累计应付款余额"
-          ></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="110" prop="remarks" label="备注"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="ctime" label="业务时间"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="account_no" label="单据编号"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="user_name" label="操作人"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="account_name" label="结算账户"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="account_type_name" label="账目类型"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="cope_money" label="应付金额"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="pay_money" label="实付金额"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="opay_money" label="本单应付余额"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="total_money" label="累计应付款余额"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="remarks" label="备注"></el-table-column>
           <el-table-column prop="data" label="操作"></el-table-column>
         </el-table>
       </div>
@@ -483,14 +461,18 @@ export default {
       this.SupplierList = res1.data.data;
     },
     async supplierInit() {
-      this.formInline["ctime_start"] =
-        this.formInline.date === ""
-          ? ""
-          : moment(this.formInline.date[0]).format("YYYY-MM-DD");
-      this.formInline["ctime_end"] =
-        this.formInline.date === ""
-          ? ""
-          : moment(this.formInline.date[1]).format("YYYY-MM-DD");
+      if (this.formInline.date !== "" && this.formInline.date !== null) {
+        this.formInline["ctime_start"] = moment(this.formInline.date[0]).format(
+          "YYYY-MM-DD"
+        );
+        this.formInline["ctime_end"] = moment(this.formInline.date[1]).format(
+          "YYYY-MM-DD"
+        );
+      }
+      if (this.formInline.date === "" || this.formInline.date === null) {
+        this.formInline["ctime_start"] = "";
+        this.formInline["ctime_end"] = "";
+      }
       this.formInline["page"] = this.pageIndex;
       this.formInline["page_size"] = this.pageSize;
       console.log(this.formInline);

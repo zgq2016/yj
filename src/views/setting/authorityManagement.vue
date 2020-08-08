@@ -1,11 +1,13 @@
 <template>
   <div class="authorityManagement">
-    <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>设置</el-breadcrumb-item>
-      <el-breadcrumb-item>账户管理</el-breadcrumb-item>
-      <el-breadcrumb-item>权限管理</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <!-- 面包屑 -->
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>设置</el-breadcrumb-item>
+        <el-breadcrumb-item>账户管理</el-breadcrumb-item>
+        <el-breadcrumb-item>权限管理</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <div class="main">
       <div class="left">
         <el-table
@@ -36,10 +38,10 @@
         </div>
         <div class="role_form">
           <el-form :inline="true" :model="form" ref="form" :rules="rules" class="demo-form-inline">
-            <el-form-item label="名称" prop="role_name">
+            <el-form-item prop="role_name">
               <el-input v-model="form.role_name" placeholder="名称"></el-input>
             </el-form-item>
-            <el-form-item label="备注">
+            <el-form-item>
               <el-input v-model="form.remarks" placeholder="备注"></el-input>
             </el-form-item>
           </el-form>
@@ -675,6 +677,16 @@ export default {
   .main {
     display: flex;
     min-height: 800px;
+    /deep/ .el-input__inner {
+      width: 100%;
+      height: 30px;
+      background-color: #f2f2f2;
+      border-radius: 15px;
+      border: none;
+      color: #5e5e5e;
+      font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
+        \\5b8b\4f53, sans-serif;
+    }
 
     .left {
       padding: 10px 5px 0 0;

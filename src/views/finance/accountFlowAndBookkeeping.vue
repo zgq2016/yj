@@ -1,74 +1,68 @@
 <template>
   <div class="accountFlowAndBookkeeping" v-if="power.indexOf('F2000100')!=-1">
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>财务</el-breadcrumb-item>
-      <el-breadcrumb-item>账户流水及记账</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>财务</el-breadcrumb-item>
+        <el-breadcrumb-item>账户流水及记账</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
+    <div style="margin-bottom:10px">
+      <el-input placeholder="单据编号" v-model="formInline.account_no" clearable style="width:200px"></el-input>
+      <el-button icon="el-icon-search" size="mini" circle class="search_button" @click="onsearch"></el-button>
+    </div>
     <div class="form">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="日期：">
+        <el-form-item>
           <el-date-picker
             v-model="formInline.date"
             type="daterange"
             range-separator="至"
-            :start-placeholder="formInline.ctime_start"
-            :end-placeholder="formInline.ctime_end"
-            style="width:100%"
             clearable
+            class="timer"
           ></el-date-picker>
         </el-form-item>
-        <el-form-item label="账目类型:" prop="account_type_name">
+        <el-form-item prop="account_type_name">
           <el-select v-model="formInline.account_type_name" clearable>
             <el-option
               v-for="item in BalanceAccountType"
               :key="item.id"
               :label="item.account_type_name"
-              :value="item.account_type_name"
+              :value="item.id"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="结算账户:" prop="account_name">
-          <el-select v-model="formInline.account_name" clearable>
+        <el-form-item prop="balance_account_id">
+          <el-select v-model="formInline.balance_account_id" clearable>
             <el-option
               v-for="item in BalanceAccount"
               :key="item.id"
               :label="item.account_name"
-              :value="item.account_name"
+              :value="item.id"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="操作者：">
+        <el-form-item>
           <el-select v-model="formInline.user_id" clearable>
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="单号：" clearable>
-          <el-input placeholder="单据编号" v-model="formInline.account_no" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="备注：" clearable>
-          <el-input placeholder="备注" v-model="formInline.remark" clearable></el-input>
-        </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="onsearch">搜索</el-button>
-          <el-button v-if="power.indexOf('F2000200')!=-1" type="primary" @click="onincome">收入</el-button>
-          <el-button v-if="power.indexOf('F2000300')!=-1" type="primary" @click="onexpend">支出</el-button>
-          <el-button
-            v-if="power.indexOf('F2000400')!=-1"
-            type="primary"
-            @click="onAccounttransfers"
-          >账户互转</el-button>
-          <el-button
-            v-if="power.indexOf('F2000500')!=-1"
-            type="primary"
-            @click="onbalanceadjustment"
-          >期初调整</el-button>
-          <el-button
-            v-if="power.indexOf('F2000600')!=-1"
-            type="primary"
-            v-print="'#printTest'"
-            icon="el-icon-printer"
-          >打印</el-button>
-          <el-button v-if="power.indexOf('F2000700')!=-1" type="primary" icon="el-icon-upload2">导出</el-button>
+          <div style="display: flex;justify-content: space-between;align-items: center;">
+            <div class="addStyle" v-if="power.indexOf('F2000200')!=-1" @click="onincome">收入</div>
+            <div class="addStyle" v-if="power.indexOf('F2000300')!=-1" @click="onexpend">支出</div>
+            <div
+              class="addStyle"
+              v-if="power.indexOf('F2000400')!=-1"
+              @click="onAccounttransfers"
+            >账户互转</div>
+            <div
+              class="addStyle"
+              v-if="power.indexOf('F2000500')!=-1"
+              @click="onbalanceadjustment"
+            >期初调整</div>
+            <div class="addStyle" v-if="power.indexOf('F2000600')!=-1" v-print="'#printTest'">打印</div>
+            <div class="addStyle" v-if="power.indexOf('F2000700')!=-1">导出</div>
+          </div>
         </el-form-item>
       </el-form>
     </div>
@@ -98,29 +92,19 @@
         </div>
       </div>
       <div class="table">
-        <el-table :data="tableData" size="mini" border>
-          <el-table-column :show-overflow-tooltip="true" width="130" prop="ctime" label="业务时间"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="90" prop="account_no" label="单据编号"></el-table-column>
-          <el-table-column
-            :show-overflow-tooltip="true"
-            width="90"
-            prop="account_type_name"
-            label="账目类型"
-          ></el-table-column>
-          <el-table-column
-            :show-overflow-tooltip="true"
-            width="70"
-            prop="account_name"
-            label="结算账户"
-          ></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="90" prop="trade_type" label="交易类型"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="90" prop="data" label="交易方"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="80" prop="user_name" label="操作人"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="70" prop="income" label="收入"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="70" prop="expend" label="支出"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="80" prop="surplus" label="盈余"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="80" prop="balance" label="账户余额"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="90" prop="remarks" label="备注"></el-table-column>
+        <el-table :data="tableData" border>
+          <el-table-column :show-overflow-tooltip="true" prop="ctime" label="业务时间"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="account_no" label="单据编号"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="account_type_name" label="账目类型"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="account_name" label="结算账户"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="transaction_type" label="交易类型"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="counterparty" label="交易方"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="user_name" label="操作人"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="cope_money" label="收入"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="pay_money" label="支出"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="opay_money" label="盈余"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="total_money" label="账户余额"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="remarks" label="备注"></el-table-column>
           <el-table-column prop="data" label="操作"></el-table-column>
         </el-table>
       </div>
@@ -431,7 +415,7 @@ export default {
       formInline: {
         date: "",
         account_type_name: "",
-        account_name: "",
+        balance_account_id: "",
         user_id: "",
         account_no: "",
         remark: "",
@@ -549,14 +533,8 @@ export default {
     //   this.$print(tempNode); // 开始调用插件
     // },
     onsearch() {
-      // console.log(moment(this.formInline.date[0]).format("YYYY-MM-DD"));
-      this.formInline.ctime_start = moment(this.formInline.date[0]).format(
-        "YYYY-MM-DD"
-      );
-      this.formInline.ctime_end = moment(this.formInline.date[1]).format(
-        "YYYY-MM-DD"
-      );
       console.log(this.formInline);
+      this.init();
     },
     onincome() {
       this.dialogVisible = true;
@@ -583,7 +561,6 @@ export default {
         this.form3["user_id"] = localStorage.getItem("user_id");
         let res = await myAccountAdd(this.form3);
         this.$refs[form].resetFields();
-        console.log(res);
         this.init();
         this.dialogVisible3 = false;
       });
@@ -606,7 +583,6 @@ export default {
         this.form2["user_id"] = localStorage.getItem("user_id");
         let res = await myAccountAdd(this.form2);
         this.$refs[form].resetFields();
-        console.log(res);
         this.init();
         this.dialogVisible2 = false;
       });
@@ -629,7 +605,6 @@ export default {
         this.form1["user_id"] = localStorage.getItem("user_id");
         let res = await myAccountAdd(this.form1);
         this.$refs[form].resetFields();
-        console.log(res);
         this.init();
         this.dialogVisible1 = false;
       });
@@ -652,7 +627,6 @@ export default {
         this.form["user_id"] = localStorage.getItem("user_id");
         let res = await myAccountAdd(this.form);
         this.$refs[form].resetFields();
-        console.log(res);
         this.init();
         this.dialogVisible = false;
       });
@@ -721,40 +695,30 @@ export default {
       this.init();
     },
     async init() {
-      let res = await myAccountList({
-        page: this.pageIndex,
-        page_size: this.pageSize,
-      });
+      if (this.formInline.date !== "" && this.formInline.date !== null) {
+        this.formInline["ctime_start"] = moment(this.formInline.date[0]).format(
+          "YYYY-MM-DD"
+        );
+        this.formInline["ctime_end"] = moment(this.formInline.date[1]).format(
+          "YYYY-MM-DD"
+        );
+      }
+      if (this.formInline.date === "" || this.formInline.date === null) {
+        this.formInline["ctime_start"] = "";
+        this.formInline["ctime_end"] = "";
+      }
+      this.formInline["page"] = this.pageIndex;
+      this.formInline["page_size"] = this.pageSize;
+      let res = await myAccountList(this.formInline);
       console.log(res);
       let { data, count } = res.data;
-      // let { expend_money, in_money } = res.data.data;
-      res.data.data.map((v) => {
-        // console.log(v);
-        if (v.account_type === "0") {
-          v["expend"] = v.total_money;
-          v["income"] = 0;
-        }
-        if (v.account_type === "1") {
-          v["income"] = v.total_money;
-          v["expend"] = 0;
-        }
-
-        v["surplus"] = Number(v["income"]) - Number(v["expend"]);
-        v["trade_type"] = v.account_type_name + "单";
-      });
-      console.log(data);
       this.tableData = data;
       this.total = count;
-      this.formInline.ctime_start = moment(this.formInline.date[0]).format(
-        "YYYY-MM-DD"
-      );
-      this.formInline.ctime_end = moment(this.formInline.date[1]).format(
-        "YYYY-MM-DD"
-      );
     },
   },
   mounted() {
     this.init();
+    this.getStylist();
     this.getBalanceAccount();
     this.getBalanceAccountType();
     this.getSettlementModes();
@@ -766,9 +730,63 @@ export default {
 
 <style lang="less" scoped>
 .accountFlowAndBookkeeping {
-  label {
-    width: 40px;
-    margin-right: 10px;
+  /deep/ .el-input__inner {
+    width: 100%;
+    height: 30px;
+    background-color: #f2f2f2;
+    border-radius: 15px;
+    border: none;
+    color: #5e5e5e;
+    font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
+      \\5b8b\4f53, sans-serif;
+  }
+  /deep/ .el-form-item__content {
+    line-height: 30px;
+  }
+  /deep/ .el-input__icon {
+    line-height: 30px;
+  }
+  .search_button {
+    margin-left: 10px;
+    background-color: #000;
+  }
+  /deep/ .el-icon-search {
+    color: #fff;
+  }
+  /deep/.el-button {
+    border: none;
+  }
+  .table {
+    .img {
+      width: 60px;
+      height: 60px;
+      border-radius: 5px;
+    }
+  }
+  .form {
+    width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .el-pagination {
+    margin: 20px;
+    text-align: right;
+  }
+  .addStyle {
+    margin: 0 30px 30px 0;
+    border-radius: 15px;
+    width: 120px;
+    height: 30px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    &:hover {
+      cursor: pointer;
+    }
   }
   .tb {
     display: flex;
@@ -792,10 +810,6 @@ export default {
       text-align: center;
       margin: 10px 0;
     }
-  }
-  .pagination {
-    margin: 20px;
-    text-align: right;
   }
 }
 </style>

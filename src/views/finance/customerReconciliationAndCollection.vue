@@ -20,17 +20,23 @@
 export default {
   data() {
     return {
-      activeName: ""
+      activeName: "",
     };
   },
   methods: {
     handleClick(tab, event) {
       this.$router.push({ path: `${tab.name}` });
-    }
+    },
   },
   mounted() {
     this.activeName = this.$route.path;
-  }
+    // console.log(this.activeName);
+  },
+  watch: {
+    $route() {
+      this.activeName = this.$route.path;
+    },
+  },
 };
 </script>
 

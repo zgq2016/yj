@@ -1,14 +1,14 @@
 <template>
   <div class="goodsCategory" v-if="power.indexOf('H1000400')!=-1">
-    <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>设置</el-breadcrumb-item>
-      <el-breadcrumb-item>商品分类</el-breadcrumb-item>
-    </el-breadcrumb>
-    <!-- 添加分类 -->
-    <div class="addClassify" v-if="power.indexOf('H1000100')!=-1">
-      <el-button type="primary" @click="addClassify">添加分类</el-button>
+    <div class="aa">
+      <!-- 面包屑 -->
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>设置</el-breadcrumb-item>
+        <el-breadcrumb-item>商品分类</el-breadcrumb-item>
+      </el-breadcrumb>
     </div>
+    <!-- 添加分类 -->
+    <div class="addClassify" v-if="power.indexOf('H1000100')!=-1" @click="addClassify">添加分类</div>
     <el-table
       :data="tableData"
       style="width: 100%;margin: 20px 0;"
@@ -341,8 +341,17 @@ export default {
 <style lang="less" scoped>
 .goodsCategory {
   .addClassify {
-    button {
-      margin: 30px;
+    margin: 0 30px 30px 0;
+    border-radius: 15px;
+    width: 120px;
+    height: 30px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    &:hover {
+      cursor: pointer;
     }
   }
   .btn {
