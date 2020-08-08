@@ -107,6 +107,11 @@ const routes = [
         component: AdvanceReimbursement,
       },
       {
+        path: "/itemDesign",
+        name: "ItemDesign",
+        component: ItemDesign,
+      },
+      {
         path: "/vacationApproval",
         name: "VacationApproval",
         component: VacationApproval,

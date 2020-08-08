@@ -175,7 +175,7 @@ export default {
       this.init(this.formInline);
     },
     handleUser_id(v) {
-      this.formInline.user_id = e;
+      this.formInline.user_id = v;
     },
     async getYear() {
       let res = await getYearList();

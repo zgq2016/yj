@@ -1,11 +1,13 @@
 <template>
   <div class="accountType" v-if="power.indexOf('F6000400')!=-1">
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>财务</el-breadcrumb-item>
-      <el-breadcrumb-item>账目类型</el-breadcrumb-item>
-    </el-breadcrumb>
-    <div style="margin:10px 0;" v-if="power.indexOf('F6000100')!=-1">
-      <el-button type="primary" @click="dialogVisible = true" icon="el-icon-plus">新增项目类型</el-button>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>财务</el-breadcrumb-item>
+        <el-breadcrumb-item>账目类型</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
+    <div v-if="power.indexOf('F6000100')!=-1" class="addStyle">
+      <div @click="dialogVisible = true">新增项目类型</div>
     </div>
 
     <div class="table" style="width: 100%;margin:10px 0">
@@ -118,7 +120,7 @@ import {
   accountTypeList,
   accountTypeEdit,
   accountTypeDel,
-  accountTypeInfo
+  accountTypeInfo,
 } from "@/api/finance";
 export default {
   data() {
@@ -134,14 +136,14 @@ export default {
       obj: {},
       rules: {
         account_type_name: [
-          { required: true, message: "类型名称", trigger: "blur" }
-        ]
+          { required: true, message: "类型名称", trigger: "blur" },
+        ],
       },
       rules1: {
         account_type_name: [
-          { required: true, message: "类型名称", trigger: "blur" }
-        ]
-      }
+          { required: true, message: "类型名称", trigger: "blur" },
+        ],
+      },
     };
   },
   methods: {
@@ -189,7 +191,7 @@ export default {
     },
     async handleEdit(index, row) {
       let res = await accountTypeInfo({
-        id: row.id
+        id: row.id,
       });
       this.obj = res.data.data;
       this.dialogVisible1 = true;
@@ -198,20 +200,20 @@ export default {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           let res = await accountTypeDel({ id: row.id });
           this.init();
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
@@ -226,7 +228,7 @@ export default {
     async init() {
       let res = await accountTypeList({
         page: this.pageIndex,
-        page_size: this.pageSize
+        page_size: this.pageSize,
       });
       console.log(res);
       res.data.data.map((v, i) => {
@@ -240,12 +242,12 @@ export default {
       let { data, count } = res.data;
       this.data = data;
       this.total = count;
-    }
+    },
   },
   mounted() {
     this.init();
     this.power = localStorage.getItem("power");
-  }
+  },
 };
 </script>
 
@@ -256,7 +258,19 @@ export default {
     margin: 0 10px;
     font-size: 16px;
   }
-  .dialog {
+  .addStyle {
+    margin: 0 30px 0px 0px;
+    border-radius: 15px;
+    width: 120px;
+    height: 30px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    &:hover {
+      cursor: pointer;
+    }
   }
   .pagination {
     margin-top: 10px;

@@ -1,12 +1,13 @@
 <template>
   <div class="accounter">
-    <el-breadcrumb separator="/" class="breadcrumb" v-if="power.indexOf('F5000400')!=-1">
-      <el-breadcrumb-item>财务</el-breadcrumb-item>
-      <el-breadcrumb-item>结算帐户</el-breadcrumb-item>
-    </el-breadcrumb>
-
-    <div style="margin:10px 0;" v-if="power.indexOf('F5000100')!=-1">
-      <el-button type="primary" @click="dialogVisible = true" icon="el-icon-plus">新增项目类型</el-button>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb" v-if="power.indexOf('F5000400')!=-1">
+        <el-breadcrumb-item>财务</el-breadcrumb-item>
+        <el-breadcrumb-item>结算帐户</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
+    <div v-if="power.indexOf('F5000100')!=-1" class="addStyle">
+      <div @click="dialogVisible = true">新增项目类型</div>
     </div>
 
     <div class="table" style="width: 100%;margin:10px 0">
@@ -156,7 +157,7 @@ import {
   balanceAccountInfo,
   balanceAccountEdit,
   balanceAccountDel,
-  balanceAccountList
+  balanceAccountList,
 } from "@/api/finance";
 export default {
   data() {
@@ -176,12 +177,14 @@ export default {
         account_type: "",
         remarks: "",
         sort: "",
-        status: ""
+        status: "",
       },
       obj: {},
       rules: {
-        account_name: [{ required: true, message: "类型名称", trigger: "blur" }]
-      }
+        account_name: [
+          { required: true, message: "类型名称", trigger: "blur" },
+        ],
+      },
     };
   },
   methods: {
@@ -228,7 +231,7 @@ export default {
     },
     async handleEdit(index, row) {
       let res = await balanceAccountInfo({
-        id: row.id
+        id: row.id,
       });
       this.obj = res.data.data;
       console.log(this.obj);
@@ -238,20 +241,20 @@ export default {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           let res = await balanceAccountDel({ id: row.id });
           this.init();
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
@@ -291,7 +294,7 @@ export default {
     async init() {
       let res = await balanceAccountList({
         page: this.pageIndex,
-        page_size: this.pageSize
+        page_size: this.pageSize,
       });
       console.log(res);
       res.data.data.map((v, i) => {
@@ -305,18 +308,32 @@ export default {
       let { data, count } = res.data;
       this.data = data;
       this.total = count;
-    }
+    },
   },
   mounted() {
     this.get_balance();
     this.init();
     this.power = localStorage.getItem("power");
-  }
+  },
 };
 </script>
 
 <style lang="less" scoped>
 .accounter {
+  .addStyle {
+    margin: 0 30px 0px 0px;
+    border-radius: 15px;
+    width: 120px;
+    height: 30px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    &:hover {
+      cursor: pointer;
+    }
+  }
   .btn {
     cursor: pointer;
     margin: 0 10px;

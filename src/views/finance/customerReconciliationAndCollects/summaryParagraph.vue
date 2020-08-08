@@ -1,9 +1,14 @@
 <template>
   <div class="summaryParagraph">
     <div class="form">
-      <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="客户：">
-          <el-select clearable v-model="formInline.customer_id" placeholder="- 全部 -">
+      <el-form
+        :inline="true"
+        :model="formInline"
+        class="demo-form-inline"
+        style="position: relative;"
+      >
+        <el-form-item>
+          <el-select clearable v-model="formInline.customer_id" placeholder="客户">
             <el-option
               v-for="item in wests"
               :key="item.id"
@@ -12,26 +17,31 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="欠款金额：">
-          <el-input-number
-            v-model="formInline.num1"
-            controls-position="right"
-            @change="handleChange"
-          ></el-input-number>
-          <label for>至</label>
-          <el-input-number
-            v-model="formInline.num2"
-            controls-position="right"
-            @change="handleChange"
-          ></el-input-number>
+        <el-form-item>
+          <div style="display: flex;justify-content: center;align-items: center;">
+            <el-input
+              v-model="formInline.num1"
+              controls-position="right"
+              @change="handleChange"
+              placeholder="开始金额"
+            ></el-input>
+            <label for>至</label>
+            <el-input
+              v-model="formInline.num2"
+              controls-position="right"
+              @change="handleChange"
+              placeholder="结束金额"
+            ></el-input>
+          </div>
         </el-form-item>
         <el-form-item>
           <el-checkbox v-model="formInline.checked">不显示无欠款客户</el-checkbox>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">查询</el-button>
-          <el-button type="primary" icon="el-icon-message">收起统计数据</el-button>
-          <el-button type="primary" icon="el-icon-upload2">导出</el-button>
+          <div style="display: flex;justify-content: space-between;align-items: center;">
+            <div class="addStyle">收起统计数据</div>
+            <div class="addStyle">导出</div>
+          </div>
         </el-form-item>
       </el-form>
     </div>
@@ -154,11 +164,8 @@ export default {
       });
       console.log(res);
       let { data, count } = res.data;
-      // let { cope_money, pay_money, opay_money } = res.data.data;
       this.tableData = data;
       this.total = count;
-      // this.ctime_start = moment(this.formInline.date[0]).format("YYYY-MM-DD");
-      // this.ctime_end = moment(this.formInline.date[1]).format("YYYY-MM-DD");
     },
     handleSizeChange(val) {
       this.pageSize = val;
@@ -178,43 +185,6 @@ export default {
 
 <style lang="less" scoped>
 .summaryParagraph {
-  label {
-    width: 40px;
-    margin-right: 10px;
-  }
-  .headers {
-    padding: 0px 10px 10px 5px;
-    .client {
-      margin-top: 10px;
-      /deep/.el-input__inner {
-        width: 120px !important;
-      }
-    }
-    .classification {
-      margin-top: 10px;
-      /deep/.el-input__inner {
-        width: 120px !important;
-      }
-    }
-    .arear {
-      margin-top: 10px;
-      label {
-        margin-left: 10px;
-      }
-    }
-    .chenckb {
-      margin-top: 20px;
-      margin-right: 100px;
-    }
-    .btn {
-      margin-top: 10px;
-    }
-  }
-  .btn1 {
-    margin-top: 15px;
-    float: right;
-  }
-
   .main_top {
     margin-top: 15px;
     span {
@@ -231,9 +201,75 @@ export default {
     }
   }
 
-  .pagination {
+  .el-icon-more {
+    background-color: #f2f2f2;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  /deep/ .el-input__inner {
+    width: 100%;
+    height: 30px;
+    background-color: #f2f2f2;
+    border-radius: 15px;
+    border: none;
+    color: #5e5e5e;
+    font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
+      \\5b8b\4f53, sans-serif;
+  }
+  /deep/ .el-form-item__content {
+    line-height: 30px;
+  }
+  /deep/ .el-range-editor /deep/ .el-range-input {
+    background-color: #f2f2f2;
+  }
+  /deep/ .el-input__icon {
+    line-height: 30px;
+  }
+  .search_button {
+    margin-left: 10px;
+    background-color: #000;
+  }
+  /deep/ .el-icon-search {
+    color: #fff;
+  }
+  /deep/.el-button {
+    border: none;
+  }
+  .table {
+    .img {
+      width: 60px;
+      height: 60px;
+      border-radius: 5px;
+    }
+  }
+  .form {
+    width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .el-pagination {
     margin: 20px;
     text-align: right;
+  }
+  .addStyle {
+    margin: 0 0px 0px 30px;
+    border-radius: 15px;
+    width: 120px;
+    height: 30px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
 </style>

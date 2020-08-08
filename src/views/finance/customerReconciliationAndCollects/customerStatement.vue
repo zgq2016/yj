@@ -1,13 +1,13 @@
 <template>
   <div class="supplierReconciliationAndPayment">
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>财务</el-breadcrumb-item>
-      <el-breadcrumb-item>客户对账及收款</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div style="margin-bottom:10px">
+      <el-input placeholder="单据编号" v-model="formInline.account_no" clearable style="width:200px"></el-input>
+      <el-button icon="el-icon-search" size="mini" circle class="search_button" @click="onSubmit"></el-button>
+    </div>
     <div class="form">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="客户：">
-          <el-select clearable v-model="formInline.customer_id" placeholder="- 全部 -">
+        <el-form-item>
+          <el-select clearable v-model="formInline.customer_id" placeholder="客户">
             <el-option
               v-for="item in wests"
               :key="item.id"
@@ -16,19 +16,20 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="日期：">
+        <el-form-item>
           <el-date-picker
             v-model="formInline.date"
             type="daterange"
             range-separator="至"
-            :start-placeholder="ctime_start"
-            :end-placeholder="ctime_end"
+            class="timer"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
             style="width:100%"
             clearable
           ></el-date-picker>
         </el-form-item>
-        <el-form-item label="账目类型：">
-          <el-select v-model="formInline.account_type_id" clearable>
+        <el-form-item>
+          <el-select v-model="formInline.account_type_id" clearable placeholder="账目类型">
             <el-option
               v-for="item in BalanceAccountType"
               :key="item.id"
@@ -37,8 +38,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="结算账户：">
-          <el-select v-model="formInline.balance_account_id" clearable>
+        <el-form-item>
+          <el-select v-model="formInline.balance_account_id" clearable placeholder="结算账户">
             <el-option
               v-for="item in BalanceAccount"
               :key="item.id"
@@ -47,20 +48,31 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="操作者：">
-          <el-select v-model="formInline.user_id" clearable>
+        <el-form-item>
+          <el-select v-model="formInline.user_id" clearable placeholder="操作者">
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="单号：" clearable>
-          <el-input placeholder="单据编号" v-model="formInline.account_no" clearable></el-input>
-        </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">查询</el-button>
-          <el-button type="primary" @click="handlePayment">付款</el-button>
-          <el-button type="primary" @click="beginninGbalanceAdjustment">期初调整</el-button>
-          <el-button type="primary" v-print="'#printTest'" icon="el-icon-printer">打印</el-button>
-          <el-button type="primary" icon="el-icon-upload2">导出</el-button>
+          <div style="display: flex;justify-content: space-between;align-items: center;">
+            <div class="addStyle" @click="handlePayment">付款</div>
+            <div
+              class="addStyle"
+              style="background-color: #e3e3e3;color: #fff;"
+              @click="beginninGbalanceAdjustment"
+            >期初调整</div>
+            <div
+              class="addStyle"
+              style="background-color: #e3e3e3;color: #fff;"
+              v-print="'#printTest'"
+              icon="el-icon-printer"
+            >打印</div>
+            <div
+              class="addStyle"
+              style="background-color: #e3e3e3;color: #fff;"
+              icon="el-icon-upload2"
+            >导出</div>
+          </div>
         </el-form-item>
       </el-form>
     </div>
@@ -488,6 +500,76 @@ export default {
 
 <style lang="less" scoped>
 .supplierReconciliationAndPayment {
+  .el-icon-more {
+    background-color: #f2f2f2;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  /deep/ .el-input__inner {
+    width: 100%;
+    height: 30px;
+    background-color: #f2f2f2;
+    border-radius: 15px;
+    border: none;
+    color: #5e5e5e;
+    font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
+      \\5b8b\4f53, sans-serif;
+  }
+  /deep/ .el-form-item__content {
+    line-height: 30px;
+  }
+  /deep/ .el-range-editor /deep/ .el-range-input {
+    background-color: #f2f2f2;
+  }
+  /deep/ .el-input__icon {
+    line-height: 30px;
+  }
+  .search_button {
+    margin-left: 10px;
+    background-color: #000;
+  }
+  /deep/ .el-icon-search {
+    color: #fff;
+  }
+  /deep/.el-button {
+    border: none;
+  }
+  .table {
+    .img {
+      width: 60px;
+      height: 60px;
+      border-radius: 5px;
+    }
+  }
+  .form {
+    width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .el-pagination {
+    margin: 20px;
+    text-align: right;
+  }
+  .addStyle {
+    margin: 0 30px 0px 0px;
+    border-radius: 15px;
+    width: 120px;
+    height: 30px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    &:hover {
+      cursor: pointer;
+    }
+  }
   .tb {
     display: flex;
     width: 100%;
@@ -506,15 +588,10 @@ export default {
   .cont {
     span {
       float: left;
-      width: 50%;
+      width: 33%;
       text-align: center;
       margin: 10px 0;
     }
-  }
-
-  .pagination {
-    margin: 20px;
-    text-align: right;
   }
 }
 </style>

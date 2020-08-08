@@ -1,9 +1,11 @@
 <template>
   <div class="customerReconciliationAndCollection">
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>财务</el-breadcrumb-item>
-      <el-breadcrumb-item>客户对账及收款</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>财务</el-breadcrumb-item>
+        <el-breadcrumb-item>客户对账及收款</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <el-container>
       <el-main>
         <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
@@ -43,8 +45,8 @@ export default {
 <style lang="less" scoped>
 .customerReconciliationAndCollection {
   .el-container {
-    margin-top: 15px;
-    overflow: hidden !important;
+    // margin-top: 15px;
+    // overflow: hidden !important;
   }
 }
 </style>

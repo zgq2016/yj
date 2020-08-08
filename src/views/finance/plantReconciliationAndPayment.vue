@@ -1,34 +1,40 @@
 <template>
   <div class="supplierReconciliationAndPayment" v-if="power.indexOf('F7000100')!=-1">
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>财务</el-breadcrumb-item>
-      <el-breadcrumb-item>加工厂对账及付款</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>财务</el-breadcrumb-item>
+        <el-breadcrumb-item>加工厂对账及付款</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
+    <div style="margin-bottom:10px">
+      <el-input placeholder="单据编号" v-model="formInline.account_no" clearable style="width:200px"></el-input>
+      <el-button icon="el-icon-search" size="mini" circle class="search_button" @click="onSubmit"></el-button>
+    </div>
     <div class="form">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="指派工厂：">
-          <el-select v-model="formInline.factory_id" clearable>
+        <el-form-item>
+          <el-select v-model="formInline.supplier_id" placeholder="供应商" clearable>
             <el-option
-              v-for="item in GetFactory"
-              :key="item.id"
-              :label="item.factory_name"
-              :value="item.id"
+              v-for="item in SupplierList"
+              :key="item.address"
+              :label="item.value"
+              :value="item.address"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="日期：">
+        <el-form-item>
           <el-date-picker
             v-model="formInline.date"
             type="daterange"
             range-separator="至"
-            :start-placeholder="formInline.ctime_start"
-            :end-placeholder="formInline.ctime_end"
-            style="width:100%"
             clearable
+            class="timer"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
           ></el-date-picker>
         </el-form-item>
-        <el-form-item label="账目类型：">
-          <el-select v-model="formInline.account_type_id" clearable>
+        <el-form-item>
+          <el-select v-model="formInline.account_type" clearable placeholder="账目类型">
             <el-option
               v-for="item in BalanceAccountType"
               :key="item.id"
@@ -37,8 +43,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="结算账户：">
-          <el-select v-model="formInline.balance_account_id" clearable>
+        <el-form-item>
+          <el-select v-model="formInline.balance_account_id" clearable placeholder="结算账户">
             <el-option
               v-for="item in BalanceAccount"
               :key="item.id"
@@ -47,29 +53,32 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="操作者：">
-          <el-select v-model="formInline.user_id" clearable>
+        <el-form-item>
+          <el-select v-model="formInline.user_id" clearable placeholder="操作者">
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="单号：" clearable>
-          <el-input placeholder="单据编号" v-model="formInline.account_no" clearable></el-input>
-        </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">查询</el-button>
-          <el-button v-if="power.indexOf('F7000200')!=-1" type="primary" @click="handlePayment">付款</el-button>
-          <el-button
-            v-if="power.indexOf('F7000300')!=-1"
-            type="primary"
-            @click="beginninGbalanceAdjustment"
-          >期初调整</el-button>
-          <el-button
-            v-if="power.indexOf('F7000400')!=-1"
-            type="primary"
-            v-print="'#printTest'"
-            icon="el-icon-printer"
-          >打印</el-button>
-          <el-button v-if="power.indexOf('F7000500')!=-1" type="primary" icon="el-icon-upload2">导出</el-button>
+          <div style="display: flex;justify-content: space-between;align-items: center;">
+            <div class="addStyle" v-if="power.indexOf('F4000200')!=-1" @click="handlePayment">付款</div>
+            <div
+              class="addStyle"
+              v-if="power.indexOf('F4000300')!=-1"
+              @click="beginninGbalanceAdjustment"
+              style="background-color: #e3e3e3;color: #fff;"
+            >期初调整</div>
+            <div
+              class="addStyle"
+              style="background-color: #e3e3e3;color: #fff;"
+              v-if="power.indexOf('F4000400')!=-1"
+              v-print="'#printTest'"
+            >打印</div>
+            <div
+              class="addStyle"
+              style="background-color: #e3e3e3;color: #fff;"
+              v-if="power.indexOf('F4000500')!=-1"
+            >导出</div>
+          </div>
         </el-form-item>
       </el-form>
     </div>
@@ -99,36 +108,16 @@
       </div>
       <div class="table">
         <el-table :data="tableData" border size="mini">
-          <el-table-column :show-overflow-tooltip="true" width="140" prop="ctime" label="业务时间"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="120" prop="account_no" label="单据编号"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="80" prop="user_name" label="操作人"></el-table-column>
-          <el-table-column
-            :show-overflow-tooltip="true"
-            width="110"
-            prop="account_name"
-            label="结算账户"
-          ></el-table-column>
-          <el-table-column
-            :show-overflow-tooltip="true"
-            width="110"
-            prop="account_type_name"
-            label="账目类型"
-          ></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="110" prop="cope_money" label="应付金额"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="110" prop="pay_money" label="实付金额"></el-table-column>
-          <el-table-column
-            :show-overflow-tooltip="true"
-            width="110"
-            prop="opay_money"
-            label="本单应付余额"
-          ></el-table-column>
-          <el-table-column
-            :show-overflow-tooltip="true"
-            width="110"
-            prop="total_money"
-            label="累计应付款余额"
-          ></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" width="110" prop="remarks" label="备注"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="ctime" label="业务时间"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="account_no" label="单据编号"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="user_name" label="操作人"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="account_name" label="结算账户"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="account_type_name" label="账目类型"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="cope_money" label="应付金额"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="pay_money" label="实付金额"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="opay_money" label="本单应付余额"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="total_money" label="累计应付款余额"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="remarks" label="备注"></el-table-column>
           <el-table-column prop="data" label="操作"></el-table-column>
         </el-table>
       </div>
@@ -447,7 +436,6 @@ export default {
       this.supplierInit();
     },
     async supplierInit() {
-
       if (this.formInline.date === "") {
         this.formInline["ctime_start"] = "";
         this.formInline["ctime_end"] = "";
@@ -490,6 +478,76 @@ export default {
 
 <style lang="less" scoped>
 .supplierReconciliationAndPayment {
+  .el-icon-more {
+    background-color: #f2f2f2;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  /deep/ .el-input__inner {
+    width: 100%;
+    height: 30px;
+    background-color: #f2f2f2;
+    border-radius: 15px;
+    border: none;
+    color: #5e5e5e;
+    font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
+      \\5b8b\4f53, sans-serif;
+  }
+  /deep/ .el-form-item__content {
+    line-height: 30px;
+  }
+  /deep/ .el-range-editor /deep/ .el-range-input {
+    background-color: #f2f2f2;
+  }
+  /deep/ .el-input__icon {
+    line-height: 30px;
+  }
+  .search_button {
+    margin-left: 10px;
+    background-color: #000;
+  }
+  /deep/ .el-icon-search {
+    color: #fff;
+  }
+  /deep/.el-button {
+    border: none;
+  }
+  .table {
+    .img {
+      width: 60px;
+      height: 60px;
+      border-radius: 5px;
+    }
+  }
+  .form {
+    width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .el-pagination {
+    margin: 20px;
+    text-align: right;
+  }
+  .addStyle {
+    margin: 0 30px 0px 0px;
+    border-radius: 15px;
+    width: 120px;
+    height: 30px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    &:hover {
+      cursor: pointer;
+    }
+  }
   .tb {
     display: flex;
     width: 100%;
@@ -508,15 +566,10 @@ export default {
   .cont {
     span {
       float: left;
-      width: 50%;
+      width: 33%;
       text-align: center;
       margin: 10px 0;
     }
-  }
-
-  .pagination {
-    margin: 20px;
-    text-align: right;
   }
 }
 </style>

@@ -19,10 +19,12 @@
             range-separator="至"
             clearable
             class="timer"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
           ></el-date-picker>
         </el-form-item>
         <el-form-item prop="account_type_name">
-          <el-select v-model="formInline.account_type_name" clearable>
+          <el-select v-model="formInline.account_type_name" clearable placeholder="账目类型">
             <el-option
               v-for="item in BalanceAccountType"
               :key="item.id"
@@ -32,7 +34,7 @@
           </el-select>
         </el-form-item>
         <el-form-item prop="balance_account_id">
-          <el-select v-model="formInline.balance_account_id" clearable>
+          <el-select v-model="formInline.balance_account_id" clearable placeholder="结算账户">
             <el-option
               v-for="item in BalanceAccount"
               :key="item.id"
@@ -42,15 +44,29 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.user_id" clearable>
+          <el-select v-model="formInline.user_id" clearable placeholder="操作者">
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
           <div style="display: flex;justify-content: space-between;align-items: center;">
-            <div class="addStyle" v-if="power.indexOf('F2000200')!=-1" @click="onincome">收入</div>
-            <div class="addStyle" v-if="power.indexOf('F2000300')!=-1" @click="onexpend">支出</div>
+            <el-dropdown trigger="click" @command="handleCommand" placement="bottom">
+              <span class="el-icon-more"></span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="a">账户互转</el-dropdown-item>
+                <el-dropdown-item command="b">期初调整</el-dropdown-item>
+                <el-dropdown-item command="c" v-print="'#printTest'">打印</el-dropdown-item>
+                <el-dropdown-item command="d">导出</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
             <div
+              class="addStyle"
+              style="background-color: #e3e3e3;color: #fff;"
+              v-if="power.indexOf('F2000300')!=-1"
+              @click="onexpend"
+            >支出</div>
+            <div class="addStyle" v-if="power.indexOf('F2000200')!=-1" @click="onincome">收入</div>
+            <!-- <div
               class="addStyle"
               v-if="power.indexOf('F2000400')!=-1"
               @click="onAccounttransfers"
@@ -61,7 +77,7 @@
               @click="onbalanceadjustment"
             >期初调整</div>
             <div class="addStyle" v-if="power.indexOf('F2000600')!=-1" v-print="'#printTest'">打印</div>
-            <div class="addStyle" v-if="power.indexOf('F2000700')!=-1">导出</div>
+            <div class="addStyle" v-if="power.indexOf('F2000700')!=-1">导出</div>-->
           </div>
         </el-form-item>
       </el-form>
@@ -525,6 +541,17 @@ export default {
     };
   },
   methods: {
+    handleCommand(command) {
+      // 新增意向订单 AddOpinionIndent
+      if (command === "a") {
+        this.onAccounttransfers();
+      }
+      // 新增阶段工作 AddPhase
+      if (command === "b") {
+        this.onbalanceadjustment();
+      }
+      // 新增企划系列 AddProjectSeries
+    },
     // 打印
     // printEvent() {
     //   let html = printX(1, 3); // a,b是我打印页面需要用到的参数，我在这里省略了参数相关的代码
@@ -730,6 +757,15 @@ export default {
 
 <style lang="less" scoped>
 .accountFlowAndBookkeeping {
+  .el-icon-more {
+    background-color: #f2f2f2;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   /deep/ .el-input__inner {
     width: 100%;
     height: 30px;
@@ -742,6 +778,9 @@ export default {
   }
   /deep/ .el-form-item__content {
     line-height: 30px;
+  }
+  /deep/ .el-range-editor /deep/ .el-range-input {
+    background-color: #f2f2f2;
   }
   /deep/ .el-input__icon {
     line-height: 30px;
@@ -775,7 +814,7 @@ export default {
     text-align: right;
   }
   .addStyle {
-    margin: 0 30px 30px 0;
+    margin: 0 0px 0px 30px;
     border-radius: 15px;
     width: 120px;
     height: 30px;
@@ -787,6 +826,7 @@ export default {
     &:hover {
       cursor: pointer;
     }
+    
   }
   .tb {
     display: flex;
