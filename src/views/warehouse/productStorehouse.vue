@@ -18,6 +18,7 @@
             <el-select
               v-model="formInline.storehouse_id"
               clearable
+              
               placeholder="请选择仓库"
               style="width:120px"
             >
@@ -51,6 +52,10 @@
               ></el-option>
             </el-select>
           </el-form-item>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 30dbcdc5df6a426cef0fc350461db2cf1163ace1
           <el-form-item>
             <el-input
               style="width:120px"

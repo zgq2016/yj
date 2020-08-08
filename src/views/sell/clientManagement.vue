@@ -1,10 +1,12 @@
 <template>
   <div class="clientManagement" v-if="power.indexOf('D1000400')!=-1">
     <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>销售</el-breadcrumb-item>
-      <el-breadcrumb-item>客户管理</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>销售</el-breadcrumb-item>
+        <el-breadcrumb-item>客户管理</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <!-- 条件 -->
     <div class="form">
       <el-form :inline="true" :model="form" class="demo-form-inline">
@@ -65,7 +67,7 @@ export default {
       tableData: [],
       pageIndex: 1,
       pageSize: 9,
-      total: 0
+      total: 0,
     };
   },
   methods: {
@@ -92,19 +94,19 @@ export default {
       let res = await getCustomerList({
         page: this.pageIndex,
         page_size: this.pageSize,
-        ...obj
+        ...obj,
       });
       console.log(res);
       let { data, count } = res.data;
       this.tableData = data;
       this.total = count;
-    }
+    },
   },
   mounted() {
     this.init();
     this.power = localStorage.getItem("power");
     console.log(this.power);
-  }
+  },
 };
 </script>
 
