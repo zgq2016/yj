@@ -1,11 +1,13 @@
 <template>
   <div class="stockInquiryDetails">
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <!-- <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" /> -->
-      <el-breadcrumb-item>仓库</el-breadcrumb-item>
-      <el-breadcrumb-item>产品入库</el-breadcrumb-item>
-      <el-breadcrumb-item>产品入库详情</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <!-- <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" /> -->
+        <el-breadcrumb-item>仓库</el-breadcrumb-item>
+        <el-breadcrumb-item>产品入库</el-breadcrumb-item>
+        <el-breadcrumb-item>产品入库详情</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <div class="main">
       <div class="top">
         <div class="rh_left">
@@ -75,8 +77,13 @@
           :summary-method="getSummaries"
         >
           <el-table-column type="index" width="45"></el-table-column>
+          <el-table-column align="center" width="80" label="图片">
+            <template align="center" slot-scope="scope" property="style_pic_url">
+              <img :src="scope.row.style_pic_url" class="img" alt />
+            </template>
+          </el-table-column>
           <el-table-column prop="stylename" align="center" label="商品"></el-table-column>
-          <el-table-column property="produce_no" align="center" label="货号"></el-table-column>
+          <el-table-column property="produce_no" align="center" label="款号"></el-table-column>
           <el-table-column prop="bar_code" align="center" label="条码"></el-table-column>
           <el-table-column prop="style_color_name" align="center" label="颜色"></el-table-column>
           <el-table-column prop="size" align="center" label="尺码"></el-table-column>
@@ -298,6 +305,7 @@ export default {
       let { data } = res.data;
       this.form = data;
       this.weretable = data.size_data;
+      console.log(data);
       this.fileList = [];
       this.form.images.map((v, i) => {
         this.fileList.push({

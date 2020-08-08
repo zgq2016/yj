@@ -1,11 +1,13 @@
 <template>
   <div class="Check">
     <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>销售</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/clientManagement' }">客户管理</el-breadcrumb-item>
-      <el-breadcrumb-item>查看</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>销售</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/clientManagement' }">客户管理</el-breadcrumb-item>
+        <el-breadcrumb-item>查看</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <div class="form">
       <el-form ref="form" :rules="rules" :model="form" label-width="80px">
         <el-form-item prop="companyname" label="公司名称">
@@ -19,8 +21,16 @@
         </el-form-item>
         <el-form-item>
           <!--   -->
-          <el-button v-if="power.indexOf('D1000300')!=-1" @click="handleEdit" style="padding:10px 50px;border-radius: 15px;">保存</el-button>
-          <el-button v-if="power.indexOf('D1000200')!=-1" @click="handleDel" style="padding:10px 50px;border-radius: 15px;">删除</el-button>
+          <el-button
+            v-if="power.indexOf('D1000300')!=-1"
+            @click="handleEdit"
+            style="padding:10px 50px;border-radius: 15px;"
+          >保存</el-button>
+          <el-button
+            v-if="power.indexOf('D1000200')!=-1"
+            @click="handleDel"
+            style="padding:10px 50px;border-radius: 15px;"
+          >删除</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -36,14 +46,14 @@ export default {
       form: {
         companyname: "",
         contacts: "",
-        phone: ""
+        phone: "",
       },
       rules: {
         companyname: [
-          { required: true, message: "请输入公司名字", trigger: "blur" }
+          { required: true, message: "请输入公司名字", trigger: "blur" },
         ],
         contacts: [
-          { required: true, message: "请输入联系人", trigger: "blur" }
+          { required: true, message: "请输入联系人", trigger: "blur" },
         ],
         phone: [
           { required: true, message: "请输入电话", trigger: "blur" },
@@ -51,15 +61,15 @@ export default {
             min: 11,
             max: 11,
             message: "请输入长度为11位的电话号码",
-            trigger: "blur"
-          }
-        ]
-      }
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
   methods: {
     async handleEdit() {
-      this.$refs["form"].validate(async valid => {
+      this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         let res = await getEdit(this.form);
         this.$router.go(-1);
@@ -70,23 +80,23 @@ export default {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           let res = await customerDel({ id });
           this.$router.push({ name: "ClientManagement" });
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
-    }
+    },
   },
   async mounted() {
     let id = this.$route.query.id - 0;
@@ -96,7 +106,7 @@ export default {
     console.log(res);
     this.power = localStorage.getItem("power");
     console.log(this.power);
-  }
+  },
 };
 </script>
 

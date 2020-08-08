@@ -1,22 +1,29 @@
 <template>
   <div class="warehouseSet" v-if="power.indexOf('C5000400')!=-1">
     <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>仓库</el-breadcrumb-item>
-      <el-breadcrumb-item>库存设置</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>仓库</el-breadcrumb-item>
+        <el-breadcrumb-item>库存设置</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <div class="main">
       <div class="header">
         <el-form style="float:left" :inline="true" :model="form">
           <el-form-item label="名称:">
-            <el-input v-model="form.storehouse_name"  size="small" placeholder="请输入仓库名称"></el-input>
+            <el-input v-model="form.storehouse_name" size="small" placeholder="请输入仓库名称"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary"  size="small" @click="onSubmit">查询</el-button>
+            <el-button type="primary" size="small" @click="onSubmit">查询</el-button>
           </el-form-item>
         </el-form>
         <el-form style="float:right">
-          <el-button  size="small" type="primary" @click="addWarehouse" v-if="power.indexOf('C5000100')!=-1">+增加仓库</el-button>
+          <el-button
+            size="small"
+            type="primary"
+            @click="addWarehouse"
+            v-if="power.indexOf('C5000100')!=-1"
+          >+增加仓库</el-button>
         </el-form>
       </div>
       <hr style="border:1px dashed #ccc" />

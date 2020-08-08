@@ -1,21 +1,23 @@
 <template>
   <div class="productionStyle">
     <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>生产</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="TL===0" :to="{ path: '/productionOrders' }">生产下单</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="TL===1" :to="{ path: '/purchase' }">采购列表</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="TL===2" :to="{ path: '/productionScheduling' }">生产排期</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="TL===3" :to="{ path: '/tailor' }">裁剪</el-breadcrumb-item>
-      <!-- 款式详细-->
-      <el-breadcrumb-item v-if="TL===4" :to="{ path: '/shipment' }">生产出货</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="TL===21" :to="{ path: '/designFile' }">款式档案</el-breadcrumb-item>
-      <el-breadcrumb-item
-        v-if="TL===21"
-        :to="{ path: `/development?id=${this.$route.query.id}&TL=21` }"
-      >款式详细</el-breadcrumb-item>
-      <el-breadcrumb-item>生产档案</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>生产</el-breadcrumb-item>
+        <el-breadcrumb-item v-if="TL===0" :to="{ path: '/productionOrders' }">生产下单</el-breadcrumb-item>
+        <el-breadcrumb-item v-if="TL===1" :to="{ path: '/purchase' }">采购列表</el-breadcrumb-item>
+        <el-breadcrumb-item v-if="TL===2" :to="{ path: '/productionScheduling' }">生产排期</el-breadcrumb-item>
+        <el-breadcrumb-item v-if="TL===3" :to="{ path: '/tailor' }">裁剪</el-breadcrumb-item>
+        <!-- 款式详细-->
+        <el-breadcrumb-item v-if="TL===4" :to="{ path: '/shipment' }">生产出货</el-breadcrumb-item>
+        <el-breadcrumb-item v-if="TL===21" :to="{ path: '/designFile' }">款式档案</el-breadcrumb-item>
+        <el-breadcrumb-item
+          v-if="TL===21"
+          :to="{ path: `/development?id=${this.$route.query.id}&TL=21` }"
+        >款式详细</el-breadcrumb-item>
+        <el-breadcrumb-item>生产档案</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <div class="main" v-if="!home">
       <div class="info">
         <div class="basicsInfo">
@@ -943,6 +945,22 @@
                       ></el-pagination>
                     </el-select>
                   </el-form-item>
+                  <el-form-item label="工厂:" style="width:250px;margin-left:120px;font-size:16px;">
+                    <el-select
+                      size="mini"
+                      v-model="item.factory_name"
+                      placeholder="请选择工厂"
+                      clearable
+                    >
+                      <el-option
+                        v-for="items in factorys"
+                        :key="items.id"
+                        :label="items.factory_name"
+                        :value="items.id"
+                      ></el-option>
+                    </el-select>
+                  </el-form-item>
+                  <!-- ***************************************************************************************************************************************************** -->
                   <hr style="border:1px dashed #999999" />
                 </el-form>
               </div>
@@ -1012,6 +1030,9 @@
                     v-if="item.shipping_type==0"
                     style="margin-left:120px;font-size:16px;font-weight:400;"
                   >客户</div>
+                  <div
+                    style="margin-left:120px;font-size:16px;font-weight:400;"
+                  >工厂:{{item.factory_name}}</div>
                   <hr style="border:1px dashed #999999" />
                 </el-form>
                 <el-button
@@ -1481,6 +1502,7 @@ export default {
       pageSize2: 10,
       total2: 0,
       wares: [], //仓库
+      factorys: [],
     };
   },
   methods: {
@@ -2810,6 +2832,7 @@ export default {
           this.regions.map((j, k) => {
             if (v.factory_id == j.id) {
               this.regions1.push(j.factory_name);
+              this.factorys.push({ id: j.id, factory_name: j.factory_name });
             }
           });
           this.formInline.push({
@@ -2817,7 +2840,7 @@ export default {
             produce_no: data[this.active].produce_no,
             factory_id: v.factory_id,
             mode: [{ id: v.mode, name: this.mode[i] }],
-            price: v.price,
+            price: Number(v.price),
             quantity: v.quantity,
             remarks: v.remarks,
             id: v.id,
@@ -3265,7 +3288,7 @@ export default {
           return;
         }
         if (v.shipping_type == 1) {
-          if (v.storehouse_id == undefined || v.storehouse_id == "") {
+          if (v.storehouse_id == undefined || v.storehouse_id == ""||v.factory_name == '' || v.factory_name == undefined) {
             blo = false;
             return;
           }
@@ -3324,6 +3347,7 @@ export default {
                   produce_complete_size: arr,
                   shipping_type: v.shipping_type,
                   storehouse_id: v.shipping_type == 1 ? v.storehouse_id : "",
+                  factory_id: v.factory_name,
                 });
               });
               let res1 = await produceCompleteAdd({
@@ -3368,9 +3392,15 @@ export default {
                   });
                 });
                 let str = "";
+                let str1 = "";
                 this.wares.map((j, k) => {
                   if (v.storehouse_id == j.storehouse_name) {
                     str = j.id;
+                  }
+                });
+                this.factorys.map((j, k) => {
+                  if (v.factory_name == j.storehouse_name) {
+                    str1 = j.id;
                   }
                 });
                 arrNew.push({
@@ -3381,6 +3411,7 @@ export default {
                   shipping_type: v.shipping_type,
                   storehouse_id:
                     v.shipping_type == 1 ? str || v.storehouse_id : "",
+                  factory_id: str1 || v.factory_name,
                 });
               });
               let res1 = await produceCompleteEdit({
@@ -3404,7 +3435,7 @@ export default {
             });
           });
       } else {
-        this.$message.error("请输入尺码数量和选择仓库");
+        this.$message.error("请输入尺码数量、选择仓库和工厂");
       }
     },
     // 删除
@@ -3458,8 +3489,7 @@ export default {
             produce_no: data[this.active].produce_no,
           });
           let data1 = res1.data.data;
-          console.log(res1);
-          // console.log(this.t_size);
+          console.log(data1);
           // console.log(this.complete);
           if (this.t_size.length != 0) {
             data1.produce_complete_data.map((v, i) => {
@@ -3578,6 +3608,7 @@ export default {
                 t_size: this.t_size,
                 id_c: v.id,
                 storehouse_id: v.storehouse_id == 0 ? "" : v.storehouse_id,
+                factory_name: v.factory_name,
                 shipping_type: Number(v.shipping_type),
                 produce_complete_size_a_data: arr_a,
                 produce_complete_size_b_data: arr_b,
@@ -3611,37 +3642,39 @@ export default {
     radioChange(item, index) {
       console.log(item, index);
     },
+    async test() {
+      let { id } = this.$route.query;
+      let pdn = this.$route.query.produce_no;
+      let res = await getStyle({ id });
+      this.obj = res.data.data;
+      // 批次
+      let res1 = await produceInfo({ style_id: Number(id) });
+      let { data } = res1.data;
+
+      if (data.length > 0) {
+        this.ob = [];
+        data.map((v, i) => {
+          this.ob.push({
+            num: i,
+            produce_no: v.produce_no,
+            logDatas: v.produce_log_data,
+          });
+        });
+        this.ob.map((v, i) => {
+          if (pdn == v.produce_no) {
+            this.active = i;
+          }
+        });
+      } else {
+        this.home = true;
+      }
+    },
   },
   async mounted() {
-    let { id } = this.$route.query;
-    let pdn = this.$route.query.produce_no;
-    let res = await getStyle({ id });
-    this.obj = res.data.data;
-    // 批次
-    let res1 = await produceInfo({ style_id: Number(id) });
-    let { data } = res1.data;
-
-    if (data.length > 0) {
-      this.ob = [];
-      data.map((v, i) => {
-        this.ob.push({
-          num: i,
-          produce_no: v.produce_no,
-          logDatas: v.produce_log_data,
-        });
-      });
-      this.ob.map((v, i) => {
-        if (pdn == v.produce_no) {
-          this.active = i;
-        }
-      });
-    } else {
-      this.home = true;
-    }
-
     // console.log(this.obj);
     // console.log(this.obj.style_materials_color_data)
     // this.activities_endlong = res.data.data.style_log;
+    this.test()
     this.init();
     this.int_i();
     this.init_r();

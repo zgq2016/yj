@@ -2,10 +2,12 @@
   <!--  v-if="power.indexOf('C2000100')!=-1" -->
   <div class="stockInquiry">
     <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>仓库</el-breadcrumb-item>
-      <el-breadcrumb-item>产品入库</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>仓库</el-breadcrumb-item>
+        <el-breadcrumb-item>产品入库</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <div class="main">
       <div class="header">
         <el-form :model="ruleForm" ref="ruleForm" class="demo-ruleForm">
@@ -217,7 +219,7 @@ export default {
       this.total = res.data.count;
       console.log(res);
       this.tableData.map((v, i) => {
-         v.ctime = v.ctime.substring(0, 10);
+        v.ctime = v.ctime.substring(0, 10);
         if (v.state == 0) {
           v.state_name = "草稿";
         } else if (v.state == 1) {

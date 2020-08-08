@@ -1,10 +1,12 @@
 <template>
   <div class="salesOrder" v-if="power.indexOf('D2000100')!=-1">
     <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>销售</el-breadcrumb-item>
-      <el-breadcrumb-item>销售订单</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>销售</el-breadcrumb-item>
+        <el-breadcrumb-item>销售订单</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <div class="main">
       <div class="search_condition">
         <el-form
@@ -222,7 +224,6 @@ export default {
         } else if (v.state === 4) {
           v.states = "已撤销";
         }
-       
       });
     },
     handleSizeChange(val) {

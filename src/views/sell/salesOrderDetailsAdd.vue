@@ -1,11 +1,13 @@
 <template>
   <div class="salesOrderDetailsAdd">
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <!-- <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" /> -->
-      <el-breadcrumb-item>销售</el-breadcrumb-item>
-      <el-breadcrumb-item>销售订单</el-breadcrumb-item>
-      <el-breadcrumb-item>销售订单详情</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <!-- <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" /> -->
+        <el-breadcrumb-item>销售</el-breadcrumb-item>
+        <el-breadcrumb-item>销售订单</el-breadcrumb-item>
+        <el-breadcrumb-item>销售订单详情</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <div class="main">
       <div class="top">
         <div class="rh_left">
@@ -36,7 +38,7 @@
 
           <!-- prop="factory_name" -->
           <el-form-item style="float:left;width:30%;margin-left:3%;" label="客户:">
-            <el-select size="mini" clearable v-model="form.companyname" placeholder="请选择厂商">
+            <el-select size="mini" clearable v-model="form.companyname" placeholder="请选择客户">
               <el-option
                 v-for="item in wests"
                 :key="item.value"
@@ -132,6 +134,11 @@
               ></div>
             </template>
           </el-table-column>
+          <el-table-column align="center" width="80" label="图片">
+            <template align="center" slot-scope="scope" property="style_pic_url">
+              <img :src="scope.row.style_pic_url" class="img" alt />
+            </template>
+          </el-table-column>
           <el-table-column prop="stylename" align="center" label="商品">
             <template slot-scope="scope">
               <el-select
@@ -164,7 +171,7 @@
                   <span>{{scope.row.commodity || "点击选择"}}</span>
             </template>-->
           </el-table-column>
-          <el-table-column prop="produce_no" align="center" sum-text label="货号"></el-table-column>
+          <el-table-column prop="produce_no" align="center" sum-text label="款号"></el-table-column>
           <el-table-column prop="bar_code" align="center" label="条码"></el-table-column>
           <el-table-column prop="style_color_name" align="center" label="颜色">
             <template slot-scope="scope">
@@ -593,6 +600,7 @@ export default {
       this.weretable = [];
       for (let i = 0; i < 6; i++) {
         this.weretable.push({
+          style_pic_url: "",
           bar_code: "",
           discount: "100",
           discount_money: "",
@@ -766,7 +774,7 @@ export default {
         row.price = v.price;
         row.discount_price = v.discount_price;
         row.style_id = v.style_data[0].style_id;
-
+        row.style_pic_url = v.style_pic_url;
         row.showHidden1 = false;
         this.dialogFormVisible = true;
         this.indexk = index;
@@ -812,7 +820,7 @@ export default {
                 discount_money: j * this.weretable[this.indexk].discount_price,
                 remark: "",
                 style_id: this.weretable[this.indexk].style_id,
-
+                style_pic_url: this.weretable[this.indexk].style_pic_url,
                 showHidden1: false,
                 showHidden2: false,
                 showHidden3: false,
@@ -852,6 +860,7 @@ export default {
               discount_money: v.discount_money,
               id: v.id || 0,
               style_id: v.style_id,
+              style_pic_url: v.style_pic_url,
             });
           }
         });

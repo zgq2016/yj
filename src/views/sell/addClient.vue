@@ -1,11 +1,13 @@
 <template>
   <div class="addClient">
     <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>销售</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/clientManagement' }">客户管理</el-breadcrumb-item>
-      <el-breadcrumb-item>新增客户</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>销售</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/clientManagement' }">客户管理</el-breadcrumb-item>
+        <el-breadcrumb-item>新增客户</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <!-- form -->
     <div class="form">
       <el-form ref="form" :rules="rules" :model="form" label-width="80px">
@@ -38,14 +40,14 @@ export default {
       form: {
         companyname: "",
         contacts: "",
-        phone: ""
+        phone: "",
       },
       rules: {
         companyname: [
-          { required: true, message: "请输入公司名字", trigger: "blur" }
+          { required: true, message: "请输入公司名字", trigger: "blur" },
         ],
         contacts: [
-          { required: true, message: "请输入联系人", trigger: "blur" }
+          { required: true, message: "请输入联系人", trigger: "blur" },
         ],
         phone: [
           { required: true, message: "请输入电话", trigger: "blur" },
@@ -53,22 +55,22 @@ export default {
             min: 11,
             max: 11,
             message: "请输入长度为11位的电话号码",
-            trigger: "blur"
-          }
-        ]
-      }
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
   methods: {
     onSubmit() {
-      this.$refs["form"].validate(async valid => {
+      this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
 
         let res = await getCustomerAdd(this.form);
         this.$router.go(-1);
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

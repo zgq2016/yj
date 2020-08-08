@@ -1,10 +1,12 @@
 <template>
   <div class="materialStorage" v-if="power.indexOf('C4000100')!=-1">
     <!-- 面包屑 -->
+    <div class="aa">
     <el-breadcrumb separator="/" class="breadcrumb">
       <el-breadcrumb-item>仓库</el-breadcrumb-item>
       <el-breadcrumb-item>物料库存流水</el-breadcrumb-item>
     </el-breadcrumb>
+    </div>
     <div class="main">
       <div class="searchInput">
         <el-form :inline="true" :model="form">

@@ -1,10 +1,12 @@
 <template>
   <div class="material" v-if="power.indexOf('C3000100')!=-1">
     <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>仓库</el-breadcrumb-item>
-      <el-breadcrumb-item>物料库存查询 或 采购</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>仓库</el-breadcrumb-item>
+        <el-breadcrumb-item>物料库存查询 或 采购</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <div class="main">
       <div class="searchInput">
         <el-form :inline="true" :model="form">
@@ -94,16 +96,16 @@
             <el-checkbox v-model="form.checked">过滤无库存</el-checkbox>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary"  size="small" @click="onSubmit">查询</el-button>
+            <el-button type="primary" size="small" @click="onSubmit">查询</el-button>
             <!-- <el-button type="primary">导出</el-button> -->
             <!-- <el-button v-print="'#printTest'" type="primary">打印</el-button> -->
           </el-form-item>
           <el-form-item>
-            <el-button  size="small" type="primary">展示统计数据</el-button>
+            <el-button size="small" type="primary">展示统计数据</el-button>
           </el-form-item>
           <el-button
             type="primary"
-             size="small"
+            size="small"
             style="float:right;margin-right:35px;"
             @click="handleCard"
             v-if="power.indexOf('C3000200')!=-1"
