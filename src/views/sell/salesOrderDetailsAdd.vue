@@ -1,20 +1,20 @@
 <template>
-  <div class="stockInquiryDetails">
+  <div class="salesOrderDetailsAdd">
     <el-breadcrumb separator="/" class="breadcrumb">
       <!-- <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" /> -->
-      <el-breadcrumb-item>仓库</el-breadcrumb-item>
-      <el-breadcrumb-item>产品入库</el-breadcrumb-item>
-      <el-breadcrumb-item>产品入库详情</el-breadcrumb-item>
+      <el-breadcrumb-item>销售</el-breadcrumb-item>
+      <el-breadcrumb-item>销售订单</el-breadcrumb-item>
+      <el-breadcrumb-item>销售订单详情</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="main">
       <div class="top">
         <div class="rh_left">
-          <h4>入库单-{{form.no}}-{{'zaan'}}</h4>
+          <h4>销售订单-{{form.no}}-{{'zaan'}}</h4>
         </div>
         <div class="rh_right">
           <el-button size="mini" type="primary" v-if="power.indexOf('C2000200')!=-1">扫码</el-button>
           <el-button size="mini" type="primary" v-if="power.indexOf('C2000300')!=-1">导入</el-button>
-          <el-button size="mini" type="primary" @click="tables">新建入库单</el-button>
+          <el-button size="mini" type="primary" @click="tables">新增销售订单</el-button>
         </div>
       </div>
       <hr style="border:1px dashed #ccc;margin:0 10px" />
@@ -23,34 +23,26 @@
         <el-form :model="form" ref="form">
           <el-form-item style="overflow: hidden;width:100%;">
             <div style="float:left;padding:10px 0 0 15px;">
-              尚欠厂商款:
+              客户尚欠款:
               <em style="color:red;">&yen;{{'0.00'}}</em>
             </div>
             <div class="cssa" style="float:right;padding:10px 15px 0 0;width:210px;">
               <el-steps :space="110" align-center :active="0" finish-status="wait">
                 <el-step icon="el-icon-success" title="草稿"></el-step>
-                <el-step icon="el-icon-success" title="已入库"></el-step>
+                <el-step icon="el-icon-success" title="已出售"></el-step>
               </el-steps>
             </div>
           </el-form-item>
 
           <!-- prop="factory_name" -->
-          <el-form-item style="float:left;width:30%;margin-left:3%;" label="厂商:">
-            <el-select size="mini" clearable v-model="form.factory_name" placeholder="请选择厂商">
+          <el-form-item style="float:left;width:30%;margin-left:3%;" label="客户:">
+            <el-select size="mini" clearable v-model="form.companyname" placeholder="请选择厂商">
               <el-option
-                v-for="item in factorys"
-                :key="item.id"
-                :label="item.factory_name"
+                v-for="item in wests"
+                :key="item.value"
+                :label="item.companyname"
                 :value="item.id"
-                :disabled="item.factory_name=='全部'? true:false"
               ></el-option>
-              <el-pagination
-                small
-                layout="prev, pager, next"
-                @size-change="handleSize1"
-                @current-change="handleCurrent1"
-                :total="total1"
-              ></el-pagination>
             </el-select>
           </el-form-item>
           <!-- prop="storehouse_name" -->
@@ -104,7 +96,7 @@
               size="mini"
               placeholder="请输入实付金额"
               style="width: 150px;"
-              v-model="form.pay_price"
+              v-model="form.pay_money"
             ></el-input>
           </el-form-item>
 
@@ -313,7 +305,7 @@
                 type="primary"
                 size="small"
                 @click="sketch(1)"
-              >入库</el-button>
+              >出售</el-button>
               <el-button
                 size="small"
                 v-if="this.$route.query.state==0&&power.indexOf('C20001000')!=-1"
@@ -376,6 +368,15 @@ import {
   bookStockOrderDel,
   bookStockOrderSizeDel,
 } from "@/api/warehouse.js";
+import {
+  customerOrderList,
+  customerOrderInfo,
+  customerOrderAdd,
+  customerOrderEdit,
+  customerOrderDel,
+  customerOrderSizeDel,
+} from "@/api/sell";
+import { getWestList } from "@/api/researchDevelopment";
 import { factoryList } from "@/api/archives";
 export default {
   data() {
@@ -405,6 +406,7 @@ export default {
       sizes: [],
       indexk: 0,
       dialogFormVisible: false,
+      wests: [],
     };
   },
   methods: {
@@ -655,7 +657,7 @@ export default {
           type: "warning",
         })
           .then(async () => {
-            let res = await bookStockOrderSizeDel({
+            let res = await customerOrderSizeDel({
               id: row.id,
             });
             console.log(res);
@@ -866,20 +868,17 @@ export default {
       console.log(this.form);
       //********* */
       if (
-        this.form.factory_name == undefined ||
-        this.form.factory_name == "" ||
+        this.form.companyname == undefined ||
+        this.form.companyname == "" ||
         this.form.storehouse_name == undefined ||
-        this.form.storehouse_name == "" ||
-        this.form.account_name == "" ||
+        // this.form.storehouse_name == ''||
+        // this.form.account_name == ''||
         this.form.account_name == undefined ||
         size_data.length <= 0
       ) {
         let str = "请填写完整数据";
-        if (
-          this.form.factory_name == undefined ||
-          this.form.factory_name == ""
-        ) {
-          str = "请选择厂商";
+        if (this.form.companyname == undefined || this.form.companyname == "") {
+          str = "请选择客户";
         }
         this.$message({
           showClose: true,
@@ -890,11 +889,11 @@ export default {
         //******* */
         if (!this.form.id) {
           // 新增
-          let res = await bookStockOrderAdd({
-            factory_id: this.form.factory_name,
+          let res = await customerOrderAdd({
+            customer_id: this.form.companyname,
             storehouse_id: this.form.storehouse_name,
             balance_account_id: this.form.account_name,
-            pay_price: this.form.pay_price,
+            pay_money: this.form.pay_money,
             remarks: this.form.remarks,
             ctime: this.form.ctime,
             size_data,
@@ -908,9 +907,9 @@ export default {
           let id1 = "";
           let id2 = "";
           let id3 = "";
-          if (typeof this.form.factory_name == "string") {
-            this.factorys.map((v, i) => {
-              if (this.form.factory_name == v.factory_name) {
+          if (typeof this.form.companyname == "string") {
+            this.wests.map((v, i) => {
+              if (this.form.companyname == v.companyname) {
                 id1 = v.id;
               }
             });
@@ -929,12 +928,11 @@ export default {
               }
             });
           }
-          console.log(id2);
-          let res = await bookStockOrderEdit({
-            factory_id: id1 || this.form.factory_name,
+          let res = await customerOrderEdit({
+            customer_id: id1 || this.form.companyname,
             storehouse_id: id2 || this.form.storehouse_name,
             balance_account_id: id3 || this.form.account_name,
-            pay_price: this.form.pay_price,
+            pay_money: this.form.pay_money,
             remarks: this.form.remarks,
             id: this.form.id,
             ctime: this.form.ctime,
@@ -943,11 +941,12 @@ export default {
             state,
             total_price: this.total_price,
           });
+          console.log(res);
         }
         this.form = {};
         this.fileList = [];
         this.$router.push({
-          path: `/stockInquiry`,
+          path: `/salesOrder`,
         });
       }
     },
@@ -959,7 +958,7 @@ export default {
         type: "warning",
       })
         .then(async () => {
-          let res = await bookStockOrderDel({
+          let res = await customerOrderDel({
             id: this.form.id,
           });
           this.form = {};
@@ -1010,7 +1009,7 @@ export default {
 
     async init() {
       if (this.$route.query.id) {
-        let res = await bookStockOrderInfo({
+        let res = await customerOrderInfo({
           id: this.$route.query.id,
         });
         let { data } = res.data;
@@ -1039,6 +1038,12 @@ export default {
         this.tables();
       }
     },
+    async getWest() {
+      let res = await getWestList();
+      let { data } = res.data;
+      this.wests = data;
+      console.log(this.wests);
+    },
   },
   mounted() {
     this.power = localStorage.getItem("power");
@@ -1047,12 +1052,13 @@ export default {
     this.factory();
     this.balance();
     this.shopping();
+    this.getWest();
   },
 };
 </script>
 
 <style lang="less" scoped>
-.stockInquiryDetails {
+.salesOrderDetailsAdd {
   .top {
     overflow: hidden;
 

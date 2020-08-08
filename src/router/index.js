@@ -60,6 +60,8 @@ import Tailor from "@/views/production/tailor.vue";
 import Shipment from "@/views/production/shipment.vue";
 import ProductionStyle from "@/views/production/productionStyle.vue";
 import SalesOrder from "@/views/sell/salesOrder.vue";
+import SalesOrderDetails from "@/views/sell/salesOrderDetails.vue";
+import SalesOrderDetailsAdd from "@/views/sell/salesOrderDetailsAdd.vue";
 import Homepage from "@/views/homepage.vue";
 
 // 财务
@@ -137,6 +139,8 @@ const routes = [
       },
       { path: "/addClient", name: "AddClient", component: AddClient },
       { path: "/salesOrder", name: "SalesOrder", component: SalesOrder },
+      { path: "/salesOrderDetails", name: "SalesOrderDetails", component: SalesOrderDetails },
+      { path: "/salesOrderDetailsAdd", name: "SalesOrderDetailsAdd", component: SalesOrderDetailsAdd },
       { path: "/check", name: "Check", component: Check },
       { path: "/designCheck", name: "DesignCheck", component: DesignCheck },
       { path: "/detailEdit", name: "DetailEdit", component: DetailEdit },

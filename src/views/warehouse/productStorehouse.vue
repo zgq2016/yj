@@ -16,7 +16,12 @@
         <el-form :inline="true" :model="formInline">
           <el-form-item>
             <el-select
+<<<<<<< HEAD
               v-model="formInline.storehouse_id"
+=======
+              v-model="form.storehouse_id"
+              size="small"
+>>>>>>> 04bb781de957f11b6ae850efeb01d5e6ffdd6b69
               clearable
               placeholder="请选择仓库"
               style="width:120px"
@@ -36,9 +41,26 @@
               ></el-pagination>
             </el-select>
           </el-form-item>
+<<<<<<< HEAD
           <el-form-item>
             <el-select
               v-model="formInline.style_type"
+=======
+
+          <el-form-item label="商品:">
+            <el-input
+              style="width:130px"
+              size="small"
+              v-model="form.stylename"
+              placeholder="请输入商品名称"
+            ></el-input>
+          </el-form-item>
+
+          <el-form-item label="分类:">
+            <el-select
+              v-model="form.style_type"
+              size="small"
+>>>>>>> 04bb781de957f11b6ae850efeb01d5e6ffdd6b69
               clearable
               placeholder="请选择分类"
               style="width:120px"
@@ -52,6 +74,26 @@
             </el-select>
           </el-form-item>
 
+<<<<<<< HEAD
+=======
+          <el-form-item label="数量:">
+            <el-input
+              style="width:120px"
+              size="small"
+              type="number"
+              v-model="form.min"
+              placeholder="请输入数量"
+            ></el-input>&nbsp;至
+            <el-input
+              style="width:120px"
+              size="small"
+              type="number"
+              v-model="form.max"
+              placeholder="请输入数量"
+            ></el-input>
+          </el-form-item>
+
+>>>>>>> 04bb781de957f11b6ae850efeb01d5e6ffdd6b69
           <el-form-item>
             <el-input
               style="width:120px"

@@ -27,7 +27,7 @@
           </el-form-item>
 
           <el-form-item label="客户:">
-            <el-select v-model="formInline.user" size="small" clearable placeholder="客户">
+            <el-select v-model="formInline.customer_id" size="small" clearable placeholder="客户">
               <el-option
                 v-for="item in wests"
                 :key="item.value"
@@ -53,7 +53,7 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" size="small" @click="onSubmit">查询</el-button>
-            <el-button type="primary" size="small" >批量打印</el-button>
+            <el-button type="primary" size="small">批量打印</el-button>
           </el-form-item>
         </el-form>
         <el-button
@@ -72,14 +72,15 @@
           width="100%"
         >
           <el-table-column align="center" type="selection" width="45"></el-table-column>
-          <el-table-column align="center" prop="state_name" label="状态"></el-table-column>
+          <el-table-column align="center" prop="states" label="状态"></el-table-column>
           <el-table-column align="center" label="日期" width="90">
             <template slot-scope="scope">{{ scope.row.ctime }}</template>
           </el-table-column>
-          <el-table-column align="center" prop="storehouse_name" label="客户"></el-table-column>
-          <el-table-column align="center" prop="factory_name" label="联系电话"></el-table-column>
+          <el-table-column align="center" prop="companyname" label="客户"></el-table-column>
+          <el-table-column align="center" prop="phone" label="联系电话"></el-table-column>
+          <el-table-column align="center" prop="storehouse_name" label="仓库"></el-table-column>
           <el-table-column align="center" prop="account_name" label="结算账户"></el-table-column>
-          <el-table-column align="center" prop="pay_price" label="结算金额"></el-table-column>
+          <el-table-column align="center" prop="pay_money" label="实付金额"></el-table-column>
           <el-table-column align="center" prop="remark" label="备注"></el-table-column>
           <el-table-column fixed="right" label="操作" width="100">
             <template slot-scope="scope">
@@ -107,23 +108,24 @@
 import {
   getYearList,
   getSeasonList,
-  // getProjectStyleList,
   getWestList,
   getStylistList,
   getCategoryList,
   getStyleList,
 } from "@/api/researchDevelopment";
+import {
+  customerOrderList,
+  customerOrderInfo,
+  customerOrderAdd,
+  customerOrderEdit,
+  customerOrderDel,
+  customerOrderSizeDel,
+} from "@/api/sell";
 export default {
   data() {
     return {
       power: "",
-      formInline: {
-        styleno: "",
-        year: "",
-        season: "",
-        user_id: "",
-        style_type: "",
-      },
+      formInline: {},
       user_id: "",
       tableData: [],
       years: [],
@@ -139,22 +141,23 @@ export default {
       states: [
         { state: "全部" },
         { state: "草稿", id: 0 },
-        { state: "已售出", id: 1 },
+        { state: "已出售", id: 1 },
         { state: "已撤销", id: 4 },
       ],
     };
   },
   methods: {
     onSubmit() {
+      this.page = 1;
+      this.formInline.ctime_start = "";
+      this.formInline.ctime_end = "";
+      if (this.formInline.ctime) {
+        this.formInline.ctime_start = this.formInline.ctime[0];
+        this.formInline.ctime_end = this.formInline.ctime[1];
+      }
       this.init(this.formInline);
     },
-    handleEdit(index, row) {
-      // console.log(index, row);
-      this.$router.push({ path: `/sampleDress?id=${row.id}` });
-    },
-    handleUser_id(e) {
-      this.formInline.user_id = e;
-    },
+
     async getYear() {
       let res = await getYearList();
       let { data } = res.data;
@@ -183,32 +186,44 @@ export default {
     },
     // 查看
     handleClick(row) {
-      console.log(row);
+      if (row.state == 1 || row.state == 4) {
+        this.$router.push({
+          path: `/salesOrderDetails?id=${row.id}&state=${row.state}`,
+        });
+      } else if (row.state == 0) {
+        this.$router.push({
+          path: `/salesOrderDetailsAdd?id=${row.id}&state=${row.state}`,
+        });
+      }
     },
     // 新增订单
     addSalesOrder() {
       this.$router.push({
-        path: ``,
+        path: `/salesOrderDetailsAdd`,
       });
     },
     async init(obj) {
-      // let res = await getStyleList({
-      //   page: this.page,
-      //   page_size: this.page_size,
-      //   ...obj,
-      // });
-      // console.log(res);
-      // this.count = res.data.count;
-      // let { data } = res.data;
-      // this.tableData = data;
+      let res = await customerOrderList({
+        page: this.page,
+        page_size: this.page_size,
+        ...obj,
+      });
+      console.log(res);
+      this.count = res.data.count;
+      let { data } = res.data;
+      this.tableData = data;
       // // console.log(this.tableData);
-      // this.tableData.map((v, i) => {
-      //   this.stylists.map((j, k) => {
-      //     if (v.user_id == j.id) {
-      //       v.stylist = j.name;
-      //     }
-      //   });
-      // });
+      this.tableData.map((v, i) => {
+        v.ctime = v.ctime.substring(0, 10);
+        if (v.state == 0) {
+          v.states = "草稿";
+        } else if (v.state == 1) {
+          v.states = "已出售";
+        } else if (v.state === 4) {
+          v.states = "已撤销";
+        }
+       
+      });
     },
     handleSizeChange(val) {
       this.page_size = val;
