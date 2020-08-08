@@ -913,17 +913,14 @@
                     @click="completeDel(item.id_c,index)"
                     v-if="power.indexOf('B5000300')!=-1"
                   >删除</el-button>
-                  <el-form-item label="出货方式:" style="width:250px;margin-left:120px;font-size:16px;">
+                  <!-- <el-form-item label="出货方式:" style="width:250px;margin-left:120px;font-size:16px;">
                     <el-radio-group @change="radioChange($event,item)" v-model="item.shipping_type">
                       <el-radio :label="0">客户</el-radio>
                       <el-radio :label="1">仓库</el-radio>
                     </el-radio-group>
-                  </el-form-item>
-                  <el-form-item
-                    v-if="item.shipping_type==1"
-                    label="仓库:"
-                    style="width:250px;margin-left:120px;font-size:16px;"
-                  >
+                  </el-form-item>-->
+                  <!-- v-if="item.shipping_type==1" -->
+                  <el-form-item label="仓库:" style="width:250px;margin-left:120px;font-size:16px;">
                     <el-select
                       size="mini"
                       v-model="item.storehouse_id"
@@ -3288,7 +3285,12 @@ export default {
           return;
         }
         if (v.shipping_type == 1) {
-          if (v.storehouse_id == undefined || v.storehouse_id == ""||v.factory_name == '' || v.factory_name == undefined) {
+          if (
+            v.storehouse_id == undefined ||
+            v.storehouse_id == "" ||
+            v.factory_name == "" ||
+            v.factory_name == undefined
+          ) {
             blo = false;
             return;
           }
@@ -3345,8 +3347,8 @@ export default {
                   style_id: id,
                   produce_no: data[this.active].produce_no,
                   produce_complete_size: arr,
-                  shipping_type: v.shipping_type,
-                  storehouse_id: v.shipping_type == 1 ? v.storehouse_id : "",
+                  shipping_type: 1,
+                  storehouse_id: v.storehouse_id,
                   factory_id: v.factory_name,
                 });
               });
@@ -3408,9 +3410,8 @@ export default {
                   produce_no: data[this.active].produce_no,
                   id: v.id_c,
                   produce_complete_size: arr,
-                  shipping_type: v.shipping_type,
-                  storehouse_id:
-                    v.shipping_type == 1 ? str || v.storehouse_id : "",
+                  shipping_type: 1,
+                  storehouse_id: str || v.storehouse_id,
                   factory_id: str1 || v.factory_name,
                 });
               });
@@ -3674,7 +3675,7 @@ export default {
     // console.log(this.obj);
     // console.log(this.obj.style_materials_color_data)
     // this.activities_endlong = res.data.data.style_log;
-    this.test()
+    this.test();
     this.init();
     this.int_i();
     this.init_r();

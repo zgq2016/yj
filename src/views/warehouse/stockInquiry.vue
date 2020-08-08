@@ -240,6 +240,7 @@ export default {
 
 <style lang="less" scoped>
 .stockInquiry {
+  overflow-y:visible;
   .header {
     .el-form {
       overflow: hidden;
@@ -270,7 +271,7 @@ export default {
       }
     }
     .table {
-      overflow: hidden;
+      // overflow: hidden;
     }
   }
 }
