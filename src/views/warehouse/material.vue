@@ -688,14 +688,12 @@ export default {
           width: 30%;
           margin-left: 3%;
           margin-top: 15px;
-
           .left {
             float: left;
             width: 80%;
             overflow: hidden;
             border-radius: 12px;
             background: #f2f2f2;
-
             img {
               width: 100px;
               height: 100px;
