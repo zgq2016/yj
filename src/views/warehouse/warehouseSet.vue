@@ -10,11 +10,17 @@
     <div class="main">
       <div class="header">
         <el-form style="float:left" :inline="true" :model="form">
-          <el-form-item label="名称:">
+          <el-form-item>
             <el-input v-model="form.storehouse_name" size="small" placeholder="请输入仓库名称"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="onSubmit">查询</el-button>
+            <el-button
+              icon="el-icon-search"
+              size="mini"
+              circle
+              class="search_button"
+              @click="onSubmit"
+            ></el-button>
           </el-form-item>
         </el-form>
         <el-form style="float:right">
@@ -406,13 +412,33 @@ export default {
   .main {
     .header {
       overflow: hidden;
-      margin-top: 20px;
     }
     .center {
     }
   }
   .pagination {
+    margin: 20px;
     float: right;
+  }
+  /deep/ .el-input__inner {
+    width: 100%;
+    height: 30px;
+    background-color: #f2f2f2;
+    border-radius: 15px;
+    border: none;
+    color: #5e5e5e;
+    font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
+      \\5b8b\4f53, sans-serif;
+  }
+  .search_button {
+    margin-left: 10px;
+    background-color: #000;
+  }
+  /deep/ .el-icon-search {
+    color: #fff;
+  }
+  /deep/.el-button {
+    border: none;
   }
 }
 </style>
