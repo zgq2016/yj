@@ -214,7 +214,11 @@
       </el-aside>
       <el-container>
         <el-main>
+<<<<<<< HEAD
           <router-view style="padding:0 40px;  "></router-view>
+=======
+          <router-view style="padding:0 40px;min-height:800px"></router-view>
+>>>>>>> c68f0d2efc974583350dae73cbd2074f4082154f
         </el-main>
       </el-container>
     </el-container>

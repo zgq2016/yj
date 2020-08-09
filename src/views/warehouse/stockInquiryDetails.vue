@@ -89,11 +89,11 @@
           <el-table-column prop="size" align="center" label="尺码"></el-table-column>
           <el-table-column prop="unit" align="center" label="单位"></el-table-column>
           <el-table-column prop="quantity" align="center" label="数量"></el-table-column>
-          <el-table-column prop="price" align="center" label="单价"></el-table-column>
-          <el-table-column prop="discount" align="center" label="折扣(%)"></el-table-column>
-          <el-table-column prop="discount_price" align="center" label="折后价"></el-table-column>
+          <el-table-column prop="price" align="center" label="加工单价"></el-table-column>
+          <!-- <el-table-column prop="discount" align="center" label="折扣(%)"></el-table-column>
+          <el-table-column prop="discount_price" align="center" label="折后价"></el-table-column>-->
           <el-table-column prop="money" align="center" label="金额"></el-table-column>
-          <el-table-column prop="discount_money" align="center" label="折后金额"></el-table-column>
+          <!-- <el-table-column prop="discount_money" align="center" label="折后金额"></el-table-column> -->
           <el-table-column prop="remark" align="center" label="备注"></el-table-column>
         </el-table>
       </div>
@@ -115,9 +115,9 @@
               <span>&yen;{{total_price}}</span>
             </el-form-item>
 
-            <el-form-item label-width="80px" label="总合计:">
+            <!-- <el-form-item label-width="80px" label="总合计:">
               <span style="color:red;font-size:16px;">&yen;{{total_price}}</span>
-            </el-form-item>
+            </el-form-item> -->
           </div>
           <div style="position: absolute;bottom:5px;left:40%;">
             <el-form-item>

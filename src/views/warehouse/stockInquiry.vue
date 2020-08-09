@@ -240,6 +240,7 @@ export default {
 
 <style lang="less" scoped>
 .stockInquiry {
+<<<<<<< HEAD
   .el-icon-more {
     background-color: #f2f2f2;
     width: 30px;
@@ -308,6 +309,40 @@ export default {
     background-color: #000;
     &:hover {
       cursor: pointer;
+=======
+  overflow-y:visible;
+  .header {
+    .el-form {
+      overflow: hidden;
+    }
+    .el-form-item {
+      float: left;
+    }
+    .el-form-item:nth-child(1) {
+      width: 300px;
+    }
+    .el-form-item:nth-child(2) {
+      width: 250px;
+    }
+    .el-form-item:nth-child(3) {
+      width: 220px;
+    }
+    .el-form-item:nth-child(4) {
+      width: 250px;
+    }
+    margin-top: 20px;
+    // /deep/.el-input {
+    //   width: 80%;
+    // }
+    /deep/.el-date-editor--daterange {
+      width: 250px;
+      .el-range-separator {
+        padding: 0;
+      }
+    }
+    .table {
+      // overflow: hidden;
+>>>>>>> c68f0d2efc974583350dae73cbd2074f4082154f
     }
   }
 }

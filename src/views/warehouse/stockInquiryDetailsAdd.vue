@@ -38,7 +38,13 @@
 
           <!-- prop="factory_name" -->
           <el-form-item style="float:left;width:30%;margin-left:3%;" label="厂商:">
-            <el-select size="mini" clearable v-model="form.factory_name" placeholder="请选择厂商">
+            <el-select
+              size="mini"
+              clearable
+              v-model="form.factory_name"
+              @change="factorChange"
+              placeholder="请选择厂商"
+            >
               <el-option
                 v-for="item in factorys"
                 :key="item.id"
@@ -128,7 +134,7 @@
           :header-cell-style="{background:'#eef1f6',color:'#606266'}"
         >
           <el-table-column type="index" width="35"></el-table-column>
-          <el-table-column align="center" label="操作">
+          <el-table-column align="center" width="80" label="操作">
             <template slot-scope="scope">
               <div
                 style="width:50%;float:left"
@@ -227,7 +233,7 @@
               <span v-else>{{scope.row.quantity}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="price" align="center" label="单价">
+          <el-table-column prop="price" align="center" label="加工单价">
             <template slot-scope="scope">
               <input
                 v-model="scope.row.price"
@@ -238,7 +244,7 @@
               <span v-else>{{scope.row.price}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="discount" align="center" label="折扣(%)">
+          <!-- <el-table-column prop="discount" align="center" label="折扣(%)">
             <template slot-scope="scope">
               <input
                 v-model="scope.row.discount"
@@ -259,9 +265,9 @@
               />
               <span v-else>{{scope.row.discount_price}}</span>
             </template>
-          </el-table-column>
+          </el-table-column>-->
           <el-table-column prop="money" align="center" label="金额"></el-table-column>
-          <el-table-column prop="discount_money" align="center" label="折后金额"></el-table-column>
+          <!-- <el-table-column prop="discount_money" align="center" label="折后金额"></el-table-column> -->
           <el-table-column prop="remark" align="center" label="备注">
             <template slot-scope="scope">
               <el-input
@@ -304,9 +310,9 @@
               <el-input size="mini" v-model="total_price" placeholder="请输入金额"></el-input>
             </el-form-item>
 
-            <el-form-item label-width="80px" label="总合计:">
+            <!-- <el-form-item label-width="80px" label="总合计:">
               <span style="color:red;font-size:16px;">&yen;{{total_price}}</span>
-            </el-form-item>
+            </el-form-item>-->
           </div>
           <div class="foote">
             <el-form-item>
@@ -445,12 +451,49 @@ export default {
     async shopping(item) {
       let res1 = await getProjectStyleList({
         keyword: item == undefined ? "" : item,
+        factory_id:
+          typeof this.form.factory_name == "number"
+            ? this.form.factory_name
+            : this.form.factory_id,
         page: this.pageIndex3,
         page_size: this.pageSize3,
       });
       // console.log(res1);
       this.shoppings = res1.data.data;
       this.total3 = res1.data.count;
+    },
+    // 选择厂商
+    factorChange() {
+      this.shopping();
+      this.weretable = [];
+      this.total_price = 0;
+      this.form.total_price = undefined;
+      // delete this.form.total_price;
+      for (let i = 0; i < 6; i++) {
+        this.weretable.push({
+          bar_code: "",
+          discount: "100",
+          discount_money: "",
+          discount_price: "",
+          money: "",
+          price: "",
+          produce_no: "",
+          quantity: "",
+          remark: "",
+          size: "",
+          style_color_name: "",
+          stylename: "",
+          unit: "",
+          showHidden1: false,
+          showHidden2: false,
+          showHidden3: false,
+          showHidden4: false,
+          showHidden5: false,
+          showHidden6: false,
+          showHidden7: false,
+          showHidden8: false,
+        });
+      }
     },
     successFile(response, file, fileList) {
       this.fileList = fileList;
@@ -564,21 +607,26 @@ export default {
       columns.forEach((column, index) => {
         if (index === 1) {
           sums[index] = "总计";
-        } else if (index === 8 || index === 12 || index === 13) {
+        } else if (index === 9 || index === 11) {
           const values = data.map((item) => Number(item[column.property]));
           if (!values.every((value) => isNaN(value))) {
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr);
               if (!isNaN(value)) {
-                // console.log(prev,curr);
-                // let a = prev.toFixed(2) + curr.toFixed(2);
-                if (index === 12) {
+                let a = prev.toFixed(2) + curr.toFixed(2);
+                if (index === 11 && this.form.total_price != undefined) {
+                  this.total_price = this.form.total_price;
+                } else if (index === 11 && this.form.total_price == undefined) {
                   this.total_price = prev + curr;
                 }
                 return prev + curr;
               } else {
-                if (index === 12) {
+                if (index === 11) {
+                  // console.log(this.form.total_price);
                   this.total_price = prev;
+                  this.total_price = this.form.total_price
+                    ? this.form.total_price
+                    : this.total_price;
                 }
                 return prev;
               }
@@ -1024,8 +1072,9 @@ export default {
           id: this.$route.query.id,
         });
         let { data } = res.data;
-        console.log(res);
+        console.log(data);
         this.form = data;
+        this.shopping();
         data.size_data.map((v, i) => {
           this.weretable.push({
             ...v,
