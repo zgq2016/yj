@@ -13,12 +13,12 @@
     <div class="form">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item>
-          <el-select v-model="formInline.supplier_id" placeholder="供应商" clearable>
+          <el-select v-model="formInline.factory_id" placeholder="加工厂" clearable>
             <el-option
-              v-for="item in SupplierList"
-              :key="item.address"
-              :label="item.value"
-              :value="item.address"
+              v-for="item in GetFactory"
+              :key="item.id"
+              :label="item.factory_name"
+              :value="item.id"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -94,15 +94,15 @@
           <div class="dv">当前查询统计数据：</div>
           <div class="dv">
             应付金额
-            <span style="color:orange;">{{cope_money}}</span>
+            <span style="color:orange;">{{total_cope_money}}</span>
           </div>
           <div class="dv">
             实付金额
-            <span style="color:orange;">{{pay_money}}</span>
+            <span style="color:orange;">{{total_pay_money}}</span>
           </div>
           <div class="dv">
             应付余额
-            <span style="color:orange;">{{opay_money}}</span>
+            <span style="color:orange;">{{total_opay_money}}</span>
           </div>
         </div>
       </div>
@@ -273,9 +273,9 @@ export default {
   data() {
     return {
       power: "",
-      cope_money: 999,
-      pay_money: 999,
-      opay_money: 999,
+      total_cope_money: 999,
+      total_pay_money: 999,
+      total_opay_money: 999,
       ctime_start: "",
       ctime_end: "",
       pageIndex: 1,
@@ -349,6 +349,7 @@ export default {
       return this.$elUploadBeforeUpload(file);
     },
     async onSubmit() {
+      console.log(this.formInline);
       this.supplierInit();
     },
     handlePayment() {
@@ -436,32 +437,40 @@ export default {
       this.supplierInit();
     },
     async supplierInit() {
-      if (this.formInline.date === "") {
-        this.formInline["ctime_start"] = "";
-        this.formInline["ctime_end"] = "";
-      }
-      if (this.formInline.date !== "") {
-        this.formInline["ctime_start"] = moment(this.formInline.date[0]).format(
-          "YYYY-MM-DD"
-        );
-        this.formInline["ctime_end"] = moment(this.formInline.date[1]).format(
-          "YYYY-MM-DD"
-        );
-      }
-      console.log(this.formInline["ctime_start"]);
+      // if (this.formInline.date === "") {
+      //   this.formInline["ctime_start"] = "";
+      //   this.formInline["ctime_end"] = "";
+      // }
+      // if (this.formInline.date !== "") {
+      //   this.formInline["ctime_start"] = moment(this.formInline.date[0]).format(
+      //     "YYYY-MM-DD"
+      //   );
+      //   this.formInline["ctime_end"] = moment(this.formInline.date[1]).format(
+      //     "YYYY-MM-DD"
+      //   );
+      // }
       this.formInline.page = this.pageIndex;
       this.formInline.page_size = this.pageSize;
       delete this.formInline.date;
       let res = await factoryAccountList(this.formInline);
       console.log(res);
-      res.data.data.map((v) => {
-        if (v.pay_money !== 0) {
-          v.opay_money = v.cope_money - v.pay_money;
-        }
-      });
-      let { data, count } = res.data;
+      // res.data.data.map((v) => {
+      //   if (v.pay_money !== 0) {
+      //     v.opay_money = v.cope_money - v.pay_money;
+      //   }
+      // });
+      let {
+        data,
+        count,
+        total_cope_money,
+        total_pay_money,
+        total_opay_money,
+      } = res.data;
       this.tableData = data;
       this.total = count;
+      this.total_cope_money = total_cope_money;
+      this.total_pay_money = total_pay_money;
+      this.total_opay_money = total_opay_money;
     },
   },
   async mounted() {

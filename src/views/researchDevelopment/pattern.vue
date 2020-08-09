@@ -76,7 +76,7 @@
         <el-table-column property="style_type" label="品类"></el-table-column>
         <el-table-column property="year" label="年份"></el-table-column>
         <el-table-column property="season" label="季节"></el-table-column>
-        <el-table-column property="stylist" label="设计师"></el-table-column>
+        <el-table-column property="username" label="设计师"></el-table-column>
         <el-table-column property="pattern" label="状态"></el-table-column>
         <el-table-column label="操作" width="400">
           <template slot-scope="scope">
@@ -263,11 +263,6 @@ export default {
         if (v.pattern_status == "6") {
           v.pattern = "等待制版";
         }
-        this.stylists.map((j, k) => {
-          if (v.user_id == j.id) {
-            v.stylist = j.name;
-          }
-        });
       });
     },
     handleSizeChange(val) {

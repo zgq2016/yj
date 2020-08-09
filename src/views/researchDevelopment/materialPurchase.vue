@@ -82,7 +82,8 @@
         <el-table-column align="center" property="style_type" label="品类"></el-table-column>
         <el-table-column align="center" property="year" label="年份"></el-table-column>
         <el-table-column align="center" property="season" label="季节"></el-table-column>
-        <el-table-column align="center" property="stylist" label="设计师"></el-table-column>
+        <el-table-column align="center" property="username" label="设计师"></el-table-column>
+        <el-table-column align="center" property="purchase" label="状态"></el-table-column>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-button
@@ -200,11 +201,27 @@ export default {
       this.tableData = data;
       // console.log(this.tableData);
       this.tableData.map((v, i) => {
-        this.stylists.map((j, k) => {
-          if (v.user_id == j.id) {
-            v.stylist = j.name;
-          }
-        });
+        if (v.purchase_status == "0") {
+          v.purchase = "未生成采购单";
+        }
+        if (v.purchase_status == "1") {
+          v.purchase = "等待采购";
+        }
+        if (v.purchase_status == "2") {
+          v.purchase = "部分主料已下单";
+        }
+        if (v.purchase_status == "3") {
+          v.purchase = "3全部主料已下单";
+        }
+        if (v.purchase_status == "4") {
+          v.purchase = "4部分辅料已下单";
+        }
+        if (v.purchase_status == "5") {
+          v.purchase = "全部辅料已下单";
+        }
+        if (v.purchase_status == "6") {
+          v.purchase = "全部回料完成";
+        }
       });
     },
     handleSizeChange(val) {

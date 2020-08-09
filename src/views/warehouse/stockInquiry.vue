@@ -8,103 +8,103 @@
         <el-breadcrumb-item>产品入库</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div class="main">
-      <div class="header">
-        <el-form :model="ruleForm" ref="ruleForm" class="demo-ruleForm">
-          <el-form-item label="日期:">
-            <el-date-picker
-              v-model="ruleForm.ctime"
-              size="small"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              format="yyyy-MM-dd"
-              value-format="yyyy-MM-dd"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item label="厂商:">
-            <el-select clearable size="small" v-model="ruleForm.factory_name" placeholder="请选择厂商">
-              <el-option
-                v-for="item in factorys"
-                :key="item.id"
-                :label="item.factory_name"
-                :value="item.id"
-              ></el-option>
-              <el-pagination
-                small
-                layout="prev, pager, next"
-                @size-change="handleSize1"
-                @current-change="handleCurrent1"
-                :total="total1"
-              ></el-pagination>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="单号:">
-            <el-input v-model="ruleForm.no" size="small" style="width:170px" placeholder="请输入单号"></el-input>
-          </el-form-item>
-          <el-form-item label="状态:">
-            <el-select clearable v-model="ruleForm.state" size="small" placeholder="请选择状态">
-              <el-option
-                v-for="item in valueElement"
-                :key="item.value"
-                :label="item.name"
-                :value="item.state"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item class="sub">
-            <el-button type="primary" @click="onSubmit">查询</el-button>
-            <el-button type="primary" v-if="power.indexOf('C2000900')!=-1">批量打印</el-button>
-          </el-form-item>
-        </el-form>
-        <div class="box" style="margin-bottom:10px;">
-          <el-button
-            size="mini"
-            @click="addCreateWare"
-            type="primary"
-            v-if="power.indexOf('C2000400')!=-1"
-          >新增入库单</el-button>
-        </div>
-      </div>
-      <div class="table">
-        <el-table
-          :data="tableData"
-          tooltip-effect="dark"
+    <div style="margin-bottom:10px">
+      <el-input v-model="ruleForm.no" size="small" style="width:170px" placeholder="请输入单号"></el-input>
+      <el-button icon="el-icon-search" size="mini" circle class="search_button" @click="onSubmit"></el-button>
+    </div>
+    <el-form :inline="true" :model="ruleForm" class="demo-form-inline" style="position: relative;">
+      <el-form-item>
+        <el-date-picker
+          v-model="ruleForm.ctime"
           size="small"
-          :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-          width="100%"
-        >
-          <el-table-column align="center" type="selection" width="45"></el-table-column>
-          <el-table-column align="center" prop="state_name" label="状态"></el-table-column>
-          <el-table-column align="center" label="日期" width="90">
-            <template slot-scope="scope">{{ scope.row.ctime }}</template>
-          </el-table-column>
-          <el-table-column align="center" prop="storehouse_name" label="仓库"></el-table-column>
-          <el-table-column align="center" prop="factory_name" label="厂商名称"></el-table-column>
-          <el-table-column align="center" prop="account_name" label="结算账户"></el-table-column>
-          <el-table-column align="center" prop="pay_price" label="实付金额"></el-table-column>
-          <el-table-column align="center" prop="remark" label="备注"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="100">
-            <template slot-scope="scope">
-              <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <!-- 分页 -->
-        <el-pagination
-          class="pagination"
-          style="float: right;"
-          small
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="pageIndex"
-          :page-sizes="[10, 20, 30, 40]"
-          :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total"
-        ></el-pagination>
-      </div>
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd"
+        ></el-date-picker>
+      </el-form-item>
+      <el-form-item>
+        <el-select clearable size="small" v-model="ruleForm.factory_name" placeholder="请选择厂商">
+          <el-option
+            v-for="item in factorys"
+            :key="item.id"
+            :label="item.factory_name"
+            :value="item.id"
+          ></el-option>
+          <el-pagination
+            small
+            layout="prev, pager, next"
+            @size-change="handleSize1"
+            @current-change="handleCurrent1"
+            :total="total1"
+          ></el-pagination>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-select clearable v-model="ruleForm.state" size="small" placeholder="请选择状态">
+          <el-option
+            v-for="item in valueElement"
+            :key="item.value"
+            :label="item.name"
+            :value="item.state"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <!-- <el-form-item label="状态:"></el-form-item> -->
+      <el-form-item>
+        <div style="display: flex;justify-content: space-between;align-items: center;">
+          <div class="addStyle" v-if="power.indexOf('C2000900')!=-1">批量打印</div>
+          <div class="addStyle" v-if="power.indexOf('C2000400')!=-1" @click="addCreateWare">新增入库单</div>
+        </div>
+      </el-form-item>
+    </el-form>
+    <!-- <div class="box" style="margin-bottom:10px;">
+      <el-button
+        size="mini"
+        @click="addCreateWare"
+        type="primary"
+        v-if="power.indexOf('C2000400')!=-1"
+      >新增入库单</el-button>
+    </div>-->
+    <div class="table">
+      <el-table
+        :data="tableData"
+        tooltip-effect="dark"
+        size="small"
+        :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+        width="100%"
+      >
+        <el-table-column align="center" type="selection" width="45"></el-table-column>
+        <el-table-column align="center" prop="state_name" label="状态"></el-table-column>
+        <el-table-column align="center" label="日期" width="90">
+          <template slot-scope="scope">{{ scope.row.ctime }}</template>
+        </el-table-column>
+        <el-table-column align="center" prop="storehouse_name" label="仓库"></el-table-column>
+        <el-table-column align="center" prop="factory_name" label="厂商名称"></el-table-column>
+        <el-table-column align="center" prop="account_name" label="结算账户"></el-table-column>
+        <el-table-column align="center" prop="pay_price" label="实付金额"></el-table-column>
+        <el-table-column align="center" prop="remark" label="备注"></el-table-column>
+        <el-table-column fixed="right" label="操作" width="100">
+          <template slot-scope="scope">
+            <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <!-- 分页 -->
+      <el-pagination
+        class="pagination"
+        style="float: right;"
+        small
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pageIndex"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+      ></el-pagination>
     </div>
   </div>
 </template>
@@ -240,37 +240,74 @@ export default {
 
 <style lang="less" scoped>
 .stockInquiry {
-  .header {
-    .el-form {
-      overflow: hidden;
+  .el-icon-more {
+    background-color: #f2f2f2;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  /deep/ .el-input__inner {
+    width: 100%;
+    height: 30px;
+    background-color: #f2f2f2;
+    border-radius: 15px;
+    border: none;
+    color: #5e5e5e;
+    font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
+      \\5b8b\4f53, sans-serif;
+  }
+  /deep/ .el-form-item__content {
+    line-height: 30px;
+  }
+  /deep/ .el-range-editor /deep/ .el-range-input {
+    background-color: #f2f2f2;
+  }
+  /deep/ .el-input__icon {
+    line-height: 30px;
+  }
+  .search_button {
+    margin-left: 10px;
+    background-color: #000;
+  }
+  /deep/ .el-icon-search {
+    color: #fff;
+  }
+  /deep/.el-button {
+    border: none;
+  }
+  .table {
+    .img {
+      width: 60px;
+      height: 60px;
+      border-radius: 5px;
     }
-    .el-form-item {
-      float: left;
-    }
-    .el-form-item:nth-child(1) {
-      width: 300px;
-    }
-    .el-form-item:nth-child(2) {
-      width: 250px;
-    }
-    .el-form-item:nth-child(3) {
-      width: 220px;
-    }
-    .el-form-item:nth-child(4) {
-      width: 250px;
-    }
-    margin-top: 20px;
-    // /deep/.el-input {
-    //   width: 80%;
-    // }
-    /deep/.el-date-editor--daterange {
-      width: 250px;
-      .el-range-separator {
-        padding: 0;
-      }
-    }
-    .table {
-      overflow: hidden;
+  }
+  .form {
+    width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .el-pagination {
+    margin: 20px;
+    text-align: right;
+  }
+  .addStyle {
+    margin: 0 30px 0px 0px;
+    border-radius: 15px;
+    width: 120px;
+    height: 30px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    &:hover {
+      cursor: pointer;
     }
   }
 }

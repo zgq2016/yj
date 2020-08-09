@@ -8,110 +8,110 @@
       </el-breadcrumb>
     </div>
     <div class="main">
-      <div class="searchInput">
-        <el-form :inline="true" :model="form">
-          <el-form-item label="仓库:">
-            <el-select
-              v-model="form.storehouse_id"
-              size="small"
-              placeholder="请选择仓库"
-              clearable
-              style="width:110px"
-            >
-              <el-option
-                v-for="item in ware"
-                :key="item.id"
-                :label="item.storehouse_name"
-                :value="item.id"
-              ></el-option>
-              <el-pagination
-                small
-                layout="prev, pager, next"
-                @size-change="handleSize"
-                @current-change="handleCurrent"
-                :total="total2"
-              ></el-pagination>
-            </el-select>
-          </el-form-item>
-
-          <el-form-item label="物料名称:">
-            <el-input
-              style="width:100px"
-              size="small"
-              v-model="form.materialsname"
-              placeholder="请输入商品名称"
-            ></el-input>
-          </el-form-item>
-
-          <el-form-item label="物料分类:">
-            <el-select
-              size="small"
-              v-model="form.materials_class_name"
-              placeholder="请选择物料分类"
-              style="width:120px;margin-right:10px;"
-              @change="handleClassDatasId($event)"
-              clearable
-            >
-              <el-option
-                v-for="item in classData"
-                :key="item.id"
-                :label="item.classname"
-                :value="item.id"
-              ></el-option>
-            </el-select>
-            <el-select
-              v-model="form.materials_class"
-              placeholder="请选择物料分类"
-              style="width:120px"
-              @change="handleClassDatasId1($event)"
-              size="small"
-            >
-              <el-option
-                v-for="item in class_datas.class_data"
-                :key="item.id"
-                :label="item.classname"
-                :value="item.id"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-
-          <el-form-item label="数量:">
-            <el-input
-              style="width:115px"
-              size="small"
-              type="number"
-              v-model="form.min"
-              placeholder="请输入数量"
-            ></el-input>&nbsp;至
-            <el-input
-              style="width:115px"
-              size="small"
-              type="number"
-              v-model="form.max"
-              placeholder="请输入数量"
-            ></el-input>
-          </el-form-item>
-
-          <el-form-item>
-            <el-checkbox v-model="form.checked">过滤无库存</el-checkbox>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" size="small" @click="onSubmit">查询</el-button>
-            <!-- <el-button type="primary">导出</el-button> -->
-            <!-- <el-button v-print="'#printTest'" type="primary">打印</el-button> -->
-          </el-form-item>
-          <el-form-item>
-            <el-button size="small" type="primary">展示统计数据</el-button>
-          </el-form-item>
-          <el-button
-            type="primary"
-            size="small"
-            style="float:right;margin-right:35px;"
-            @click="handleCard"
-            v-if="power.indexOf('C3000200')!=-1"
-          >采购</el-button>
-        </el-form>
+      <div style="margin-bottom:10px">
+        <el-input
+          size="small"
+          style="width:170px"
+          v-model="form.materialsname"
+          placeholder="请输入商品名称"
+        ></el-input>
+        <el-button icon="el-icon-search" size="mini" circle class="search_button" @click="onSubmit"></el-button>
       </div>
+      <el-form :inline="true" :model="form">
+        <el-form-item>
+          <el-select
+            v-model="form.storehouse_id"
+            size="small"
+            placeholder="请选择仓库"
+            clearable
+            style="width:110px"
+          >
+            <el-option
+              v-for="item in ware"
+              :key="item.id"
+              :label="item.storehouse_name"
+              :value="item.id"
+            ></el-option>
+            <el-pagination
+              small
+              layout="prev, pager, next"
+              @size-change="handleSize"
+              @current-change="handleCurrent"
+              :total="total2"
+            ></el-pagination>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-select
+            size="small"
+            v-model="form.materials_class_name"
+            placeholder="请选择物料分类"
+            style="width:120px;margin-right:10px;"
+            @change="handleClassDatasId($event)"
+            clearable
+          >
+            <el-option
+              v-for="item in classData"
+              :key="item.id"
+              :label="item.classname"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+          <el-select
+            v-model="form.materials_class"
+            placeholder="请选择物料分类"
+            style="width:120px"
+            @change="handleClassDatasId1($event)"
+            size="small"
+          >
+            <el-option
+              v-for="item in class_datas.class_data"
+              :key="item.id"
+              :label="item.classname"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item>
+          <el-input
+            style="width:115px"
+            size="small"
+            type="number"
+            v-model="form.min"
+            placeholder="请输入数量"
+          ></el-input>&nbsp;至
+          <el-input
+            style="width:115px"
+            size="small"
+            type="number"
+            v-model="form.max"
+            placeholder="请输入数量"
+          ></el-input>
+        </el-form-item>
+
+        <el-form-item>
+          <el-checkbox v-model="form.checked">过滤无库存</el-checkbox>
+        </el-form-item>
+        <el-form-item>
+          <!-- <el-button type="primary">导出</el-button> -->
+          <!-- <el-button v-print="'#printTest'" type="primary">打印</el-button> -->
+        </el-form-item>
+        <el-form-item>
+          <div style="display: flex;justify-content: space-between;align-items: center;">
+            <div class="addStyle">展示统计数据</div>
+            <div class="addStyle" @click="handleCard" v-if="power.indexOf('C3000200')!=-1">采购</div>
+          </div>
+        </el-form-item>
+        <!-- <el-button
+          type="primary"
+          size="small"
+          style="float:right;margin-right:35px;"
+          @click="handleCard"
+          v-if="power.indexOf('C3000200')!=-1"
+        >采购</el-button>-->
+      </el-form>
+
       <hr style="border:1px dashed #ccc" />
       <div class="table">
         <div class="box">
@@ -618,12 +618,65 @@ export default {
 <style lang="less" scoped>
 .material {
   .main {
-    margin: 20px;
-    /deep/.pagination {
-      float: right;
+    .el-pagination {
+      margin: 20px;
+      text-align: right;
     }
-    .searchInput {
-      overflow: hidden;
+    /deep/ .el-input__inner {
+      width: 100%;
+      height: 30px;
+      background-color: #f2f2f2;
+      border-radius: 15px;
+      border: none;
+      color: #5e5e5e;
+      font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
+        \\5b8b\4f53, sans-serif;
+    }
+    /deep/ .el-form-item__content {
+      line-height: 30px;
+    }
+    /deep/ .el-range-editor /deep/ .el-range-input {
+      background-color: #f2f2f2;
+    }
+    /deep/ .el-input__icon {
+      line-height: 30px;
+    }
+    .search_button {
+      margin-left: 10px;
+      background-color: #000;
+    }
+    /deep/ .el-icon-search {
+      color: #fff;
+    }
+    /deep/.el-button {
+      border: none;
+    }
+    .table {
+      .img {
+        width: 60px;
+        height: 60px;
+        border-radius: 5px;
+      }
+    }
+    .form {
+      width: 1200px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .addStyle {
+      margin: 0 30px 0px 0px;
+      border-radius: 15px;
+      width: 120px;
+      height: 30px;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #000;
+      &:hover {
+        cursor: pointer;
+      }
     }
     .table {
       .box {
