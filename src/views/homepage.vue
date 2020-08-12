@@ -1,8 +1,10 @@
 <template>
   <div class="homepage">
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>首页</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>首页</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <div class="main">
       <div class="left">
         <div class="left_list">

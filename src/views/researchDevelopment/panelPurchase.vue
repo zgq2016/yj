@@ -146,9 +146,9 @@
                 <el-select v-model="form.balance_account_id" placeholder="请选择">
                   <el-option
                     v-for="item in options"
-                    :key="item.id"
+                    :key="item.value"
                     :label="item.account_name"
-                    :value="item.account_name"
+                    :value="item.id"
                   ></el-option>
                 </el-select>
               </el-form-item>

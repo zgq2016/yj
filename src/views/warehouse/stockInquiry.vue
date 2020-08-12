@@ -141,7 +141,7 @@ export default {
       total: 0,
       power: "",
       valueElement: [
-        { name: "全部" },
+        { name: "全部", state: 5 },
         { name: "已入库", state: 1 },
         { name: "草稿", state: 0 },
         { name: "已撤销", state: 4 },
@@ -159,7 +159,7 @@ export default {
 
       this.factorys = res.data.data;
       this.total1 = res.data.count;
-      this.factorys.unshift({ factory_name: "全部" });
+      this.factorys.unshift({ factory_name: "全部", id: 0 });
     },
     handleSize1(val) {
       this.pageSize1 = val;

@@ -141,7 +141,7 @@ export default {
       count: 0,
       stylist: "",
       states: [
-        { state: "全部" },
+        { state: "全部", id: 5 },
         { state: "草稿", id: 0 },
         { state: "已出售", id: 1 },
         { state: "已撤销", id: 4 },

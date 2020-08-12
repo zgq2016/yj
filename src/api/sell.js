@@ -90,4 +90,13 @@ export const customerOrderSizeDel = (data) => {
   });
 };
 
+// 订单详情
+export const getProduceStyleList = (data) => {
+  return axios({
+    url: "?g=get_produce_style_list",
+    method: "post",
+    data: data,
+  });
+};
+
 

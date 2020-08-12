@@ -4,7 +4,11 @@
       <el-breadcrumb separator="/" class="breadcrumb">
         <!-- <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" /> -->
         <el-breadcrumb-item>销售</el-breadcrumb-item>
+<<<<<<< HEAD
         <el-breadcrumb-item :to="{ path: '/salesOrder' }">销售订单</el-breadcrumb-item>
+=======
+        <el-breadcrumb-item>销售订单</el-breadcrumb-item>
+>>>>>>> 16c4984fc395c6168ef9aef2f4c7f991b527fcf4
         <el-breadcrumb-item>销售订单详情</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -139,7 +143,7 @@
               <img :src="scope.row.style_pic_url" class="img" alt />
             </template>
           </el-table-column>
-          <el-table-column prop="stylename" align="center" label="商品">
+          <el-table-column prop="stylename" width="110" align="center" label="商品">
             <template slot-scope="scope">
               <el-select
                 v-model="scope.row.stylename"
@@ -376,6 +380,7 @@ import {
   bookStockOrderSizeDel,
 } from "@/api/warehouse.js";
 import {
+  getProduceStyleList,
   customerOrderList,
   customerOrderInfo,
   customerOrderAdd,
@@ -444,7 +449,7 @@ export default {
     },
     // 商品
     async shopping(item) {
-      let res1 = await getProjectStyleList({
+      let res1 = await getProduceStyleList({
         keyword: item == undefined ? "" : item,
         page: this.pageIndex3,
         page_size: this.pageSize3,
