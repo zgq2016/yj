@@ -4,11 +4,7 @@
       <el-breadcrumb separator="/" class="breadcrumb">
         <!-- <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" /> -->
         <el-breadcrumb-item>销售</el-breadcrumb-item>
-<<<<<<< HEAD
         <el-breadcrumb-item :to="{ path: '/salesOrder' }">销售订单</el-breadcrumb-item>
-=======
-        <el-breadcrumb-item>销售订单</el-breadcrumb-item>
->>>>>>> 16c4984fc395c6168ef9aef2f4c7f991b527fcf4
         <el-breadcrumb-item>销售订单详情</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
