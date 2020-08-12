@@ -8,7 +8,9 @@
       </el-breadcrumb>
     </div>
     <div style="margin-bottom:10px">
-      <el-input style="width:200px" v-model="formInline.stylename" placeholder="请输入商品名称"></el-input>
+      <el-input style="width:200px;margin-right:10px;" v-model="formInline.stylename" placeholder="请输入商品名称"></el-input>
+      <el-input style="width:120px" type="number" v-model="formInline.min" placeholder="请输入数量"></el-input>&nbsp;至
+      <el-input style="width:120px" type="number" v-model="formInline.max" placeholder="请输入数量"></el-input>
       <el-button icon="el-icon-search" size="mini" circle class="search_button" @click="onSubmit"></el-button>
     </div>
     <div class="main">
@@ -18,6 +20,7 @@
             <el-select
               v-model="formInline.storehouse_id"
               clearable
+              @change="onSubmit"
               placeholder="请选择仓库"
               style="width:120px"
             >
@@ -42,6 +45,7 @@
               clearable
               placeholder="请选择分类"
               style="width:120px"
+              @change="onSubmit"
             >
               <el-option
                 v-for="item in cate"
@@ -51,22 +55,9 @@
               ></el-option>
             </el-select>
           </el-form-item>
+
           <el-form-item>
-            <el-input
-              style="width:120px"
-              type="number"
-              v-model="formInline.min"
-              placeholder="请输入数量"
-            ></el-input>&nbsp;至
-            <el-input
-              style="width:120px"
-              type="number"
-              v-model="formInline.max"
-              placeholder="请输入数量"
-            ></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-checkbox v-model="formInline.checked">过滤无库存</el-checkbox>
+            <el-checkbox  @change="onSubmit" v-model="formInline.checked">过滤无库存</el-checkbox>
           </el-form-item>
         </el-form>
         <div class="addStyle">

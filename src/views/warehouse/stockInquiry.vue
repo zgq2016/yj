@@ -23,10 +23,11 @@
           end-placeholder="结束日期"
           format="yyyy-MM-dd"
           value-format="yyyy-MM-dd"
+          @change="onSubmit"
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-select clearable size="small" v-model="ruleForm.factory_name" placeholder="请选择厂商">
+        <el-select clearable size="small"  @change="onSubmit" v-model="ruleForm.factory_id" placeholder="请选择厂商">
           <el-option
             v-for="item in factorys"
             :key="item.id"
@@ -43,7 +44,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select clearable v-model="ruleForm.state" size="small" placeholder="请选择状态">
+        <el-select clearable  @change="onSubmit" v-model="ruleForm.state" size="small" placeholder="请选择状态">
           <el-option
             v-for="item in valueElement"
             :key="item.value"

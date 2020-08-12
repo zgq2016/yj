@@ -62,7 +62,7 @@
           <div style="display: flex;justify-content: space-between;align-items: center;">
             <div class="addStyle" v-if="power.indexOf('F4000200')!=-1" @click="handlePayment">付款</div>
             <div
-              class="addStyle"
+              class="addStyle" 
               v-if="power.indexOf('F4000300')!=-1"
               @click="beginninGbalanceAdjustment"
               style="background-color: #e3e3e3;color: #fff;"

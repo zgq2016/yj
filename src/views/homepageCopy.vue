@@ -6,81 +6,85 @@
       </el-breadcrumb>
     </div>
     <div class="main">
-      <div class="header">
-        <el-row :gutter="20">
-          <el-col :span="8">
-            <div class="grid-content bg-purples">
-              <span class="fonts">【当月工作状况】</span>
-              <div id="myChart"></div>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="grid-content bg-purple">
-              <span class="fonts" @click.stop="$router.push({path: `/announcements`})">【公司公告】</span>
-              <ul>
-                <li @click.stop="lookTitle(item1)" v-for="(item1,index) in nav_list" :key="index">
-                  <span>{{item1.title}}</span>
-                </li>
-              </ul>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="grid-content bg-purple">
-              <span class="fonts">【提醒信息】</span>
-              <ul>
-                <li @click.stop="lookTitle1(item1)" v-for="(item1,index) in list2" :key="index">
-                  <span>{{item1.title}}</span>
-                </li>
-              </ul>
-            </div>
-          </el-col>
-        </el-row>
-      </div>
-      <div class="content_1">
-        <div class="hed">
-          <h3>个人工作</h3>
-          <span @click.stop="$router.push({path: `/itemDesign`})">更多</span>
-        </div>
-        <div>
+      <div class="left">
+        <div class="left_list">
           <ul>
-            <li @click.stop="rout1(item.id)" v-for="(item,index) in works_1" :key="index">
-              <el-image
-                style="width: 290px; height: 160px;border-radius: 10px;"
-                :src="item.picurl"
-                fit="cover"
-              ></el-image>
-              <span>
-                <p>{{item.projecttype}}</p>
-                <p>{{item.projectname}}</p>
-                <p>{{item.name}}</p>
-              </span>
+            <li
+              v-for="(item,index) in feature"
+              :key="index"
+              @mouseenter="vb = true"
+              @mouseleave="vb = false"
+              @click.stop="skip(item)"
+            >
+              <span class="del" @click.stop="delShor(item,index)" v-if="vb">x</span>
+              {{item.title}}
+            </li>
+            <li @click.stop="addshort">
+              <span class="el-icon-plus"></span>
+              <span>增加快捷功能</span>
             </li>
           </ul>
         </div>
-      </div>
-      <div class="content_2">
-        <h3>协助工作</h3>
         <div>
-          <ul>
-            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_2" :key="index">
-              <el-image
-                style="width: 132px; height: 230px;border-radius: 10px;"
-                :src="item.style_pic_url"
-                fit="cover"
-              ></el-image>
-              <span>
-                <p>{{item.style_type}}</p>
-                <p>{{item.stylename}}</p>
-                <p>{{item.style_color}}</p>
-                <p>{{item.name}}</p>
-              </span>
-            </li>
-          </ul>
+          <el-date-picker
+            v-model="date1"
+            type="month"
+            size="mini"
+            style="width:130px;position: relative;left:150px;top:35px;z-index:2;cursor: pointer;"
+            @change="changedDate($event)"
+            placeholder="请选择月份"
+          ></el-date-picker>
+          <div id="myChart" :style="{width: '100%', height: '500px',border:'1px solid #ccc'}"></div>
+        </div>
+      </div>
+      <div class="right">
+        <div class="nav1">
+          <div class="head">
+            <span class="el-icon-chat-line-round"></span> 公司公告
+          </div>
+          <div class="nav_list">
+            <ul>
+              <li
+                v-for="(item1,index) in nav_list"
+                :key="index"
+                @click.stop="lookTitle(item1)"
+              >{{item1.title}}</li>
+              <li @click.stop="$router.push({path: `/announcements`})">+ 更多公告</li>
+            </ul>
+          </div>
+        </div>
+        <div class="nav2">
+          <div class="head">
+            <span class="el-icon-warning-outline"></span> 提醒信息
+          </div>
+          <div class="nav_list">
+            <ul>
+              <li
+                v-for="(item1,index) in list2"
+                :key="index"
+                @click.stop="lookTitle1(item1)"
+              >{{item1.title}}</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
+    <!-- 选择快捷功能 -->
+    <el-dialog title="请选择快捷功能" :visible.sync="dialogVisible" center width="30%">
+      <el-form style="width:250px;margin:0 auto;">
+        <el-form-item label="快捷功能:">
+          <el-select v-model="cut" placeholder="请选择快捷功能" style="width:145px">
+            <el-option v-for="item in list" :key="item.id" :label="item.title" :value="item.title"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addshortcutKey">确 定</el-button>
+      </span>
+    </el-dialog>
     <!-- 公告信息 -->
-    <el-dialog title="公告信息" :visible.sync="dialogVisible1" width="45%" center>
+    <el-dialog title="公告信息" :visible.sync="dialogVisible1" width="30%" center>
       <el-form :model="form" style="margin:0 20px" label-width="60px">
         <el-form-item label="主题:">
           <span>{{form.title}}</span>
@@ -94,7 +98,7 @@
       </el-form>
     </el-dialog>
     <!-- 提醒信息 -->
-    <el-dialog title="提醒信息" :visible.sync="dialogVisible2" width="45%" center>
+    <el-dialog title="提醒信息" :visible.sync="dialogVisible2" width="30%" center>
       <el-form :model="form1" style="margin:0 20px" label-width="60px">
         <el-form-item label="主题:">
           <span>{{form1.title}}</span>
@@ -118,8 +122,6 @@ import {
   noticeIndexList,
   warnList,
   mouthWorkStatus,
-  myWork,
-  myAssistWork,
 } from "@/api/home.js";
 import moment from "moment";
 export default {
@@ -141,15 +143,12 @@ export default {
       form: {},
       form1: {},
       yearMonth: "",
-      works_1: [],
-      works_2: [],
     };
   },
   mounted() {
     this.drawLine();
     this.init();
     this.mouthWork();
-    this.work();
   },
   methods: {
     // 查看公告
@@ -222,48 +221,19 @@ export default {
     drawLine() {
       // 基于准备好的dom，初始化echarts实例
       let myChart = this.$echarts.init(document.getElementById("myChart"));
-      window.onresize = myChart.resize;
-
       // 绘制图表
       myChart.setOption({
+        title: { text: "月工作状况" },
+        color: ["#3fb1e3"],
         tooltip: {},
-        color: "red",
         xAxis: {
-          // name: "日期",
+          name: "日期",
           type: "category",
           data: this.xA,
-          axisLine: {
-            lineStyle: {
-              color: "#fff",
-            },
-          },
-          // show: false,
-          axisTick: {
-            //y轴刻度线
-            show: false,
-          },
-          splitLine: {
-            //网格线
-            show: false,
-          },
         },
         yAxis: {
-          // name: "款式数量",
+          name: "款式数量",
           type: "value",
-          axisLine: {
-            lineStyle: {
-              color: "#fff",
-            },
-          },
-          // show: false,
-          axisTick: {
-            //y轴刻度线
-            show: false,
-          },
-          splitLine: {
-            //网格线
-            show: false,
-          },
         },
         series: [
           {
@@ -365,8 +335,6 @@ export default {
       });
       let data1 = res1.data.data;
       this.nav_list = data1;
-      this.nav_list = this.nav_list.slice(0, 3);
-
       // 提醒信息
       let res2 = await warnList({
         page_size: 10,
@@ -374,34 +342,6 @@ export default {
       });
       let data2 = res2.data.data;
       this.list2 = data2;
-      this.list2 = this.list2.slice(0, 3);
-    },
-    async work() {
-      let res = await myWork({
-        limit: 5,
-      });
-      console.log(res);
-      this.works_1 = res.data.data;
-      this.works_1.map((v, i) => {
-        if (v.projecttype == 0) {
-          v.projecttype = "【意向订单】";
-        } else if (v.projecttype == 1) {
-          v.projecttype = "【阶段工作】";
-        } else if (v.projecttype == 2) {
-          v.projecttype = "【企划系列】";
-        }
-      });
-      let res1 = await myAssistWork({
-        limit: 10,
-      });
-      console.log(res1);
-      this.works_2 = res1.data.data;
-    },
-    rout1(id){
-      this.$router.push({path: `/designCheck?id=${id}`})
-    },
-    rout2(id){
-      this.$router.push({path: `/development?id=${id}`})
     },
     //根据某年某月计算出具体日期
     getDaysInMonth(year, month) {
@@ -425,182 +365,120 @@ export default {
   .main {
     overflow: hidden;
     margin-top: 10px;
-    max-width: 1600px;
-    .el-row {
-      min-width: 1000px;
-      margin-bottom: 20px;
-      height: 160px;
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
-    @media screen and (max-width: 1460px) {
-      .el-col {
-        border-radius: 10px;
-        .grid-content {
-          height: 144px;
-        }
-        #myChart {
-          height: 180px;
-          width: 100%;
-          position: absolute;
-          top: -10px;
-        }
-      }
-    }
-    @media screen and (min-width: 1440px) {
-      .el-col {
-        border-radius: 10px;
-        .grid-content {
-          height: 208px;
-        }
-        #myChart {
-          position: absolute;
-          top: 30px;
-          height: 100%;
-          width: 100%;
-        }
-      }
-      .content_1 {
-        margin-top: 85px;
-      }
-    }
 
-    // .bg-purple-dark {
-    //   background: #99a9bf;
-    // }
-
-    .bg-purple {
-      position: relative;
-      background: #dde1e6;
-      .fonts {
-        color: #000000;
-        position: absolute;
-        top: 7px;
-        left: 7px;
-        font-size: 50%;
-        cursor: pointer;
-      }
-      .fonts:hover {
-        color: red;
-      }
-      ul {
-        position: absolute;
-        top: 30%;
-        left: 10px;
-        li {
-          display: block;
-          margin-bottom: 15px;
-          cursor: pointer;
-          span {
-            padding: 5px 15px;
-            border-radius: 10px;
-            font-size: 10px;
-            background: #f2f2f2;
-            margin-bottom: 10px;
-            min-width: 130px;
-          }
-        }
-      }
-    }
-    .bg-purples {
-      position: relative;
-      background: #000000;
-      .fonts {
-        cursor: pointer;
-        color: #f9fafc;
-        position: absolute;
-        top: 7px;
-        left: 7px;
-        font-size: 10px;
-      }
-    }
-    // .bg-purple-light {
-    //   background: #e5e9f2;
-    // }
-
-    .grid-content {
-      border-radius: 10px;
-      min-height: 36px;
-    }
-    .row-bg {
-      padding: 10px 0;
-      background-color: #f9fafc;
-    }
-    @media screen and (max-width: 1500px) {
-      .content_1 {
-        width: 1440px;
-        .hed {
-          width: 1440px;
-        }
+    .left {
+      float: left;
+      width: 75%;
+      padding: 1%;
+      .left_list {
         ul {
-          li:nth-child(4) {
-            margin-right: 0;
-          }
-        }
-      }
-      .content_2 {
-        width: 1420px;
-      }
-    }
-    .content_1 {
-      margin-bottom: 25px;
-
-      height: 260px;
-      overflow: hidden;
-      .hed {
-        overflow: hidden;
-        h3 {
-          float: left;
-          font-weight: 900;
-          margin: 10px 0;
-          font-size: 16px;
-        }
-        span {
-          float: right;
-          cursor: pointer;
-        }
-      }
-
-      ul {
-        overflow: hidden;
-        li {
-          float: left;
-          width: 290px;
-          margin-right: 25px;
-          margin-bottom: 25px;
-
-          span {
+          overflow: hidden;
+          li {
+            float: left;
+            list-style: none;
             display: block;
-            margin-top: 5px;
-            p {
-              padding: 1px;
-              color: #000000;
+            width: 130px;
+            margin: 0 2.5%;
+            height: 130px;
+            line-height: 130px;
+            text-align: center;
+            border-radius: 12px;
+            background: #666666;
+            margin-bottom: 25px;
+            color: #fff;
+            cursor: pointer;
+            position: relative;
+            .del {
+              width: 20px;
+              height: 20px;
+              line-height: 20px;
+              position: absolute;
+              top: 0;
+              right: 0;
             }
-            p:last-of-type {
-              color: #999999;
+          }
+          li:last-of-type {
+            cursor: pointer;
+            line-height: 40px;
+            span {
+              width: 100%;
+              display: block;
+              font-size: 14px;
+            }
+            span:first-of-type {
+              padding-top: 35px;
+              font-size: 25px !important;
             }
           }
         }
-        li:last-of-type {
-          display: block;
-          margin-right: 0;
-        }
       }
     }
-    .content_2 {
-      margin-bottom: 130px;
-      h3 {
-        font-weight: 900;
-        font-size: 16px;
-        margin: 10px 0;
+    .right {
+      float: left;
+      width: 25%;
+      .nav1 {
+        position: relative;
+        width: 100%;
+        padding: 0 5%;
+        min-height: 300px;
+        max-height: auto;
+        border: 1px solid #cccccc;
+        margin-bottom: 10px;
+        .head {
+          width: 100%;
+          height: 30px;
+          line-height: 30px;
+          font-size: 15px;
+          font-weight: 600;
+          border-bottom: 1px dashed #cccccc;
+        }
+
+        .nav_list {
+          ul {
+            overflow: hidden;
+            li {
+              cursor: pointer;
+              list-style: none;
+              padding: 3px 0;
+            }
+            li:last-of-type {
+              position: absolute;
+              bottom: 5px;
+              right: 15px;
+              font-size: 12px;
+              font-weight: 600;
+            }
+            li:hover {
+              color: rgb(223, 64, 64);
+            }
+          }
+        }
       }
-      ul {
-        overflow: hidden;
-        li {
-          float: left;
-          margin-right: 26px;
-          margin-bottom: 25px;
+      .nav2 {
+        width: 100%;
+        padding: 0 5%;
+        min-height: 450px;
+        max-height: auto;
+        border: 1px solid #cccccc;
+        .head {
+          width: 100%;
+          height: 30px;
+          font-size: 15px;
+          font-weight: 600;
+          line-height: 30px;
+          border-bottom: 1px dashed #cccccc;
+        }
+        .nav_list {
+          ul {
+            li {
+              cursor: pointer;
+              list-style: none;
+              padding: 3px 0;
+            }
+            li:hover {
+              color: rgb(223, 64, 64);
+            }
+          }
         }
       }
     }
