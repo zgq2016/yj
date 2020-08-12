@@ -8,7 +8,12 @@
       </el-breadcrumb>
     </div>
     <div style="margin-bottom:10px">
-      <el-input v-model="name" placeholder="项目" class="project" style="width:200px"></el-input>
+      <el-input
+        v-model="formInline.stylekeyword"
+        placeholder="项目"
+        class="project"
+        style="width:200px"
+      ></el-input>
       <el-button
         icon="el-icon-search"
         size="mini"
@@ -20,12 +25,24 @@
     <div class="form">
       <el-form :inline="true" class="demo-form-inline">
         <el-form-item>
-          <el-select v-model="year" clearable placeholder="年份" style="width:100px">
+          <el-select
+            v-model="formInline.year"
+            clearable
+            placeholder="年份"
+            style="width:100px"
+            @change="get_year"
+          >
             <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="season" clearable placeholder="季节" style="width:100px">
+          <el-select
+            v-model="formInline.season"
+            clearable
+            placeholder="季节"
+            style="width:100px"
+            @change="get_seasons"
+          >
             <el-option
               v-for="item in seasons"
               :key="item.id"
@@ -36,7 +53,7 @@
         </el-form-item>
         <el-form-item>
           <el-select
-            v-model="stylist"
+            v-model="formInline.user_id"
             clearable
             placeholder="设计师"
             @change="handleUser_id($event)"
@@ -46,7 +63,13 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="category" clearable placeholder="类别" style="width:100px">
+          <el-select
+            v-model="formInline.style_type"
+            clearable
+            placeholder="类别"
+            style="width:100px"
+            @change="get_style_type"
+          >
             <el-option
               v-for="item in categorys"
               :key="item.id"
@@ -57,7 +80,7 @@
         </el-form-item>
         <el-form-item>
           <el-select
-            v-model="west"
+            v-model="formInline.customer_id"
             clearable
             placeholder="西所"
             @change="handleCustomer_id($event)"
@@ -73,7 +96,7 @@
         </el-form-item>
         <el-form-item>
           <el-select
-            v-model="state"
+            v-model="formInline.state"
             clearable
             placeholder="状态"
             @change="handelState($event)"
@@ -181,6 +204,15 @@ export default {
       ],
       obj: {},
       power: "",
+      formInline: {
+        stylekeyword: "",
+        year: "",
+        season: "",
+        user_id: "",
+        style_type: "",
+        customer_id: "",
+        state: "",
+      },
     };
   },
   methods: {
@@ -200,84 +232,72 @@ export default {
     },
     // 获取userid
     handleUser_id(e) {
-      this.user_id = e;
+      this.formInline.user_id = e;
+      this.init();
     },
     // 获取customer_id
     handleCustomer_id(e) {
-      this.customer_id = e;
+      this.formInline.customer_id = e;
+      this.init();
     },
     // state
     handelState(e) {
-      this.stateId = e;
+      this.formInline.state = e;
+      this.init();
     },
     // 搜索
-    async handlesearch() {
-      // console.log(...this.date)
-      this.obj["ctime_start"] = moment(this.date[0]).format("YYYY-MM-DD");
-      this.obj["ctime_end"] = moment(this.date[1]).format("YYYY-MM-DD");
-      this.obj["stylekeyword"] = this.name;
-      this.obj["year"] = this.year;
-      this.obj["season"] = this.season;
-      this.obj["user_id"] = this.user_id;
-      this.obj["style_type"] = this.category;
-      this.obj["customer_id"] = this.customer_id;
-      this.obj["state"] = this.stateId;
-      delete this.obj["0"];
-      delete this.obj["1"];
-      this.init(this.obj);
+    handlesearch() {
+      this.init();
+    },
+    get_style_type() {
+      this.init();
+    },
+    get_year() {
+      this.init();
+    },
+    get_seasons() {
+      this.init();
     },
     /* 获取数据 */
     async getYear() {
       let res = await getYearList();
       let { data } = res.data;
-      // console.log(data);
       this.years = data;
     },
     async getSeason() {
       let res = await getSeasonList();
       let { data } = res.data;
-      // console.log(data);
       this.seasons = data;
     },
     async getStylist() {
       let res = await getStylistList();
       let { data } = res.data;
-      // console.log(data);
       this.stylists = data;
     },
     async getCategory() {
       let res = await getCategoryList();
       let { data } = res.data;
-      // console.log(data);
       this.categorys = data;
     },
     async getWest() {
       let res = await getWestList();
       let { data } = res.data;
-      // console.log(data);
       this.wests = data;
     },
     handleSizeChange(val) {
       this.pageSize = val;
-      this.init(this.obj);
+      this.init();
     },
     handleCurrentChange(val) {
       this.pageIndex = val;
-      this.init(this.obj);
+      this.init();
     },
-    async init(object) {
-      console.log(object);
-      // if(object===undefined){}
-      let res = await getDataList({
-        page: this.pageIndex,
-        page_size: this.pageSize,
-        ...object,
-      });
+    async init() {
+      this.formInline["page"] = this.pageIndex;
+      this.formInline["page_size"] = this.pageSize;
+      let res = await getDataList(this.formInline);
       let { data, count } = res.data;
       this.data = data;
-      console.log(res);
-
-      // console.log( this.data);
       for (let i = 0; i < this.data.length; i++) {
         if (this.data[i].projecttype === "0") {
           this.data[i].projecttype = "意向订单";
@@ -288,8 +308,6 @@ export default {
         }
       }
       this.total = count;
-      this.ctime_start = moment(this.date[0]).format("YYYY-MM-DD");
-      this.ctime_end = moment(this.date[1]).format("YYYY-MM-DD");
     },
   },
   mounted() {
@@ -301,7 +319,6 @@ export default {
     this.getWest();
 
     this.power = localStorage.getItem("power");
-    console.log(this.power);
   },
 };
 </script>
@@ -393,7 +410,6 @@ export default {
     line-height: 32px;
     width: 5%;
     color: #303133;
-    
   }
 }
 </style>

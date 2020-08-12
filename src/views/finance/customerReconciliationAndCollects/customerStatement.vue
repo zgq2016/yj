@@ -7,13 +7,13 @@
     <div class="form">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item>
-          <el-select clearable v-model="formInline.customer_id" placeholder="客户">
-            <el-option
-              v-for="item in wests"
-              :key="item.id"
-              :label="item.companyname"
-              :value="item.id"
-            ></el-option>
+          <el-select
+            clearable
+            v-model="customer_id"
+            placeholder="客户"
+            @change="gte_companyname($event)"
+          >
+            <el-option v-for="item in wests" :key="item.id" :label="item.companyname" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -21,41 +21,58 @@
             v-model="formInline.date"
             type="daterange"
             range-separator="至"
+            clearable
             class="timer"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            style="width:100%"
-            clearable
+            format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd"
+            @change="gte_date($event)"
           ></el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.account_type_id" clearable placeholder="账目类型">
+          <el-select
+            v-model="account_type_name"
+            clearable
+            placeholder="账目类型"
+            @change="get_account_type_name($event)"
+          >
             <el-option
               v-for="item in BalanceAccountType"
               :key="item.id"
               :label="item.account_type_name"
-              :value="item.id"
+              :value="item"
             ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.balance_account_id" clearable placeholder="结算账户">
+          <el-select
+            v-model="balance_account_id"
+            clearable
+            placeholder="结算账户"
+            @change="get_account_name($event)"
+          >
             <el-option
               v-for="item in BalanceAccount"
               :key="item.id"
               :label="item.account_name"
-              :value="item.id"
+              :value="item"
             ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.user_id" clearable placeholder="操作者">
+          <el-select
+            v-model="formInline.user_id"
+            clearable
+            placeholder="操作者"
+            @change="get_user_id($event)"
+          >
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
           <div style="display: flex;justify-content: space-between;align-items: center;">
-            <div class="addStyle" @click="handlePayment">付款</div>
+            <div class="addStyle" @click="handlePayment">收款</div>
             <div
               class="addStyle"
               style="background-color: #e3e3e3;color: #fff;"
@@ -79,24 +96,24 @@
     <el-divider></el-divider>
     <div id="printTest">
       <div class="header">
-        <h2 style="text-align:center;height:40px;">供应商对账单</h2>
+        <h2 style="text-align:center;height:40px;">客户对账单</h2>
         <div class="cont">
-          <span>供应商：{{formInline.Supplier}}</span>
-          <span>日期：{{this.ctime_start}} 至 {{this.ctime_end}}</span>
+          <span>客户: {{customer_id}}</span>
+          <span>日期：{{formInline.ctime_start}} 至 {{formInline.ctime_end}}</span>
         </div>
         <div class="tb">
           <div class="dv">当前查询统计数据：</div>
           <div class="dv">
             应付金额
-            <span style="color:orange;">{{cope_money}}</span>
+            <span style="color:orange;">{{total_cope_money}}</span>
           </div>
           <div class="dv">
             实付金额
-            <span style="color:orange;">{{pay_money}}</span>
+            <span style="color:orange;">{{total_pay_money}}</span>
           </div>
           <div class="dv">
             应付余额
-            <span style="color:orange;">{{opay_money}}</span>
+            <span style="color:orange;">{{total_opay_money}}</span>
           </div>
         </div>
       </div>
@@ -265,16 +282,22 @@ import { getSupplierSelect } from "@/api/archives";
 export default {
   data() {
     return {
-      cope_money: 999,
-      pay_money: 999,
-      opay_money: 999,
+      total_cope_money: "",
+      total_pay_money: "",
+      total_opay_money: "",
+      customer_id: "",
+      account_type_name: "",
+      balance_account_id: "",
+      cope_money: "",
+      pay_money: "",
+      opay_money: "",
       ctime_start: "",
       ctime_end: "",
       pageIndex: 1,
       pageSize: 9,
       total: 0,
       tableData: [],
-      money: "999999999",
+      money: "",
       dialogVisible: false,
       dialogVisible1: false,
       form: {
@@ -319,7 +342,7 @@ export default {
         pay_money: [{ required: true, message: "实付金额", trigger: "change" }],
       },
       formInline: {
-        Supplier: "",
+        customer_id: "",
         date: "",
         account_type_id: "",
         balance_account_id: "",
@@ -336,6 +359,33 @@ export default {
     };
   },
   methods: {
+    gte_companyname(e) {
+      console.log(e);
+      this.formInline.customer_id = e.id;
+      this.customer_id = e.companyname;
+      this.supplierInit();
+    },
+    get_account_type_name(e) {
+      console.log(e);
+      this.formInline.account_type_id = e.id;
+      this.account_type_name = e.account_type_name;
+      this.supplierInit();
+    },
+    get_account_name(e) {
+      console.log(e);
+      this.formInline.balance_account_id = e.id;
+      this.balance_account_id = e.account_name;
+      this.supplierInit();
+    },
+    get_user_id(e) {
+      this.supplierInit();
+    },
+    gte_date(e) {
+      console.log(e);
+      this.formInline["ctime_start"] = e === null ? "" : e[0];
+      this.formInline["ctime_end"] = e === null ? "" : e[1];
+      this.supplierInit();
+    },
     async handleSuccess1(response, file, fileList) {
       this.form.picurl = response.data.pic_file_url;
     },
@@ -350,31 +400,6 @@ export default {
     async onSubmit() {
       this.supplierInit();
     },
-    // async querySearch(value, cb) {
-    //   this.form.supplier_companyname = value;
-    //   console.log(value);
-    //   let res = await getSupplierSelect({
-    //     keyword: this.form.supplier_companyname
-    //   });
-    //   let { data } = res.data;
-    //   cb(data);
-    // },
-    // async querySearch1(value, cb) {
-    //   this.form1.supplier_companyname = value;
-    //   let res = await getSupplierSelect({
-    //     keyword: this.form1.supplier_companyname
-    //   });
-    //   let { data } = res.data;
-    //   cb(data);
-    // },
-    // handleSelect(item) {
-    //   this.form.customer_id = item.address;
-    //   this.form.supplier_companyname = item.value;
-    // },
-    // handleSelect1(item) {
-    //   this.form1.customer_id = item.address;
-    //   this.form1.supplier_companyname = item.value;
-    // },
     handlePayment() {
       this.dialogVisible = true;
     },
@@ -466,25 +491,22 @@ export default {
       this.SupplierList = res1.data.data;
     },
     async supplierInit() {
-      if (this.formInline.date !== "" && this.formInline.date !== null) {
-        this.formInline["ctime_start"] = moment(this.formInline.date[0]).format(
-          "YYYY-MM-DD"
-        );
-        this.formInline["ctime_end"] = moment(this.formInline.date[1]).format(
-          "YYYY-MM-DD"
-        );
-      }
-      if (this.formInline.date === "" || this.formInline.date === null) {
-        this.formInline["ctime_start"] = "";
-        this.formInline["ctime_end"] = "";
-      }
       this.formInline["page"] = this.pageIndex;
       this.formInline["page_size"] = this.pageSize;
       let res = await customerAccountList(this.formInline);
       console.log(res);
-      let { data, count } = res.data;
+      let {
+        data,
+        count,
+        total_cope_money,
+        total_pay_money,
+        total_opay_money,
+      } = res.data;
       this.tableData = data;
       this.total = count;
+      this.total_cope_money = total_cope_money;
+      this.total_pay_money = total_pay_money;
+      this.total_opay_money = total_opay_money;
     },
   },
   async mounted() {
@@ -494,6 +516,10 @@ export default {
     this.getStylist();
     this.getBalanceAccount();
     this.getBalanceAccountType();
+    this.customer_id =
+      this.$route.query.companyname === "" ? "" : this.$route.query.companyname;
+    this.formInline.customer_id =
+      this.$route.query.customer_id === "" ? "" : this.$route.query.customer_id;
   },
 };
 </script>

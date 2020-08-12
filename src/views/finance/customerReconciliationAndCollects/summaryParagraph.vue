@@ -20,14 +20,16 @@
         <el-form-item>
           <div style="display: flex;justify-content: center;align-items: center;">
             <el-input
-              v-model="formInline.num1"
+              clearable
+              v-model="formInline.min"
               controls-position="right"
               @change="handleChange"
               placeholder="开始金额"
             ></el-input>
             <label for>至</label>
             <el-input
-              v-model="formInline.num2"
+              clearable
+              v-model="formInline.max"
               controls-position="right"
               @change="handleChange"
               placeholder="结束金额"
@@ -35,10 +37,17 @@
           </div>
         </el-form-item>
         <el-form-item>
-          <el-checkbox v-model="formInline.checked">不显示无欠款客户</el-checkbox>
+          <el-checkbox v-model="formInline.hide_empty">不显示无欠款客户</el-checkbox>
         </el-form-item>
         <el-form-item>
           <div style="display: flex;justify-content: space-between;align-items: center;">
+            <el-button
+              icon="el-icon-search"
+              size="mini"
+              circle
+              class="search_button"
+              @click="onSubmit"
+            ></el-button>
             <div class="addStyle">收起统计数据</div>
             <div class="addStyle">导出</div>
           </div>
@@ -77,7 +86,10 @@
         <el-table-column :show-overflow-tooltip="true" prop="phone" label="手机"></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="balance" label="欠款">
           <template slot-scope="scope">
-            <div @click="handleDetail(scope.$index, scope.row)">{{scope.row.balance}}</div>
+            <div
+              @click="handleDetail(scope.$index, scope.row)"
+              style="cursor: pointer;color: blue;"
+            >{{scope.row.balance}}</div>
           </template>
         </el-table-column>
       </el-table>
@@ -133,17 +145,21 @@ export default {
       ],
       formInline: {
         customer_id: "",
-        num1: "",
-        num2: "",
-        checked: "",
+        min: "",
+        max: "",
+        hide_empty: "",
       },
     };
   },
   methods: {
+    onSubmit() {
+      console.log(this.formInline);
+      this.supplierInit();
+    },
     handleDetail(index, row) {
       console.log(row);
       this.$router.push({
-        path: `/customerStatement?customer_id=${row.id}`,
+        path: `/customerStatement?customer_id=${row.id}&companyname=${row.companyname}`,
       });
     },
     async getWest() {
@@ -158,10 +174,9 @@ export default {
       console.log(v);
     },
     async supplierInit() {
-      let res = await customerBalance({
-        page: this.pageIndex,
-        page_size: this.pageSize,
-      });
+      this.formInline["page"] = this.pageIndex;
+      this.formInline["page_size"] = this.pageSize;
+      let res = await customerBalance(this.formInline);
       console.log(res);
       let { data, count } = res.data;
       this.tableData = data;

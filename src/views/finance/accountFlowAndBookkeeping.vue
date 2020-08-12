@@ -21,30 +21,48 @@
             class="timer"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
+            format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd"
+            @change="gte_date($event)"
           ></el-date-picker>
         </el-form-item>
         <el-form-item prop="account_type_name">
-          <el-select v-model="formInline.account_type_name" clearable placeholder="账目类型">
+          <el-select
+            v-model="account_type_name"
+            clearable
+            placeholder="账目类型"
+            @change="get_account_type_name($event)"
+          >
             <el-option
               v-for="item in BalanceAccountType"
               :key="item.id"
               :label="item.account_type_name"
-              :value="item.id"
+              :value="item"
             ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item prop="balance_account_id">
-          <el-select v-model="formInline.balance_account_id" clearable placeholder="结算账户">
+          <el-select
+            v-model="balance_account_id"
+            clearable
+            placeholder="结算账户"
+            @change="get_account_name($event)"
+          >
             <el-option
               v-for="item in BalanceAccount"
               :key="item.id"
               :label="item.account_name"
-              :value="item.id"
+              :value="item"
             ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.user_id" clearable placeholder="操作者">
+          <el-select
+            v-model="formInline.user_id"
+            clearable
+            placeholder="操作者"
+            @change="get_user_id($event)"
+          >
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -87,23 +105,23 @@
       <div class="header">
         <h2 style="text-align:center;height:40px;">资金流水账</h2>
         <div class="cont">
-          <span>结算账户：{{formInline.account_name}}</span>
-          <span>账目类型：{{formInline.account_type_name}}</span>
+          <span>账目类型：{{account_type_name}}</span>
+          <span>结算账户：{{balance_account_id}}</span>
           <span>日期：{{formInline.ctime_start}} 至 {{formInline.ctime_end}}</span>
         </div>
         <div class="tb">
           <div class="dv">当前查询统计数据：</div>
           <div class="dv">
             收入
-            <span style="color:orange;">{{expend_money}}</span>
+            <span style="color:orange;">{{total_cope_money}}</span>
           </div>
           <div class="dv">
             支出
-            <span style="color:orange;">{{in_money}}</span>
+            <span style="color:orange;">{{total_pay_money}}</span>
           </div>
           <div class="dv">
             盈余
-            <span style="color:orange;">999</span>
+            <span style="color:orange;">{{total_opay_money}}</span>
           </div>
         </div>
       </div>
@@ -414,9 +432,12 @@ import {
 export default {
   data() {
     return {
+      total_cope_money: "",
+      total_pay_money: "",
+      total_opay_money: "",
+      account_type_name: "",
+      balance_account_id: "",
       power: "",
-      expend_money: "",
-      in_money: "",
       ctime_start: "",
       ctime_end: "",
       pageIndex: 1,
@@ -541,6 +562,27 @@ export default {
     };
   },
   methods: {
+    get_account_type_name(e) {
+      console.log(e);
+      this.formInline.account_type_id = e.id;
+      this.account_type_name = e.account_type_name;
+      this.init();
+    },
+    get_account_name(e) {
+      console.log(e);
+      this.formInline.balance_account_id = e.id;
+      this.balance_account_id = e.account_name;
+      this.init();
+    },
+    gte_date(e) {
+      this.formInline["ctime_start"] = e === null ? "" : e[0];
+      this.formInline["ctime_end"] = e === null ? "" : e[1];
+      console.log(e);
+      this.init();
+    },
+    get_user_id(e) {
+      this.init();
+    },
     handleCommand(command) {
       // 新增意向订单 AddOpinionIndent
       if (command === "a") {
@@ -722,25 +764,22 @@ export default {
       this.init();
     },
     async init() {
-      if (this.formInline.date !== "" && this.formInline.date !== null) {
-        this.formInline["ctime_start"] = moment(this.formInline.date[0]).format(
-          "YYYY-MM-DD"
-        );
-        this.formInline["ctime_end"] = moment(this.formInline.date[1]).format(
-          "YYYY-MM-DD"
-        );
-      }
-      if (this.formInline.date === "" || this.formInline.date === null) {
-        this.formInline["ctime_start"] = "";
-        this.formInline["ctime_end"] = "";
-      }
       this.formInline["page"] = this.pageIndex;
       this.formInline["page_size"] = this.pageSize;
       let res = await myAccountList(this.formInline);
       console.log(res);
-      let { data, count } = res.data;
+      let {
+        data,
+        count,
+        total_cope_money,
+        total_pay_money,
+        total_opay_money,
+      } = res.data;
       this.tableData = data;
       this.total = count;
+      this.total_cope_money = total_cope_money;
+      this.total_pay_money = total_pay_money;
+      this.total_opay_money = total_opay_money;
     },
   },
   mounted() {
@@ -826,7 +865,6 @@ export default {
     &:hover {
       cursor: pointer;
     }
-    
   }
   .tb {
     display: flex;

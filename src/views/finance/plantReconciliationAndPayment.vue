@@ -13,12 +13,17 @@
     <div class="form">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item>
-          <el-select v-model="formInline.factory_id" placeholder="加工厂" clearable>
+          <el-select
+            v-model="factory_id"
+            placeholder="加工厂"
+            clearable
+            @change="get_factory_id($event)"
+          >
             <el-option
               v-for="item in GetFactory"
               :key="item.id"
               :label="item.factory_name"
-              :value="item.id"
+              :value="item"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -31,31 +36,44 @@
             class="timer"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
+            format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd"
+            @change="gte_date($event)"
           ></el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.account_type" clearable placeholder="账目类型">
+          <el-select
+            v-model="account_type_name"
+            clearable
+            placeholder="账目类型"
+            @change="get_account_type_name($event)"
+          >
             <el-option
               v-for="item in BalanceAccountType"
               :key="item.id"
               :label="item.account_type_name"
-              :value="item.id"
+              :value="item"
             ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.balance_account_id" clearable placeholder="结算账户">
+          <el-select
+            v-model="balance_account_id"
+            clearable
+            placeholder="结算账户"
+            @change="get_account_name($event)"
+          >
             <el-option
               v-for="item in BalanceAccount"
               :key="item.id"
               :label="item.account_name"
-              :value="item.id"
+              :value="item"
             ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.user_id" clearable placeholder="操作者">
-            <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          <el-select v-model="user_id" clearable placeholder="操作者" @change="get_user_id($event)">
+            <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -87,7 +105,7 @@
       <div class="header">
         <h2 style="text-align:center;height:40px;">工厂对账单</h2>
         <div class="cont">
-          <span>工厂：{{formInline.Supplier}}</span>
+          <span>工厂：{{factory_id}}</span>
           <span>日期：{{this.ctime_start}} 至 {{this.ctime_end}}</span>
         </div>
         <div class="tb">
@@ -273,9 +291,9 @@ export default {
   data() {
     return {
       power: "",
-      total_cope_money: 999,
-      total_pay_money: 999,
-      total_opay_money: 999,
+      total_cope_money: "",
+      total_pay_money: "",
+      total_opay_money: "",
       ctime_start: "",
       ctime_end: "",
       pageIndex: 1,
@@ -339,9 +357,43 @@ export default {
       SupplierList: [],
       stylists: [],
       status: "",
+      factory_id: "",
+      account_type_name: "",
+      balance_account_id: "",
+      user_id: "",
     };
   },
   methods: {
+    get_factory_id(e) {
+      console.log(e);
+      this.formInline.factory_id = e.id;
+      this.factory_id = e.factory_name;
+      this.supplierInit();
+    },
+    gte_date(e) {
+      console.log(e);
+      this.formInline["ctime_start"] = e === null ? "" : e[0];
+      this.formInline["ctime_end"] = e === null ? "" : e[1];
+      this.supplierInit();
+    },
+    get_account_name(e) {
+      console.log(e);
+      this.formInline.balance_account_id = e.id;
+      this.balance_account_id = e.account_name;
+      this.supplierInit();
+    },
+    get_user_id(e) {
+      console.log(e);
+      this.formInline.user_id = e.id;
+      this.user_id = e.name;
+      this.supplierInit();
+    },
+    get_account_type_name(e) {
+      console.log(e);
+      this.formInline.account_type_id = e.id;
+      this.account_type_name = e.account_type_name;
+      this.supplierInit();
+    },
     async handleSuccess1(response, file, fileList) {
       this.form.picurl = response.data.pic_file_url;
     },
@@ -437,28 +489,11 @@ export default {
       this.supplierInit();
     },
     async supplierInit() {
-      // if (this.formInline.date === "") {
-      //   this.formInline["ctime_start"] = "";
-      //   this.formInline["ctime_end"] = "";
-      // }
-      // if (this.formInline.date !== "") {
-      //   this.formInline["ctime_start"] = moment(this.formInline.date[0]).format(
-      //     "YYYY-MM-DD"
-      //   );
-      //   this.formInline["ctime_end"] = moment(this.formInline.date[1]).format(
-      //     "YYYY-MM-DD"
-      //   );
-      // }
       this.formInline.page = this.pageIndex;
       this.formInline.page_size = this.pageSize;
-      delete this.formInline.date;
+      // delete this.formInline.date;
       let res = await factoryAccountList(this.formInline);
       console.log(res);
-      // res.data.data.map((v) => {
-      //   if (v.pay_money !== 0) {
-      //     v.opay_money = v.cope_money - v.pay_money;
-      //   }
-      // });
       let {
         data,
         count,

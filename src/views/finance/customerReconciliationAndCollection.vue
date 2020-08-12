@@ -9,7 +9,7 @@
     <el-container>
       <el-main>
         <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane label="对款汇总" name="/summaryParagraph"></el-tab-pane>
+          <el-tab-pane label="对账汇总" name="/summaryParagraph"></el-tab-pane>
           <el-tab-pane label="客户对账单" name="/customerStatement"></el-tab-pane>
           <router-view></router-view>
         </el-tabs>

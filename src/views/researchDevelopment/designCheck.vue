@@ -50,6 +50,7 @@
               v-if="power.indexOf('A2000200')!=-1"
             >添加款式</span>
             <span class="addStyle" @click="newTheStyle" v-if="power.indexOf('A2000200')!=-1">新增款式</span>
+            <span class="addStyle" @click="switchover">切换</span>
           </div>
         </div>
       </div>
@@ -58,39 +59,52 @@
 
     <!-- table -->
     <div class="table" v-if="power.indexOf('A2000100')!=-1">
-      <el-table ref="singleTable" :data="tableData" highlight-current-row>
-        <el-table-column type="index" width="50"></el-table-column>
-        <el-table-column label="图片" width="70">
-          <template slot-scope="scope">
-            <img :src="scope.row.style_pic_url" class="img" width="100" alt />
-          </template>
-        </el-table-column>
-        <el-table-column>
-          <template slot-scope="scope">
-            <img
-              v-if="scope.row.style_color_pic_url!==''"
-              :src="scope.row.style_color_pic_url"
-              class="img"
-              alt
-            />
-            <div
-              v-if="scope.row.style_color_pic_url===''"
-              :style="`background-color:${scope.row.color_code};`"
-              class="color"
-            ></div>
-          </template>
-        </el-table-column>
-        <el-table-column property="style_color" label="颜色"></el-table-column>
-        <el-table-column property="stylename" label="款式名称"></el-table-column>
-        <el-table-column property="styleno" label="款号"></el-table-column>
-        <el-table-column property="style_type" label="品类"></el-table-column>
-        <el-table-column label="操作" align="right">
-          <!-- 插槽：匿名插槽，具名插槽，数据插槽 -->
-          <template v-slot="scope">
-            <div @click="handleEdit(scope.row)" class="check">查看</div>
-          </template>
-        </el-table-column>
-      </el-table>
+      <div v-if="switchover_active===false">
+        <el-table ref="singleTable" :data="tableData" highlight-current-row>
+          <el-table-column type="index" width="50"></el-table-column>
+          <el-table-column label="图片" width="70">
+            <template slot-scope="scope">
+              <img :src="scope.row.style_pic_url" class="img" width="100" alt />
+            </template>
+          </el-table-column>
+          <el-table-column>
+            <template slot-scope="scope">
+              <img
+                v-if="scope.row.style_color_pic_url!==''"
+                :src="scope.row.style_color_pic_url"
+                class="img"
+                alt
+              />
+              <div
+                v-if="scope.row.style_color_pic_url===''"
+                :style="`background-color:${scope.row.color_code};`"
+                class="color"
+              ></div>
+            </template>
+          </el-table-column>
+          <el-table-column property="style_color" label="颜色"></el-table-column>
+          <el-table-column property="stylename" label="款式名称"></el-table-column>
+          <el-table-column property="styleno" label="款号"></el-table-column>
+          <el-table-column property="style_type" label="品类"></el-table-column>
+          <el-table-column label="操作" align="right">
+            <!-- 插槽：匿名插槽，具名插槽，数据插槽 -->
+            <template v-slot="scope">
+              <div @click="handleEdit(scope.row)" class="check">查看</div>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div v-if="switchover_active===true">
+        <div class="card" v-for="(item, index) in tableData" :key="index">
+          <div @click="handleEdit(item)">
+            <img :src="item.style_pic_url" alt />
+            <div style="color:#000">{{item.style_type}}</div>
+            <div style="color:#000">{{item.stylename}}</div>
+            <div style="color:#000">{{item.styleno}}</div>
+            <div style="color:#ccc">{{item.user_name}}</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <el-dialog title="款式搜索" :visible.sync="centerDialogVisible" width="60%" center>
@@ -156,9 +170,13 @@ export default {
       styleList: [],
 
       power: "",
+      switchover_active: false,
     };
   },
   methods: {
+    switchover() {
+      this.switchover_active = !this.switchover_active;
+    },
     handleSelectItem(item) {
       this.$confirm("确定选择", "提示", {
         confirmButtonText: "确定",
@@ -211,9 +229,10 @@ export default {
     async init() {
       let { id } = this.$route.query;
       let res = await getProject({ id });
+      // console.log(res);
       this.obj = res.data.data;
       this.tableData = res.data.data.style_data;
-      console.log(res);
+      console.log(this.tableData);
     },
   },
   async mounted() {
@@ -325,6 +344,28 @@ export default {
       width: 60px;
       height: 60px;
       border-radius: 5px;
+    }
+    .color {
+      width: 60px;
+      height: 60px;
+      border-radius: 5px;
+    }
+  }
+  .card {
+    margin: 0 25px 20px 0;
+    font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
+      \\5b8b\4f53, sans-serif;
+    width: 130px;
+    height: 300px;
+    float: left;
+    img {
+      width: 130px;
+      height: 230px;
+      border-radius: 10px;
+      margin-bottom: 3px;
+    }
+    div {
+      margin: 1px 5px;
     }
   }
   // .el-table th,
