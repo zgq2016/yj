@@ -1,12 +1,12 @@
 <template>
   <div class="salesOrderDetailsAdd">
     <div class="aa">
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <!-- <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" /> -->
-      <el-breadcrumb-item>销售</el-breadcrumb-item>
-      <el-breadcrumb-item>销售订单</el-breadcrumb-item>
-      <el-breadcrumb-item>销售订单详情</el-breadcrumb-item>
-    </el-breadcrumb>
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <!-- <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" /> -->
+        <el-breadcrumb-item>销售</el-breadcrumb-item>
+        <el-breadcrumb-item>销售订单</el-breadcrumb-item>
+        <el-breadcrumb-item>销售订单详情</el-breadcrumb-item>
+      </el-breadcrumb>
     </div>
     <div class="main">
       <div class="top">
@@ -139,7 +139,7 @@
               <img :src="scope.row.style_pic_url" class="img" alt />
             </template>
           </el-table-column>
-          <el-table-column prop="stylename" align="center" label="商品">
+          <el-table-column prop="stylename" width="110" align="center" label="商品">
             <template slot-scope="scope">
               <el-select
                 v-model="scope.row.stylename"
@@ -376,6 +376,7 @@ import {
   bookStockOrderSizeDel,
 } from "@/api/warehouse.js";
 import {
+  getProduceStyleList,
   customerOrderList,
   customerOrderInfo,
   customerOrderAdd,
@@ -444,7 +445,7 @@ export default {
     },
     // 商品
     async shopping(item) {
-      let res1 = await getProjectStyleList({
+      let res1 = await getProduceStyleList({
         keyword: item == undefined ? "" : item,
         page: this.pageIndex3,
         page_size: this.pageSize3,
@@ -600,7 +601,7 @@ export default {
       this.weretable = [];
       for (let i = 0; i < 6; i++) {
         this.weretable.push({
-          style_pic_url:'',
+          style_pic_url: "",
           bar_code: "",
           discount: "100",
           discount_money: "",
@@ -774,7 +775,7 @@ export default {
         row.price = v.price;
         row.discount_price = v.discount_price;
         row.style_id = v.style_data[0].style_id;
-        row.style_pic_url = v.style_pic_url
+        row.style_pic_url = v.style_pic_url;
         row.showHidden1 = false;
         this.dialogFormVisible = true;
         this.indexk = index;
@@ -820,7 +821,7 @@ export default {
                 discount_money: j * this.weretable[this.indexk].discount_price,
                 remark: "",
                 style_id: this.weretable[this.indexk].style_id,
-                style_pic_url:this.weretable[this.indexk].style_pic_url,
+                style_pic_url: this.weretable[this.indexk].style_pic_url,
                 showHidden1: false,
                 showHidden2: false,
                 showHidden3: false,
@@ -860,7 +861,7 @@ export default {
               discount_money: v.discount_money,
               id: v.id || 0,
               style_id: v.style_id,
-              style_pic_url:v.style_pic_url
+              style_pic_url: v.style_pic_url,
             });
           }
         });

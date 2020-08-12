@@ -71,7 +71,7 @@
 
       <el-form-item>
         <el-date-picker
-          style="width:300px;"
+          
           v-model="form.business_time"
           size="small"
           type="daterange"

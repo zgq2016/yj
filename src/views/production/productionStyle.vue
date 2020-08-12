@@ -59,7 +59,7 @@
             @click.stop="switchingStyle(item,index)"
             :class="active===index?'active':''"
           >
-            <div class="color">下单批次：{{item.num}}</div>
+            <div class="color">下单批次：{{index+1}}</div>
             <div class="el-icon-close" @click.stop="styleColorDel(item,index)"></div>
           </div>
         </div>

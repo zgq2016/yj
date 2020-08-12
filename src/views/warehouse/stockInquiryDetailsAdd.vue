@@ -43,6 +43,7 @@
               clearable
               v-model="form.factory_name"
               @change="factorChange"
+              @visible-change="vschange"
               placeholder="请选择厂商"
             >
               <el-option
@@ -153,7 +154,7 @@
               <img :src="scope.row.style_pic_url" class="img" alt />
             </template>
           </el-table-column>
-          <el-table-column prop="stylename" align="center" label="商品">
+          <el-table-column prop="stylename" width="110" align="center" label="商品">
             <template slot-scope="scope">
               <el-select
                 v-model="scope.row.stylename"
@@ -164,6 +165,7 @@
                 @visible-change="visibleChange($event,scope.row)"
                 @change="handleSelect($event,scope.column, scope.row,scope.$index)"
                 placeholder="请选择"
+                no-data-text="请先选择厂商"
               >
                 <el-option
                   v-for="item in shoppings"
@@ -419,6 +421,7 @@ export default {
       sizes: [],
       indexk: 0,
       dialogFormVisible: false,
+      clone: "",
     };
   },
   methods: {
@@ -447,6 +450,12 @@ export default {
       this.pageIndex3 = val;
       this.shopping();
     },
+    // 厂商下拉框出现与隐藏
+    vschange(bl) {
+      if (bl == true && this.form.factory_name) {
+        this.clone = this.deepClone(this.form.factory_name);
+      }
+    },
     // 商品
     async shopping(item) {
       let res1 = await getProjectStyleList({
@@ -464,35 +473,78 @@ export default {
     },
     // 选择厂商
     factorChange() {
-      this.shopping();
-      this.weretable = [];
-      this.total_price = 0;
-      this.form.total_price = undefined;
-      // delete this.form.total_price;
-      for (let i = 0; i < 6; i++) {
-        this.weretable.push({
-          bar_code: "",
-          discount: "100",
-          discount_money: "",
-          discount_price: "",
-          money: "",
-          price: "",
-          produce_no: "",
-          quantity: "",
-          remark: "",
-          size: "",
-          style_color_name: "",
-          stylename: "",
-          unit: "",
-          showHidden1: false,
-          showHidden2: false,
-          showHidden3: false,
-          showHidden4: false,
-          showHidden5: false,
-          showHidden6: false,
-          showHidden7: false,
-          showHidden8: false,
-        });
+      let bld = true;
+      this.weretable.map((v, i) => {
+        if (v.stylename == "" || v.stylename == undefined) {
+          bld = false;
+        }
+      });
+      if (bld) {
+        this.$confirm("此操作将永久删除表格内的商品, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+
+          .then(() => {
+            this.shopping();
+            this.weretable.map(async (v, i) => {
+              let res = await bookStockOrderSizeDel({
+                id: v.id,
+              });
+              console.log(res);
+            });
+            this.weretable = [];
+            this.total_price = 0;
+            this.form.total_price = undefined;
+            // delete this.form.total_price;
+            for (let i = 0; i < 6; i++) {
+              this.weretable.push({
+                bar_code: "",
+                discount: "100",
+                discount_money: "",
+                discount_price: "",
+                money: "",
+                price: "",
+                produce_no: "",
+                quantity: "",
+                remark: "",
+                size: "",
+                style_color_name: "",
+                stylename: "",
+                unit: "",
+                showHidden1: false,
+                showHidden2: false,
+                showHidden3: false,
+                showHidden4: false,
+                showHidden5: false,
+                showHidden6: false,
+                showHidden7: false,
+                showHidden8: false,
+              });
+            }
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+          })
+          .catch(() => {
+            let id1 = "";
+            if (typeof this.clone == "number") {
+              this.factorys.map((v, i) => {
+                if (this.clone == v.id) {
+                  id1 = v.factory_name;
+                }
+              });
+            }
+            this.form.factory_name = id1 || this.clone;
+            this.$message({
+              type: "info",
+              message: "已取消删除",
+            });
+          });
+      } else {
+        this.shopping();
       }
     },
     successFile(response, file, fileList) {
@@ -531,7 +583,7 @@ export default {
             row.quantity * row.discount_price
           ).toFixed(2);
           row.showHidden4 = false;
-        } else if (v.label == "单价") {
+        } else if (v.label == "加工单价") {
           row.price = Number(item).toFixed(2);
           row.discount_price = Number((row.discount / 100) * row.price).toFixed(
             2
@@ -577,7 +629,7 @@ export default {
         row.showHidden3 = true;
       } else if (column.label == "数量") {
         row.showHidden4 = true;
-      } else if (column.label == "单价") {
+      } else if (column.label == "加工单价") {
         row.showHidden5 = true;
       } else if (column.label == "折扣(%)") {
         row.showHidden6 = true;
@@ -614,11 +666,18 @@ export default {
               const value = Number(curr);
               if (!isNaN(value)) {
                 let a = prev.toFixed(2) + curr.toFixed(2);
-                if (index === 11 && this.form.total_price != undefined) {
+                //   console.log(this.form.total_price);
+                //   if (index === 11 && !this.form.total_price) {
+                //     this.total_price = this.form.total_price;
+                //   } else if (index === 11 && this.form.total_price == undefined) {
+                //     this.total_price = prev + curr;
+                //   }
+                if (index === 11 && this.form.total_price != prev + curr) {
                   this.total_price = this.form.total_price;
-                } else if (index === 11 && this.form.total_price == undefined) {
+                } else if (index === 11) {
                   this.total_price = prev + curr;
                 }
+                // console.log(this.total_price);
                 return prev + curr;
               } else {
                 if (index === 11) {
@@ -960,7 +1019,6 @@ export default {
             state,
             total_price: this.total_price,
           });
-          console.log(res);
         } else {
           // 编辑
           let id1 = "";
@@ -987,7 +1045,6 @@ export default {
               }
             });
           }
-          console.log(id2);
           let res = await bookStockOrderEdit({
             factory_id: id1 || this.form.factory_name,
             storehouse_id: id2 || this.form.storehouse_name,
@@ -1065,7 +1122,12 @@ export default {
       this.settlement = res3.data.data;
       // console.log(res3);
     },
-
+    // 深拷贝
+    deepClone(obj) {
+      let _obj = JSON.stringify(obj),
+        objClone = JSON.parse(_obj);
+      return objClone;
+    },
     async init() {
       if (this.$route.query.id) {
         let res = await bookStockOrderInfo({
@@ -1096,6 +1158,9 @@ export default {
           });
         });
       } else {
+        this.tables();
+      }
+      if (this.weretable.length == 0) {
         this.tables();
       }
     },
