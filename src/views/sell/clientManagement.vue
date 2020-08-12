@@ -10,24 +10,32 @@
     <!-- 条件 -->
     <div class="form">
       <el-form :inline="true" :model="form" class="demo-form-inline">
-        <el-form-item label="公司">
+        <el-form-item>
           <el-input v-model="form.companyname" placeholder="公司名称关键字"></el-input>
         </el-form-item>
-        <el-form-item label="联系人">
+        <el-form-item>
           <el-input v-model="form.contacts" placeholder="联系人"></el-input>
         </el-form-item>
-        <el-form-item label="电话">
+        <el-form-item>
           <el-input v-model="form.phone" placeholder="电话"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="onSubmit">搜索</el-button>
+          <!-- <el-button type="primary" icon="el-icon-search" @click="onSubmit">搜索</el-button> -->
+          <el-button
+            icon="el-icon-search"
+            size="mini"
+            circle
+            class="search_button"
+            @click="onSubmit"
+          ></el-button>
         </el-form-item>
       </el-form>
+      <!-- 新增项目 -->
+      <div class="addStyle" v-if="power.indexOf('D1000100')!=-1">
+        <div @click="addClient">新增客户</div>
+      </div>
     </div>
-    <!-- 新增项目 -->
-    <div class="addStyle" v-if="power.indexOf('D1000100')!=-1">
-      <div @click="addClient">新增客户</div>
-    </div>
+
     <!-- table -->
     <div class="table">
       <el-table ref="singleTable" :data="tableData" highlight-current-row>
@@ -113,33 +121,51 @@ export default {
 <style lang="less" scoped>
 .clientManagement {
   .form {
-    padding: 20px 100px 30px 20px;
+    width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /deep/ .el-input__inner {
+      width: 100%;
+      height: 30px;
+      background-color: #f2f2f2;
+      border-radius: 15px;
+      border: none;
+      color: #5e5e5e;
+      font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
+        \\5b8b\4f53, sans-serif;
+    }
+    .search_button {
+      margin-left: 10px;
+      background-color: #000;
+    }
+    /deep/ .el-icon-search {
+      color: #fff;
+    }
+    /deep/.el-button {
+      border: none;
+    }
   }
   .addStyle {
-    margin: 0 30px 30px 0;
-    text-align: right;
-    div {
-      width: 140px;
-      height: 30px;
-      background-color: #ccc;
-      border-radius: 12px;
-      padding: 10px 40px;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      &:hover {
-        background-color: #000;
-        cursor: pointer;
-      }
+    margin: 0 30px 0px 0px;
+    border-radius: 15px;
+    width: 120px;
+    height: 30px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    &:hover {
+      cursor: pointer;
     }
   }
   .check {
     cursor: pointer;
   }
-  .pagination {
+  .el-pagination {
+    margin: 20px;
     text-align: right;
-    margin-top: 10px;
   }
 }
 </style>

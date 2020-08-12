@@ -165,7 +165,6 @@
                 @visible-change="visibleChange($event,scope.row)"
                 @change="handleSelect($event,scope.column, scope.row,scope.$index)"
                 placeholder="请选择"
-                no-data-text="请先选择厂商"
               >
                 <el-option
                   v-for="item in shoppings"
@@ -451,19 +450,19 @@ export default {
       this.shopping();
     },
     // 厂商下拉框出现与隐藏
-    vschange(bl) {
-      if (bl == true && this.form.factory_name) {
-        this.clone = this.deepClone(this.form.factory_name);
-      }
-    },
+    // vschange(bl) {
+    //   if (bl == true && this.form.factory_name) {
+    //     this.clone = this.deepClone(this.form.factory_name);
+    //   }
+    // },
     // 商品
     async shopping(item) {
+      // factory_id:
+      //   typeof this.form.factory_name == "number"
+      //     ? this.form.factory_name
+      //     : this.form.factory_id,
       let res1 = await getProjectStyleList({
         keyword: item == undefined ? "" : item,
-        factory_id:
-          typeof this.form.factory_name == "number"
-            ? this.form.factory_name
-            : this.form.factory_id,
         page: this.pageIndex3,
         page_size: this.pageSize3,
       });
@@ -473,79 +472,10 @@ export default {
     },
     // 选择厂商
     factorChange() {
-      let bld = true;
-      this.weretable.map((v, i) => {
-        if (v.stylename == "" || v.stylename == undefined) {
-          bld = false;
-        }
-      });
-      if (bld) {
-        this.$confirm("此操作将永久删除表格内的商品, 是否继续?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        })
-
-          .then(() => {
-            this.shopping();
-            this.weretable.map(async (v, i) => {
-              let res = await bookStockOrderSizeDel({
-                id: v.id,
-              });
-              console.log(res);
-            });
-            this.weretable = [];
-            this.total_price = 0;
-            this.form.total_price = undefined;
-            // delete this.form.total_price;
-            for (let i = 0; i < 6; i++) {
-              this.weretable.push({
-                bar_code: "",
-                discount: "100",
-                discount_money: "",
-                discount_price: "",
-                money: "",
-                price: "",
-                produce_no: "",
-                quantity: "",
-                remark: "",
-                size: "",
-                style_color_name: "",
-                stylename: "",
-                unit: "",
-                showHidden1: false,
-                showHidden2: false,
-                showHidden3: false,
-                showHidden4: false,
-                showHidden5: false,
-                showHidden6: false,
-                showHidden7: false,
-                showHidden8: false,
-              });
-            }
-            this.$message({
-              type: "success",
-              message: "删除成功!",
-            });
-          })
-          .catch(() => {
-            let id1 = "";
-            if (typeof this.clone == "number") {
-              this.factorys.map((v, i) => {
-                if (this.clone == v.id) {
-                  id1 = v.factory_name;
-                }
-              });
-            }
-            this.form.factory_name = id1 || this.clone;
-            this.$message({
-              type: "info",
-              message: "已取消删除",
-            });
-          });
-      } else {
-        this.shopping();
-      }
+      // this.weretable = [];
+      this.total_price = 0;
+      this.form.total_price = undefined;
+      // delete this.form.total_price;
     },
     successFile(response, file, fileList) {
       this.fileList = fileList;

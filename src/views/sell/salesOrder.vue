@@ -7,91 +7,80 @@
         <el-breadcrumb-item>销售订单</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div class="main">
-      <div class="search_condition">
-        <el-form
-          :inline="true"
-          :model="formInline"
-          class="demo-form-inline"
-          style="position: relative;"
-        >
-          <el-form-item label="日期:">
-            <el-date-picker
-              v-model="formInline.ctime"
-              size="small"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              format="yyyy-MM-dd"
-              value-format="yyyy-MM-dd"
-            ></el-date-picker>
-          </el-form-item>
-
-          <el-form-item label="客户:">
-            <el-select v-model="formInline.customer_id" size="small" clearable placeholder="客户">
-              <el-option
-                v-for="item in wests"
-                :key="item.value"
-                :label="item.companyname"
-                :value="item.id"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-
-          <el-form-item label="单号:">
-            <el-input v-model="formInline.no" size="small" style="width:170px" placeholder="请输入单号"></el-input>
-          </el-form-item>
-
-          <el-form-item label="状态:">
-            <el-select v-model="formInline.state" size="small" clearable placeholder="状态">
-              <el-option
-                v-for="item in states"
-                :key="item.value"
-                :label="item.state"
-                :value="item.id"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" size="small" @click="onSubmit">查询</el-button>
-            <el-button type="primary" size="small">批量打印</el-button>
-          </el-form-item>
-        </el-form>
-        <el-button
-          type="primary"
-          size="small"
-          style="margin-bottom:15px;"
-          @click="addSalesOrder"
-        >新增订单</el-button>
-      </div>
-      <div class="table">
-        <el-table
-          :data="tableData"
-          tooltip-effect="dark"
-          size="small"
-          :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-          width="100%"
-        >
-          <el-table-column align="center" type="selection" width="45"></el-table-column>
-          <el-table-column align="center" prop="states" label="状态"></el-table-column>
-          <el-table-column align="center" label="日期" width="90">
-            <template slot-scope="scope">{{ scope.row.ctime }}</template>
-          </el-table-column>
-          <el-table-column align="center" prop="companyname" label="客户"></el-table-column>
-          <el-table-column align="center" prop="phone" label="联系电话"></el-table-column>
-          <el-table-column align="center" prop="storehouse_name" label="仓库"></el-table-column>
-          <el-table-column align="center" prop="account_name" label="结算账户"></el-table-column>
-          <el-table-column align="center" prop="pay_money" label="实付金额"></el-table-column>
-          <el-table-column align="center" prop="remark" label="备注"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="100">
-            <template slot-scope="scope">
-              <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
+    <div style="margin-bottom:10px">
+      <el-input placeholder="单据编号" v-model="formInline.no" clearable style="width:200px"></el-input>
+      <el-button icon="el-icon-search" size="mini" circle class="search_button" @click="onSubmit"></el-button>
     </div>
+    <el-form
+      :inline="true"
+      :model="formInline"
+      class="demo-form-inline"
+      style="position: relative;"
+    >
+      <el-form-item>
+        <el-date-picker
+          v-model="formInline.ctime"
+          size="small"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd"
+        ></el-date-picker>
+      </el-form-item>
+
+      <el-form-item>
+        <el-select v-model="formInline.customer_id" size="small" clearable placeholder="客户">
+          <el-option
+            v-for="item in wests"
+            :key="item.value"
+            :label="item.companyname"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item>
+        <el-select v-model="formInline.state" size="small" clearable placeholder="状态">
+          <el-option v-for="item in states" :key="item.value" :label="item.state" :value="item.id"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <div style="display: flex;justify-content: space-between;align-items: center;">
+          <div class="addStyle" @click="addSalesOrder">新增订单</div>
+          <div class="addStyle" style="background-color: #e3e3e3;color: #fff;">批量打印</div>
+        </div>
+      </el-form-item>
+    </el-form>
+
+    <div class="table">
+      <el-table
+        :data="tableData"
+        tooltip-effect="dark"
+        size="small"
+        :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+        width="100%"
+      >
+        <el-table-column align="center" type="selection" width="45"></el-table-column>
+        <el-table-column align="center" prop="states" label="状态"></el-table-column>
+        <el-table-column align="center" label="日期" width="90">
+          <template slot-scope="scope">{{ scope.row.ctime }}</template>
+        </el-table-column>
+        <el-table-column align="center" prop="companyname" label="客户"></el-table-column>
+        <el-table-column align="center" prop="phone" label="联系电话"></el-table-column>
+        <el-table-column align="center" prop="storehouse_name" label="仓库"></el-table-column>
+        <el-table-column align="center" prop="account_name" label="结算账户"></el-table-column>
+        <el-table-column align="center" prop="pay_money" label="实付金额"></el-table-column>
+        <el-table-column align="center" prop="remark" label="备注"></el-table-column>
+        <el-table-column fixed="right" label="操作" width="100">
+          <template slot-scope="scope">
+            <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
     <!-- 分页 -->
     <el-pagination
       class="pagination"
@@ -248,74 +237,66 @@ export default {
 </script>
 <style lang="less" scoped>
 .salesOrder {
-  .main {
-    margin: 20px;
-    // .search_condition {
-    //   .inquire {
-    //     width: 100px;
-    //     height: 40px;
-    //     background-color: #000;
-    //     display: flex;
-    //     justify-content: center;
-    //     align-items: center;
-    //     border-radius: 50px;
-    //     color: #fff;
-    //     cursor: pointer;
-    //     &:hover {
-    //       background-color: blue;
-    //     }
-    //   }
-
-    //   // /deep/.el-input__inner {
-    //   //   width: 150px;
-    //   // }
-    // }
-    .search_condition {
-      .el-form {
-        overflow: hidden;
-      }
-      .el-form-item {
-        float: left;
-      }
-      .el-form-item:nth-child(1) {
-        width: 300px;
-      }
-      .el-form-item:nth-child(2) {
-        width: 250px;
-      }
-      .el-form-item:nth-child(3) {
-        width: 220px;
-      }
-      .el-form-item:nth-child(4) {
-        width: 250px;
-      }
-      margin-top: 20px;
-      // /deep/.el-input {
-      //   width: 80%;
-      // }
-      /deep/.el-date-editor--daterange {
-        width: 250px;
-        .el-range-separator {
-          padding: 0;
-        }
-      }
-      .table {
-        overflow: hidden;
-      }
-    }
-    // .elbtn {
-    //   padding: 5px 30px;
-    //   border-radius: 10px;
-    // }
-    .table {
-      .img {
-        width: 40px;
-        height: 40px;
-      }
+  /deep/ .el-input__inner {
+    width: 100%;
+    height: 30px;
+    background-color: #f2f2f2;
+    border-radius: 15px;
+    border: none;
+    color: #5e5e5e;
+    font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
+      \\5b8b\4f53, sans-serif;
+  }
+  /deep/ .el-form-item__content {
+    line-height: 30px;
+  }
+  /deep/ .el-range-editor /deep/ .el-range-input {
+    background-color: #f2f2f2;
+  }
+  /deep/ .el-input__icon {
+    line-height: 30px;
+  }
+  .search_button {
+    margin-left: 10px;
+    background-color: #000;
+  }
+  /deep/ .el-icon-search {
+    color: #fff;
+  }
+  /deep/.el-button {
+    border: none;
+  }
+  .table {
+    .img {
+      width: 60px;
+      height: 60px;
+      border-radius: 5px;
     }
   }
+  .form {
+    width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
   .el-pagination {
+    margin: 20px;
     text-align: right;
+  }
+  .addStyle {
+    margin: 0 30px 0px 0px;
+    border-radius: 15px;
+    width: 120px;
+    height: 30px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
 </style>
