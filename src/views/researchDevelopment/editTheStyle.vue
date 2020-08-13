@@ -149,11 +149,12 @@
               />
               上传色卡图片
             </div>
-            <button
-              v-if="status===2"
-              class="upload"
-              style="margin-left:30px;padding-right: 50px"
-            >选择颜色</button>
+            <button v-if="status===2" class="upload" style="margin-left:30px;padding:0 20px 0 10px">
+              选择颜色
+              <div v-if="status===2">
+                <el-color-picker v-model="color_code" @change="color_picker"></el-color-picker>
+              </div>
+            </button>
           </div>
           <div class="line">
             <div class="cropper-content">
@@ -227,9 +228,6 @@
             title="下载"
             @click="down('blob')"
           />
-        </div>
-        <div style="margin:50px auto" v-if="status===2">
-          <el-color-picker v-model="color_code" @change="color_picker"></el-color-picker>
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -522,7 +520,7 @@ export default {
         // 调用actions的登录方法
         let obj = {};
         this.obj.user_id_data.map((v) => {
-          v["user_id"] = v.id;
+          v["user_id"] = v.user_id;
           delete v.checked;
           delete v.ctime;
           delete v.id;
@@ -789,9 +787,9 @@ export default {
     border: 1px solid #e6e6e6;
     border-radius: 4px;
     font-size: 0;
-    position: relative;
-    left: -390px;
-    top: -50px;
+    // position: relative;
+    // left: -390px;
+    // top: -50px;
     cursor: pointer;
   }
 }

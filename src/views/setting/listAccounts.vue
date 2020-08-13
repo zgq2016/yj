@@ -8,7 +8,7 @@
         <el-breadcrumb-item>账户列表</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <!-- <el-button type="primary">增加账户</el-button> -->
+    <el-button type="primary" @click="addAccounts">增加账户</el-button>
     <el-table :data="tableData" style="width: 100%;margin: 20px 0;" row-key="id" border>
       <el-table-column prop="name" label="用户名"></el-table-column>
       <el-table-column prop="role_name" label="权限角色"></el-table-column>
@@ -58,6 +58,7 @@
         <el-button type="primary" @click="handleEditList">确 定</el-button>
       </span>
     </el-dialog>
+
     <el-dialog title="添加权限" :visible.sync="centerDialogVisible2" width="30%" center>
       <el-form ref="form1" :model="form1" :rules="rules1" label-width="80px">
         <el-form-item label="权限角色" prop="role_name">
@@ -81,10 +82,47 @@
           </el-select>
         </el-form-item>
       </el-form>
-
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleEditUserListClose('form1')">取 消</el-button>
         <el-button type="primary" @click="handleEditUserList('form1')">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog title="添加权限" :visible.sync="centerDialogVisible3" width="30%" center>
+      <el-form ref="form2" :model="form2" :rules="rules2" label-width="80px">
+        <el-form-item label="用户名" prop="name">
+          <el-input v-model="form2.name" placeholder="请输入用户名"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" prop="username">
+          <el-input v-model="form2.username" placeholder="请输入手机号"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="form2.password" placeholder="请输入密码" show-password></el-input>
+        </el-form-item>
+        <el-form-item label="权限等级" prop="level">
+          <el-select v-model="form2.level" placeholder="权限等级">
+            <el-option
+              v-for="item in Access_level"
+              :key="item.id"
+              :label="item.access"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="用户角色" prop="role">
+          <el-select v-model="form2.role" placeholder="用户角色">
+            <el-option
+              v-for="item in userRoleList"
+              :key="item.id"
+              :label="item.role_name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handlecloseAccounts('form2')">取 消</el-button>
+        <el-button type="primary" @click="handleaddAccounts('form2')">确 定</el-button>
       </span>
     </el-dialog>
     <!-- 分页 -->
@@ -111,6 +149,7 @@ import {
   userPassEdit,
   getRoleSelect,
   userEdit,
+  register,
 } from "@/api/setting.js";
 export default {
   data() {
@@ -119,11 +158,19 @@ export default {
       centerDialogVisible: false, //添加分类
       centerDialogVisible1: false, //编辑分类
       centerDialogVisible2: false, //编辑分类
+      centerDialogVisible3: false, //编辑分类
       region: "",
       form: {
         goods_category_name: "",
         describe: "",
         sort: "",
+      },
+      form2: {
+        name: "",
+        username: "",
+        password: "",
+        level: "",
+        role: "",
       },
       form1: { role_name: "", Access: "" },
       options: [],
@@ -136,6 +183,19 @@ export default {
         pwd: [{ required: true, message: "请输入原密码", trigger: "blur" }],
         passworded: [
           { required: true, message: "请输入修改后密码", trigger: "blur" },
+        ],
+      },
+      rules2: {
+        name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+        username: [
+          { required: true, message: "请输入手机号码", trigger: "blur" },
+        ],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
+        level: [
+          { required: true, message: "请选择权限等级", trigger: "change" },
+        ],
+        role: [
+          { required: true, message: "请选择用户角色", trigger: "change" },
         ],
       },
       vb: false,
@@ -160,6 +220,36 @@ export default {
     };
   },
   methods: {
+    handlecloseAccounts(form) {
+      this.$refs[form].resetFields();
+      this.centerDialogVisible3 = false;
+    },
+    async handleaddAccounts(form) {
+      this.$refs["form2"].validate(async (valid) => {
+        if (!valid) return;
+        let res = await register(this.form2);
+        console.log(res);
+        if (res.data.error_code === 1) {
+          this.$message({
+            showClose: true,
+            message: res.data.msg,
+            type: "error",
+          });
+        } else {
+          this.$message({
+            showClose: true,
+            message: res.data.msg,
+            type: "success",
+          });
+          this.centerDialogVisible3 = false;
+          this.$refs[form].resetFields();
+          this.init();
+        }
+      });
+    },
+    async addAccounts() {
+      this.centerDialogVisible3 = true;
+    },
     handleEditUserListClose(form) {
       this.$refs[form].resetFields();
       this.centerDialogVisible2 = false;
@@ -184,8 +274,7 @@ export default {
       this.form1.Access = row.Access;
       this.form1.name = row.name;
       this.form1.id = row.id;
-      let res = await getRoleSelect();
-      this.userRoleList = res.data.data;
+
       this.centerDialogVisible2 = true;
     },
     get_goods_category_id(e) {
@@ -252,8 +341,10 @@ export default {
       this.total = count;
     },
   },
-  mounted() {
+  async mounted() {
     this.init();
+    let res = await getRoleSelect();
+    this.userRoleList = res.data.data;
   },
 };
 </script>

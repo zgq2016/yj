@@ -29,8 +29,8 @@ Vue.prototype.$elUploadBeforeUpload = function(file) {
         // 大小在500k以下，宽度1000以下
         imageConversion
           .compressAccurately(file, {
-            size: 500,
-            width: 1000,
+            size: 1000,
+            width: 2000,
           })
           .then((res) => {
             console.log("压缩后", res);

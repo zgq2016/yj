@@ -338,6 +338,13 @@ export const noticeDel = (data) => {
     data: data,
   });
 };
+export const register = (data) => {
+  return axios({
+    url: "?g=register",
+    method: "post",
+    data: data,
+  });
+};
 
 // user_edit
 // 用户资料更新接口

@@ -218,8 +218,16 @@
             <button
               v-if="status===4||status===2"
               class="upload"
-              style="margin-left:30px;padding-right: 50px"
-            >选择颜色</button>
+              style="margin-left:30px;padding:0 20px 0 10px"
+            >
+              选择颜色
+              <div v-if="this.$route.query.oldId===undefined&&status===2">
+                <el-color-picker v-model="color_code" @change="color_picker"></el-color-picker>
+              </div>
+              <div v-if="this.$route.query.oldId!==undefined&&status===4">
+                <el-color-picker v-model="color_code"></el-color-picker>
+              </div>
+            </button>
           </div>
           <div class="line">
             <div class="cropper-content">
@@ -293,12 +301,6 @@
             title="下载"
             @click="down('blob')"
           />
-        </div>
-        <div style="margin:50px auto" v-if="this.$route.query.oldId===undefined&&status===2">
-          <el-color-picker v-model="color_code" @change="color_picker"></el-color-picker>
-        </div>
-        <div style="margin:50px auto" v-if="this.$route.query.oldId!==undefined&&status===4">
-          <el-color-picker v-model="color_code"></el-color-picker>
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -837,6 +839,7 @@ export default {
     height: 150px;
     border-radius: 10px;
     overflow: hidden;
+
     .avatar-uploader-icon {
       border: 1px solid #ccc;
       font-size: 28px;
@@ -952,14 +955,17 @@ export default {
     box-sizing: border-box;
     height: 40px;
     width: 40px;
-    padding: 4px;
+    // padding: 4px;
     border: 1px solid #e6e6e6;
     border-radius: 4px;
     font-size: 0;
+    cursor: pointer;
+  }
+  /deep/.el-color-dropdown,
+  .el-color-picker__panel {
     position: relative;
     left: -390px;
     top: -50px;
-    cursor: pointer;
   }
 }
 </style>
