@@ -33,7 +33,7 @@
 import {
   styleSampleAdd,
   styleSampleList,
-  styleSampleDel
+  styleSampleDel,
 } from "@/api/researchDevelopment";
 export default {
   data() {
@@ -41,7 +41,7 @@ export default {
       power: "",
       dialogImageUrl: "",
       dialogVisible: false,
-      img_list: [] //图片数据
+      img_list: [], //图片数据
     };
   },
   methods: {
@@ -66,16 +66,15 @@ export default {
     async init() {
       let res = await styleSampleList({ style_id: this.$route.query.id - 0 });
       console.log(res);
-      this.img_list = res.data.data.map(v => {
+      this.img_list = res.data.data.map((v) => {
         return { url: v.picurl, id: v.id };
       });
-    }
+    },
   },
   mounted() {
     this.init();
     this.power = localStorage.getItem("power");
-    console.log(this.power);
-  }
+  },
 };
 </script>
 

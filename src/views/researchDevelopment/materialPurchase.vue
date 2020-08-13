@@ -18,14 +18,25 @@
       class="demo-form-inline"
       style="position: relative;"
     >
-      <!-- <el-form-item label="款号"></el-form-item> -->
       <el-form-item>
-        <el-select v-model="formInline.year" clearable placeholder="年份" style="width:120px">
+        <el-select
+          v-model="formInline.year"
+          clearable
+          placeholder="年份"
+          style="width:120px"
+          @change="get_year($event)"
+        >
           <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="formInline.season" clearable placeholder="季节" style="width:120px">
+        <el-select
+          v-model="formInline.season"
+          clearable
+          placeholder="季节"
+          style="width:120px"
+          @change="get_season($event)"
+        >
           <el-option
             v-for="item in seasons"
             :key="item.id"
@@ -46,7 +57,13 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="formInline.style_type" clearable placeholder="类别" style="width:120px">
+        <el-select
+          v-model="formInline.style_type"
+          clearable
+          placeholder="类别"
+          style="width:120px"
+          @change="get_style_type($event)"
+        >
           <el-option
             v-for="item in categorys"
             :key="item.id"
@@ -55,14 +72,10 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item>
-        <el-select v-model="state" clearable placeholder="类别" style="width:120px">
-          <el-option v-for="item in states" :key="item.id" :label="item.name" :value="item.name"></el-option>
-        </el-select>
-      </el-form-item>
-
       <!-- <el-form-item>
-            <el-button type="primary" @click="onSubmit">查询</el-button>
+        <el-select v-model="formInline.state" clearable placeholder="状态" style="width:120px">
+          <el-option v-for="item in states" :key="item.id" :label="item.name" :value="item.id"></el-option>
+        </el-select>
       </el-form-item>-->
     </el-form>
     <div class="table">
@@ -100,9 +113,9 @@
       class="pagination"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="page"
+      :current-page="pageIndex"
       :page-sizes="[9, 18, 27, 36]"
-      :page-size="page_size"
+      :page-size="pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="count"
     ></el-pagination>
@@ -138,8 +151,8 @@ export default {
       categorys: [],
       wests: [],
       obj: {},
-      page: 1,
-      page_size: 9,
+      pageIndex: 1,
+      pageSize: 9,
       count: 0,
       stylist: "",
       state: "",
@@ -153,15 +166,24 @@ export default {
     };
   },
   methods: {
+    get_year() {
+      this.init();
+    },
+    get_season() {
+      this.init();
+    },
+    get_style_type() {
+      this.init();
+    },
     onSubmit() {
-      this.init(this.formInline);
+      this.init();
     },
     handleEdit(index, row) {
-      // console.log(index, row);
       this.$router.push({ path: `/materialPurchasing?id=${row.id}&TL=${1}` });
     },
     handleUser_id(e) {
       this.formInline.user_id = e;
+      this.init();
     },
     async getYear() {
       let res = await getYearList();
@@ -177,7 +199,6 @@ export default {
       let res = await getStylistList();
       let { data } = res.data;
       this.stylists = data;
-      // console.log(this.stylists);
     },
     async getCategory() {
       let res = await getCategoryList();
@@ -189,17 +210,14 @@ export default {
       let { data } = res.data;
       this.wests = data;
     },
-    async init(obj) {
-      let res = await getStyleList({
-        page: this.page,
-        page_size: this.page_size,
-        ...obj,
-      });
+    async init() {
+      this.formInline["page"] = this.pageIndex;
+      this.formInline["page_size"] = this.pageSize;
+      let res = await getStyleList(this.formInline);
       console.log(res);
       this.count = res.data.count;
       let { data } = res.data;
       this.tableData = data;
-      // console.log(this.tableData);
       this.tableData.map((v, i) => {
         if (v.purchase_status == "0") {
           v.purchase = "未生成采购单";
@@ -225,12 +243,12 @@ export default {
       });
     },
     handleSizeChange(val) {
-      this.page_size = val;
-      this.init(this.formInline);
+      this.pageSize = val;
+      this.init();
     },
     handleCurrentChange(val) {
-      this.page = val;
-      this.init(this.formInline);
+      this.pageIndex = val;
+      this.init();
     },
   },
   mounted() {
@@ -241,7 +259,6 @@ export default {
     this.getWest();
     this.init();
     this.power = localStorage.getItem("power");
-    console.log(this.power);
   },
 };
 </script>

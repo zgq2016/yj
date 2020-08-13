@@ -47,6 +47,7 @@ const actions = {
       localStorage.setItem("power", this.state.userInfo.power);
       localStorage.setItem("user_id", this.state.userInfo.id);
       localStorage.setItem("itcast_pro_token", res.data.data.token);
+      localStorage.setItem("level", res.data.data.level);
       router.push({ name: "Index" });
       return true;
     });

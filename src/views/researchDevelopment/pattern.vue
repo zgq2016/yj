@@ -18,12 +18,24 @@
       style="position: relative;"
     >
       <el-form-item>
-        <el-select v-model="formInline.year" clearable placeholder="年份" style="width:120px">
+        <el-select
+          v-model="formInline.year"
+          clearable
+          placeholder="年份"
+          style="width:120px"
+          @change="get_year($event)"
+        >
           <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="formInline.season" clearable placeholder="季节" style="width:120px">
+        <el-select
+          v-model="formInline.season"
+          clearable
+          placeholder="季节"
+          style="width:120px"
+          @change="get_season($event)"
+        >
           <el-option
             v-for="item in seasons"
             :key="item.id"
@@ -35,16 +47,22 @@
       <el-form-item>
         <el-select
           v-model="stylist"
-          clearable
           placeholder="设计师"
           @change="handleUser_id($event)"
+          clearable
           style="width:120px"
         >
           <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="formInline.style_type" clearable placeholder="类别" style="width:120px">
+        <el-select
+          v-model="formInline.style_type"
+          clearable
+          placeholder="类别"
+          style="width:120px"
+          @change="get_style_type($event)"
+        >
           <el-option
             v-for="item in categorys"
             :key="item.id"
@@ -53,11 +71,11 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item>
-        <el-select v-model="state" clearable placeholder="状态" style="width:120px">
-          <el-option v-for="item in states" :key="item.id" :label="item.name" :value="item.name"></el-option>
+      <!-- <el-form-item>
+        <el-select v-model="formInline.state" clearable placeholder="状态" style="width:120px">
+          <el-option v-for="item in states" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item>-->
     </el-form>
     <div class="table">
       <el-table ref="singleTable" :data="tableData" highlight-current-row style="width: 100%">
@@ -118,9 +136,9 @@
       class="pagination"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="page"
+      :current-page="pageIndex"
       :page-sizes="[9, 18, 27, 36]"
-      :page-size="page_size"
+      :page-size="pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="count"
     ></el-pagination>
@@ -159,8 +177,8 @@ export default {
       categorys: [],
       wests: [],
       obj: {},
-      page: 1,
-      page_size: 9,
+      pageIndex: 1,
+      pageSize: 9,
       count: 0,
       stylist: "",
       state: "",
@@ -193,14 +211,24 @@ export default {
       this.init();
     },
     onSubmit() {
-      this.init(this.formInline);
+      this.init();
     },
     handleEdit(index, row) {
       // console.log(index, row);
       this.$router.push({ path: `/patternStatus?id=${row.id}&TL=${2}` });
     },
+    get_year() {
+      this.init();
+    },
+    get_season() {
+      this.init();
+    },
+    get_style_type() {
+      this.init();
+    },
     handleUser_id(e) {
       this.formInline.user_id = e;
+      this.init();
     },
     async getYear() {
       let res = await getYearList();
@@ -228,12 +256,10 @@ export default {
       let { data } = res.data;
       this.wests = data;
     },
-    async init(obj) {
-      let res = await getStyleList({
-        page: this.page,
-        page_size: this.page_size,
-        ...obj,
-      });
+    async init() {
+      this.formInline["page"] = this.pageIndex;
+      this.formInline["page_size"] = this.pageSize;
+      let res = await getStyleList(this.formInline);
       console.log(res);
       this.count = res.data.count;
       let { data } = res.data;
@@ -266,12 +292,12 @@ export default {
       });
     },
     handleSizeChange(val) {
-      this.page_size = val;
-      this.init(this.formInline);
+      this.pageSize = val;
+      this.init();
     },
     handleCurrentChange(val) {
-      this.page = val;
-      this.init(this.formInline);
+      this.pageIndex = val;
+      this.init();
     },
   },
   mounted() {

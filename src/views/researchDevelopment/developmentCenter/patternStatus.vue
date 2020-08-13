@@ -265,7 +265,6 @@ export default {
     this.init();
     this.antistopActive = true;
     this.power = localStorage.getItem("power");
-    console.log(this.power);
   }
 };
 </script>

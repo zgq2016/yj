@@ -1,15 +1,17 @@
 <template>
   <div class="panelPurchase">
-    <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <!-- <el-breadcrumb-item>研发部</el-breadcrumb-item>
+    <div class="aa">
+      <!-- 面包屑 -->
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <!-- <el-breadcrumb-item>研发部</el-breadcrumb-item>
       <el-breadcrumb-item :to="{ path: '/itemDesign' }">设计项目</el-breadcrumb-item>
       <el-breadcrumb-item :to="{ path: `/designCheck?id=${this.$route.query.project_id}` }">项目详细</el-breadcrumb-item>
       <el-breadcrumb-item
         :to="{ path: `/materialPurchasing?id=${this.$route.query.style_id}&TL=30&project_id=${this.$route.query.project_id}` }"
-      >款式详细</el-breadcrumb-item>-->
-      <el-breadcrumb-item>版料采购单</el-breadcrumb-item>
-    </el-breadcrumb>
+        >款式详细</el-breadcrumb-item>-->
+        <el-breadcrumb-item>版料采购单</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <div class="main">
       <!-- 物料卡信息 供应商信息 -->
       <div class="info">

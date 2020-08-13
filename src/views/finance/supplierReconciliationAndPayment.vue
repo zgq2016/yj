@@ -13,12 +13,17 @@
     <div class="form">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item>
-          <el-select v-model="formInline.supplier_id" placeholder="供应商" clearable>
+          <el-select
+            v-model="supplier_id"
+            placeholder="供应商"
+            clearable
+            @change="get_Supplier($event)"
+          >
             <el-option
               v-for="item in SupplierList"
               :key="item.address"
               :label="item.value"
-              :value="item.address"
+              :value="item"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -31,31 +36,44 @@
             class="timer"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
+            format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd"
+            @change="gte_date($event)"
           ></el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.account_type" clearable placeholder="账目类型">
+          <el-select
+            v-model="account_type_id"
+            clearable
+            placeholder="账目类型"
+            @change="get_account_type_name($event)"
+          >
             <el-option
               v-for="item in BalanceAccountType"
               :key="item.id"
               :label="item.account_type_name"
-              :value="item.id"
+              :value="item"
             ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.balance_account_id" clearable placeholder="结算账户">
+          <el-select
+            v-model="balance_account_id"
+            clearable
+            placeholder="结算账户"
+            @change="get_account_name($event)"
+          >
             <el-option
               v-for="item in BalanceAccount"
               :key="item.id"
               :label="item.account_name"
-              :value="item.id"
+              :value="item"
             ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.user_id" clearable placeholder="操作者">
-            <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          <el-select v-model="user_id" clearable placeholder="操作者" @change="get_user_id($event)">
+            <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -87,7 +105,7 @@
       <div class="header">
         <h2 style="text-align:center;height:40px;">供应商对账单</h2>
         <div class="cont">
-          <span>供应商：{{formInline.Supplier}}</span>
+          <span>供应商：{{supplier_id}}</span>
           <span>日期：{{formInline.ctime_start}} 至 {{formInline.ctime_end}}</span>
         </div>
         <div class="tb">
@@ -331,7 +349,7 @@ export default {
       formInline: {
         supplier_id: "",
         date: "",
-        account_type: "",
+        account_type_id: "",
         balance_account_id: "",
         user_id: "",
         account_no: "",
@@ -342,9 +360,41 @@ export default {
       SupplierList: [],
       stylists: [],
       status: "",
+      supplier_id: "",
+      account_type_id: "",
+      balance_account_id: "",
+      user_id: "",
     };
   },
   methods: {
+    get_Supplier(e) {
+      this.formInline.supplier_id = e.address;
+      this.supplier_id = e.value;
+      this.supplierInit();
+    },
+    get_account_type_name(e) {
+      console.log(e);
+      this.formInline.account_type_id = e.id;
+      this.account_type_id = e.account_type_name;
+      this.supplierInit();
+    },
+    get_account_name(e) {
+      console.log(e);
+      this.formInline.balance_account_id = e.id;
+      this.balance_account_id = e.account_name;
+      this.supplierInit();
+    },
+    get_user_id(e) {
+      console.log(e);
+      this.formInline.user_id = e.id;
+      this.user_id = e.name;
+      this.supplierInit();
+    },
+    gte_date(e) {
+      this.formInline["ctime_start"] = e === null ? "" : e[0];
+      this.formInline["ctime_end"] = e === null ? "" : e[1];
+      this.supplierInit();
+    },
     async handleSuccess1(response, file, fileList) {
       this.form.picurl = response.data.pic_file_url;
     },
@@ -472,22 +522,10 @@ export default {
       this.SupplierList = res1.data.data;
     },
     async supplierInit() {
-      if (this.formInline.date !== "" && this.formInline.date !== null) {
-        this.formInline["ctime_start"] = moment(this.formInline.date[0]).format(
-          "YYYY-MM-DD"
-        );
-        this.formInline["ctime_end"] = moment(this.formInline.date[1]).format(
-          "YYYY-MM-DD"
-        );
-      }
-      if (this.formInline.date === "" || this.formInline.date === null) {
-        this.formInline["ctime_start"] = "";
-        this.formInline["ctime_end"] = "";
-      }
       this.formInline["page"] = this.pageIndex;
       this.formInline["page_size"] = this.pageSize;
-      console.log(this.formInline);
       let res = await supplierAccountList(this.formInline);
+      console.log(res);
 
       res.data.data.map((v) => {
         if (v.pay_money !== 0) {

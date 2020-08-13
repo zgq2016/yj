@@ -105,7 +105,7 @@
           <el-form-item label="详细要求">
             <el-input type="textarea" v-model="obj.detailed" class="textarea"></el-input>
           </el-form-item>
-          <el-form-item label="指派设计师" prop="user_name">
+          <el-form-item label="指派设计师" prop="user_name" v-if="user_level!==2">
             <el-select v-model="obj.user_name" placeholder="工作人员名称" @change="handleUser_id($event)">
               <el-option
                 v-for="item in stylists"
@@ -349,15 +349,16 @@ export default {
         detailed: [
           { required: true, message: "请输入详细要求", trigger: "blur" },
         ],
-        user_name: [
-          { required: true, message: "请输入设计师", trigger: "blur" },
-        ],
+        // user_name: [
+        //   { required: true, message: "请输入设计师", trigger: "blur" },
+        // ],
       },
 
       Assistant: false,
       checkedList: [],
       arr: [],
       user_id_data_length: "",
+      user_level: "",
     };
   },
   methods: {
@@ -614,7 +615,7 @@ export default {
     this.getstylist();
 
     this.power = localStorage.getItem("power");
-    console.log(this.power);
+    this.user_level = localStorage.getItem("level");
   },
 };
 </script>

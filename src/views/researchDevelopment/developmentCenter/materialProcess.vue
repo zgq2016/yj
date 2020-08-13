@@ -534,36 +534,45 @@ export default {
     },
     //增加物料颜色
     async addDesignColor() {
-      let { id } = this.$route.query;
-      if (this.isCheckListBoxEvent.isCheckList !== true) {
-        let res = await projectStyleColorAdd({
-          style_id: id,
-          style_color_name: this.designColor,
+      if (this.designColor === "") {
+        this.$message({
+          showClose: true,
+          message: "请选择颜色",
+          type: "error",
         });
-        this.init();
-        this.centerDialogVisible = false;
-        this.designColor = "";
-      }
-      if (this.isCheckListBoxEvent.isCheckList === true) {
-        let obj = {};
-        obj["style_id"] = id;
-        obj["style_color_name"] = this.designColor;
-        obj["style_materials_list_data"] = this.isCheckList;
+      } else {
+        let { id } = this.$route.query;
+        if (this.isCheckListBoxEvent.isCheckList !== true) {
+          let res = await projectStyleColorAdd({
+            style_id: id,
+            style_color_name: this.designColor,
+          });
+          this.init();
+          this.centerDialogVisible = false;
+          this.designColor = "";
+        }
+        if (this.isCheckListBoxEvent.isCheckList === true) {
+          let obj = {};
+          obj["style_id"] = id;
+          obj["style_color_name"] = this.designColor;
+          obj["style_materials_list_data"] = this.isCheckList;
 
-        let res = await projectStyleMaterialsListAdd(obj);
-        console.log(res);
-        this.init();
-        this.active = 0;
-        this.centerDialogVisible = false;
+          let res = await projectStyleMaterialsListAdd(obj);
+          console.log(res);
+          this.init();
+          this.active = 0;
+          this.centerDialogVisible = false;
+        }
       }
     },
     isCheckListBox(e, e1) {
+      console.log(e, e1);
       this.isCheckListBoxEvent = e;
       if (e.isCheckList === true) {
         this.isCheckList.push({
           mainclass: e1.mainclass,
           id: e.id,
-          materials_color_id: this.materials_color_id1 || e1.style_color_id,
+          materials_color_id: this.materials_color_id1 || e.style_color_id,
           materials_id: e.materials_id,
         });
       }
@@ -714,7 +723,6 @@ export default {
     this.init();
     this.delListInit();
     this.power = localStorage.getItem("power");
-    console.log(this.power);
   },
 };
 </script>

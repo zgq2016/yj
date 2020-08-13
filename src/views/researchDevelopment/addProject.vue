@@ -106,7 +106,7 @@
           <el-form-item label="详细要求">
             <el-input type="textarea" v-model="form.detailed" class="textarea"></el-input>
           </el-form-item>
-          <el-form-item label="指派设计师">
+          <el-form-item label="指派设计师" v-if="user_level!==2">
             <el-select v-model="form.stylist" placeholder="工作人员名称" @change="handleUser_id($event)">
               <el-option
                 v-for="item in stylists"
@@ -348,6 +348,7 @@ export default {
         ],
       },
       arr: [],
+      user_level: "",
     };
   },
   methods: {
@@ -547,15 +548,13 @@ export default {
         }
         let res = await getAddProject(obj);
         console.log(res);
-        this.$router.push({ name: "Index" });
+        this.$router.push({ name: "ItemDesign" });
       });
     },
     handleCustomer_id(e) {
-      console.log(e);
       this.form.customer_id = e;
     },
     handleUser_id(e) {
-      console.log(e);
       this.form.user_id = e;
     },
     async getWest() {
@@ -580,7 +579,6 @@ export default {
         v["checked"] = false;
       });
       this.stylists = data;
-      console.log(this.stylists);
     },
   },
   async mounted() {
@@ -593,6 +591,7 @@ export default {
     this.getYear();
     this.getSeason();
     this.getstylist();
+    this.user_level = localStorage.getItem("level");
   },
 };
 </script>
