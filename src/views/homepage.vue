@@ -392,16 +392,16 @@ export default {
         }
       });
       let res1 = await myAssistWork({
-        limit: 10,
+        limit: 20,
       });
       console.log(res1);
       this.works_2 = res1.data.data;
     },
-    rout1(id){
-      this.$router.push({path: `/designCheck?id=${id}`})
+    rout1(id) {
+      this.$router.push({ path: `/designCheck?id=${id}` });
     },
-    rout2(id){
-      this.$router.push({path: `/development?id=${id}`})
+    rout2(id) {
+      this.$router.push({ path: `/development?id=${id}` });
     },
     //根据某年某月计算出具体日期
     getDaysInMonth(year, month) {
@@ -434,7 +434,7 @@ export default {
         margin-bottom: 0;
       }
     }
-    @media screen and (max-width: 1460px) {
+    @media screen and (max-width: 1500px) {
       .el-col {
         border-radius: 10px;
         .grid-content {
@@ -448,7 +448,7 @@ export default {
         }
       }
     }
-    @media screen and (min-width: 1440px) {
+    @media screen and (min-width: 1490px) {
       .el-col {
         border-radius: 10px;
         .grid-content {
@@ -531,7 +531,7 @@ export default {
       .content_1 {
         width: 1440px;
         .hed {
-          width: 1440px;
+          width: 1220px;
         }
         ul {
           li:nth-child(4) {
@@ -541,6 +541,8 @@ export default {
       }
       .content_2 {
         width: 1420px;
+        height: 690px;
+        overflow: hidden;
       }
     }
     .content_1 {
@@ -561,15 +563,30 @@ export default {
           cursor: pointer;
         }
       }
-
+      @keyframes animations {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-5px);
+        }
+        100% {
+          transform: translateY(-10px);
+        }
+      }
       ul {
-        overflow: hidden;
+        li:hover {
+          cursor: pointer;
+          animation: animations 0.1s linear forwards;
+        }
         li {
           float: left;
           width: 290px;
           margin-right: 25px;
           margin-bottom: 25px;
-
+          // .el-image:hover {
+          //   animation: anima 0.5s linear forwards;
+          // }
           span {
             display: block;
             margin-top: 5px;
@@ -596,11 +613,14 @@ export default {
         margin: 10px 0;
       }
       ul {
-        overflow: hidden;
         li {
           float: left;
           margin-right: 26px;
           margin-bottom: 25px;
+        }
+        li:hover {
+          cursor: pointer;
+          animation: animations 0.1s linear forwards;
         }
       }
     }

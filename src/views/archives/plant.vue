@@ -1,11 +1,13 @@
 <template>
   <div class="distributor">
     <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>档案库</el-breadcrumb-item>
-      <!-- <el-breadcrumb-item>物料工艺卡</el-breadcrumb-item> -->
-      <el-breadcrumb-item>工厂</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>档案库</el-breadcrumb-item>
+        <!-- <el-breadcrumb-item>物料工艺卡</el-breadcrumb-item> -->
+        <el-breadcrumb-item>工厂</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <!-- 左右侧边栏 -->
     <el-container>
       <el-aside style="width:inherit;">
@@ -116,7 +118,7 @@
           :data="tableData"
           stripe
           :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-          style=" width:960px;margin:5px;cursor: pointer;"
+          style=" width:75vw;margin:5px;cursor: pointer;"
         >
           <el-table-column prop="factory_name" align="center" label="工厂名称"></el-table-column>
           <el-table-column prop="contacts" align="center" label="联系人"></el-table-column>
@@ -552,10 +554,6 @@ export default {
 
 <style lang="less" scoped>
 .distributor {
-  height: 100%;
-  /deep/.el-container {
-    height: 100%;
-  }
   .el-menu-admin:not(.el-menu--collapse) {
     width: 200px;
     min-height: 400px;

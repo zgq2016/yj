@@ -1,14 +1,19 @@
 <template>
   <div class="distributor" v-if="power.indexOf('E2000400')!=-1">
     <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>档案库</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/routeCard_list' }">物料工艺卡</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="TL===0">新增物料工艺卡</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="TL===1">物料工艺卡详情</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="TL===2" :to="{ path: `/routeCardDeital?id=${id_NO}&TL=1` }">物料工艺卡详情</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="TL===2">物料工艺卡编辑</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>档案库</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/routeCard_list' }">物料工艺卡</el-breadcrumb-item>
+        <el-breadcrumb-item v-if="TL===0">新增物料工艺卡</el-breadcrumb-item>
+        <el-breadcrumb-item v-if="TL===1">物料工艺卡详情</el-breadcrumb-item>
+        <el-breadcrumb-item
+          v-if="TL===2"
+          :to="{ path: `/routeCardDeital?id=${id_NO}&TL=1` }"
+        >物料工艺卡详情</el-breadcrumb-item>
+        <el-breadcrumb-item v-if="TL===2">物料工艺卡编辑</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <!-- 左右侧边栏 -->
     <el-container>
       <el-aside style="width:inherit;">

@@ -1,14 +1,16 @@
 <template>
   <div class="distributor" v-if="power.indexOf('E1000400')!=-1">
     <!-- 面包屑 -->
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>档案库</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/distributor_list' }">供应商</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="TL===0">新增供应商</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="TL===1">供应商详情</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="TL===2" :to="{ path: `/listDeital?id=${id_NO}&TL=1` }">供应商详情</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="TL===2">供应商编辑</el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>档案库</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/distributor_list' }">供应商</el-breadcrumb-item>
+        <el-breadcrumb-item v-if="TL===0">新增供应商</el-breadcrumb-item>
+        <el-breadcrumb-item v-if="TL===1">供应商详情</el-breadcrumb-item>
+        <el-breadcrumb-item v-if="TL===2" :to="{ path: `/listDeital?id=${id_NO}&TL=1` }">供应商详情</el-breadcrumb-item>
+        <el-breadcrumb-item v-if="TL===2">供应商编辑</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <!-- 左右侧边栏 -->
     <el-container>
       <el-aside style="width:inherit;">
