@@ -4,6 +4,21 @@
   </div>
 </template>
 
+<script>
+export default {
+  data() {
+    return {};
+  },
+  methods: {
+    // localStorage.getItem("power")
+  },
+  mounted() {
+    let user_id = localStorage.getItem("user_id");
+    this.$store.commit("setUserInfo", { id: user_id });
+  },
+};
+</script>
+
 <style lang="less">
 .el-autocomplete-suggestion {
   width: 150px !important;

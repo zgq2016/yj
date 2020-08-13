@@ -51,6 +51,7 @@ const actions = {
       router.push({ name: "Index" });
       return true;
     });
+    
   },
 };
 export const store = new Vuex.Store({ router, state, mutations, actions });

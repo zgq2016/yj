@@ -102,14 +102,14 @@
               <el-button
                 class="elbtn"
                 size="mini"
-                v-if="scope.row.pattern_status==='2'||scope.row.pattern_status==='4'"
-                @click="pattern_apply(scope.$index, scope.row)"
-              >提交审核</el-button>
+                v-if="(scope.row.pattern_status==='2'||scope.row.pattern_status==='4')&&scope.row.user_id==userid"
+                @click="pattern_apply(scope.$index, scope.row)" 
+              >提交审核{{scope.row.user_id}},{{userid}}</el-button>
               <!-- 2 4 -->
               <el-button
                 class="elbtn"
                 size="mini"
-                v-if="scope.row.pattern_status==='3'"
+                v-if="scope.row.pattern_status==='3'&&scope.row.user_id==userid"
                 @click="cancel_pattern_apply(scope.$index, scope.row)"
               >撤回审核</el-button>
               <el-button
@@ -308,6 +308,11 @@ export default {
     this.getWest();
     this.init();
     this.power = localStorage.getItem("power");
+  },
+  computed: {
+    userid() {
+      return this.$store.state.userInfo.id;
+    },
   },
 };
 </script>

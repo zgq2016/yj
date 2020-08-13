@@ -106,7 +106,7 @@
         <h2 style="text-align:center;height:40px;">工厂对账单</h2>
         <div class="cont">
           <span>工厂：{{factory_id}}</span>
-          <span>日期：{{this.ctime_start}} 至 {{this.ctime_end}}</span>
+          <span>日期：{{formInline.ctime_start}} 至 {{formInline.ctime_end}}</span>
         </div>
         <div class="tb">
           <div class="dv">当前查询统计数据：</div>

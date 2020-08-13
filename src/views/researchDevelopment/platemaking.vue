@@ -102,14 +102,14 @@
               <el-button
                 class="elbtn"
                 size="mini"
-                v-if="scope.row.sample_status==='2'||scope.row.sample_status==='4'"
+                v-if="scope.row.sample_status==='2'||scope.row.sample_status==='4'&&scope.row.user_id==userid"
                 @click="sample_apply(scope.$index, scope.row)"
               >提交审核</el-button>
               <!-- 2 4 -->
               <el-button
                 class="elbtn"
                 size="mini"
-                v-if="scope.row.sample_status==='3'"
+                v-if="scope.row.sample_status==='3'&&scope.row.user_id==userid"
                 @click="cancel_sample_apply(scope.$index, scope.row)"
               >撤回审核</el-button>
               <el-button
@@ -312,6 +312,11 @@ export default {
     this.getWest();
     this.init();
     this.power = localStorage.getItem("power");
+  },
+  computed: {
+    userid() {
+      return this.$store.state.userInfo.id;
+    },
   },
 };
 </script>

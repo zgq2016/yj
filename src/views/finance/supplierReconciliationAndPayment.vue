@@ -80,7 +80,7 @@
           <div style="display: flex;justify-content: space-between;align-items: center;">
             <div class="addStyle" v-if="power.indexOf('F4000200')!=-1" @click="handlePayment">付款</div>
             <div
-              class="addStyle" 
+              class="addStyle"
               v-if="power.indexOf('F4000300')!=-1"
               @click="beginninGbalanceAdjustment"
               style="background-color: #e3e3e3;color: #fff;"
@@ -112,15 +112,15 @@
           <div class="dv">当前查询统计数据：</div>
           <div class="dv">
             应付金额
-            <span style="color:orange;">{{cope_money}}</span>
+            <span style="color:orange;">{{total_cope_money}}</span>
           </div>
           <div class="dv">
             实付金额
-            <span style="color:orange;">{{pay_money}}</span>
+            <span style="color:orange;">{{total_pay_money}}</span>
           </div>
           <div class="dv">
             应付余额
-            <span style="color:orange;">{{opay_money}}</span>
+            <span style="color:orange;">{{total_opay_money}}</span>
           </div>
         </div>
       </div>
@@ -288,9 +288,9 @@ export default {
   data() {
     return {
       power: "",
-      cope_money: 999,
-      pay_money: 999,
-      opay_money: 999,
+      total_cope_money: "",
+      total_pay_money: "",
+      total_opay_money: "",
       ctime_start: "",
       ctime_end: "",
       pageIndex: 1,
@@ -532,8 +532,17 @@ export default {
           v.opay_money = v.cope_money - v.pay_money;
         }
       });
-      let { data, count } = res.data;
+      let {
+        data,
+        count,
+        total_cope_money,
+        total_pay_money,
+        total_opay_money,
+      } = res.data;
       this.tableData = data;
+      this.total_cope_money = total_cope_money;
+      this.total_pay_money = total_pay_money;
+      this.total_opay_money = total_opay_money;
       this.total = count;
     },
   },
