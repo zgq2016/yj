@@ -435,6 +435,7 @@ export default {
       let res = await balanceAccountSelect();
       let { data } = res.data;
       this.options = data;
+      console.log(data);
     },
   },
   async mounted() {

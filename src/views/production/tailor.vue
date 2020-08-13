@@ -76,7 +76,7 @@
         <el-table-column align="center" property="style_type" label="品类"></el-table-column>
         <el-table-column align="center" property="year" label="年份"></el-table-column>
         <el-table-column align="center" property="season" label="季节"></el-table-column>
-        <el-table-column align="center" property="stylist" label="设计师"></el-table-column>
+        <el-table-column align="center" property="user_name" label="设计师"></el-table-column>
         <el-table-column align="center" property="state" label="状态"></el-table-column>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">

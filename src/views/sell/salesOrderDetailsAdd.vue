@@ -566,7 +566,7 @@ export default {
       columns.forEach((column, index) => {
         if (index === 1) {
           sums[index] = "总计";
-        } else if (index === 8 || index === 12 || index === 13) {
+        } else if (index === 9 || index === 13 || index === 14) {
           const values = data.map((item) => Number(item[column.property]));
           if (!values.every((value) => isNaN(value))) {
             sums[index] = values.reduce((prev, curr) => {
@@ -574,12 +574,12 @@ export default {
               if (!isNaN(value)) {
                 // console.log(prev,curr);
                 // let a = prev.toFixed(2) + curr.toFixed(2);
-                if (index === 12) {
+                if (index === 13) {
                   this.total_price = prev + curr;
                 }
                 return prev + curr;
               } else {
-                if (index === 12) {
+                if (index === 13) {
                   this.total_price = prev;
                 }
                 return prev;

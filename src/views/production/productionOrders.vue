@@ -96,7 +96,7 @@
         <el-table-column align="center" property="style_type" label="品类"></el-table-column>
         <el-table-column align="center" property="year" label="年份"></el-table-column>
         <el-table-column align="center" property="season" label="季节"></el-table-column>
-        <el-table-column align="center" property="stylist" label="设计师"></el-table-column>
+        <el-table-column align="center" property="user_name" label="设计师"></el-table-column>
         <el-table-column align="center" property="state" label="状态"></el-table-column>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
@@ -283,11 +283,11 @@ export default {
       let { data } = res.data;
       this.tableData = data;
       this.tableData.map((v, i) => {
-        this.stylists.map((j, k) => {
-          if (v.user_id == j.id) {
-            v.stylist = j.name;
-          }
-        });
+        // this.stylists.map((j, k) => {
+        //   if (v.user_id == j.id) {
+        //     v.stylist = j.name;
+        //   }
+        // });
         if (v.order_status == 0) {
           v.state = "未下单";
         } else if (v.order_status == 1) {
