@@ -11,9 +11,23 @@
       <div style="margin-bottom:10px">
         <el-input
           size="small"
-          style="width:170px"
+          style="width:170px;margin-right:10px;"
           v-model="form.materialsname"
           placeholder="请输入商品名称"
+        ></el-input>
+        <el-input
+          style="width:115px"
+          size="small"
+          type="number"
+          v-model="form.min"
+          placeholder="请输入数量"
+        ></el-input>&nbsp;至
+        <el-input
+          style="width:115px"
+          size="small"
+          type="number"
+          v-model="form.max"
+          placeholder="请输入数量"
         ></el-input>
         <el-button icon="el-icon-search" size="mini" circle class="search_button" @click="onSubmit"></el-button>
       </div>
@@ -23,6 +37,7 @@
             v-model="form.storehouse_id"
             size="small"
             placeholder="请选择仓库"
+            @change="onSubmit"
             clearable
             style="width:110px"
           >
@@ -45,9 +60,9 @@
           <el-select
             size="small"
             v-model="form.materials_class_name"
-            placeholder="请选择物料分类"
-            style="width:120px;margin-right:10px;"
             @change="handleClassDatasId($event)"
+            placeholder="请选择物料分类"
+            style="width:140px;margin-right:10px;"
             clearable
           >
             <el-option
@@ -59,9 +74,9 @@
           </el-select>
           <el-select
             v-model="form.materials_class"
-            placeholder="请选择物料分类"
-            style="width:120px"
             @change="handleClassDatasId1($event)"
+            placeholder="请选择物料小分类"
+            style="width:140px"
             size="small"
           >
             <el-option
@@ -74,24 +89,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-input
-            style="width:115px"
-            size="small"
-            type="number"
-            v-model="form.min"
-            placeholder="请输入数量"
-          ></el-input>&nbsp;至
-          <el-input
-            style="width:115px"
-            size="small"
-            type="number"
-            v-model="form.max"
-            placeholder="请输入数量"
-          ></el-input>
-        </el-form-item>
-
-        <el-form-item>
-          <el-checkbox v-model="form.checked">过滤无库存</el-checkbox>
+          <el-checkbox @change="onSubmit" v-model="form.checked">过滤无库存</el-checkbox>
         </el-form-item>
         <el-form-item>
           <!-- <el-button type="primary">导出</el-button> -->
@@ -125,6 +123,7 @@
               <img :src="item.picurl" alt />
               <div class="left_n">
                 <span>{{item.classname}}({{item.materials_class_name}})</span>
+                <!-- <span>{{item.materialsname}}</span> -->
                 <span>{{item.color}}</span>
                 <span>内部编号:{{item.materialsno}}</span>
                 <span>{{item.companyname}}</span>
@@ -434,6 +433,7 @@ export default {
           this.form.materials_class_id = this.class_datas.class_data[0].id;
         }
       }
+      this.onSubmit();
     },
     async handleClassDatasId1(e) {
       // console.log(this.class_datas);
@@ -447,6 +447,7 @@ export default {
           });
         }
       });
+      this.onSubmit();
       console.log(this.form);
     },
     toMaterial(item) {
@@ -592,6 +593,7 @@ export default {
       let { data } = res.data;
       this.materials = data;
       this.total = res.data.count;
+
     },
     async stock() {
       // 仓库

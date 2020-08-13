@@ -60,3 +60,19 @@ export const mouthWorkStatus = data => {
     data: data
   });
 };
+// 个人工作
+export const myWork = data => {
+  return axios({
+    url: "?g=my_work",
+    method: "post",
+    data: data
+  });
+};
+// 协助工作
+export const myAssistWork = data => {
+  return axios({
+    url: "?g=my_assist_work",
+    method: "post",
+    data: data
+  });
+};

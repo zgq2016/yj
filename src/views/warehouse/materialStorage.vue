@@ -18,12 +18,26 @@
     </div>
     <el-form :inline="true" :model="form">
       <el-form-item>
+        <el-date-picker
+          v-model="form.business_time"
+          size="small"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd"
+          @change="onSubmit"
+        ></el-date-picker>
+      </el-form-item>
+      <el-form-item>
         <el-select
           size="small"
           v-model="form.storehouse_id"
           clearable
           placeholder="请选择仓库"
           style="width:120px"
+          @change="onSubmit"
         >
           <el-option
             v-for="item in ware"
@@ -48,6 +62,7 @@
           clearable
           placeholder="请选择分类"
           style="width:120px"
+          @change="onSubmit"
         >
           <el-option
             v-for="(item,index) in options"
@@ -68,20 +83,6 @@
               ></el-option>
             </el-select>
       </el-form-item>-->
-
-      <el-form-item>
-        <el-date-picker
-          
-          v-model="form.business_time"
-          size="small"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          format="yyyy-MM-dd"
-          value-format="yyyy-MM-dd"
-        ></el-date-picker>
-      </el-form-item>
     </el-form>
 
     <hr style="border:1px dashed #ccc" />
@@ -114,7 +115,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="pageIndex"
-      :page-sizes="[10, 20, 30, 40]"
+      :page-sizes="[9, 18, 27, 36]"
       :page-size="pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
