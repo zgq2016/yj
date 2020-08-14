@@ -152,7 +152,7 @@ export default {
       .list {
         width: 25%;
         height: 60px;
-        margin: 0 70px 20px 0;
+        margin: 0 70px 20px 20px;
         border-radius: 10px;
         overflow: hidden;
         background-color: #f2f2f2;

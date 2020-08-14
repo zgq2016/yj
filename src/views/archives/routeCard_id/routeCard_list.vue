@@ -143,7 +143,7 @@ export default {
         width: 30%;
         display: flex;
         cursor: pointer;
-        margin: 0 20px 20px 0;
+        margin: 0 20px 20px 20px;
         .list_img {
           img {
             width: 100px;
