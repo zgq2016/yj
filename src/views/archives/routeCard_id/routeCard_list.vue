@@ -187,6 +187,10 @@ export default {
         background-color: #f2f2f2;
         display: flex;
         cursor: pointer;
+<<<<<<< HEAD
+=======
+        margin: 0 20px 20px 20px;
+>>>>>>> 6016fb9e9dd753c05931a007c5faa2b145d3f3f5
         .list_img {
           img {
             width: 100px;

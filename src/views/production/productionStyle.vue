@@ -88,9 +88,9 @@
           </el-step>
         </el-steps>
       </div>
-      <!-- 信息部分 -->
-      <el-collapse v-model="activeNames" @change="handleChange">
-        <el-collapse-item v-if="showhide1&&power.indexOf('B1000300')!=-1" title="下单信息" name="1">
+
+      <el-tabs style="margin-bottom:150px;" v-model="activeNames1" @click.stop="handleClick">
+        <el-tab-pane label="下单信息" v-if="showhide1&&power.indexOf('B1000300')!=-1" name="1">
           <div class="orderInformation">
             <!-- <div style="margin-left:50px;">请先增加批次</div> -->
             <!-- 没数据或者修改 -->
@@ -301,7 +301,7 @@
             <!-- 有数据 -->
             <div v-if="show">
               <el-form style="position: relative;width:auto;height:300px;" label-width="80px">
-                <span style="position:absolute;left:20%;font-size:14px;">出货时间 {{this.form_i.date}}</span>
+                <span style="position:absolute;left:10%;font-size:14px;">出货时间：{{this.form_i.date}}</span>
                 <div class="table_header">
                   <div class="table_nav">
                     <span>颜色</span>
@@ -326,8 +326,8 @@
               </el-form>
             </div>
           </div>
-        </el-collapse-item>
-        <el-collapse-item v-if="showhide2&&power.indexOf('B2000300')!=-1" title="采购" name="2">
+        </el-tab-pane>
+        <el-tab-pane label="采购" v-if="showhide2&&power.indexOf('B2000300')!=-1" name="2">
           <div class="purchase" v-if="king1">
             <div class="color">
               <span
@@ -338,7 +338,6 @@
                 style="margin:0 10px;width:60px;padding:5px;text-align:center;cursor: pointer;"
               >{{item_color}}</span>
             </div>
-
             <div class="material_purchase">
               <div v-for="(item, index) in cardList" :key="index">
                 <div class="content" v-for="(item1, index1) in item.list" :key="index1">
@@ -611,137 +610,139 @@
               v-if="power.indexOf('B2000100')!=-1"
             >+ 增加物料</el-button>
           </div>
-        </el-collapse-item>
-        <el-collapse-item v-if="showhide3&&power.indexOf('B3000300')!=-1" title="生产排单" name="3">
-          <!-- 无数据 -->
-          <div v-if="!vb" class="productionArranged">
-            <el-form
-              :inline="true"
-              class="demo-form-inline"
-              :model="formg"
-              ref="formg"
-              style="margin-bottom:10px;position: relative;"
-            >
-              <div v-for="(item,index) in formg.child" :key="index" style="position: relative;">
-                <el-form-item label="指派工厂：">
-                  <el-input
-                    v-model="regions1[index]"
-                    placeholder="指派工厂"
-                    disabled
-                    style="width:150px"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item
-                  :prop="'child.'+index+'.mode[0].name'"
-                  :rules="contactRules.name"
-                  label="指派方式："
-                >
-                  <el-select
-                    v-model="item.mode[0].name"
-                    @change="select_l(index)"
-                    placeholder="指派方式"
-                    style="width:150px"
+        </el-tab-pane>
+        <el-tab-pane label="生产排单" v-if="showhide3&&power.indexOf('B3000300')!=-1" name="3">
+          <div class="tailor">
+            <!-- 无数据 -->
+            <div v-if="!vb" class="productionArranged">
+              <el-form
+                :inline="true"
+                class="demo-form-inline"
+                :model="formg"
+                ref="formg"
+                style="margin-bottom:10px;position: relative;"
+              >
+                <div v-for="(item,index) in formg.child" :key="index" style="position: relative;">
+                  <el-form-item label="指派工厂：">
+                    <el-input
+                      v-model="regions1[index]"
+                      placeholder="指派工厂"
+                      disabled
+                      style="width:150px"
+                    ></el-input>
+                  </el-form-item>
+                  <el-form-item
+                    :prop="'child.'+index+'.mode[0].name'"
+                    :rules="contactRules.name"
+                    label="指派方式："
                   >
-                    <el-option
-                      v-for="item_l in modes"
-                      :key="item_l.id"
-                      :label="item_l.mode_name"
-                      :value="item_l.mode_name"
-                    ></el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item
-                  :prop="'child.'+index+'.quantity'"
-                  :rules="contactRules.quantity"
-                  label="指派数量："
-                >
-                  <el-input
-                    v-model.number="item.quantity"
-                    placeholder="请填入指派数量"
-                    style="width:150px"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item
-                  :prop="'child.'+index+'.price'"
-                  :rules="contactRules.price"
-                  label="加工价格："
-                >
-                  <el-input v-model.number="item.price" placeholder="请填入加工价格" style="width:150px"></el-input>
-                </el-form-item>
-                <el-form-item>
-                  <el-button>加工费对比</el-button>
-                </el-form-item>
-                <el-form-item label="备注：">
-                  <el-input type="textarea" v-model="item.remarks" style="width:50vw"></el-input>
-                </el-form-item>
-                <el-button
-                  style="position: absolute;right:5px;bottom:5px;"
-                  type="danger"
-                  @click="factoryDel(item.id,index)"
-                  round
-                  v-if="power.indexOf('B3000200')!=-1"
-                >删除</el-button>
-                <hr style="border:1px dashed #999999" />
-              </div>
-            </el-form>
-
-            <!-- 新增指派工厂与确定排单 -->
-            <div v-if="regionVB">
-              <el-form>
-                <el-form-item label="新增指派工厂：">
-                  <el-select
-                    v-model="region"
-                    @change="regionadd"
-                    placeholder="增加工厂"
-                    style="width:150px"
+                    <el-select
+                      v-model="item.mode[0].name"
+                      @change="select_l(index)"
+                      placeholder="指派方式"
+                      style="width:150px"
+                    >
+                      <el-option
+                        v-for="item_l in modes"
+                        :key="item_l.id"
+                        :label="item_l.mode_name"
+                        :value="item_l.mode_name"
+                      ></el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item
+                    :prop="'child.'+index+'.quantity'"
+                    :rules="contactRules.quantity"
+                    label="指派数量："
                   >
-                    <el-option
-                      v-for="itemregion in regions"
-                      :key="itemregion.id"
-                      :label="itemregion.factory_name"
-                      :value="itemregion.factory_name"
-                    ></el-option>
-                  </el-select>
-                </el-form-item>
+                    <el-input
+                      v-model.number="item.quantity"
+                      placeholder="请填入指派数量"
+                      style="width:150px"
+                    ></el-input>
+                  </el-form-item>
+                  <el-form-item
+                    :prop="'child.'+index+'.price'"
+                    :rules="contactRules.price"
+                    label="加工价格："
+                  >
+                    <el-input v-model.number="item.price" placeholder="请填入加工价格" style="width:150px"></el-input>
+                  </el-form-item>
+                  <el-form-item>
+                    <el-button>加工费对比</el-button>
+                  </el-form-item>
+                  <el-form-item label="备注：">
+                    <el-input type="textarea" v-model="item.remarks" style="width:50vw"></el-input>
+                  </el-form-item>
+                  <el-button
+                    style="position: absolute;right:5px;bottom:5px;"
+                    type="danger"
+                    @click="factoryDel(item.id,index)"
+                    round
+                    v-if="power.indexOf('B3000200')!=-1"
+                  >删除</el-button>
+                  <hr style="border:1px dashed #999999" />
+                </div>
               </el-form>
+
+              <!-- 新增指派工厂与确定排单 -->
+              <div v-if="regionVB">
+                <el-form>
+                  <el-form-item label="新增指派工厂：">
+                    <el-select
+                      v-model="region"
+                      @change="regionadd"
+                      placeholder="增加工厂"
+                      style="width:150px"
+                    >
+                      <el-option
+                        v-for="itemregion in regions"
+                        :key="itemregion.id"
+                        :label="itemregion.factory_name"
+                        :value="itemregion.factory_name"
+                      ></el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-form>
+              </div>
+              <el-button
+                @click="arranged"
+                round
+                v-if="ascertain2&&power.indexOf('B3000100')!=-1"
+                style="float:right;margin-bottom:15px;"
+              >确认排单</el-button>
             </div>
-            <el-button
-              @click="arranged"
-              round
-              v-if="ascertain2&&power.indexOf('B3000100')!=-1"
-              style="float:right;margin-bottom:15px;"
-            >确认排单</el-button>
-          </div>
-          <!-- 有数据 -->
-          <div style="position: relative;" v-if="vb">
-            <div class="factory_table" v-for="(item2,index2) in formInline" :key="index2">
-              <div class="factory_left">
-                <div class="factory_left_top">
-                  <div class="list">
-                    <span>指派工厂：</span>
-                    <span>{{regions1[index2]}}</span>
-                    <span>指派方式：</span>
-                    <span>{{mode[index2]}}</span>
-                    <span>指派数量：</span>
-                    <span>{{item2.quantity}}</span>
-                    <span>加工价格：</span>
-                    <span>{{item2.price}}元</span>
+            <!-- 有数据 -->
+            <div style v-if="vb">
+              <div class="factory_table" v-for="(item2,index2) in formInline" :key="index2">
+                <div class="factory_left">
+                  <div class="factory_left_top">
+                    <div class="list">
+                      <span>指派工厂：</span>
+                      <span>{{regions1[index2]}}</span>
+                      <span>指派方式：</span>
+                      <span>{{mode[index2]}}</span>
+                      <span>指派数量：</span>
+                      <span>{{item2.quantity}}</span>
+                      <span>加工价格：</span>
+                      <span>{{item2.price}}元</span>
+                    </div>
+                  </div>
+                  <div class="factory_left_bottom">
+                    <span>备注：</span>
+                    <span>{{item2.remarks}}</span>
                   </div>
                 </div>
-                <div class="factory_left_bottom">
-                  <span>备注：</span>
-                  <span>{{item2.remarks}}</span>
-                </div>
-              </div>
 
-              <hr style="border:1px dashed #999999" />
-            </div>
-            <div class="factory_right" v-if="ascertain2&&power.indexOf('B3000400')!=-1">
-              <el-button round type="info" @click="factoryEidt()">修改</el-button>
+                <hr style="border:1px dashed #999999" />
+              </div>
+              <div class="factory_right" v-if="ascertain2&&power.indexOf('B3000400')!=-1">
+                <el-button round type="info" @click="factoryEidt()">修改</el-button>
+              </div>
             </div>
           </div>
-        </el-collapse-item>
-        <el-collapse-item v-if="showhide4&&power.indexOf('B4000300')!=-1" title="裁剪" name="4">
+        </el-tab-pane>
+        <el-tab-pane label="裁剪" v-if="showhide4&&power.indexOf('B4000300')!=-1" name="4">
           <div class="tailor">
             <div>
               <!-- <div v-if="tailorList.category>0"> -->
@@ -794,7 +795,7 @@
                 </div>
               </div>
               <!-- 有数据 -->
-              <div v-if="vb1" style="position:relative">
+              <div v-if="vb1" style="position:relative;margin-top:30px;">
                 <el-row v-if="tailorVB" style="margin-left:5%;">
                   <el-col :span="3">录入裁床数量：</el-col>
                 </el-row>
@@ -821,14 +822,14 @@
                   </div>
                   <hr style="border:1px dashed #999999" />
                 </div>
-                <el-button
-                  style="position:absolute;right:10%;top:0;"
-                  round
-                  type="info"
-                  @click="tailorEdit()"
-                  v-if="showhide3&&power.indexOf('B4000400')!=-1"
-                >修改</el-button>
               </div>
+              <el-button
+                v-if="showhide3&&power.indexOf('B4000400')!=-1&&vb1"
+                style="position:absolute;right:10%;top:0;"
+                round
+                type="info"
+                @click="tailorEdit()"
+              >修改</el-button>
             </div>
             <div class="add" v-if="!vb1">
               <el-button size="mini" v-if="tailorVB" @click="tailoradd" round>+ 增加床次</el-button>
@@ -836,8 +837,8 @@
             </div>
             <!-- </div> -->
           </div>
-        </el-collapse-item>
-        <el-collapse-item v-if="showhide5&&power.indexOf('B5000300')!=-1" title="出货" name="5">
+        </el-tab-pane>
+        <el-tab-pane label="出货" v-if="showhide5&&power.indexOf('B5000300')!=-1" name="5">
           <div class="shipment">
             <div class="shipmentList">
               <!-- 无数据 -->
@@ -1029,25 +1030,25 @@
                   >客户</div>
                   <div
                     style="margin-left:120px;font-size:16px;font-weight:400;"
-                  >工厂:{{item.factory_name}}</div>
+                  >工厂：{{item.factory_name}}</div>
                   <hr style="border:1px dashed #999999" />
                 </el-form>
-                <el-button
-                  style="position:absolute;right:10%;top:0;"
-                  round
-                  type="info"
-                  @click="completeEdit()"
-                  v-if="power.indexOf('B5000400')!=-1"
-                >修改</el-button>
               </div>
+              <el-button
+                style="position:absolute;right:10%;top:0;"
+                round
+                type="info"
+                @click="completeEdit()"
+                v-if="power.indexOf('B5000400')!=-1&&vb2"
+              >修改</el-button>
             </div>
             <div class="add" v-if="!vb2">
               <el-button @click="goDownAdd" v-if="shipmentVB" round>+增加出货批次</el-button>
               <el-button @click="goDownlist" v-if="power.indexOf('B5000100')!=-1" round>确定</el-button>
             </div>
           </div>
-        </el-collapse-item>
-      </el-collapse>
+        </el-tab-pane>
+      </el-tabs>
     </div>
     <div v-if="home" style="margin:100px auto;font-size:16px; text-align: center;">请增加批次！</div>
 
@@ -1500,12 +1501,19 @@ export default {
       total2: 0,
       wares: [], //仓库
       factorys: [],
+      activeNames1: "1",
+      t_size1: [],
     };
   },
   methods: {
     //
     handleChange(val) {
       // console.log(val);
+    },
+    handleClick(tab, val) {
+      // console.log(val);
+      console.log(tab, val);
+      this.activeNames1 = tab.index + 1;
     },
     onSubmit() {
       // console.log("submit!");
@@ -2127,6 +2135,8 @@ export default {
                 this.t_size = [...new Set(this.t_size)];
               });
             });
+            this.t_size1 = JSON.parse(JSON.stringify(this.t_size));
+
             this.table.map((v, i) => {
               v.produce_order_size_date.map((a, j) => {
                 let quant = [];
@@ -2178,6 +2188,7 @@ export default {
         this.showhide1 = false;
       }
       this.handleSearchInput();
+      return this.t_size1;
     },
     // 确定下单
     async clickOrders() {
@@ -3066,97 +3077,101 @@ export default {
     },
     // 裁剪初始化
     async init_t() {
-      setTimeout(async () => {
-        let { id } = this.$route.query;
-        let res = await produceInfo({
-          //批次
-          style_id: id,
-        });
-        let { data } = res.data;
-
-        this.tailorList = [];
-        if (data.length > 0) {
-          let res1 = await produceCutOrderList({
-            //裁剪数据列
+      setTimeout(
+        async function () {
+          let { id } = this.$route.query;
+          let res = await produceInfo({
+            //批次
             style_id: id,
-            produce_no: data[this.active].produce_no,
           });
-          // console.log(res1);
-          let data1 = res1.data.data;
-          // console.log(res1);
+          let { data } = res.data;
 
-          if (data1.length > 0) {
-            this.vb1 = true;
-            this.edit1 = true;
-            this.ascertain3 = true;
-            this.showhide5 = true;
-          } else {
-            this.showhide5 = false;
-            // console.log(1);
-            this.ascertain3 = false;
-            this.tailoradd();
+          this.tailorList = [];
+          if (data.length > 0) {
+            let res1 = await produceCutOrderList({
+              //裁剪数据列
+              style_id: id,
+              produce_no: data[this.active].produce_no,
+            });
+            // console.log(res1);
+            let data1 = res1.data.data;
+            // console.log(res1);
+
+            if (data1.length > 0) {
+              this.vb1 = true;
+              this.edit1 = true;
+              this.ascertain3 = true;
+              this.showhide5 = true;
+            } else {
+              this.showhide5 = false;
+              // console.log(1);
+              this.ascertain3 = false;
+              this.tailoradd();
+            }
+            // console.log(data1);
+
+            // 往裁剪表加入数据
+            data1.map((v, i) => {
+              let arrNew = [];
+              let arrObj = [];
+              v.produce_cut_order_size_data.map((j, k) => {
+                arrNew.push(j.style_color_name);
+                arrObj.push({
+                  color: j.style_color_name,
+                  quantity: j.quantity,
+                  size: j.size,
+                  id: j.id,
+                });
+              });
+              arrNew = [...new Set(arrNew)]; //去重
+
+              let sizeInput = [];
+              let arrNew1 = [];
+              arrNew.map((q, w) => {
+                sizeInput = [];
+                let ids = [];
+                this.t_size1.map((f, g) => {
+                  sizeInput.push(0);
+                  ids.push(0);
+                });
+                arrObj.map((j, k) => {
+                  if (j.color == q) {
+                    this.t_size1.map((f, g) => {
+                      if (j.size == f) {
+                        sizeInput[g] = j.quantity;
+                        ids[g] = j.id;
+                      }
+                    });
+                  }
+                });
+
+                let sum = sizeInput.reduce((prev, cur) => {
+                  return Number(prev) + Number(cur);
+                });
+                arrNew1.push({
+                  color: q,
+                  sizeNum: sum,
+                  size_input: sizeInput,
+                  id: ids,
+                });
+              });
+              let sum1 = 0;
+              arrNew1.map((k, l) => {
+                sum1 += k.sizeNum;
+              });
+              this.tailorList.push({
+                category: arrNew1,
+                imageUrl: v.picurl,
+                t_size: this.t_size1,
+                total: sum1,
+                id: v.id,
+              });
+            });
+            // console.log(this.tailorList);
           }
-          // console.log(data1);
-
-          // 往裁剪表加入数据
-          data1.map((v, i) => {
-            let arrNew = [];
-            let arrObj = [];
-            v.produce_cut_order_size_data.map((j, k) => {
-              arrNew.push(j.style_color_name);
-              arrObj.push({
-                color: j.style_color_name,
-                quantity: j.quantity,
-                size: j.size,
-                id: j.id,
-              });
-            });
-            arrNew = [...new Set(arrNew)]; //去重
-
-            let sizeInput = [];
-            let arrNew1 = [];
-            arrNew.map((q, w) => {
-              sizeInput = [];
-              let ids = [];
-              this.t_size.map((f, g) => {
-                sizeInput.push(0);
-                ids.push(0);
-              });
-              arrObj.map((j, k) => {
-                if (j.color == q) {
-                  this.t_size.map((f, g) => {
-                    if (j.size == f) {
-                      sizeInput[g] = j.quantity;
-                      ids[g] = j.id;
-                    }
-                  });
-                }
-              });
-              let sum = sizeInput.reduce((prev, cur) => {
-                return Number(prev) + Number(cur);
-              });
-              arrNew1.push({
-                color: q,
-                sizeNum: sum,
-                size_input: sizeInput,
-                id: ids,
-              });
-            });
-            let sum1 = 0;
-            arrNew1.map((k, l) => {
-              sum1 += k.sizeNum;
-            });
-            this.tailorList.push({
-              category: arrNew1,
-              imageUrl: v.picurl,
-              t_size: this.t_size,
-              total: sum1,
-              id: v.id,
-            });
-          });
-          // console.log(this.tailorList);
-        }
-      }, 500);
+        }.bind(this),
+        500
+      );
     },
 
     // 出货
@@ -3207,7 +3222,7 @@ export default {
       });
 
       this.complete.push({
-        t_size: this.t_size,
+        t_size: this.t_size1,
         produce_complete_size_a_data: newArr1, //成品
         produce_complete_size_b_data: newArr2, //次品
         total_a: 0,
@@ -3492,7 +3507,7 @@ export default {
           let data1 = res1.data.data;
           console.log(data1);
           // console.log(this.complete);
-          if (this.t_size.length != 0) {
+          if (this.t_size1.length != 0) {
             data1.produce_complete_data.map((v, i) => {
               // 成品
               let arrColor_a = []; //颜色
@@ -3537,13 +3552,13 @@ export default {
               arrColor_a.map((f, g) => {
                 arrInput_a = [];
                 id_a = [];
-                this.t_size.map((f, g) => {
+                this.t_size1.map((f, g) => {
                   arrInput_a.push(0);
                   id_a.push(0);
                 });
                 arrObj_a.map((j, k) => {
                   if (j.style_color_name == f) {
-                    this.t_size.map((n, m) => {
+                    this.t_size1.map((n, m) => {
                       if (j.size == n) {
                         arrInput_a[m] = j.quantity;
                         id_a[m] = j.id;
@@ -3606,7 +3621,7 @@ export default {
               this.complete.push({
                 total_a: total_aa,
                 total_b: total_bb,
-                t_size: this.t_size,
+                t_size: this.t_size1,
                 id_c: v.id,
                 storehouse_id: v.storehouse_id == 0 ? "" : v.storehouse_id,
                 factory_name: v.factory_name,
@@ -3675,6 +3690,7 @@ export default {
     // console.log(this.obj);
     // console.log(this.obj.style_materials_color_data)
     // this.activities_endlong = res.data.data.style_log;
+    await this.init();
     this.test();
     this.init();
     this.int_i();
@@ -3832,7 +3848,8 @@ export default {
       }
     }
     .factory_table {
-      margin: 0 20%;
+      margin: 40px;
+      width: 80%;
       position: relative;
       .factory_left_top {
         width: 100%;
@@ -3853,13 +3870,14 @@ export default {
     }
     .factory_right {
       position: absolute;
-      top: 5%;
+      top: 1%;
       right: 5%;
     }
     .tailor {
       .tailor_table {
-        margin-left: 15%;
+        margin-left: 10%;
         position: relative;
+        width: 70%;
         .tailor_nav {
           overflow: hidden;
           span {
@@ -3903,8 +3921,9 @@ export default {
     }
     .shipment {
       .shipmentList {
-        margin: 30px 0;
+        margin: 30px 30px;
         padding: 10px 0;
+        width: 80%;
         .tailor_table {
           margin-left: 10%;
           margin-bottom: 20px;
@@ -4069,7 +4088,7 @@ export default {
   .table_header {
     width: 600px;
     position: absolute;
-    left: 25%;
+    left: 15%;
     top: 40px;
     .table_nav {
       width: 100%;
@@ -4081,6 +4100,8 @@ export default {
         float: left;
         width: 10%;
         height: 30px;
+        font-size: 14px;
+        font-weight: 600;
       }
     }
     .table_list {
