@@ -317,7 +317,6 @@ export default {
     this.getStylist();
     this.getCategory();
     this.getWest();
-
     this.power = localStorage.getItem("power");
   },
 };

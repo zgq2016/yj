@@ -1,16 +1,27 @@
 <template>
   <!--  v-if="data.id=data.id||0" -->
   <div class="right_list">
-    <!-- 搜索 新增 -->
-    <div style="display:flex;justify-content: space-between;align-items: center;">
-      <div class="search">
-        <el-input v-model="companyname" placeholder="请输入内容" style="width:200px;margin:0 10px;"></el-input>
-        <el-button class="el-icon-search" @click="handleSearch">搜索</el-button>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>档案库</el-breadcrumb-item>
+        <el-breadcrumb-item>供应商</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
+    <div style="margin-bottom:10px">
+      <el-input placeholder="单据编号" v-model="companyname" clearable style="width:200px"></el-input>
+      <el-button
+        icon="el-icon-search"
+        size="mini"
+        circle
+        class="search_button"
+        @click="handleSearch"
+      ></el-button>
+      <div class="form">
+        <el-form :inline="true" class="demo-form-inline"></el-form>
+        <!-- 新增项目 -->
+        <div class="addStyle" @click="addSupplier" v-if="power.indexOf('E2000100')!=-1">新增</div>
       </div>
       <!-- add -->
-      <div class="addStyle">
-        <span class="add" @click="addSupplier" v-if="power.indexOf('E2000100')!=-1">新增</span>
-      </div>
     </div>
 
     <!-- main -->
@@ -38,22 +49,21 @@
                 v-if="item.supplier_contact_data.length>0"
               >{{item.supplier_contact_data[0].contacts}}:{{item.supplier_contact_data[0].phone}}</div>
             </div>
-            <!-- <div class="list_content_right">101</div> -->
           </div>
         </div>
       </div>
-      <!-- 分页 -->
-      <el-pagination
-        class="pagination"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pageIndex"
-        :page-sizes="[24, 48, 72, 96]"
-        :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
-      ></el-pagination>
     </div>
+    <!-- 分页 -->
+    <el-pagination
+      class="pagination"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="pageIndex"
+      :page-sizes="[24, 48, 72, 96]"
+      :page-size="pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+    ></el-pagination>
   </div>
 </template>
 
@@ -63,8 +73,8 @@ export default {
   props: {
     data: {
       type: Object, // 声明属性的类型
-      default: () => ({}) // 属性的默认值
-    }
+      default: () => ({}), // 属性的默认值
+    },
   },
   data() {
     return {
@@ -73,7 +83,7 @@ export default {
       SupplierList: [], //列表数据
       pageIndex: 1,
       pageSize: 24,
-      total: 0
+      total: 0,
     };
   },
   methods: {
@@ -98,7 +108,7 @@ export default {
         materials_class_id: this.data.id || "",
         page: this.pageIndex,
         page_size: this.pageSize,
-        companyname: this.companyname
+        companyname: this.companyname,
       });
       // console.log(res);
       let { data, count } = res.data;
@@ -112,7 +122,7 @@ export default {
     handleCurrentChange(val) {
       this.pageIndex = val;
       this.init();
-    }
+    },
   },
   mounted() {
     this.init();
@@ -122,27 +132,52 @@ export default {
   watch: {
     data() {
       this.init();
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="less" scoped>
 .right_list {
   .addStyle {
-    text-align: right;
-    .add {
-      border-radius: 12px;
-      padding: 8px 50px;
-      color: #000;
-      border: 1px solid #000;
-      margin-right: 10px;
-      &:hover {
-        color: #fff;
-        background-color: #000;
-        cursor: pointer;
-      }
+    margin: 0 30px 0px 0px;
+    border-radius: 15px;
+    width: 120px;
+    height: 30px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    &:hover {
+      cursor: pointer;
     }
+  }
+  /deep/ .el-input__inner {
+    width: 100%;
+    height: 30px;
+    background-color: #f2f2f2;
+    border-radius: 15px;
+    border: none;
+    color: #5e5e5e;
+    font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
+      \\5b8b\4f53, sans-serif;
+  }
+  .search_button {
+    margin-left: 10px;
+    background-color: #000;
+  }
+  /deep/ .el-icon-search {
+    color: #fff;
+  }
+  /deep/.el-button {
+    border: none;
+  }
+  .form {
+    width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   .main {
     padding: 20px 0;
@@ -150,9 +185,9 @@ export default {
       display: flex;
       flex-wrap: wrap;
       .list {
-        width: 25%;
+        width: 300px;
         height: 60px;
-        margin: 0 70px 20px 0;
+        margin: 0 20px 20px 0;
         border-radius: 10px;
         overflow: hidden;
         background-color: #f2f2f2;
@@ -181,9 +216,10 @@ export default {
         }
       }
     }
-    .pagination {
-      text-align: right;
-    }
+  }
+  .el-pagination {
+    margin: 20px;
+    text-align: right;
   }
 }
 </style>

@@ -1,5 +1,13 @@
 <template>
   <div class="addSupplier">
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>档案库</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/distributor_list' }">供应商</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: `/listDeital?id=${obj.id}` }">供应商详细</el-breadcrumb-item>
+        <el-breadcrumb-item>编辑供应商</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <!-- 图片 -->
     <div class="upload">
       <!-- 商标/名片 -->
@@ -138,8 +146,16 @@
           <el-input type="textarea" v-model="obj.remarks" placeholder="请输入内容" clearable></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button v-if="power.indexOf('E1000300')!=-1" @click="handleEdit" style="padding:10px 50px;border-radius: 10px;">保存</el-button>
-          <el-button v-if="power.indexOf('E1000200')!=-1" @click="handleDel" style="padding:10px 50px;border-radius: 10px;">删除</el-button>
+          <el-button
+            v-if="power.indexOf('E1000300')!=-1"
+            @click="handleEdit"
+            style="padding:10px 50px;border-radius: 10px;"
+          >保存</el-button>
+          <el-button
+            v-if="power.indexOf('E1000200')!=-1"
+            @click="handleDel"
+            style="padding:10px 50px;border-radius: 10px;"
+          >删除</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -250,7 +266,7 @@ import {
   supplierEdit,
   supplierDel,
   getMaterialsClass,
-  getMaterialsClassInfo
+  getMaterialsClassInfo,
 } from "@/api/archives";
 
 import { VueCropper } from "vue-cropper";
@@ -258,7 +274,7 @@ import { Api } from "@/js/api.js"; //接口url配置文件
 
 export default {
   components: {
-    VueCropper
+    VueCropper,
   },
   data() {
     return {
@@ -278,7 +294,7 @@ export default {
         autoCrop: true,
         autoCropWidth: 150,
         autoCropHeight: 150,
-        fixedBox: true
+        fixedBox: true,
       },
       fileName: "", //本机文件地址
       downImg: "#",
@@ -295,41 +311,41 @@ export default {
       // 表单规则
       rules: {
         companyname: [
-          { required: true, message: "请输入公司名称", trigger: "blur" }
+          { required: true, message: "请输入公司名称", trigger: "blur" },
         ],
         mainclass: [
-          { required: true, message: "请选择分类", trigger: "change" }
+          { required: true, message: "请选择分类", trigger: "change" },
         ],
         materials_class_name: [
-          { required: true, message: "请选择二级分类", trigger: "change" }
+          { required: true, message: "请选择二级分类", trigger: "change" },
         ],
         address: [
-          { required: true, message: "请填写详细地址", trigger: "blur" }
+          { required: true, message: "请填写详细地址", trigger: "blur" },
         ],
         tax: [{ required: true, message: "请填写税点", trigger: "blur" }],
         isbill: [
-          { required: true, message: "请选择是否发票", trigger: "change" }
-        ]
+          { required: true, message: "请选择是否发票", trigger: "change" },
+        ],
       },
       contact_dataRules: {
         contact_contacts: [
-          { required: true, message: "请填写联系人名称", trigger: "blur" }
+          { required: true, message: "请填写联系人名称", trigger: "blur" },
         ],
         contact_phone: [
-          { required: true, message: "请填写联系人号码", trigger: "blur" }
-        ]
+          { required: true, message: "请填写联系人号码", trigger: "blur" },
+        ],
       },
       bank_dataRules: {
         bank_bank: [
-          { required: true, message: "请选择银行", trigger: "change" }
+          { required: true, message: "请选择银行", trigger: "change" },
         ],
         bank_name: [
-          { required: true, message: "请填写卡号名称", trigger: "blur" }
+          { required: true, message: "请填写卡号名称", trigger: "blur" },
         ],
         bank_bankid: [
-          { required: true, message: "请填写银行卡号", trigger: "blur" }
-        ]
-      }
+          { required: true, message: "请填写银行卡号", trigger: "blur" },
+        ],
+      },
     };
   },
   methods: {
@@ -359,12 +375,12 @@ export default {
       let formData = new FormData();
       // 输出
       if (type === "blob") {
-        this.$refs.cropper.getCropBlob(data => {
+        this.$refs.cropper.getCropBlob((data) => {
           let img = window.URL.createObjectURL(data);
           this.model = true;
           this.modelSrc = img;
           formData.append("file", data, this.fileName);
-          Api(formData).then(response => {
+          Api(formData).then((response) => {
             if (this.status == 1) {
               this.obj.cardpicurl = response.data.data.pic_file_url;
               this.imgFile = "";
@@ -377,12 +393,12 @@ export default {
             this.$message({
               //element-ui的消息Message消息提示组件
               type: "success",
-              message: "上传成功"
+              message: "上传成功",
             });
           });
         });
       } else {
-        this.$refs.cropper.getCropData(data => {
+        this.$refs.cropper.getCropData((data) => {
           this.model = true;
           this.modelSrc = data;
         });
@@ -399,13 +415,13 @@ export default {
       var aLink = document.createElement("a");
       aLink.download = "author-img";
       if (type === "blob") {
-        this.$refs.cropper.getCropBlob(data => {
+        this.$refs.cropper.getCropBlob((data) => {
           this.downImg = window.URL.createObjectURL(data);
           aLink.href = window.URL.createObjectURL(data);
           aLink.click();
         });
       } else {
-        this.$refs.cropper.getCropData(data => {
+        this.$refs.cropper.getCropData((data) => {
           this.downImg = data;
           aLink.href = data;
           aLink.click();
@@ -423,7 +439,7 @@ export default {
         return false;
       }
       var reader = new FileReader();
-      reader.onload = e => {
+      reader.onload = (e) => {
         let data;
         if (typeof e.target.result === "object") {
           // 把Array Buffer转化为blob 如果是base64不需要
@@ -465,7 +481,7 @@ export default {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(async () => {
           let res = await supplierDel({ id: this.obj.id });
@@ -473,19 +489,19 @@ export default {
           this.$router.push({ path: "/distributor_list" });
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
     async handleEdit() {
       let data = this.$route.query;
-      this.$refs["obj"].validate(async valid => {
+      this.$refs["obj"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
 
@@ -502,7 +518,7 @@ export default {
       this.obj.contact_data.push({
         contacts: "",
         phone: "",
-        id: ""
+        id: "",
         // key: Date.now()
       });
     },
@@ -516,7 +532,7 @@ export default {
         bank: "",
         name: "",
         bankid: "",
-        id: ""
+        id: "",
         // key: Date.now()
       });
     },
@@ -545,7 +561,7 @@ export default {
     async handleClassDatasId(e) {
       this.classDatasId = e;
       let res = await getMaterialsClassInfo({
-        id: this.classDatasId || this.obj.mainclass_id
+        id: this.classDatasId || this.obj.mainclass_id,
       });
       console.log(res);
       let { data } = res.data;
@@ -559,7 +575,7 @@ export default {
     },
     handleClassDatasIds(e) {
       this.obj.materials_class_id = e;
-    }
+    },
   },
   async mounted() {
     let { id } = this.$route.query;
@@ -571,7 +587,7 @@ export default {
     this.classData = res1.data.data;
     this.power = localStorage.getItem("power");
     console.log(this.power);
-  }
+  },
 };
 </script>
 

@@ -1,5 +1,12 @@
 <template>
   <div class="routeCardDeital">
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>档案库</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/routeCard_list' }">物料工艺卡</el-breadcrumb-item>
+        <el-breadcrumb-item>物料工艺卡详细</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <div class="main">
       <div style="display:flex;justify-content: space-between;">
         <div class="up">
@@ -34,7 +41,11 @@
             </div>
           </div>
         </div>
-        <router-link :to="`/editrouteCard?id=${upData.id}&TL=2`" :data="upData" v-if="power.indexOf('E2000200')!=-1||power.indexOf('E2000300')!=-1">
+        <router-link
+          :to="`/editrouteCard?id=${upData.id}&TL=2`"
+          :data="upData"
+          v-if="power.indexOf('E2000200')!=-1||power.indexOf('E2000300')!=-1"
+        >
           <span class="el-icon-edit" style="font-size: 30px;cursor: pointer;"></span>
         </router-link>
       </div>
@@ -86,7 +97,7 @@ export default {
       upData: {},
       obj: {},
       dialogVisible: false,
-      dialogVisible1: false
+      dialogVisible1: false,
     };
   },
   methods: {
@@ -98,10 +109,10 @@ export default {
     },
     async init() {
       let res = await getSupplierInfo({
-        id: this.upData.materials_supplier_data[0].supplier_id
+        id: this.upData.materials_supplier_data[0].supplier_id,
       });
       this.obj = res.data.data;
-    }
+    },
   },
   async mounted() {
     let { id } = this.$route.query;
@@ -118,7 +129,7 @@ export default {
     this.init();
     this.power = localStorage.getItem("power");
     console.log(this.power);
-  }
+  },
 };
 </script>
 

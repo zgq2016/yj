@@ -22,12 +22,12 @@ import MerchandiseNews from "@/views/researchDevelopment/developmentCenter/merch
 import MaterialPurchasing from "@/views/researchDevelopment/developmentCenter/materialPurchasing.vue";
 import PatternStatus from "@/views/researchDevelopment/developmentCenter/patternStatus.vue";
 import SampleDress from "@/views/researchDevelopment/developmentCenter/sampleDress.vue";
-import Distributor from "@/views/archives/distributor.vue";
+// import Distributor from "@/views/archives/distributor.vue";
 import Distributor_list from "@/views/archives/distributor_id/distributor_list.vue";
 import AddSupplier from "@/views/archives/distributor_id/addSupplier.vue";
 import ListDeital from "@/views/archives/distributor_id/listDeital.vue";
 import EditSupplier from "@/views/archives/distributor_id/editSupplier.vue";
-import RouteCard from "@/views/archives/routeCard.vue";
+// import RouteCard from "@/views/archives/routeCard.vue";
 import Plant from "@/views/archives/plant.vue";
 import RouteCard_list from "@/views/archives/routeCard_id/routeCard_list.vue";
 import AddRouteCard from "@/views/archives/routeCard_id/addRouteCard.vue";
@@ -43,6 +43,7 @@ import ListAccounts from "@/views/setting/listAccounts.vue";
 import Logout from "@/views/setting/logout.vue";
 import AuthorityManagement from "@/views/setting/authorityManagement.vue";
 import Announcements from "@/views/setting/announcements.vue";
+import MaterialClassification from "@/views/setting/materialClassification.vue";
 import Pattern from "@/views/researchDevelopment/pattern.vue";
 import Platemaking from "@/views/researchDevelopment/platemaking.vue";
 import StockInquiry from "@/views/warehouse/stockInquiry.vue";
@@ -144,8 +145,16 @@ const routes = [
       },
       { path: "/addClient", name: "AddClient", component: AddClient },
       { path: "/salesOrder", name: "SalesOrder", component: SalesOrder },
-      { path: "/salesOrderDetails", name: "SalesOrderDetails", component: SalesOrderDetails },
-      { path: "/salesOrderDetailsAdd", name: "SalesOrderDetailsAdd", component: SalesOrderDetailsAdd },
+      {
+        path: "/salesOrderDetails",
+        name: "SalesOrderDetails",
+        component: SalesOrderDetails,
+      },
+      {
+        path: "/salesOrderDetailsAdd",
+        name: "SalesOrderDetailsAdd",
+        component: SalesOrderDetailsAdd,
+      },
       { path: "/check", name: "Check", component: Check },
       { path: "/designCheck", name: "DesignCheck", component: DesignCheck },
       { path: "/detailEdit", name: "DetailEdit", component: DetailEdit },
@@ -199,7 +208,51 @@ const routes = [
         name: "Announcements",
         component: Announcements,
       },
-
+      {
+        path: "/materialClassification",
+        name: "MaterialClassification",
+        component: MaterialClassification,
+      },
+      {
+        path: "/distributor_list",
+        name: "Distributor_list",
+        component: Distributor_list,
+      },
+      {
+        path: "/addSupplier",
+        name: "AddSupplier",
+        component: AddSupplier,
+      },
+      {
+        path: "/listDeital",
+        name: "ListDeital",
+        component: ListDeital,
+      },
+      {
+        path: "/editSupplier",
+        name: "EditSupplier",
+        component: EditSupplier,
+      },
+      {
+        path: "/routeCard_list",
+        name: "RouteCard_list",
+        component: RouteCard_list,
+      },
+      {
+        path: "/addRouteCard",
+        name: "AddRouteCard",
+        component: AddRouteCard,
+      },
+      {
+        path: "/routeCardDeital",
+        name: "RouteCardDeital",
+        component: RouteCardDeital,
+      },
+      {
+        path: "/editrouteCard",
+        name: "EditrouteCard",
+        component: EditrouteCard,
+      },
       {
         path: "/stockInquiry",
         name: "StockInquiry",
@@ -304,62 +357,63 @@ const routes = [
           },
         ],
       },
-      {
-        path: "/distributor",
-        name: "Distributor",
-        component: Distributor,
-        redirect: { path: "/distributor_list" },
-        children: [
-          {
-            path: "/distributor_list",
-            name: "Distributor_list",
-            component: Distributor_list,
-          },
-          {
-            path: "/addSupplier",
-            name: "AddSupplier",
-            component: AddSupplier,
-          },
-          {
-            path: "/listDeital",
-            name: "ListDeital",
-            component: ListDeital,
-          },
-          {
-            path: "/editSupplier",
-            name: "EditSupplier",
-            component: EditSupplier,
-          },
-        ],
-      },
-      {
-        path: "/routeCard",
-        name: "RouteCard",
-        component: RouteCard,
-        redirect: { path: "/routeCard_list" },
-        children: [
-          {
-            path: "/routeCard_list",
-            name: "RouteCard_list",
-            component: RouteCard_list,
-          },
-          {
-            path: "/addRouteCard",
-            name: "AddRouteCard",
-            component: AddRouteCard,
-          },
-          {
-            path: "/routeCardDeital",
-            name: "RouteCardDeital",
-            component: RouteCardDeital,
-          },
-          {
-            path: "/editrouteCard",
-            name: "EditrouteCard",
-            component: EditrouteCard,
-          },
-        ],
-      },
+
+      // {
+      //   path: "/distributor",
+      //   name: "Distributor",
+      //   component: Distributor,
+      //   redirect: { path: "/distributor_list" },
+      //   children: [
+      //     {
+      //       path: "/distributor_list",
+      //       name: "Distributor_list",
+      //       component: Distributor_list,
+      //     },
+      //     {
+      //       path: "/addSupplier",
+      //       name: "AddSupplier",
+      //       component: AddSupplier,
+      //     },
+      //     {
+      //       path: "/listDeital",
+      //       name: "ListDeital",
+      //       component: ListDeital,
+      //     },
+      //     {
+      //       path: "/editSupplier",
+      //       name: "EditSupplier",
+      //       component: EditSupplier,
+      //     },
+      //   ],
+      // },
+      // {
+      //   path: "/routeCard",
+      //   name: "RouteCard",
+      //   component: RouteCard,
+      //   redirect: { path: "/routeCard_list" },
+      //   children: [
+      //     {
+      //       path: "/routeCard_list",
+      //       name: "RouteCard_list",
+      //       component: RouteCard_list,
+      //     },
+      //     {
+      //       path: "/addRouteCard",
+      //       name: "AddRouteCard",
+      //       component: AddRouteCard,
+      //     },
+      //     {
+      //       path: "/routeCardDeital",
+      //       name: "RouteCardDeital",
+      //       component: RouteCardDeital,
+      //     },
+      //     {
+      //       path: "/editrouteCard",
+      //       name: "EditrouteCard",
+      //       component: EditrouteCard,
+      //     },
+      //   ],
+      // },
       {
         path: "/designFile",
         name: "DesignFile",

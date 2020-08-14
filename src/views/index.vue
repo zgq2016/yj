@@ -108,8 +108,8 @@
               </div>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/distributor" v-if="power.indexOf('E1000')!=-1">供应商</el-menu-item>
-              <el-menu-item index="/routeCard" v-if="power.indexOf('E2000')!=-1">物料工艺卡</el-menu-item>
+              <el-menu-item index="/distributor_list" v-if="power.indexOf('E1000')!=-1">供应商</el-menu-item>
+              <el-menu-item index="/routeCard_list" v-if="power.indexOf('E2000')!=-1">物料工艺卡</el-menu-item>
               <el-menu-item index="/designFile" v-if="power.indexOf('E3000')!=-1">款式档案</el-menu-item>
               <el-menu-item index="/plant">工厂</el-menu-item>
               <!-- v-if="power.indexOf('E4000')!=-1" -->
@@ -196,6 +196,7 @@
             </template>
             <el-menu-item-group>
               <el-menu-item index="/goodsCategory" v-if="power.indexOf('H1000')!=-1">商品分类</el-menu-item>
+              <el-menu-item index="/materialClassification">物料分类</el-menu-item>
               <el-menu-item index="/colorManagement" v-if="power.indexOf('H2000')!=-1">颜色管理</el-menu-item>
               <el-menu-item index="/measurementManagement" v-if="power.indexOf('H3000')!=-1">尺码管理</el-menu-item>
               <el-menu-item index="/materialManagement" v-if="power.indexOf('H4000')!=-1">材质管理</el-menu-item>

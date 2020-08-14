@@ -1,5 +1,12 @@
 <template>
   <div class="ListDeital">
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>档案库</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/distributor_list' }">供应商</el-breadcrumb-item>
+        <el-breadcrumb-item>供应商详细</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <div class="main">
       <div class="left">
         <div class="main_left">
@@ -70,7 +77,7 @@ export default {
       id: "",
       obj: {},
       dialogVisible: false,
-      dialogVisible1: false
+      dialogVisible1: false,
     };
   },
   methods: {
@@ -79,7 +86,7 @@ export default {
     },
     handlePreview1() {
       this.dialogVisible1 = true;
-    }
+    },
   },
   async mounted() {
     let { id } = this.$route.query;
@@ -96,7 +103,7 @@ export default {
     }
     this.power = localStorage.getItem("power");
     console.log(this.power);
-  }
+  },
 };
 </script>
 

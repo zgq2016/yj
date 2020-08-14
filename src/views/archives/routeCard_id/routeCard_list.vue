@@ -1,15 +1,27 @@
 <template>
   <div class="routeCard_list">
-    <!-- 搜索 新增 -->
-    <div style="display:flex;justify-content: space-between;align-items: center;">
-      <div class="search">
-        <el-input v-model="companyname" placeholder="请输入内容" style="width:200px;margin:0 10px;"></el-input>
-        <el-button class="el-icon-search">搜索</el-button>
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>档案库</el-breadcrumb-item>
+        <el-breadcrumb-item>供应商</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
+    <div style="margin-bottom:10px">
+      <el-input placeholder="单据编号" v-model="companyname" clearable style="width:200px"></el-input>
+      <el-button
+        icon="el-icon-search"
+        size="mini"
+        circle
+        class="search_button"
+        @click="handleSearch"
+      ></el-button>
+      <div class="form">
+        <el-form :inline="true" class="demo-form-inline">
+          <el-form-item></el-form-item>
+        </el-form>
+        <div class="addStyle" @click="addRouteCard" v-if="power.indexOf('E2000100')!=-1">新增</div>
       </div>
       <!-- add -->
-      <div class="addStyle" v-if="power.indexOf('E2000100')!=-1">
-        <span class="add" @click="addRouteCard">新增</span>
-      </div>
     </div>
     <!-- main -->
     <div class="main">
@@ -57,8 +69,8 @@ export default {
   props: {
     data: {
       type: Object, // 声明属性的类型
-      default: () => ({}) // 属性的默认值
-    }
+      default: () => ({}), // 属性的默认值
+    },
   },
   data() {
     return {
@@ -67,22 +79,31 @@ export default {
       SupplierList: [], //列表数据
       pageIndex: 1,
       pageSize: 24,
-      total: 0
+      total: 0,
     };
   },
   methods: {
+    handleSearch() {
+      if (this.companyname === "") {
+        this.data.id = 0;
+        this.init();
+      } else {
+        this.data.id = this.data.id;
+        this.init();
+      }
+    },
     routeCardDeital(item) {
       this.$router.push({ path: `/routeCardDeital?id=${item.id}&TL=1` });
     },
     addRouteCard() {
-      this.$router.push({ path: `/addRouteCard?id=${this.data.id || 0}&TL=0` });
+      this.$router.push({ path: `/addRouteCard` });
     },
     async init() {
       let res = await getMaterialsList({
         materials_class_id: this.data.id || 0,
         page: this.pageIndex,
         page_size: this.pageSize,
-        companyname: this.companyname
+        companyname: this.companyname,
       });
       console.log(res);
       let { data, count } = res.data;
@@ -97,39 +118,61 @@ export default {
     handleCurrentChange(val) {
       this.pageIndex = val;
       this.init();
-    }
+    },
   },
   mounted() {
     this.init();
     this.power = localStorage.getItem("power");
-    console.log(this.power);
   },
   watch: {
     data() {
       this.init();
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="less" scoped>
 .routeCard_list {
   .addStyle {
-    // margin: 0 30px 30px 0;
-    text-align: right;
-    .add {
-      border-radius: 12px;
-      padding: 8px 50px;
-      color: #000;
-      // background-color: #fff;
-      border: 1px solid #000;
-      margin-right: 10px;
-      &:hover {
-        color: #fff;
-        background-color: #000;
-        cursor: pointer;
-      }
+    margin: 0 30px 0px 0px;
+    border-radius: 15px;
+    width: 120px;
+    height: 30px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    &:hover {
+      cursor: pointer;
     }
+  }
+  /deep/ .el-input__inner {
+    width: 100%;
+    height: 30px;
+    background-color: #f2f2f2;
+    border-radius: 15px;
+    border: none;
+    color: #5e5e5e;
+    font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
+      \\5b8b\4f53, sans-serif;
+  }
+  .search_button {
+    margin-left: 10px;
+    background-color: #000;
+  }
+  /deep/ .el-icon-search {
+    color: #fff;
+  }
+  /deep/.el-button {
+    border: none;
+  }
+  .form {
+    width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   .main {
     padding: 20px 0;
@@ -137,13 +180,13 @@ export default {
       display: flex;
       flex-wrap: wrap;
       .list {
-        background-color: #f2f2f2;
+        width: 300px;
+        margin: 0 20px 20px 0;
         border-radius: 10px;
         overflow: hidden;
-        width: 30%;
+        background-color: #f2f2f2;
         display: flex;
         cursor: pointer;
-        margin: 0 20px 20px 0;
         .list_img {
           img {
             width: 100px;

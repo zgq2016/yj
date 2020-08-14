@@ -4,38 +4,23 @@
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>设置</el-breadcrumb-item>
-        <el-breadcrumb-item>商品分类</el-breadcrumb-item>
+        <el-breadcrumb-item>物料分类</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <!-- 添加分类 -->
-    <div class="addClassify" v-if="power.indexOf('H1000100')!=-1" @click="addClassify">添加分类</div>
+    <div class="addClassify" @click="addClassify">添加分类</div>
     <el-table
       :data="tableData"
       style="width: 100%;margin: 20px 0;"
       row-key="id"
       border
-      :tree-props="{children: 'goods_category_data' , hasChildren: 'hasChildren'}"
+      :tree-props="{children: 'class_data' , hasChildren: 'hasChildren'}"
     >
-      <el-table-column prop="goods_category_name" label="分类名称" width="200"></el-table-column>
-      <el-table-column prop="describe" label="分类描述" width="200"></el-table-column>
-      <el-table-column prop="sort" label="排序" width="200"></el-table-column>
-      <el-table-column prop="unit" label="单位" width="200"></el-table-column>
-      <el-table-column
-        align="right"
-        label="操作"
-        v-if="power.indexOf('H1000300')!=-1||power.indexOf('H1000200')!=-1"
-      >
+      <el-table-column prop="classname" label="分类名称" width="200"></el-table-column>
+      <el-table-column align="right" label="操作">
         <template slot-scope="scope">
-          <div
-            v-if="power.indexOf('H1000300')!=-1"
-            class="el-icon-edit btn"
-            @click="handleEdit(scope.$index, scope.row)"
-          ></div>
-          <div
-            v-if="power.indexOf('H1000200')!=-1"
-            class="el-icon-delete btn"
-            @click="handleDelete(scope.$index, scope.row)"
-          ></div>
+          <div class="el-icon-edit btn" @click="handleEdit(scope.$index, scope.row)"></div>
+          <div class="el-icon-delete btn" @click="handleDelete(scope.$index, scope.row)"></div>
         </template>
       </el-table-column>
     </el-table>
@@ -49,41 +34,19 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <el-form ref="form" :rules="rules1" :model="form" label-width="80px">
-        <el-form-item label="分类名称" prop="goods_category_name">
-          <el-input v-model="form.goods_category_name" style="width:80%;"></el-input>
+      <el-form ref="form1" :rules="rules" :model="form" label-width="80px">
+        <el-form-item label="分类名称" prop="classname">
+          <el-input v-model="form.classname" style="width:80%;"></el-input>
         </el-form-item>
-        <el-form-item label="上级分类">
-          <el-select
-            v-model="region"
-            placeholder="可选/可不选"
-            style="width:80%;"
-            clearable
-            @change="get_goods_category_id($event)"
-          >
+        <el-form-item label="上级分类" prop="class_id">
+          <el-select v-model="form.class_id" placeholder="可选/可不选" style="width:80%;" clearable>
             <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.goods_category_name "
+              v-for="item in classData"
+              :key="item.id"
+              :label="item.classname"
               :value="item.id"
             ></el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item v-if="region != ''" label="计量单位">
-          <el-select v-model="form.unit" clearable placeholder="请选择">
-            <el-option
-              v-for="item in units"
-              :key="item.id"
-              :label="item.unit_name"
-              :value="item.unit_name"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="分类描述">
-          <el-input type="textarea" v-model="form.describe"></el-input>
-        </el-form-item>
-        <el-form-item label="排序">
-          <el-input v-model="form.sort" style="width:80%;"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -101,40 +64,19 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <el-form ref="obj" :model="obj" :rules="rules" label-width="80px" resetFields>
-        <el-form-item label="分类名称" prop="goods_category_name">
-          <el-input v-model="obj.goods_category_name" style="width:80%;"></el-input>
+      <el-form ref="obj" :model="obj" :rules="rules1" label-width="80px" resetFields>
+        <el-form-item label="分类名称" prop="classname">
+          <el-input v-model="obj.classname" style="width:80%;"></el-input>
         </el-form-item>
-        <el-form-item label="上级分类" v-if="rowLevel==='1'">
-          <el-select
-            v-model="region"
-            clearable
-            @change="get_goods_category_id($event)"
-            style="width:80%;"
-          >
+        <el-form-item label="上级分类" prop="class_id">
+          <el-select v-model="obj.class_id" placeholder="可选/可不选" style="width:80%;" clearable>
             <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.goods_category_name "
+              v-for="item in classData"
+              :key="item.id"
+              :label="item.classname"
               :value="item.id"
             ></el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item v-if="region != ''&&rowLevel==='1'" label="计量单位">
-          <el-select v-model="obj.unit" clearable placeholder="请选择">
-            <el-option
-              v-for="item in units"
-              :key="item.id"
-              :label="item.unit_name"
-              :value="item.unit_name"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="分类描述">
-          <el-input type="textarea" v-model="obj.describe"></el-input>
-        </el-form-item>
-        <el-form-item label="排序">
-          <el-input v-model="obj.sort" style="width:80%;"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -163,19 +105,27 @@ import {
   goodsCategoryDel,
   goodsCategoryEdit,
 } from "@/api/setting.js";
+import {
+  getMaterialsClass,
+  materialsClassAdd,
+  getMaterialsClassInfo,
+  getMaterialsClassEdit,
+  materialsClassDel,
+} from "@/api/archives";
 import { getUnitSelect } from "@/api/archives";
 export default {
   data() {
     return {
+      classData: [],
       units: [],
       power: "",
       rules: {
-        goods_category_name: [
+        classname: [
           { required: true, message: "请输入分类名称", trigger: "blur" },
         ],
       },
       rules1: {
-        goods_category_name: [
+        classname: [
           { required: true, message: "请输入分类名称", trigger: "blur" },
         ],
       },
@@ -183,11 +133,8 @@ export default {
       centerDialogVisible: false, //添加分类
       centerDialogVisible1: false, //编辑分类
       form: {
-        goods_category_id: 0,
-        goods_category_name: "",
-        describe: "",
-        sort: "",
-        level: 0,
+        classname: "",
+        class_id: "",
       },
       region: "",
       obj: {},
@@ -252,7 +199,7 @@ export default {
         type: "warning",
       })
         .then(async () => {
-          let res = await goodsCategoryDel({ id: row.id });
+          let res = await materialsClassDel({ id: row.id });
           this.init();
           this.$message({
             type: "success",
@@ -284,36 +231,41 @@ export default {
         this.centerDialogVisible = true;
       }
     },
-    async handleNewList() {
+    async handleNewList(form) {
       this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
-        delete this.form.region;
-        if (this.tableData.length === 0) {
-          let res = await goodsCategoryAdd(this.form);
+        if (this.form.class_id === "") {
+          let form = {};
+          form.classname = this.form.classname;
+          form.class_id = 0;
+          form.level = 0;
+          let res = await materialsClassAdd(form);
+          console.log(res);
           this.$refs["form"].resetFields();
-          this.form.goods_category_id = 0;
-          this.region = "";
           this.centerDialogVisible = false;
           this.init();
         }
-        if (this.tableData.length > 0) {
-          let res = await goodsCategoryAdd(this.form);
+        if (this.form.class_id !== "") {
+          let form = {};
+          form.classname = this.form.classname;
+          form.class_id = this.form.class_id;
+          form.level = 1;
+          let res = await materialsClassAdd(form);
+          console.log(res);
           this.$refs["form"].resetFields();
-          this.form.goods_category_id = 0;
           this.centerDialogVisible = false;
           this.init();
         }
       });
     },
     async init() {
-      let res = await goodsCategoryList({
-        page: this.pageIndex,
-        page_size: this.pageSize,
-      });
+      let res = await getMaterialsClass();
       console.log(res);
       let { data, count } = res.data;
       this.tableData = data;
       this.total = count;
+      this.getUnit();
+      this.getClassData();
     },
     handleSizeChange(val) {
       this.pageSize = val;
@@ -323,6 +275,11 @@ export default {
       this.pageIndex = val;
       this.init();
     },
+    async getClassData() {
+      let res = await getMaterialsClass();
+      let { data } = res.data;
+      this.classData = data;
+    },
     async getUnit() {
       let res = await getUnitSelect();
       let { data } = res.data;
@@ -331,7 +288,6 @@ export default {
   },
   mounted() {
     this.init();
-    this.getUnit();
     this.power = localStorage.getItem("power");
   },
 };
