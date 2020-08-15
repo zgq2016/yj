@@ -91,11 +91,7 @@
     <!-- table -->
     <div class="table" v-if="power.indexOf('A2000100')!=-1">
       <div v-if="switchover_active===false">
-<<<<<<< HEAD
         <el-table ref="singleTable" :data="tableData" size="mini">
-=======
-        <el-table ref="singleTable" size='mini' :data="tableData" highlight-current-row>
->>>>>>> 0885bbd9c0b111bb2f6ae1d8f56f975355a60c55
           <el-table-column type="index" width="50"></el-table-column>
           <el-table-column label="图片" width="70">
             <template slot-scope="scope">

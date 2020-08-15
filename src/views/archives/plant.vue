@@ -10,7 +10,6 @@
     </div>
     <!-- 左右侧边栏 -->
     <el-container>
-<<<<<<< HEAD
       <div>
         <div style="margin-bottom:10px">
           <el-input
@@ -29,83 +28,6 @@
           ></el-button>
         </div>
         <div class="form">
-=======
-      <el-aside style="width:inherit;">
-        <el-menu
-          default-active="2"
-          class="el-menu-vertical-demo"
-          :router="true"
-          :unique-opened="true"
-          style="height:240px;width:11vw;"
-        >
-          <!-- <el-submenu :index="item.id+''" v-for="(item,index) in menuList" :key="index">
-            <template slot="title">
-              <div
-                style="display: flex;justify-content: space-between;align-items: center;margin-right:10px;"
-                @mouseenter="mouseenter(index)"
-                @mouseleave="mouseleave"
-              >
-                <span class="classname">{{item.mode_name}}</span>
-                <span
-                  class="el-icon-edit-outline"
-                  :class="active===index?'block':'none'"
-                  @click.stop="aa(item)"
-                ></span>
-              </div>
-            </template>
-            <el-menu-item
-              v-for="(item1,index1) in item.class_data"
-              :key="index1"
-              @click="handleIten(item1)"
-            >
-              <div
-                style="display: flex;justify-content: space-between;align-items: center;"
-                @mouseenter="mouseenter1(index1)"
-                @mouseleave="mouseleave1"
-              >
-                <span class="classname">{{item1.mode_name}}</span>
-                <span
-                  class="el-icon-edit-outline"
-                  :class="active1===index1?'block':'none'"
-                  @click.stop="aa1(item1)"
-                ></span>
-              </div>
-            </el-menu-item>
-            <el-menu-item @click="handelShow(level=1,item)">
-              <template slot="title">
-                <span class="el-icon-plus"></span>
-                <span>新增工厂二级分类</span>
-              </template>
-            </el-menu-item>
-          </el-submenu>-->
-          <el-menu-item v-for="(item,index) in menuList" :key="index">
-            <div
-              @mouseenter="mouseenter(index)"
-              @mouseleave="mouseleave"
-              @click="clickMenu(item)"
-              style="display: flex;justify-content: space-between;align-items: center;margin-right:10px;"
-            >
-              <span slot="title" style="color:#000;">{{item.mode_name}}</span>
-              <span
-                class="el-icon-edit-outline"
-                :class="active===index?'block':'none'"
-                @click.stop="aa(item)"
-              ></span>
-            </div>
-          </el-menu-item>
-          <el-menu-item index @click="handelShow(level=0)">
-            <template slot="title">
-              <span class="el-icon-plus"></span>
-              <span>新增工厂方式</span>
-            </template>
-          </el-menu-item>
-        </el-menu>
-      </el-aside>
-
-      <!-- 右边 -->
-      <div class="table">
-        <div class="form" style="margin:15px">
->>>>>>> 0885bbd9c0b111bb2f6ae1d8f56f975355a60c55
           <el-form :inline="true" :model="form" class="demo-form-inline">
             <el-form-item>
               <el-select v-model="form.mode_id" clearable placeholder="请选择指派方式">
@@ -123,13 +45,8 @@
         <el-table
           :data="tableData"
           stripe
-<<<<<<< HEAD
           :header-cell-style="{background:'#eef1f6',color:'#606266'}"
           style=" width:85vw;margin:5px;cursor: pointer;"
-=======
-          size='mini'
-          style=" width:75vw;margin:5px;cursor: pointer;"
->>>>>>> 0885bbd9c0b111bb2f6ae1d8f56f975355a60c55
         >
           <el-table-column prop="factory_name" align="center" label="工厂名称"></el-table-column>
           <el-table-column prop="contacts" align="center" label="联系人"></el-table-column>
