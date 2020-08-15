@@ -476,6 +476,13 @@ export const sampleAgree = (data) => {
     data: data,
   });
 };
+export const designAgree = (data) => {
+  return axios({
+    url: "?g=design_agree",
+    method: "post",
+    data: data,
+  });
+};
 
 // contacts、phone
 // bank、bankid、name

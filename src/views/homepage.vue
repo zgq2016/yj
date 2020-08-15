@@ -64,7 +64,7 @@
           <ul>
             <li @click.stop="rout2(item.id)" v-for="(item,index) in works_2" :key="index">
               <el-image
-                style="width: 132px; height: 230px;border-radius: 10px;"
+                style="width: 150px; height: 230px;border-radius: 10px;"
                 :src="item.style_pic_url"
                 fit="cover"
               ></el-image>

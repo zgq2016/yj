@@ -34,7 +34,7 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <el-form ref="form1" :rules="rules" :model="form" label-width="80px">
+      <el-form ref="form" :rules="rules" :model="form" label-width="80px">
         <el-form-item label="分类名称" prop="classname">
           <el-input v-model="form.classname" style="width:80%;"></el-input>
         </el-form-item>
@@ -50,10 +50,11 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleClose">取 消</el-button>
-        <el-button type="primary" @click="handleNewList">确 定</el-button>
+        <el-button type="primary" @click="handleClose(form)">取 消</el-button>
+        <el-button type="primary" @click="handleNewList(form)">确 定</el-button>
       </span>
     </el-dialog>
+
     <!-- 编辑分类 -->
     <el-dialog
       title="编辑分类"
@@ -68,7 +69,7 @@
         <el-form-item label="分类名称" prop="classname">
           <el-input v-model="obj.classname" style="width:80%;"></el-input>
         </el-form-item>
-        <el-form-item label="上级分类" prop="class_id">
+        <el-form-item label="上级分类" prop="class_id" v-if="obj.level==1">
           <el-select v-model="obj.class_id" placeholder="可选/可不选" style="width:80%;" clearable>
             <el-option
               v-for="item in classData"
@@ -80,8 +81,8 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleClose1">取 消</el-button>
-        <el-button type="primary" @click="handleEditList">确 定</el-button>
+        <el-button type="primary" @click="handleClose1('obj')">取 消</el-button>
+        <el-button type="primary" @click="handleEditList('obj')">确 定</el-button>
       </span>
     </el-dialog>
     <!-- 分页 -->
@@ -112,12 +113,10 @@ import {
   getMaterialsClassEdit,
   materialsClassDel,
 } from "@/api/archives";
-import { getUnitSelect } from "@/api/archives";
 export default {
   data() {
     return {
       classData: [],
-      units: [],
       power: "",
       rules: {
         classname: [
@@ -148,48 +147,29 @@ export default {
     };
   },
   methods: {
-    handleClose() {
-      this.form.goods_category_id = 0;
-      this.form.goods_category_name = "";
-      this.form.describe = "";
-      this.form.sort = "";
-      this.form.level = 0;
-      this.region = "";
+    handleClose(form) {
+      this.$refs["form"].resetFields();
       this.centerDialogVisible = false;
-      this.vh1 = false;
       this.init();
     },
-    handleClose1() {
+    handleClose1(obj) {
+      this.$refs["obj"].resetFields();
       this.centerDialogVisible1 = false;
-      this.vh1 = false;
       this.init();
     },
-    handleEditList() {
+    handleEditList(obj) {
       this.$refs["obj"].validate(async (valid) => {
         if (!valid) return;
-        delete this.obj.goods_category_data;
-        delete this.obj.region;
-        console.log(this.obj);
-        let res = await goodsCategoryEdit(this.obj);
+        let res = await getMaterialsClassEdit(this.obj);
         console.log(res);
         this.$refs["obj"].resetFields();
-        this.obj.goods_category_id = 0;
-        this.region = "";
         this.centerDialogVisible1 = false;
         this.init();
       });
     },
     async handleEdit(index, row) {
-      let res = await goodsCategoryInfo({ id: row.goods_category_id });
-      console.log(res);
-      this.region = res.data.data[0].goods_category_name;
-      console.log(row);
-      this.rowLevel = row.level;
-      let res1 = await goodsCategoryInfo();
-      let { data } = res1.data;
-      this.options = data;
+      console.log(index, row);
       this.obj = row;
-
       this.centerDialogVisible1 = true;
     },
     async handleDelete(index, row) {
@@ -213,23 +193,8 @@ export default {
           });
         });
     },
-    get_goods_category_id(e) {
-      this.form.goods_category_id = e;
-      this.obj.goods_category_id = e;
-      this.vh1 = true;
-    },
     async addClassify() {
-      if (this.tableData.length === 0) {
-        this.region = "";
-        this.centerDialogVisible = true;
-      }
-      if (this.tableData.length > 0) {
-        this.region = "";
-        let res = await goodsCategoryInfo();
-        let { data } = res.data;
-        this.options = data;
-        this.centerDialogVisible = true;
-      }
+      this.centerDialogVisible = true;
     },
     async handleNewList(form) {
       this.$refs["form"].validate(async (valid) => {
@@ -264,7 +229,6 @@ export default {
       let { data, count } = res.data;
       this.tableData = data;
       this.total = count;
-      this.getUnit();
       this.getClassData();
     },
     handleSizeChange(val) {
@@ -279,11 +243,6 @@ export default {
       let res = await getMaterialsClass();
       let { data } = res.data;
       this.classData = data;
-    },
-    async getUnit() {
-      let res = await getUnitSelect();
-      let { data } = res.data;
-      this.units = data;
     },
   },
   mounted() {

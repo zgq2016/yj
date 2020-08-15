@@ -20,10 +20,15 @@
       <div class="basicInfo">基础信息</div>
       <div style="display: flex;justify-content: space-between;">
         <div class="content">
-          <img class="imgSrc" :src="obj.style_pic_url" alt />
+          <!-- <img class="imgSrc" :src="obj.style_pic_url" alt /> -->
+          <div
+            class="imgSrc"
+            :style="`background: url(${obj.style_pic_url}) no-repeat 0 -75px;width:150px;height:150px`"
+          ></div>
           <img
             v-if="obj.style_color_pic_url!==''"
             class="imgSrc"
+            style="width:150px;height:150px"
             :src="obj.style_color_pic_url"
             alt
           />
@@ -43,19 +48,22 @@
               <div>颜色：{{obj.style_color}}</div>
             </div>
             <div style="display:flex">
-              <div
+              <el-tooltip
                 class="edit"
                 style="background-color: #f2f2f2;"
-                @click="editTheStyle"
                 v-if="power.indexOf('A2000300')!=-1||power.indexOf('A2000400')!=-1"
+                content="编辑"
+                placement="top"
               >
-                <svg viewBox="0 0 32 32" width="20" height="20">
-                  <path
-                    d="M17.2 9.144l5.656 5.657-13.2 13.199h-5.656v-5.657l13.2-13.2zM19.085 7.259l2.828-2.829c0.241-0.241 0.575-0.39 0.943-0.39s0.701 0.149 0.943 0.39l3.772 3.772c0.241 0.241 0.39 0.575 0.39 0.943s-0.149 0.701-0.39 0.943l-2.829 2.828-5.656-5.656z"
-                    fill="#5e5e5e"
-                  />
-                </svg>
-              </div>
+                <div @click="editTheStyle">
+                  <svg viewBox="0 0 32 32" width="20" height="20">
+                    <path
+                      d="M17.2 9.144l5.656 5.657-13.2 13.199h-5.656v-5.657l13.2-13.2zM19.085 7.259l2.828-2.829c0.241-0.241 0.575-0.39 0.943-0.39s0.701 0.149 0.943 0.39l3.772 3.772c0.241 0.241 0.39 0.575 0.39 0.943s-0.149 0.701-0.39 0.943l-2.829 2.828-5.656-5.656z"
+                      fill="#5e5e5e"
+                    />
+                  </svg>
+                </div>
+              </el-tooltip>
             </div>
           </div>
         </div>

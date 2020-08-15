@@ -279,6 +279,7 @@ export default {
       if (this.tableData.length > 0) {
         this.region = "";
         let res = await goodsCategoryInfo();
+        console.log(res);
         let { data } = res.data;
         this.options = data;
         this.centerDialogVisible = true;
@@ -290,6 +291,7 @@ export default {
         delete this.form.region;
         if (this.tableData.length === 0) {
           let res = await goodsCategoryAdd(this.form);
+          console.log(res);
           this.$refs["form"].resetFields();
           this.form.goods_category_id = 0;
           this.region = "";
@@ -298,6 +300,7 @@ export default {
         }
         if (this.tableData.length > 0) {
           let res = await goodsCategoryAdd(this.form);
+          console.log(res);
           this.$refs["form"].resetFields();
           this.form.goods_category_id = 0;
           this.centerDialogVisible = false;

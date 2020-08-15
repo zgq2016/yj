@@ -53,7 +53,7 @@
             <el-menu-item-group>
               <el-menu-item index="/productionOrders" v-if="power.indexOf('A1000')!=-1">生产下单</el-menu-item>
               <el-menu-item index="/purchase" v-if="power.indexOf('A2000')!=-1">生产采购</el-menu-item>
-              <el-menu-item index="/productionScheduling" v-if="power.indexOf('A3000')!=-1">生产排期</el-menu-item>
+              <el-menu-item index="/productionScheduling" v-if="power.indexOf('A3000')!=-1">生产排单</el-menu-item>
               <el-menu-item index="/tailor" v-if="power.indexOf('A4000')!=-1">裁剪</el-menu-item>
               <el-menu-item index="/shipment" v-if="power.indexOf('A5000')!=-1">生产出货</el-menu-item>
             </el-menu-item-group>
@@ -197,14 +197,15 @@
             <el-menu-item-group>
               <el-menu-item index="/goodsCategory" v-if="power.indexOf('H1000')!=-1">商品分类</el-menu-item>
               <el-menu-item index="/materialClassification">物料分类</el-menu-item>
+              <el-menu-item index="/plantManagement">工厂分类</el-menu-item>
               <el-menu-item index="/colorManagement" v-if="power.indexOf('H2000')!=-1">颜色管理</el-menu-item>
               <el-menu-item index="/measurementManagement" v-if="power.indexOf('H3000')!=-1">尺码管理</el-menu-item>
               <el-menu-item index="/materialManagement" v-if="power.indexOf('H4000')!=-1">材质管理</el-menu-item>
               <el-menu-item index="/timeManagement" v-if="power.indexOf('H5000')!=-1">季节管理</el-menu-item>
               <el-menu-item index="/unitManagement" v-if="power.indexOf('H6000')!=-1">单位管理</el-menu-item>
               <el-submenu index="9-3" v-if="power.indexOf('H7000')!=-1">
-                <template slot="title" v-if="power.indexOf('H7000')!=-1">账户管理</template>
-                <el-menu-item index="/listAccounts">账户列表</el-menu-item>
+                <template slot="title" v-if="power.indexOf('H7000')!=-1">用户管理</template>
+                <el-menu-item index="/listAccounts">用户列表</el-menu-item>
                 <el-menu-item index="authorityManagement">权限管理</el-menu-item>
               </el-submenu>
               <el-menu-item index="/announcements">公司公告</el-menu-item>

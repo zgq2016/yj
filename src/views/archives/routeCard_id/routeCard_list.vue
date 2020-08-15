@@ -15,13 +15,27 @@
         class="search_button"
         @click="handleSearch"
       ></el-button>
-      <div class="form">
-        <el-form :inline="true" class="demo-form-inline">
-          <el-form-item></el-form-item>
-        </el-form>
-        <div class="addStyle" @click="addRouteCard" v-if="power.indexOf('E2000100')!=-1">新增</div>
-      </div>
-      <!-- add -->
+    </div>
+    <div class="form">
+      <el-form :inline="true" class="demo-form-inline">
+        <el-form-item prop="class_id">
+          <el-select
+            v-model="form.class_id"
+            placeholder="选择物料"
+            clearable
+            @change="get_classData($event)"
+            style="width:100px"
+          >
+            <el-option
+              v-for="item in classData"
+              :key="item.id"
+              :label="item.classname"
+              :value="item"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div class="addStyle" @click="addRouteCard" v-if="power.indexOf('E2000100')!=-1">新增</div>
     </div>
     <!-- main -->
     <div class="main">
@@ -64,7 +78,7 @@
 </template>
 
 <script>
-import { getMaterialsList } from "@/api/archives";
+import { getMaterialsList, getMaterialsClass } from "@/api/archives";
 export default {
   props: {
     data: {
@@ -80,6 +94,10 @@ export default {
       pageIndex: 1,
       pageSize: 24,
       total: 0,
+      classData: [],
+      form: {
+        class_id: "",
+      },
     };
   },
   methods: {
@@ -187,10 +205,6 @@ export default {
         background-color: #f2f2f2;
         display: flex;
         cursor: pointer;
-<<<<<<< HEAD
-=======
-        margin: 0 20px 20px 20px;
->>>>>>> 6016fb9e9dd753c05931a007c5faa2b145d3f3f5
         .list_img {
           img {
             width: 100px;
@@ -207,6 +221,7 @@ export default {
     }
   }
   .pagination {
+    margin: 20px;
     text-align: right;
   }
 }

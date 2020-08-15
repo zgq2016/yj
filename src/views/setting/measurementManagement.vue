@@ -247,9 +247,9 @@ export default {
       this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         delete this.form.region;
-        console.log(this.form);
         if (this.tableData.length === 0) {
           let res = await sizeAdd(this.form);
+          console.log(res);
           this.$refs["form"].resetFields();
           this.form.size_id = 0;
           this.region = "";
@@ -258,6 +258,7 @@ export default {
         }
         if (this.tableData.length > 0) {
           let res = await sizeAdd(this.form);
+          console.log(res);
           this.$refs["form"].resetFields();
           this.form.size_id = 0;
           this.region = "";
@@ -288,7 +289,6 @@ export default {
   mounted() {
     this.init();
     this.power = localStorage.getItem("power");
-    console.log(this.power);
   },
 };
 </script>

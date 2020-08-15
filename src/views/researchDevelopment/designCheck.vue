@@ -12,7 +12,7 @@
     <div class="detail">
       <div class="left_img">
         <div v-if="obj.picurl!==''">
-          <img :src="obj.picurl" alt />
+          <img :src="obj.picurl" alt style="width:150px;height:150px" />
         </div>
         <div v-if="obj.picurl===''">
           <img v-if="obj.projecttype==='0'" src="../../assets/意向.jpg" alt />
@@ -29,19 +29,51 @@
           <div class="claim">要求：{{obj.detailed}}</div>
         </div>
         <div style="display:flex">
-          <div
-            @click="editOutline"
+          <el-tooltip
             class="edit"
             style="margin-right: 12px;background-color: #f2f2f2;"
             v-if="power.indexOf('A1000300')!=-1||power.indexOf('A1000400')!=-1"
+            content="编辑"
+            placement="top"
           >
-            <svg viewBox="0 0 32 32" width="20" height="20">
-              <path
-                d="M17.2 9.144l5.656 5.657-13.2 13.199h-5.656v-5.657l13.2-13.2zM19.085 7.259l2.828-2.829c0.241-0.241 0.575-0.39 0.943-0.39s0.701 0.149 0.943 0.39l3.772 3.772c0.241 0.241 0.39 0.575 0.39 0.943s-0.149 0.701-0.39 0.943l-2.829 2.828-5.656-5.656z"
-                fill="#5e5e5e"
-              />
-            </svg>
-          </div>
+            <div @click="editOutline">
+              <svg viewBox="0 0 32 32" width="20" height="20">
+                <path
+                  d="M17.2 9.144l5.656 5.657-13.2 13.199h-5.656v-5.657l13.2-13.2zM19.085 7.259l2.828-2.829c0.241-0.241 0.575-0.39 0.943-0.39s0.701 0.149 0.943 0.39l3.772 3.772c0.241 0.241 0.39 0.575 0.39 0.943s-0.149 0.701-0.39 0.943l-2.829 2.828-5.656-5.656z"
+                  fill="#5e5e5e"
+                />
+              </svg>
+            </div>
+          </el-tooltip>
+          <el-tooltip
+            class="edit"
+            style="margin-right: 12px;background-color: #f2f2f2;"
+            v-if="switchover_active===false"
+            content="切换"
+            placement="top"
+          >
+            <div @click="switchover">
+              <svg viewBox="0 0 32 32" width="20" height="20">
+                <path
+                  d="M4 11h5V5H4v6zm0 7h5v-6H4v6zm6 0h5v-6h-5v6zm6 0h5v-6h-5v6zm-6-7h5V5h-5v6zm6-6v6h5V5h-5z"
+                  fill="#5e5e5e"
+                />
+              </svg>
+            </div>
+          </el-tooltip>
+          <el-tooltip
+            class="edit"
+            style="margin-right: 12px;background-color: #f2f2f2;"
+            v-if="switchover_active===true"
+            content="切换"
+            placement="top"
+          >
+            <div @click="switchover">
+              <svg viewBox="0 0 32 32" width="20" height="20">
+                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" fill="#5e5e5e" />
+              </svg>
+            </div>
+          </el-tooltip>
           <div class="add">
             <span
               style="background-color: #f2f2f2;color: #5e5e5e;"
@@ -50,7 +82,6 @@
               v-if="power.indexOf('A2000200')!=-1"
             >添加款式</span>
             <span class="addStyle" @click="newTheStyle" v-if="power.indexOf('A2000200')!=-1">新增款式</span>
-            <span class="addStyle" @click="switchover">切换</span>
           </div>
         </div>
       </div>
@@ -60,11 +91,11 @@
     <!-- table -->
     <div class="table" v-if="power.indexOf('A2000100')!=-1">
       <div v-if="switchover_active===false">
-        <el-table ref="singleTable" :data="tableData" highlight-current-row>
+        <el-table ref="singleTable" :data="tableData" size="mini">
           <el-table-column type="index" width="50"></el-table-column>
           <el-table-column label="图片" width="70">
             <template slot-scope="scope">
-              <img :src="scope.row.style_pic_url" class="img" width="100" alt />
+              <img :src="scope.row.style_pic_url" class="img" alt />
             </template>
           </el-table-column>
           <el-table-column>
@@ -97,7 +128,11 @@
       <div v-if="switchover_active===true">
         <div class="card" v-for="(item, index) in tableData" :key="index">
           <div @click="handleEdit(item)">
-            <img :src="item.style_pic_url" alt />
+            <el-image
+              style="width: 150px; height: 300px;border-radius: 10px;"
+              :src="item.style_pic_url"
+              fit="cover"
+            ></el-image>
             <div style="color:#000">{{item.style_type}}</div>
             <div style="color:#000">{{item.stylename}}</div>
             <div style="color:#000">{{item.styleno}}</div>
@@ -298,6 +333,8 @@ export default {
       align-items: center;
       cursor: pointer;
       margin-right: 15px;
+      font-size: 10px;
+      // padding: 10px;
     }
   }
 
@@ -339,15 +376,14 @@ export default {
     }
   }
   .table {
-    // margin-top: -40px;
     .img {
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
       border-radius: 5px;
     }
     .color {
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
       border-radius: 5px;
     }
   }
@@ -355,30 +391,10 @@ export default {
     margin: 0 25px 20px 0;
     font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
       \\5b8b\4f53, sans-serif;
-    width: 130px;
-    height: 300px;
     float: left;
-    img {
-      width: 130px;
-      height: 230px;
-      border-radius: 10px;
-      margin-bottom: 3px;
-    }
     div {
       margin: 1px 5px;
     }
   }
-  // .el-table th,
-  // .el-table tr {
-  //   background-color: #fff;
-  //   height: 72px;
-  // }
-  // /deep/ .el-table th > .cell {
-  //   font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
-  //     \\5b8b\4f53, sans-serif;
-  // }
-  // /deep/ .el-table tr {
-  //   height: 10px;
-  // }
 }
 </style>

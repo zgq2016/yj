@@ -17,6 +17,7 @@ import DetailEdit from "@/views/researchDevelopment/detailEdit.vue";
 import DevelopmentStatus from "@/views/researchDevelopment/developmentStatus.vue";
 import Development from "@/views/researchDevelopment/developmentCenter/development.vue";
 import DesignNote from "@/views/researchDevelopment/developmentCenter/designNote.vue";
+import Print from "@/views/print.vue";
 import MaterialProcess from "@/views/researchDevelopment/developmentCenter/materialProcess.vue";
 import MerchandiseNews from "@/views/researchDevelopment/developmentCenter/merchandiseNews.vue";
 import MaterialPurchasing from "@/views/researchDevelopment/developmentCenter/materialPurchasing.vue";
@@ -44,6 +45,7 @@ import Logout from "@/views/setting/logout.vue";
 import AuthorityManagement from "@/views/setting/authorityManagement.vue";
 import Announcements from "@/views/setting/announcements.vue";
 import MaterialClassification from "@/views/setting/materialClassification.vue";
+import PlantManagement from "@/views/setting/plantManagement.vue";
 import Pattern from "@/views/researchDevelopment/pattern.vue";
 import Platemaking from "@/views/researchDevelopment/platemaking.vue";
 import StockInquiry from "@/views/warehouse/stockInquiry.vue";
@@ -96,6 +98,11 @@ const routes = [
     component: Login,
   },
   {
+    path: "/print",
+    name: "Print",
+    component: Print,
+  },
+  {
     path: "/index",
     name: "Index",
     component: Index,
@@ -122,6 +129,7 @@ const routes = [
         name: "ExaminationAndApprovalWork",
         component: ExaminationAndApprovalWork,
       },
+
       { path: "/addProject", name: "AddProject", component: AddProject },
       {
         path: "/panelPurchase",
@@ -212,6 +220,11 @@ const routes = [
         path: "/materialClassification",
         name: "MaterialClassification",
         component: MaterialClassification,
+      },
+      {
+        path: "/plantManagement",
+        name: "PlantManagement",
+        component: PlantManagement,
       },
       {
         path: "/distributor_list",
@@ -330,6 +343,7 @@ const routes = [
             name: "DesignNote",
             component: DesignNote,
           },
+
           {
             path: "/materialProcess",
             name: "MaterialProcess",

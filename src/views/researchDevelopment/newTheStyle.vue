@@ -13,7 +13,11 @@
     <div class="main" v-if="!this.$route.query.oldId">
       <div class="styleNumber">
         <div class="upload" @click="handle_style_pic_url">
-          <img v-if="form.style_pic_url" :src="form.style_pic_url" alt />
+          <!-- <img v-if="form.style_pic_url" :src="form.style_pic_url" alt /> -->
+          <div
+            v-if="form.style_pic_url"
+            :style="`background: url(${form.style_pic_url}) no-repeat 0 -75px;width:150px;height:150px `"
+          ></div>
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </div>
         <div class="styleNumberContent">
@@ -109,13 +113,6 @@
                   </div>
                 </div>
               </el-form-item>
-              <!-- <div>{{styleno}}</div>
-                <el-form-item label="指派设计师">
-                  <div>{{obj.user_name}}</div>
-                </el-form-item>
-                <el-form-item label="协助">
-                  <div v-for="(item, index) in obj.user_id_data" :key="index">{{item.name}}</div>
-              </el-form-item>-->
               <el-form-item label="名称" prop="stylename">
                 <el-input v-model="obj.stylename" style="width:200px"></el-input>
               </el-form-item>
@@ -149,26 +146,6 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <!-- <el-form-item label="设计师" prop="user_name">
-                <el-select
-                  v-model="obj.user_name"
-                  placeholder="工作人员名称"
-                  @change="handleUser_id($event)"
-                >
-                  <el-option
-                    v-for="item in stylists"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="指派助理">
-                <div style="display:flex">
-                  <div v-for="(item, index) in obj.user_id_data" :key="index">{{item.name}},</div>
-                  <div @click="handleAddAssistant" style="margin-left:20px">添加助理</div>
-                </div>
-              </el-form-item>-->
               <el-form-item label="颜色" prop="style_color_name">
                 <el-select v-model="obj.style_color_name">
                   <el-option
@@ -234,10 +211,10 @@
               <div class="cropper">
                 <vueCropper
                   ref="cropper"
+                  :info="false"
                   :img="option.img"
                   :outputSize="option.size"
                   :outputType="option.outputType"
-                  :info="true"
                   :full="option.full"
                   :canMove="option.canMove"
                   :canMoveBox="option.canMoveBox"
@@ -250,12 +227,17 @@
                   @imgLoad="imgLoad"
                 ></vueCropper>
               </div>
-              <div class="show-preview">
+              <div class="show-preview" v-if="status===4||status===2">
                 <div class="preview">
                   <div
                     v-if="color_code"
                     :style="`background-color:${color_code};width:150px;height:150px`"
                   ></div>
+                  <img v-if="previews.url" :src="previews.url" :style="previews.img" />
+                </div>
+              </div>
+              <div class="show-preview1" v-if="status===1||status===3">
+                <div class="preview">
                   <img v-if="previews.url" :src="previews.url" :style="previews.img" />
                 </div>
               </div>
@@ -367,6 +349,8 @@ export default {
         autoCropWidth: 150,
         autoCropHeight: 150,
         fixedBox: true,
+        centerBox: true,
+        infoTrue: false,
       },
       fileName: "", //本机文件地址
       downImg: "#",
@@ -608,6 +592,13 @@ export default {
       // reader.readAsDataURL(file)
       // 转化为blob
       reader.readAsArrayBuffer(file);
+      if (this.status === 2 || this.status === 4) {
+        this.option.autoCropWidth = 150;
+        this.option.autoCropHeight = 150;
+      } else if (this.status === 1 || this.status === 3) {
+        this.option.autoCropWidth = 150;
+        this.option.autoCropHeight = 300;
+      }
     },
     imgLoad(msg) {},
 
@@ -623,11 +614,13 @@ export default {
     },
     handle_obj_style_pic_url() {
       this.option.img = "";
+
       this.status = 3;
       this.centerDialogVisible = true;
     },
     handle_obj_style_color_pic_url() {
       this.option.img = "";
+
       this.status = 4;
       this.centerDialogVisible = true;
     },
@@ -933,12 +926,20 @@ export default {
       justify-content: flex-end;
       -webkit-justify-content: flex-end;
       .cropper {
-        width: 260px;
-        height: 260px;
+        width: 350px;
+        height: 350px;
       }
       .show-preview {
         width: 150px;
         height: 150px;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #ccc;
+        margin-left: 30px;
+      }
+      .show-preview1 {
+        width: 150px;
+        height: 300px;
         border-radius: 10px;
         overflow: hidden;
         border: 1px solid #ccc;

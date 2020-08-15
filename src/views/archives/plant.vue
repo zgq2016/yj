@@ -10,92 +10,26 @@
     </div>
     <!-- 左右侧边栏 -->
     <el-container>
-      <el-aside style="width:inherit;">
-        <el-menu
-          default-active="2"
-          class="el-menu-vertical-demo"
-          :router="true"
-          :unique-opened="true"
-          style="height:240px;width:11vw;"
-        >
-          <!-- <el-submenu :index="item.id+''" v-for="(item,index) in menuList" :key="index">
-            <template slot="title">
-              <div
-                style="display: flex;justify-content: space-between;align-items: center;margin-right:10px;"
-                @mouseenter="mouseenter(index)"
-                @mouseleave="mouseleave"
-              >
-                <span class="classname">{{item.mode_name}}</span>
-                <span
-                  class="el-icon-edit-outline"
-                  :class="active===index?'block':'none'"
-                  @click.stop="aa(item)"
-                ></span>
-              </div>
-            </template>
-            <el-menu-item
-              v-for="(item1,index1) in item.class_data"
-              :key="index1"
-              @click="handleIten(item1)"
-            >
-              <div
-                style="display: flex;justify-content: space-between;align-items: center;"
-                @mouseenter="mouseenter1(index1)"
-                @mouseleave="mouseleave1"
-              >
-                <span class="classname">{{item1.mode_name}}</span>
-                <span
-                  class="el-icon-edit-outline"
-                  :class="active1===index1?'block':'none'"
-                  @click.stop="aa1(item1)"
-                ></span>
-              </div>
-            </el-menu-item>
-            <el-menu-item @click="handelShow(level=1,item)">
-              <template slot="title">
-                <span class="el-icon-plus"></span>
-                <span>新增工厂二级分类</span>
-              </template>
-            </el-menu-item>
-          </el-submenu>-->
-          <el-menu-item v-for="(item,index) in menuList" :key="index">
-            <div
-              @mouseenter="mouseenter(index)"
-              @mouseleave="mouseleave"
-              @click="clickMenu(item)"
-              style="display: flex;justify-content: space-between;align-items: center;margin-right:10px;"
-            >
-              <span slot="title" style="color:#000;">{{item.mode_name}}</span>
-              <span
-                class="el-icon-edit-outline"
-                :class="active===index?'block':'none'"
-                @click.stop="aa(item)"
-              ></span>
-            </div>
-          </el-menu-item>
-          <el-menu-item index @click="handelShow(level=0)">
-            <template slot="title">
-              <span class="el-icon-plus"></span>
-              <span>新增工厂方式</span>
-            </template>
-          </el-menu-item>
-        </el-menu>
-      </el-aside>
-
-      <!-- 右边 -->
       <div>
-        <div class="form" style="margin:15px">
+        <div style="margin-bottom:10px">
+          <el-input
+            v-model="form.companyname"
+            style="width:200px;margin-right:10px"
+            placeholder="工厂名称"
+          ></el-input>
+          <el-input v-model="form.contacts" style="width:200px;margin-right:10px" placeholder="联系人"></el-input>
+          <el-input v-model="form.phone" style="width:200px;margin-right:10px" placeholder="电话"></el-input>
+          <el-button
+            icon="el-icon-search"
+            size="mini"
+            circle
+            class="search_button"
+            @click="onSubmit"
+          ></el-button>
+        </div>
+        <div class="form">
           <el-form :inline="true" :model="form" class="demo-form-inline">
-            <el-form-item label="工厂名称:">
-              <el-input v-model="form.companyname" style="width:120px" placeholder="工厂名称"></el-input>
-            </el-form-item>
-            <el-form-item label="联系人:">
-              <el-input v-model="form.contacts" style="width:120px" placeholder="联系人"></el-input>
-            </el-form-item>
-            <el-form-item label="电话:">
-              <el-input v-model="form.phone" style="width:125px" placeholder="电话"></el-input>
-            </el-form-item>
-            <el-form-item label="指派方式:">
+            <el-form-item>
               <el-select v-model="form.mode_id" clearable placeholder="请选择指派方式">
                 <el-option
                   v-for="item in menuList"
@@ -105,20 +39,14 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-
-            <el-form-item>
-              <el-button type="primary" icon="el-icon-search" @click="onSubmit">搜索</el-button>
-            </el-form-item>
           </el-form>
-        </div>
-        <div class="addStyle" style="margin:0 0 10px 15px;">
-          <el-button type="primary" @click="addClient">新增工厂</el-button>
+          <div class="addStyle" @click="addClient">新增工厂</div>
         </div>
         <el-table
           :data="tableData"
           stripe
           :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-          style=" width:75vw;margin:5px;cursor: pointer;"
+          style=" width:85vw;margin:5px;cursor: pointer;"
         >
           <el-table-column prop="factory_name" align="center" label="工厂名称"></el-table-column>
           <el-table-column prop="contacts" align="center" label="联系人"></el-table-column>
@@ -161,23 +89,6 @@
           style="width:300px;padding:10px 10px"
         ></el-input>
       </div>
-      <!-- <div v-if="edit_id===1">
-        <el-input
-          v-model="getMaterialsClassInfoObj.mode_name"
-          placeholder="分类名称"
-          style="width:300px;padding:10px 10px"
-        ></el-input>
-        <el-input
-          v-model="getMaterialsClassInfoObj.sort"
-          placeholder="排序"
-          style="width:300px;padding:10px 10px"
-        ></el-input>
-        <el-input
-          v-model="getMaterialsClassInfoObj.class_id_mode_name"
-          placeholder="上级分类"
-          style="width:300px;padding:10px 10px"
-        ></el-input>
-      </div>-->
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleDel">删除</el-button>
         <el-button type="primary" @click="handleEdit">保存</el-button>
@@ -574,7 +485,56 @@ export default {
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
   }
+  /deep/ .el-input__inner {
+    width: 100%;
+    height: 30px;
+    background-color: #f2f2f2;
+    border-radius: 15px;
+    border: none;
+    color: #5e5e5e;
+    font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
+      \\5b8b\4f53, sans-serif;
+  }
+  /deep/ .el-input__icon {
+    line-height: 30px;
+  }
+  .search_button {
+    margin-left: 10px;
+    background-color: #000;
+  }
+  /deep/ .el-icon-search {
+    color: #fff;
+  }
+  /deep/.el-button {
+    border: none;
+  }
+  .form {
+    width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .el-pagination {
+    margin: 20px;
+    text-align: right;
+  }
+  .addStyle {
+    margin: 0 30px 30px 0;
+    border-radius: 15px;
+    width: 120px;
+    height: 30px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    &:hover {
+      cursor: pointer;
+    }
+  }
   .pagination {
+    margin: 20px;
     float: right;
   }
 }

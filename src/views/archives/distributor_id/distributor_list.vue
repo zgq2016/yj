@@ -16,12 +16,27 @@
         class="search_button"
         @click="handleSearch"
       ></el-button>
-      <div class="form">
-        <el-form :inline="true" class="demo-form-inline"></el-form>
-        <!-- 新增项目 -->
-        <div class="addStyle" @click="addSupplier" v-if="power.indexOf('E2000100')!=-1">新增</div>
-      </div>
-      <!-- add -->
+    </div>
+    <div class="form">
+      <el-form :inline="true" class="demo-form-inline">
+        <el-form-item prop="class_id">
+          <el-select
+            v-model="form.class_id"
+            placeholder="选择物料"
+            clearable
+            @change="get_classData($event)"
+            style="width:100px"
+          >
+            <el-option
+              v-for="item in classData"
+              :key="item.id"
+              :label="item.classname"
+              :value="item"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div class="addStyle" @click="addSupplier" v-if="power.indexOf('E2000100')!=-1">新增</div>
     </div>
 
     <!-- main -->
@@ -68,7 +83,7 @@
 </template>
 
 <script>
-import { getSupplierList } from "@/api/archives";
+import { getSupplierList, getMaterialsClass } from "@/api/archives";
 export default {
   props: {
     data: {
@@ -84,9 +99,14 @@ export default {
       pageIndex: 1,
       pageSize: 24,
       total: 0,
+      classData: [],
+      form: {
+        class_id: "",
+      },
     };
   },
   methods: {
+    get_classData() {},
     handleSearch() {
       if (this.companyname === "") {
         this.data.id = 0;
@@ -110,7 +130,7 @@ export default {
         page_size: this.pageSize,
         companyname: this.companyname,
       });
-      // console.log(res);
+      console.log(res);
       let { data, count } = res.data;
       this.total = count;
       this.SupplierList = data;
@@ -123,11 +143,16 @@ export default {
       this.pageIndex = val;
       this.init();
     },
+    async getClassData() {
+      let res = await getMaterialsClass();
+      let { data } = res.data;
+      this.classData = data;
+    },
   },
   mounted() {
     this.init();
+    this.getClassData();
     this.power = localStorage.getItem("power");
-    console.log(this.power);
   },
   watch: {
     data() {
@@ -139,20 +164,6 @@ export default {
 
 <style lang="less" scoped>
 .right_list {
-  .addStyle {
-    margin: 0 30px 0px 0px;
-    border-radius: 15px;
-    width: 120px;
-    height: 30px;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #000;
-    &:hover {
-      cursor: pointer;
-    }
-  }
   /deep/ .el-input__inner {
     width: 100%;
     height: 30px;
@@ -162,6 +173,9 @@ export default {
     color: #5e5e5e;
     font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
       \\5b8b\4f53, sans-serif;
+  }
+  /deep/ .el-input__icon {
+    line-height: 30px;
   }
   .search_button {
     margin-left: 10px;
@@ -179,6 +193,25 @@ export default {
     justify-content: space-between;
     align-items: center;
   }
+
+  .el-pagination {
+    margin: 20px;
+    text-align: right;
+  }
+  .addStyle {
+    margin: 0 30px 30px 0;
+    border-radius: 15px;
+    width: 120px;
+    height: 30px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    &:hover {
+      cursor: pointer;
+    }
+  }
   .main {
     padding: 20px 0;
     .dataList {
@@ -187,11 +220,7 @@ export default {
       .list {
         width: 300px;
         height: 60px;
-<<<<<<< HEAD
         margin: 0 20px 20px 0;
-=======
-        margin: 0 70px 20px 20px;
->>>>>>> 6016fb9e9dd753c05931a007c5faa2b145d3f3f5
         border-radius: 10px;
         overflow: hidden;
         background-color: #f2f2f2;

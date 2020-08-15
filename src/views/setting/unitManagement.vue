@@ -199,7 +199,6 @@ export default {
   mounted() {
     this.init();
     this.power = localStorage.getItem("power");
-    console.log(this.power);
   },
 };
 </script>

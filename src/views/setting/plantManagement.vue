@@ -1,38 +1,26 @@
 <template>
-  <div class="colorManagement" v-if="power.indexOf('H5000400')!=-1">
+  <div class="colorManagement">
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>设置</el-breadcrumb-item>
-        <el-breadcrumb-item>季节管理</el-breadcrumb-item>
+        <el-breadcrumb-item>工厂管理</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <!-- 添加季节 -->
-    <div class="addClassify" v-if="power.indexOf('H5000100')!=-1" @click="addClassify">添加季节</div>
+    <!-- 添加工厂 -->
+    <div class="addClassify" @click="addClassify">添加工厂</div>
     <el-table :data="tableData" style="width: 100%;margin: 20px 0;">
-      <el-table-column prop="season_name" label="季节名称" width="200"></el-table-column>
-      <el-table-column
-        align="right"
-        label="操作"
-        v-if="power.indexOf('H5000200')!=-1||power.indexOf('H5000300')!=-1"
-      >
+      <el-table-column prop="mode_name" label="工厂名称" width="200"></el-table-column>
+      <el-table-column align="right" label="操作">
         <template slot-scope="scope">
-          <div
-            v-if="power.indexOf('H5000300')!=-1"
-            class="el-icon-edit btn"
-            @click="handleEdit(scope.$index, scope.row)"
-          ></div>
-          <div
-            v-if="power.indexOf('H5000200')!=-1"
-            class="el-icon-delete btn"
-            @click="handleDelete(scope.$index, scope.row)"
-          ></div>
+          <div class="el-icon-edit btn" @click="handleEdit(scope.$index, scope.row)"></div>
+          <div class="el-icon-delete btn" @click="handleDelete(scope.$index, scope.row)"></div>
         </template>
       </el-table-column>
     </el-table>
-    <!-- 季节分类 -->
+    <!-- 工厂分类 -->
     <el-dialog
-      title="季节分类"
+      title="工厂分类"
       :visible.sync="centerDialogVisible"
       width="30%"
       center
@@ -42,11 +30,11 @@
     >
       <el-form ref="form" :model="form" label-width="80px" resetFields>
         <el-form-item
-          label="季节名称"
-          prop="season_name"
-          :rules="[ { required: true, message: '请输入季节名称', trigger: 'blur' },]"
+          label="工厂名称"
+          prop="mode_name"
+          :rules="[ { required: true, message: '请输入工厂名称', trigger: 'blur' },]"
         >
-          <el-input v-model="form.season_name" style="width:80%;"></el-input>
+          <el-input v-model="form.mode_name" style="width:80%"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -54,9 +42,9 @@
         <el-button type="primary" @click="handleNewList">确 定</el-button>
       </span>
     </el-dialog>
-    <!-- 编辑季节 -->
+    <!-- 编辑工厂 -->
     <el-dialog
-      title="编辑季节"
+      title="编辑工厂"
       :visible.sync="centerDialogVisible1"
       width="30%"
       center
@@ -66,11 +54,11 @@
     >
       <el-form ref="form" :model="form" label-width="80px" resetFields>
         <el-form-item
-          label="季节名称"
-          prop="season_name"
-          :rules="[ { required: true, message: '请输入季节名称', trigger: 'blur' },]"
+          label="工厂名称"
+          prop="mode_name"
+          :rules="[ { required: true, message: '请输入工厂名称', trigger: 'blur' },]"
         >
-          <el-input v-model="form.season_name" style="width:80%;"></el-input>
+          <el-input v-model="form.mode_name" style="width:80%"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -92,19 +80,32 @@
   </div>
 </template>
 <script>
-import { seasonList, seasonAdd, seasonEdit, seasonDel } from "@/api/setting.js";
-
+import { unitList, unitAdd, unitEdit, unitDel } from "@/api/setting.js";
+import {
+  getMaterialsClass,
+  materialsClassAdd,
+  getMaterialsClassInfo,
+  getMaterialsClassEdit,
+  materialsClassDel,
+  factoryAdd, //新增工厂接口
+  factoryEdit, //编辑工厂接口
+  factoryDel, //删除工厂接口
+  factoryList, //工厂list接口
+  getFactoryModeSelect, //左边栏
+  factoryModeAdd, //工厂加工方式
+  factoryModeEdit, //工厂加工方式编辑接口
+  factoryModeDel, //工厂加工方式删除接口
+} from "@/api/archives";
 export default {
   data() {
     return {
       power: "",
       tableData: [],
-      centerDialogVisible: false, //添加季节
-      centerDialogVisible1: false, //编辑季节
+      centerDialogVisible: false, //添加工厂
+      centerDialogVisible1: false, //编辑工厂
       region: "",
       form: {
-        season_name: "",
-        id: "",
+        mode_name: "",
       },
       pageIndex: 1,
       pageSize: 10,
@@ -113,12 +114,12 @@ export default {
   },
   methods: {
     handleClose() {
-      this.form.season_name = "";
+      this.form.mode_name = "";
       this.centerDialogVisible = false;
       this.init();
     },
     handleClose1() {
-      this.form.season_name = "";
+      this.form.mode_name = "";
       this.centerDialogVisible1 = false;
       this.init();
     },
@@ -127,9 +128,9 @@ export default {
         if (!valid) return;
         // 调用actions的登录方法
 
-        let res = await seasonAdd(this.form);
+        let res = await factoryModeAdd(this.form);
         console.log(res);
-        this.form.season_name = "";
+        this.form.mode_name = "";
         this.init();
         this.centerDialogVisible = false;
       });
@@ -139,9 +140,9 @@ export default {
         if (!valid) return;
         // 调用actions的登录方法
 
-        let res = await seasonEdit(this.form);
+        let res = await factoryModeEdit(this.form);
         console.log(res);
-        this.form.season_name = "";
+        this.form.mode_name = "";
         this.form.id = "";
         this.init();
         this.centerDialogVisible1 = false;
@@ -152,7 +153,7 @@ export default {
     },
     async handleEdit(index, row) {
       console.log(row);
-      this.form.season_name = row.season_name;
+      this.form.mode_name = row.mode_name;
       this.form.id = row.id;
       this.centerDialogVisible1 = true;
     },
@@ -163,7 +164,7 @@ export default {
         type: "warning",
       })
         .then(async () => {
-          let res = await seasonDel({ id: row.id });
+          let res = await factoryModeDel({ id: row.id });
           this.init();
           this.$message({
             type: "success",
@@ -186,7 +187,7 @@ export default {
       this.init();
     },
     async init() {
-      let res = await seasonList({
+      let res = await getFactoryModeSelect({
         page: this.pageIndex,
         page_size: this.pageSize,
       });
