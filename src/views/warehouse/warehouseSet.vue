@@ -32,15 +32,9 @@
           >+增加仓库</el-button>
         </el-form>
       </div>
-      <hr style="border:1px dashed #ccc" />
     </div>
-    <div class="center">
-      <el-table
-        :data="ware"
-        row-key="id"
-        size="mini"
-        :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-      >
+    <div class="center table">
+      <el-table :data="ware" row-key="id" size="mini"> 
         <el-table-column align="center" width="90" label="操作">
           <template slot-scope="scope">
             <div
@@ -429,6 +423,13 @@ export default {
     color: #5e5e5e;
     font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
       \\5b8b\4f53, sans-serif;
+  }
+  .table {
+    .el-table {
+      /deep/.cell {
+        font-weight: 500 !important;
+      }
+    }
   }
   .search_button {
     margin-left: 10px;

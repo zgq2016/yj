@@ -85,7 +85,6 @@
       </el-form-item>-->
     </el-form>
 
-    <hr style="border:1px dashed #ccc" />
     <div class="table">
       <el-table
         id="printTest"
@@ -257,6 +256,11 @@ export default {
       width: 60px;
       height: 60px;
       border-radius: 5px;
+    }
+     .el-table {
+      /deep/.cell {
+        font-weight: 500 !important;
+      }
     }
   }
   .form {

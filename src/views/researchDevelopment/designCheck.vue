@@ -60,7 +60,7 @@
     <!-- table -->
     <div class="table" v-if="power.indexOf('A2000100')!=-1">
       <div v-if="switchover_active===false">
-        <el-table ref="singleTable" :data="tableData" highlight-current-row>
+        <el-table ref="singleTable" size='mini' :data="tableData" highlight-current-row>
           <el-table-column type="index" width="50"></el-table-column>
           <el-table-column label="图片" width="70">
             <template slot-scope="scope">
@@ -349,6 +349,11 @@ export default {
       width: 60px;
       height: 60px;
       border-radius: 5px;
+    }
+    .el-table {
+      /deep/.cell {
+        font-weight: 500 !important;
+      }
     }
   }
   .card {

@@ -11,7 +11,7 @@
     </div>
 
     <div class="table" style="width: 100%;margin:10px 0">
-      <el-table :data="data" border style="width: 100%">
+      <el-table size="mini" :data="data" border style="width: 100%">
         <el-table-column fixed prop="account_name" label="账户名称"></el-table-column>
         <el-table-column prop="account" label="账号"></el-table-column>
         <el-table-column prop="name" label="开户人"></el-table-column>
@@ -342,6 +342,13 @@ export default {
   .pagination {
     margin-top: 10px;
     text-align: right;
+  }
+  .table {
+    .el-table {
+      /deep/.cell {
+        font-weight: 500 !important;
+      }
+    }
   }
 }
 </style>

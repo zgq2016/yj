@@ -110,7 +110,6 @@
         >采购</el-button>-->
       </el-form>
 
-      <hr style="border:1px dashed #ccc" />
       <div class="table">
         <div class="box">
           <div

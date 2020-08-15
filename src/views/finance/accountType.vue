@@ -11,7 +11,7 @@
     </div>
 
     <div class="table" style="width: 100%;margin:10px 0">
-      <el-table :data="data" border style="width: 100%">
+      <el-table :data="data" size='mini' border style="width: 100%">
         <el-table-column fixed prop="account_type_name" label="类型名称"></el-table-column>
         <el-table-column prop="statusName" label="状态"></el-table-column>
         <el-table-column prop="remarks" label="备注"></el-table-column>
@@ -275,6 +275,13 @@ export default {
   .pagination {
     margin-top: 10px;
     text-align: right;
+  }
+  .table{
+     .el-table {
+      /deep/.cell {
+        font-weight: 500 !important;
+      }
+    }
   }
 }
 </style>

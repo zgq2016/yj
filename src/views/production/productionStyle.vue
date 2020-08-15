@@ -89,7 +89,7 @@
         </el-steps>
       </div>
 
-      <el-tabs style="margin-bottom:150px;" v-model="activeNames1" @click.stop="handleClick">
+      <el-tabs style="margin-bottom:150px;" v-model="activeNames" @click.stop="handleClick">
         <el-tab-pane label="下单信息" v-if="showhide1&&power.indexOf('B1000300')!=-1" name="1">
           <div class="orderInformation">
             <!-- <div style="margin-left:50px;">请先增加批次</div> -->
@@ -372,21 +372,21 @@
                   <div class="wastage">
                     <div>
                       大货单件用量
-                      <div>20m</div>
+                      <div>{{item1.maxusage}}m</div>
                     </div>
                     <div>
                       损耗
-                      <div>0.5m</div>
+                      <div>{{item1.loss}}m</div>
                     </div>
                   </div>
                   <div class="amount">
                     <div>
                       计算总用量
-                      <div>100m</div>
+                      <div>{{(Number(item1.maxusage)+Number(item1.loss))*Number(item1.amountPurchased) }}m</div>
                     </div>
                     <div>
                       计算总金额
-                      <div>10000</div>
+                      <div>&yen;{{((Number(item1.maxusage)+Number(item1.loss))*Number(item1.amountPurchased))*Number(item1.purchasePrice)}}</div>
                     </div>
                   </div>
                   <div class="orderInformation" v-if="item1.produce_order_procure_log_data">
@@ -718,18 +718,28 @@
                 <div class="factory_left">
                   <div class="factory_left_top">
                     <div class="list">
-                      <span>指派工厂：</span>
+                      <span>
+                        <strong>指派工厂：</strong>
+                      </span>
                       <span>{{regions1[index2]}}</span>
-                      <span>指派方式：</span>
+                      <span>
+                        <strong>指派方式：</strong>
+                      </span>
                       <span>{{mode[index2]}}</span>
-                      <span>指派数量：</span>
+                      <span>
+                        <strong>指派数量：</strong>
+                      </span>
                       <span>{{item2.quantity}}</span>
-                      <span>加工价格：</span>
-                      <span>{{item2.price}}元</span>
+                      <span>
+                        <strong>加工价格：</strong>
+                      </span>
+                      <span>&yen; {{item2.price}} </span>
                     </div>
                   </div>
                   <div class="factory_left_bottom">
-                    <span>备注：</span>
+                    <span>
+                      <strong>备注：</strong>
+                    </span>
                     <span>{{item2.remarks}}</span>
                   </div>
                 </div>
@@ -1299,7 +1309,6 @@ export default {
       MaterialsList: [], //物料数组
       centerDialogVisible1: false, //增加款式颜色
       input: "",
-      activeNames: "1",
       table: [], //数据表格
       t_size: [], //数据表格尺码
       t_quantity: [], //数据表格尺码数量
@@ -1501,7 +1510,7 @@ export default {
       total2: 0,
       wares: [], //仓库
       factorys: [],
-      activeNames1: "1",
+      activeNames: "1",
       t_size1: [],
     };
   },
@@ -1513,7 +1522,7 @@ export default {
     handleClick(tab, val) {
       // console.log(val);
       console.log(tab, val);
-      this.activeNames1 = tab.index + 1;
+      this.activeNames = tab.index + 1;
     },
     onSubmit() {
       // console.log("submit!");
@@ -2577,7 +2586,6 @@ export default {
           produce_no: data[this.active].produce_no,
         });
         let data3 = res2.data.data;
-        // console.log(data3);
 
         let all1 = [[], [], [], [], [], [], [], [], [], []];
         data3.map((v, i) => {
@@ -2587,6 +2595,8 @@ export default {
             }
           });
         });
+        console.log(all1);
+
         if (itemn == undefined) {
           itemn = this.active1;
         }
@@ -2602,6 +2612,7 @@ export default {
                 let res1 = await getSupplierInfo({
                   id: Number(data.materials_supplier_data[0].supplier_id),
                 });
+
                 let datas = res1.data.data;
                 f["materialsno"] = data.materialsno;
                 f["companyname"] = datas.companyname;
@@ -2614,7 +2625,7 @@ export default {
         });
       }
       // console.log(this.procurement);
-      // console.log(this.cardList);
+      console.log(this.cardList);
     },
 
     // 生产排单
@@ -3505,7 +3516,6 @@ export default {
             produce_no: data[this.active].produce_no,
           });
           let data1 = res1.data.data;
-          console.log(data1);
           // console.log(this.complete);
           if (this.t_size1.length != 0) {
             data1.produce_complete_data.map((v, i) => {
@@ -3656,7 +3666,7 @@ export default {
     // }
     // 客户仓库单选框
     radioChange(item, index) {
-      console.log(item, index);
+      // console.log(item, index);
     },
     async test() {
       let { id } = this.$route.query;
@@ -3790,6 +3800,7 @@ export default {
                   }
                 }
                 .cardStyle_left_content {
+                  padding: 15px 5px;
                   div {
                     margin: 0 3px;
                   }
@@ -3819,6 +3830,7 @@ export default {
             background-color: #f2f2f2;
             height: 100px;
             text-align: center;
+            padding: 14px;
           }
           .amount {
             width: 100px;
@@ -3826,6 +3838,7 @@ export default {
             background-color: #f2f2f2;
             height: 100px;
             text-align: center;
+            padding: 14px;
           }
           .orderInformation {
             border-radius: 10px;
@@ -3854,17 +3867,31 @@ export default {
       .factory_left_top {
         width: 100%;
         display: inline-block;
+        margin-bottom: 20px;
         .list {
           span {
             float: left;
             display: block;
-            padding: 5px 10px;
+            padding: 5px;
+            font-size: 14px;
+            strong {
+              font-size: 15px;
+            }
+          }
+          span:nth-child(2),
+          span:nth-child(4),
+          span:nth-child(6) {
+            margin-right: 25px;
           }
         }
       }
       .factory_left_bottom {
         span {
-          padding: 25px 10px;
+          padding: 25px 5px;
+          font-size: 14px;
+          strong {
+            font-size: 15px;
+          }
         }
       }
     }
@@ -3984,7 +4011,6 @@ export default {
   }
   // .placeAnOrderBatchInfo {
   .el-steps {
-    margin: 40px 0;
     /deep/.el-step__icon-inner[class*="el-icon"]:not(.is-status) {
       font-size: 16px;
       font-weight: 800;
@@ -4012,6 +4038,7 @@ export default {
   //步骤条
   .orderInformation {
     .el-steps {
+      margin: 40px 0;
       position: relative;
       // margin-bottom: 40px;
       /deep/.el-step__icon {

@@ -187,11 +187,7 @@ export default {
       .list {
         width: 300px;
         height: 60px;
-<<<<<<< HEAD
         margin: 0 20px 20px 0;
-=======
-        margin: 0 70px 20px 20px;
->>>>>>> 6016fb9e9dd753c05931a007c5faa2b145d3f3f5
         border-radius: 10px;
         overflow: hidden;
         background-color: #f2f2f2;

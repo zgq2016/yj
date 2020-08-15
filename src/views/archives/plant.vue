@@ -83,7 +83,7 @@
       </el-aside>
 
       <!-- 右边 -->
-      <div>
+      <div class="table">
         <div class="form" style="margin:15px">
           <el-form :inline="true" :model="form" class="demo-form-inline">
             <el-form-item label="工厂名称:">
@@ -117,7 +117,7 @@
         <el-table
           :data="tableData"
           stripe
-          :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+          size='mini'
           style=" width:75vw;margin:5px;cursor: pointer;"
         >
           <el-table-column prop="factory_name" align="center" label="工厂名称"></el-table-column>
@@ -576,6 +576,13 @@ export default {
   }
   .pagination {
     float: right;
+  }
+  .table{
+     .el-table {
+      /deep/.cell {
+        font-weight: 500 !important;
+      }
+    }
   }
 }
 </style>

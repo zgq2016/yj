@@ -64,7 +64,7 @@
         id="printTest"
         ref="singleTable"
         :data="tableData"
-        size="small"
+        size="mini"
         highlight-current-row
         style="width: 100%"
       >
@@ -308,6 +308,11 @@ export default {
       width: 60px;
       height: 60px;
       border-radius: 5px;
+    }
+    .el-table {
+      /deep/.cell {
+        font-weight: 500 !important;
+      }
     }
   }
   .form {

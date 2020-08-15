@@ -132,23 +132,9 @@
           size="mini"
           style="cursor: pointer;"
           @cell-click="cellClick"
-          :header-cell-style="{background:'#eef1f6',color:'#606266'}"
         >
           <el-table-column type="index" width="35"></el-table-column>
-          <el-table-column align="center" width="80" label="操作">
-            <template slot-scope="scope">
-              <div
-                style="width:50%;float:left"
-                class="el-icon-plus btn"
-                @click="handleAdd(scope.$index, scope.row)"
-              ></div>
-              <div
-                style="width:50%;float:right"
-                class="el-icon-delete btn"
-                @click="handleDelete(scope.$index, scope.row)"
-              ></div>
-            </template>
-          </el-table-column>
+
           <el-table-column align="center" width="80" label="图片">
             <template align="center" slot-scope="scope" property="style_pic_url">
               <img :src="scope.row.style_pic_url" class="img" alt />
@@ -281,6 +267,20 @@
                 v-if="scope.row.showHidden8"
               ></el-input>
               <span v-else>{{scope.row.remark}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" width="80" label="操作">
+            <template slot-scope="scope">
+              <div
+                style="width:50%;float:left"
+                class="el-icon-plus btn"
+                @click="handleAdd(scope.$index, scope.row)"
+              ></div>
+              <div
+                style="width:50%;float:right"
+                class="el-icon-delete btn"
+                @click="handleDelete(scope.$index, scope.row)"
+              ></div>
             </template>
           </el-table-column>
         </el-table>
@@ -589,7 +589,7 @@ export default {
       columns.forEach((column, index) => {
         if (index === 1) {
           sums[index] = "总计";
-        } else if (index === 9 || index === 11) {
+        } else if (index === 8 || index === 10) {
           const values = data.map((item) => Number(item[column.property]));
           if (!values.every((value) => isNaN(value))) {
             sums[index] = values.reduce((prev, curr) => {
@@ -604,13 +604,13 @@ export default {
                 //   }
                 if (index === 11 && this.form.total_price != prev + curr) {
                   this.total_price = this.form.total_price;
-                } else if (index === 11) {
+                } else if (index === 10) {
                   this.total_price = prev + curr;
                 }
                 // console.log(this.total_price);
                 return prev + curr;
               } else {
-                if (index === 11) {
+                if (index === 10) {
                   // console.log(this.form.total_price);
                   this.total_price = prev;
                   this.total_price = this.form.total_price
@@ -1125,6 +1125,11 @@ export default {
   }
   .table {
     margin-top: 15px;
+    .el-table {
+      /deep/.cell {
+        font-weight: 500 !important;
+      }
+    }
   }
   .main_footer {
     margin-top: 15px;

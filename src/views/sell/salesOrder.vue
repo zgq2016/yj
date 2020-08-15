@@ -55,13 +55,7 @@
     </el-form>
 
     <div class="table">
-      <el-table
-        :data="tableData"
-        tooltip-effect="dark"
-        size="small"
-        :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-        width="100%"
-      >
+      <el-table :data="tableData" tooltip-effect="dark" size="small" width="100%">
         <el-table-column align="center" type="selection" width="45"></el-table-column>
         <el-table-column align="center" prop="states" label="状态"></el-table-column>
         <el-table-column align="center" label="日期" width="90">
@@ -271,6 +265,11 @@ export default {
       width: 60px;
       height: 60px;
       border-radius: 5px;
+    }
+    .el-table {
+      /deep/.cell {
+        font-weight: 500 !important;
+      }
     }
   }
   .form {
