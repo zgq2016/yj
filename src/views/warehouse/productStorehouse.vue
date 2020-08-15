@@ -8,7 +8,11 @@
       </el-breadcrumb>
     </div>
     <div style="margin-bottom:10px">
-      <el-input style="width:200px;margin-right:10px;" v-model="formInline.stylename" placeholder="请输入商品名称"></el-input>
+      <el-input
+        style="width:200px;margin-right:10px;"
+        v-model="formInline.stylename"
+        placeholder="请输入商品名称"
+      ></el-input>
       <el-input style="width:120px" type="number" v-model="formInline.min" placeholder="请输入数量"></el-input>&nbsp;至
       <el-input style="width:120px" type="number" v-model="formInline.max" placeholder="请输入数量"></el-input>
       <el-button icon="el-icon-search" size="mini" circle class="search_button" @click="onSubmit"></el-button>
@@ -57,21 +61,19 @@
           </el-form-item>
 
           <el-form-item>
-            <el-checkbox  @change="onSubmit" v-model="formInline.checked">过滤无库存</el-checkbox>
+            <el-checkbox @change="onSubmit" v-model="formInline.checked">过滤无库存</el-checkbox>
           </el-form-item>
         </el-form>
         <div class="addStyle">
           <div>展示统计数据</div>
         </div>
       </div>
-      <hr style="border:1px dashed #ccc" />
       <div class="table">
         <el-table
           id="printTest"
           ref="tableData"
           :data="tableData"
           size="mini"
-          :header-cell-style="{background:'#eef1f6',color:'#606266'}"
           highlight-current-row
           style="width: 100%"
         >
@@ -82,7 +84,7 @@
               <img :src="scope.row.image" class="img" alt />
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="styleno" label="货号"></el-table-column>
+          <el-table-column align="center" prop="styleno" label="款号"></el-table-column>
           <el-table-column align="center" prop="stylenumber" label="条码"></el-table-column>
           <el-table-column
             align="center"
@@ -247,6 +249,11 @@ export default {
       width: 60px;
       height: 60px;
       border-radius: 5px;
+    }
+    .el-table {
+      /deep/.cell {
+        font-weight: 500 !important;
+      }
     }
   }
   .form {

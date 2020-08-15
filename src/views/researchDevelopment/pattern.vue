@@ -103,7 +103,7 @@
                 class="elbtn"
                 size="mini"
                 v-if="(scope.row.pattern_status==='2'||scope.row.pattern_status==='4')&&scope.row.user_id==userid"
-                @click="pattern_apply(scope.$index, scope.row)" 
+                @click="pattern_apply(scope.$index, scope.row)"
               >提交审核{{scope.row.user_id}},{{userid}}</el-button>
               <!-- 2 4 -->
               <el-button
@@ -343,6 +343,11 @@ export default {
       width: 60px;
       height: 60px;
       border-radius: 5px;
+    }
+    .el-table {
+      /deep/.cell {
+        font-weight: 500 !important;
+      }
     }
   }
   .form {

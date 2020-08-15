@@ -74,7 +74,6 @@
         :data="tableData"
         tooltip-effect="dark"
         size="small"
-        :header-cell-style="{background:'#eef1f6',color:'#606266'}"
         width="100%"
       >
         <el-table-column align="center" type="selection" width="45"></el-table-column>
@@ -284,6 +283,11 @@ export default {
       width: 60px;
       height: 60px;
       border-radius: 5px;
+    }
+     .el-table {
+      /deep/.cell {
+        font-weight: 500 !important;
+      }
     }
   }
   .form {

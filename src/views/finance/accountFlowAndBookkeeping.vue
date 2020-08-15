@@ -126,7 +126,7 @@
         </div>
       </div>
       <div class="table">
-        <el-table :data="tableData" border>
+        <el-table size="mini" :data="tableData" border>
           <el-table-column :show-overflow-tooltip="true" prop="ctime" label="业务时间"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" prop="account_no" label="单据编号"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" prop="account_type_name" label="账目类型"></el-table-column>
@@ -839,6 +839,11 @@ export default {
       width: 60px;
       height: 60px;
       border-radius: 5px;
+    }
+    .el-table {
+      /deep/.cell {
+        font-weight: 500 !important;
+      }
     }
   }
   .form {

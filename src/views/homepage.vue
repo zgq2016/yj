@@ -38,17 +38,41 @@
       </div>
       <div class="content_1">
         <div class="hed">
-          <h3>个人工作</h3>
+          <p>设计项目</p>
           <span @click.stop="$router.push({path: `/itemDesign`})">更多</span>
         </div>
         <div>
           <ul>
             <li @click.stop="rout1(item.id)" v-for="(item,index) in works_1" :key="index">
-              <el-image
-                style="width: 290px; height: 160px;border-radius: 10px;"
-                :src="item.picurl"
-                fit="cover"
-              ></el-image>
+              <div v-if="item.picurl!=''">
+                <el-image
+                  style="width: 290px; height: 160px;border-radius: 10px;"
+                  :src="item.picurl"
+                  fit="cover"
+                ></el-image>
+              </div>
+              <div>
+                <div v-if="item.picurl==''">
+                  <img
+                    style="width: 290px; height: 160px;border-radius: 10px;"
+                    v-if="item.projecttype=='【意向订单】'"
+                    src="./../assets/意向.jpg"
+                    alt
+                  />
+                  <img
+                    style="width: 290px; height: 160px;border-radius: 10px;"
+                    v-if="item.projecttype=='【阶段工作】'"
+                    src="./../assets/阶段.jpg"
+                    alt
+                  />
+                  <img
+                    style="width: 290px; height: 160px;border-radius: 10px;"
+                    v-if="item.projecttype=='【企划系列】'"
+                    src="./../assets/系列.jpg"
+                    alt
+                  />
+                </div>
+              </div>
               <span>
                 <p>{{item.projecttype}}</p>
                 <p>{{item.projectname}}</p>
@@ -59,12 +83,32 @@
         </div>
       </div>
       <div class="content_2">
-        <h3>协助工作</h3>
+        <p>项目款式</p>
         <div>
           <ul>
             <li @click.stop="rout2(item.id)" v-for="(item,index) in works_2" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
+                :src="item.style_pic_url"
+                fit="cover"
+              ></el-image>
+              <span>
+                <p>{{item.style_type}}</p>
+                <p>{{item.stylename}}</p>
+                <p>{{item.style_color}}</p>
+                <p>{{item.name}}</p>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="content_3">
+        <p>版料采购</p>
+        <div>
+          <ul>
+            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_3" :key="index">
+              <el-image
+                style="width: 132px; height: 230px;border-radius: 10px;"
                 :src="item.style_pic_url"
                 fit="cover"
               ></el-image>
@@ -121,6 +165,8 @@ import {
   myWork,
   myAssistWork,
 } from "@/api/home.js";
+
+import { getDataList, getStyleList } from "@/api/researchDevelopment";
 import moment from "moment";
 export default {
   data() {
@@ -143,6 +189,7 @@ export default {
       yearMonth: "",
       works_1: [],
       works_2: [],
+      works_3: [],
     };
   },
   mounted() {
@@ -377,9 +424,11 @@ export default {
       this.list2 = this.list2.slice(0, 3);
     },
     async work() {
-      let res = await myWork({
-        limit: 5,
+      let res = await getDataList({
+        page: 1,
+        page_size: 5,
       });
+
       console.log(res);
       this.works_1 = res.data.data;
       this.works_1.map((v, i) => {
@@ -391,11 +440,18 @@ export default {
           v.projecttype = "【企划系列】";
         }
       });
-      let res1 = await myAssistWork({
-        limit: 20,
+      // let res1 = await myAssistWork({
+      //   limit: 20,
+      // });
+      // this.works_2 = res1.data.data;
+
+      let res2 = await getStyleList({
+        page: 1,
+        page_size: 10,
       });
-      console.log(res1);
-      this.works_2 = res1.data.data;
+      this.works_2 = res2.data.data;
+      this.works_3 = res2.data.data;
+      console.log(this.works_3);
     },
     rout1(id) {
       this.$router.push({ path: `/designCheck?id=${id}` });
@@ -544,19 +600,25 @@ export default {
         height: 690px;
         overflow: hidden;
       }
+      .content_3 {
+        width: 1420px;
+        height: 690px;
+        overflow: hidden;
+      }
     }
     .content_1 {
       margin-bottom: 25px;
-
+      width: 100%;
       height: 260px;
       overflow: hidden;
       .hed {
         overflow: hidden;
-        h3 {
+        p {
           float: left;
-          font-weight: 900;
+          font-weight: 500;
           margin: 10px 0;
-          font-size: 16px;
+          color: #000000;
+          font-size: 18px;
         }
         span {
           float: right;
@@ -606,11 +668,32 @@ export default {
       }
     }
     .content_2 {
-      margin-bottom: 130px;
-      h3 {
-        font-weight: 900;
-        font-size: 16px;
+      height: 345px;
+      & > p {
+        font-weight: 500;
+        font-size: 18px;
         margin: 10px 0;
+        color: #000000;
+      }
+      ul {
+        li {
+          float: left;
+          margin-right: 26px;
+          margin-bottom: 25px;
+        }
+        li:hover {
+          cursor: pointer;
+          animation: animations 0.1s linear forwards;
+        }
+      }
+    }
+    .content_3 {
+      height: 345px;
+      & > p {
+        font-weight: 500;
+        font-size: 18px;
+        margin: 10px 0;
+        color: #000000;
       }
       ul {
         li {

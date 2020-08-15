@@ -73,7 +73,6 @@
           show-summary
           size="small"
           style="cursor: pointer;"
-          :header-cell-style="{background:'#eef1f6',color:'#606266'}"
           :summary-method="getSummaries"
         >
           <el-table-column type="index" width="45"></el-table-column>
@@ -117,7 +116,7 @@
 
             <!-- <el-form-item label-width="80px" label="总合计:">
               <span style="color:red;font-size:16px;">&yen;{{total_price}}</span>
-            </el-form-item> -->
+            </el-form-item>-->
           </div>
           <div style="position: absolute;bottom:5px;left:40%;">
             <el-form-item>
@@ -341,6 +340,11 @@ export default {
   }
   .table {
     margin-top: 15px;
+    .el-table {
+      /deep/.cell {
+        font-weight: 500 !important;
+      }
+    }
   }
   .right_form {
     /deep/.cssa {

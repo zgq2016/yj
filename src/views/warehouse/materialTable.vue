@@ -75,11 +75,7 @@
         </div>
 
         <div class="table">
-          <el-table
-            :data="tableData"
-            :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-            style="width: 100%;margin-top:15px;"
-          >
+          <el-table :data="tableData" style="width: 100%;margin-top:15px;" size="mini">
             <!-- <el-table-column align="center" type="index" label="采购批次" width="50"></el-table-column> -->
 
             <el-table-column type="expand">
@@ -285,6 +281,13 @@ export default {
       }
       .form {
         margin: 30px 10px;
+      }
+    }
+    .table {
+      .el-table {
+        /deep/.cell {
+          font-weight: 500 !important;
+        }
       }
     }
   }

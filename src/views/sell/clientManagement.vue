@@ -160,6 +160,13 @@ export default {
       cursor: pointer;
     }
   }
+  .table {
+    .el-table {
+      /deep/.cell {
+        font-weight: 500 !important;
+      }
+    }
+  }
   .check {
     cursor: pointer;
   }

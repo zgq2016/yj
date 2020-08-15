@@ -290,6 +290,11 @@ export default {
       height: 60px;
       border-radius: 5px;
     }
+    .el-table {
+      /deep/.cell {
+        font-weight: 500 !important;
+      }
+    }
   }
   .form {
     width: 1200px;
