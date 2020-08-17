@@ -12,8 +12,14 @@
     <div class="detail">
       <div class="left_img">
         <div v-if="obj.picurl!==''">
-          <img :src="obj.picurl" alt style="width:150px;height:150px" />
+          <el-image
+            v-if="obj.picurl!==''"
+            style="width: 150px; height: 150px;border-radius: 15px;margin-right: 20px;"
+            :src="obj.picurl"
+            fit="cover"
+          ></el-image>
         </div>
+
         <div v-if="obj.picurl===''">
           <img v-if="obj.projecttype==='0'" src="../../assets/意向.jpg" alt />
           <img v-if="obj.projecttype==='1'" src="../../assets/阶段.jpg" alt />
@@ -91,9 +97,9 @@
     <!-- table -->
     <div class="table" v-if="power.indexOf('A2000100')!=-1">
       <div v-if="switchover_active===false">
-        <el-table ref="singleTable" :data="tableData" size="mini">
-          <el-table-column type="index" width="50"></el-table-column>
-          <el-table-column label="图片" width="140">
+        <el-table :data="tableData" size>
+          <el-table-column type="index"></el-table-column>
+          <el-table-column label="图片">
             <template slot-scope="scope" property="style_pic_url">
               <div style="display: flex;">
                 <el-image
@@ -130,11 +136,6 @@
               :src="item.style_pic_url"
               fit="cover"
             ></el-image>
-            <!-- <img
-              :src="item.style_pic_url"
-              alt
-              style="width: 150px; height: 300px;border-radius: 10px;"
-            />-->
             <div style="color:#000">{{item.style_type}}</div>
             <div style="color:#000">{{item.stylename}}</div>
             <div style="color:#000">{{item.styleno}}</div>
@@ -159,7 +160,12 @@
               <!-- router-link :to="`/newTheStyle?id=${$route.query.id}&oldId=${item.id}`" -->
               <div class="search_card_left">
                 <div class="search_card_left_img">
-                  <img :src="item.style_pic_url" alt />
+                  <!-- <img :src="item.style_pic_url" alt /> -->
+                  <el-image
+                    style="width: 100px;height: 100px;margin-right: 20px;"
+                    :src="item.style_pic_url"
+                    fit="cover"
+                  ></el-image>
                 </div>
                 <div class="search_card_left_content">
                   <div class="search_card_left_content_name">{{item.stylename}}</div>
@@ -311,7 +317,7 @@ export default {
     .right_content {
       flex: 1;
       .claim {
-        width: 1200px;
+        // width: 1200px;
         text-align: justify;
         text-justify: newspaper;
         word-break: break-all;

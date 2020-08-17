@@ -11,7 +11,13 @@
     </div>
     <div class="main">
       <div class="upload" @click="handleImg">
-        <img v-if="obj.picurl" :src="obj.picurl" alt />
+        <!-- <img v-if="obj.picurl" :src="obj.picurl" alt /> -->
+        <el-image
+          v-if="obj.picurl"
+          style="width: 150px; height: 150px"
+          :src="obj.picurl"
+          fit="cover"
+        ></el-image>
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </div>
       <!-- form -->
@@ -166,10 +172,10 @@
               <div class="cropper">
                 <vueCropper
                   ref="cropper"
+                  :info="false"
                   :img="option.img"
                   :outputSize="option.size"
                   :outputType="option.outputType"
-                  :info="true"
                   :full="option.full"
                   :canMove="option.canMove"
                   :canMoveBox="option.canMoveBox"
@@ -294,6 +300,8 @@ export default {
         autoCropWidth: 150,
         autoCropHeight: 150,
         fixedBox: true,
+        centerBox: true,
+        infoTrue: false,
       },
       fileName: "", //本机文件地址
       downImg: "#",
@@ -500,6 +508,8 @@ export default {
       // reader.readAsDataURL(file)
       // 转化为blob
       reader.readAsArrayBuffer(file);
+      this.option.autoCropWidth = 290;
+      this.option.autoCropHeight = 160;
     },
     imgLoad(msg) {},
     handleImg() {
@@ -674,6 +684,7 @@ export default {
         opacity: 0;
         filter: alpha(opacity=0);
         cursor: pointer;
+        
       }
     }
     .info {
@@ -722,12 +733,12 @@ export default {
       justify-content: flex-end;
       -webkit-justify-content: flex-end;
       .cropper {
-        width: 260px;
-        height: 260px;
+        width: 350px;
+        height: 350px;
       }
       .show-preview {
-        width: 150px;
-        height: 150px;
+        width: 290px;
+        height: 160px;
         border-radius: 10px;
         overflow: hidden;
         border: 1px solid #ccc;
