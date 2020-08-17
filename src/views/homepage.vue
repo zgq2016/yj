@@ -1,9 +1,5 @@
 <template>
-<<<<<<< HEAD
-  <div class="homepage" v-if="power.indexOf('Z1000')!=-1">
-=======
-  <div class="homepage" >
->>>>>>> c2c6333012cf391a8f5909c865c1ca8d6e242c6d
+  <div class="homepage">
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>首页</el-breadcrumb-item>
@@ -268,7 +264,6 @@
       </div>
     </div>
 
-    
     <!-- 公告信息 -->
     <el-dialog title="公告信息" :visible.sync="dialogVisible1" width="45%" center>
       <el-form :model="form" style="margin:0 20px" label-width="60px">
@@ -543,7 +538,7 @@ export default {
           }
         });
       });
-      this.yA.push(10)
+      this.yA.push(10);
       this.date1 = this.yearMonth;
       this.drawLine();
       // console.log(res);
