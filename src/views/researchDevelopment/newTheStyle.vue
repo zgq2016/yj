@@ -13,11 +13,6 @@
     <div class="main" v-if="!this.$route.query.oldId">
       <div class="styleNumber">
         <div class="upload" @click="handle_style_pic_url">
-          <!-- <img v-if="form.style_pic_url" :src="form.style_pic_url" alt /> -->
-          <!-- <div
-            v-if="form.style_pic_url"
-            :style="`background: url(${form.style_pic_url}) no-repeat 0 -75px;width:150px;height:150px `"
-          ></div>-->
           <el-image
             v-if="form.style_pic_url"
             style="width: 150px; height: 150px;margin-right: 5px;"
