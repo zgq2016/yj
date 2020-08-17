@@ -108,7 +108,147 @@
           <ul>
             <li @click.stop="rout2(item.id)" v-for="(item,index) in works_3" :key="index">
               <el-image
-                style="width: 132px; height: 230px;border-radius: 10px;"
+                style="width: 150px; height: 230px;border-radius: 10px;"
+                :src="item.style_pic_url"
+                fit="cover"
+              ></el-image>
+              <span>
+                <p>{{item.style_type}}</p>
+                <p>{{item.stylename}}</p>
+                <p>{{item.style_color}}</p>
+                <p>{{item.name}}</p>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="content_3">
+        <p>纸样</p>
+        <div>
+          <ul>
+            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_3" :key="index">
+              <el-image
+                style="width: 150px; height: 230px;border-radius: 10px;"
+                :src="item.style_pic_url"
+                fit="cover"
+              ></el-image>
+              <span>
+                <p>{{item.style_type}}</p>
+                <p>{{item.stylename}}</p>
+                <p>{{item.style_color}}</p>
+                <p>{{item.name}}</p>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="content_3">
+        <p>制版</p>
+        <div>
+          <ul>
+            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_3" :key="index">
+              <el-image
+                style="width: 150px; height: 230px;border-radius: 10px;"
+                :src="item.style_pic_url"
+                fit="cover"
+              ></el-image>
+              <span>
+                <p>{{item.style_type}}</p>
+                <p>{{item.stylename}}</p>
+                <p>{{item.style_color}}</p>
+                <p>{{item.name}}</p>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="content_3">
+        <p>生产下单</p>
+        <div>
+          <ul>
+            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_4" :key="index">
+              <el-image
+                style="width: 150px; height: 230px;border-radius: 10px;"
+                :src="item.style_pic_url"
+                fit="cover"
+              ></el-image>
+              <span>
+                <p>{{item.style_type}}</p>
+                <p>{{item.stylename}}</p>
+                <p>{{item.style_color}}</p>
+                <p>{{item.name}}</p>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="content_3">
+        <p>生产采购</p>
+        <div>
+          <ul>
+            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_4" :key="index">
+              <el-image
+                style="width: 150px; height: 230px;border-radius: 10px;"
+                :src="item.style_pic_url"
+                fit="cover"
+              ></el-image>
+              <span>
+                <p>{{item.style_type}}</p>
+                <p>{{item.stylename}}</p>
+                <p>{{item.style_color}}</p>
+                <p>{{item.name}}</p>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="content_3">
+        <p>生产排单</p>
+        <div>
+          <ul>
+            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_4" :key="index">
+              <el-image
+                style="width: 150px; height: 230px;border-radius: 10px;"
+                :src="item.style_pic_url"
+                fit="cover"
+              ></el-image>
+              <span>
+                <p>{{item.style_type}}</p>
+                <p>{{item.stylename}}</p>
+                <p>{{item.style_color}}</p>
+                <p>{{item.name}}</p>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="content_3">
+        <p>裁剪</p>
+        <div>
+          <ul>
+            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_4" :key="index">
+              <el-image
+                style="width: 150px; height: 230px;border-radius: 10px;"
+                :src="item.style_pic_url"
+                fit="cover"
+              ></el-image>
+              <span>
+                <p>{{item.style_type}}</p>
+                <p>{{item.stylename}}</p>
+                <p>{{item.style_color}}</p>
+                <p>{{item.name}}</p>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="content_3">
+        <p>生产出货</p>
+        <div>
+          <ul>
+            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_4" :key="index">
+              <el-image
+                style="width: 150px; height: 230px;border-radius: 10px;"
                 :src="item.style_pic_url"
                 fit="cover"
               ></el-image>
@@ -165,7 +305,7 @@ import {
   myWork,
   myAssistWork,
 } from "@/api/home.js";
-
+import { produceAdd, getProduceList } from "@/api/production";
 import { getDataList, getStyleList } from "@/api/researchDevelopment";
 import moment from "moment";
 export default {
@@ -190,6 +330,7 @@ export default {
       works_1: [],
       works_2: [],
       works_3: [],
+      works_4: [],
     };
   },
   mounted() {
@@ -449,9 +590,15 @@ export default {
         page: 1,
         page_size: 10,
       });
+      let res3 = await getProduceList({
+        page: 1,
+        page_size: 10,
+      });
       this.works_2 = res2.data.data;
       this.works_3 = res2.data.data;
+      this.works_4 = res3.data.data;
       console.log(this.works_3);
+
     },
     rout1(id) {
       this.$router.push({ path: `/designCheck?id=${id}` });
@@ -583,7 +730,7 @@ export default {
       padding: 10px 0;
       background-color: #f9fafc;
     }
-    @media screen and (max-width: 1500px) {
+    @media screen and (max-width: 1510px) {
       .content_1 {
         width: 1440px;
         .hed {
@@ -596,12 +743,12 @@ export default {
         }
       }
       .content_2 {
-        width: 1420px;
+        width: 1400px;
         height: 690px;
         overflow: hidden;
       }
       .content_3 {
-        width: 1420px;
+        width: 1400px;
         height: 690px;
         overflow: hidden;
       }
@@ -669,6 +816,7 @@ export default {
     }
     .content_2 {
       height: 345px;
+      overflow: hidden;
       & > p {
         font-weight: 500;
         font-size: 18px;
@@ -689,6 +837,7 @@ export default {
     }
     .content_3 {
       height: 345px;
+      overflow: hidden;
       & > p {
         font-weight: 500;
         font-size: 18px;
