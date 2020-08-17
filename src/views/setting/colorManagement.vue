@@ -51,13 +51,8 @@
         <el-form-item label="颜色名称" prop="color_name">
           <el-input v-model="form.color_name" style="width:80%;"></el-input>
         </el-form-item>
-        <el-form-item label="上级分类">
-          <el-select
-            v-model="region"
-            placeholder="可选/可不选"
-            style="width:80%;"
-            @change="get_goods_category_id($event)"
-          >
+        <el-form-item label="上级分类" prop="color_id">
+          <el-select v-model="form.color_id" placeholder="可选/可不选" style="width:80%;">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -66,13 +61,13 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="排序">
+        <el-form-item label="排序" prop="sort">
           <el-input v-model="form.sort" style="width:80%;"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleClose">取 消</el-button>
-        <el-button type="primary" @click="handleNewList">确 定</el-button>
+        <el-button type="primary" @click="handleClose('form')">取 消</el-button>
+        <el-button type="primary" @click="handleNewList('form')">确 定</el-button>
       </span>
     </el-dialog>
     <!-- 编辑分类 -->
@@ -147,10 +142,8 @@ export default {
       centerDialogVisible: false, //添加分类
       centerDialogVisible1: false, //编辑分类
       form: {
-        // region: "",
-        level: 0,
         color_name: "",
-        color_id: 0,
+        color_id: "",
         sort: "",
       },
       region: "",
@@ -165,11 +158,7 @@ export default {
   },
   methods: {
     handleClose() {
-      this.form.color_id = 0;
-      this.form.color_name = "";
-      this.form.sort = "";
-      this.form.level = 0;
-      this.region = "";
+      this.$refs["form"].resetFields();
       this.centerDialogVisible = false;
       this.init();
     },
@@ -244,7 +233,7 @@ export default {
         this.centerDialogVisible = true;
       }
     },
-    async handleNewList() {
+    async handleNewList(form) {
       this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         delete this.form.region;
@@ -252,19 +241,15 @@ export default {
         if (this.tableData.length === 0) {
           let res = await colorAdd(this.form);
           this.$refs["form"].resetFields();
-          this.form.color_id = 0;
-          this.region = "";
           this.centerDialogVisible = false;
-          // this.init();
+          this.init();
         }
         if (this.tableData.length > 0) {
           let res = await colorAdd(this.form);
           this.$refs["form"].resetFields();
-          this.form.color_id = 0;
-          this.region = "";
           this.centerDialogVisible = false;
+          this.init();
         }
-        this.init();
       });
     },
     async init() {

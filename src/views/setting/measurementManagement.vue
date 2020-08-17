@@ -51,13 +51,8 @@
         <el-form-item label="尺码名称" prop="size_name">
           <el-input v-model="form.size_name" style="width:80%;"></el-input>
         </el-form-item>
-        <el-form-item label="上级分类">
-          <el-select
-            v-model="region"
-            placeholder="可选/可不选"
-            style="width:80%;"
-            @change="get_goods_category_id($event)"
-          >
+        <el-form-item label="上级分类" prop="size_id">
+          <el-select v-model="form.size_id" placeholder="可选/可不选" style="width:80%;">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -66,13 +61,13 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="排序">
+        <el-form-item label="排序" prop="sort">
           <el-input v-model="form.sort" style="width:80%;"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleClose">取 消</el-button>
-        <el-button type="primary" @click="handleNewList">确 定</el-button>
+        <el-button type="primary" @click="handleClose('form')">取 消</el-button>
+        <el-button type="primary" @click="handleNewList('form')">确 定</el-button>
       </span>
     </el-dialog>
     <!-- 编辑分类 -->
@@ -147,9 +142,8 @@ export default {
       centerDialogVisible: false, //添加分类
       centerDialogVisible1: false, //编辑分类
       form: {
-        level: 0,
         size_name: "",
-        size_id: 0,
+        size_id: "",
         sort: "",
       },
       region: "",
@@ -164,11 +158,7 @@ export default {
   },
   methods: {
     handleClose() {
-      this.form.size_id = 0;
-      this.form.size_name = "";
-      this.form.sort = "";
-      this.form.level = 0;
-      this.region = "";
+      this.$refs["form"].resetFields();
       this.centerDialogVisible = false;
       this.init();
     },
@@ -243,7 +233,7 @@ export default {
         this.centerDialogVisible = true;
       }
     },
-    async handleNewList() {
+    async handleNewList(form) {
       this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         delete this.form.region;
@@ -251,8 +241,6 @@ export default {
           let res = await sizeAdd(this.form);
           console.log(res);
           this.$refs["form"].resetFields();
-          this.form.size_id = 0;
-          this.region = "";
           this.centerDialogVisible = false;
           this.init();
         }
@@ -260,8 +248,6 @@ export default {
           let res = await sizeAdd(this.form);
           console.log(res);
           this.$refs["form"].resetFields();
-          this.form.size_id = 0;
-          this.region = "";
           this.centerDialogVisible = false;
           this.init();
         }

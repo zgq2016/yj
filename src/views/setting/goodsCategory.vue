@@ -53,24 +53,18 @@
         <el-form-item label="分类名称" prop="goods_category_name">
           <el-input v-model="form.goods_category_name" style="width:80%;"></el-input>
         </el-form-item>
-        <el-form-item label="上级分类">
-          <el-select
-            v-model="region"
-            placeholder="可选/可不选"
-            style="width:80%;"
-            clearable
-            @change="get_goods_category_id($event)"
-          >
+        <el-form-item label="上级分类" prop="goods_category_id">
+          <el-select v-model="form.goods_category_id" placeholder="可选/可不选" style="width:80%;" clearable>
             <el-option
               v-for="item in options"
-              :key="item.value"
-              :label="item.goods_category_name "
+              :key="item.id"
+              :label="item.goods_category_name"
               :value="item.id"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item v-if="region != ''" label="计量单位">
-          <el-select v-model="form.unit" clearable placeholder="请选择">
+        <el-form-item v-if="form.goods_category_id != ''" label="计量单位" prop="unit">
+          <el-select v-model="form.unit" clearable placeholder="请选择" style="width:80%;">
             <el-option
               v-for="item in units"
               :key="item.id"
@@ -79,16 +73,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="分类描述">
+        <el-form-item label="分类描述" prop="describe">
           <el-input type="textarea" v-model="form.describe"></el-input>
         </el-form-item>
-        <el-form-item label="排序">
+        <el-form-item label="排序" prop="sort">
           <el-input v-model="form.sort" style="width:80%;"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleClose">取 消</el-button>
-        <el-button type="primary" @click="handleNewList">确 定</el-button>
+        <el-button type="primary" @click="handleClose('form')">取 消</el-button>
+        <el-button type="primary" @click="handleNewList('form')">确 定</el-button>
       </span>
     </el-dialog>
     <!-- 编辑分类 -->
@@ -183,11 +177,11 @@ export default {
       centerDialogVisible: false, //添加分类
       centerDialogVisible1: false, //编辑分类
       form: {
-        goods_category_id: 0,
         goods_category_name: "",
+        goods_category_id: "",
+        unit: "",
         describe: "",
         sort: "",
-        level: 0,
       },
       region: "",
       obj: {},
@@ -201,13 +195,8 @@ export default {
     };
   },
   methods: {
-    handleClose() {
-      this.form.goods_category_id = 0;
-      this.form.goods_category_name = "";
-      this.form.describe = "";
-      this.form.sort = "";
-      this.form.level = 0;
-      this.region = "";
+    handleClose(form) {
+      this.$refs["form"].resetFields();
       this.centerDialogVisible = false;
       this.vh1 = false;
       this.init();
@@ -285,16 +274,13 @@ export default {
         this.centerDialogVisible = true;
       }
     },
-    async handleNewList() {
+    async handleNewList(form) {
       this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
-        delete this.form.region;
         if (this.tableData.length === 0) {
           let res = await goodsCategoryAdd(this.form);
           console.log(res);
           this.$refs["form"].resetFields();
-          this.form.goods_category_id = 0;
-          this.region = "";
           this.centerDialogVisible = false;
           this.init();
         }
@@ -302,7 +288,6 @@ export default {
           let res = await goodsCategoryAdd(this.form);
           console.log(res);
           this.$refs["form"].resetFields();
-          this.form.goods_category_id = 0;
           this.centerDialogVisible = false;
           this.init();
         }

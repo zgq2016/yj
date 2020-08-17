@@ -258,7 +258,6 @@ export default {
     border-bottom-color: #000 !important;
   }
   .el-menu-demo {
-    overflow: hidden;
     border-radius: 15px;
   }
   .logo {
@@ -275,7 +274,7 @@ export default {
     width: 100px;
     height: 600px;
     border-radius: 20px;
-    overflow: hidden;
+    // overflow: hidden;
     padding: 20px 0;
   }
   /deep/.el-main {

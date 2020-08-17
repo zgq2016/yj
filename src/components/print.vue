@@ -67,6 +67,12 @@
 <script>
 import { getStyle } from "@/api/researchDevelopment";
 export default {
+  props: {
+    data: {
+      type: Object, // 声明属性的类型
+      default: () => ({}), // 属性的默认值
+    },
+  },
   data() {
     return {
       obj: {},
