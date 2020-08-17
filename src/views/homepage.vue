@@ -598,12 +598,13 @@ export default {
       this.works_3 = res2.data.data;
       this.works_4 = res3.data.data;
       console.log(this.works_3);
-
     },
     rout1(id) {
       this.$router.push({ path: `/designCheck?id=${id}` });
+      document.body.style = null;
     },
     rout2(id) {
+      document.body.style = null;
       this.$router.push({ path: `/development?id=${id}` });
     },
     //根据某年某月计算出具体日期

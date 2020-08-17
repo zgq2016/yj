@@ -88,7 +88,7 @@
             <el-button
               class="elbtn"
               size="mini"
-              v-if="scope.row.procure_status==1"
+              v-if="scope.row.procure_status==1||scope.row.procure_status==2"
               @click="handleEdit(scope.$index, scope.row)"
             >{{"查看"}}</el-button>
             <el-button
