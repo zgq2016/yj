@@ -1,5 +1,5 @@
 <template>
-  <div class="homepage" v-if="power.indexOf('A')!=-1">
+  <div class="homepage" v-if="power.indexOf('Z1000')!=-1">
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>首页</el-breadcrumb-item>

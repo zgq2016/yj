@@ -84,8 +84,17 @@
         <el-table-column align="center" label="图片" width="140">
           <template slot-scope="scope" property="style_pic_url">
             <div style="display: flex;">
-              <img style="margin-right: 5px;" :src="scope.row.style_pic_url" class="img" alt />
-              <img :src="scope.row.style_color_pic_url" class="img" alt />
+              <el-image
+                style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
+                :src="scope.row.style_pic_url"
+                fit="cover"
+              ></el-image>
+              <img
+                :src="scope.row.style_color_pic_url"
+                class="img"
+                style="width: 50px; height: 50px;border-radius: 5px;"
+                alt
+              />
             </div>
           </template>
         </el-table-column>

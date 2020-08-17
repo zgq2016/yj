@@ -10,7 +10,6 @@ export default {
     return {};
   },
   methods: {
-    // localStorage.getItem("power")
   },
   mounted() {
     let user_id = localStorage.getItem("user_id");

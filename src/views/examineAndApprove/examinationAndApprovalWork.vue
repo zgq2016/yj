@@ -82,10 +82,11 @@
         <el-table-column label="序号" type="index" width="50"></el-table-column>
         <el-table-column label="图片" width="140">
           <template slot-scope="scope" property="style_pic_url">
-            <div style="display: flex;">
-              <img style="margin-right: 5px;" :src="scope.row.style_pic_url" class="img" alt />
-              <img :src="scope.row.style_color_pic_url" class="img" alt />
-            </div>
+            <el-image
+              style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
+              :src="scope.row.style_pic_url"
+              fit="cover"
+            ></el-image>
           </template>
         </el-table-column>
         <el-table-column property="stylename" label="名称"></el-table-column>
@@ -348,7 +349,6 @@ export default {
     margin: 20px;
     text-align: right;
     // cropper-face cropper-move
-    
   }
 }
 </style>

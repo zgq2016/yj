@@ -21,10 +21,16 @@
       <div style="display: flex;justify-content: space-between;">
         <div class="content">
           <!-- <img class="imgSrc" :src="obj.style_pic_url" alt /> -->
-          <div
+          <!-- <div
             class="imgSrc"
             :style="`background: url(${obj.style_pic_url}) no-repeat 0 -75px;width:150px;height:150px`"
-          ></div>
+          ></div>-->
+          <el-image
+            class="imgSrc"
+            style="width: 150px; height: 150px;margin-right: 5px;"
+            :src="obj.style_pic_url"
+            fit="cover"
+          ></el-image>
           <img
             v-if="obj.style_color_pic_url!==''"
             class="imgSrc"
@@ -35,6 +41,7 @@
           <div
             v-if="obj.style_color_pic_url===''"
             class="imgSrc"
+            style="width:150px;height:150px"
             :style="`background-color:${obj.color_code};`"
           ></div>
           <div class="info">

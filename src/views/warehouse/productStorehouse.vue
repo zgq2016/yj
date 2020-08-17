@@ -81,7 +81,11 @@
           <el-table-column align="center" prop="stylename" label="名称"></el-table-column>
           <el-table-column align="center" width="70" label="图片">
             <template slot-scope="scope">
-              <img :src="scope.row.image" class="img" alt />
+              <el-image
+                style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
+                :src="scope.row.image"
+                fit="cover"
+              ></el-image>
             </template>
           </el-table-column>
           <el-table-column align="center" prop="styleno" label="款号"></el-table-column>

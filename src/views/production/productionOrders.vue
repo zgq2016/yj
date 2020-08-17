@@ -85,8 +85,12 @@
       >
         <el-table-column type="index" label="序号"></el-table-column>
         <el-table-column align="center" label="图片">
-          <template align="center" slot-scope="scope" property="style_pic_url">
-            <img :src="scope.row.style_pic_url" class="img" alt />
+          <template slot-scope="scope" property="style_pic_url">
+            <el-image
+              style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
+              :src="scope.row.style_pic_url"
+              fit="cover"
+            ></el-image>
           </template>
         </el-table-column>
         <el-table-column align="center" property="styleno" label="款号"></el-table-column>

@@ -20,10 +20,16 @@
       <div class="styleNumber">
         <div class="upload" @click="handle_obj_style_pic_url">
           <!-- <img v-if="obj.style_pic_url" :src="obj.style_pic_url" alt /> -->
-          <div
+          <!-- <div
             v-if="obj.style_pic_url"
             :style="`background: url(${obj.style_pic_url}) no-repeat 0 -75px;width:150px;height:150px `"
-          ></div>
+          ></div>-->
+          <el-image
+            v-if="obj.style_pic_url"
+            style="width: 150px; height: 150px;margin-right: 5px;"
+            :src="obj.style_pic_url"
+            fit="cover"
+          ></el-image>
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </div>
         <div class="styleNumberContent">

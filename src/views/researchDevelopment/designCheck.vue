@@ -93,24 +93,21 @@
       <div v-if="switchover_active===false">
         <el-table ref="singleTable" :data="tableData" size="mini">
           <el-table-column type="index" width="50"></el-table-column>
-          <el-table-column label="图片" width="70">
-            <template slot-scope="scope">
-              <img :src="scope.row.style_pic_url" class="img" alt />
-            </template>
-          </el-table-column>
-          <el-table-column>
-            <template slot-scope="scope">
-              <img
-                v-if="scope.row.style_color_pic_url!==''"
-                :src="scope.row.style_color_pic_url"
-                class="img"
-                alt
-              />
-              <div
-                v-if="scope.row.style_color_pic_url===''"
-                :style="`background-color:${scope.row.color_code};`"
-                class="color"
-              ></div>
+          <el-table-column label="图片" width="140">
+            <template slot-scope="scope" property="style_pic_url">
+              <div style="display: flex;">
+                <el-image
+                  style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
+                  :src="scope.row.style_pic_url"
+                  fit="cover"
+                ></el-image>
+                <img
+                  :src="scope.row.style_color_pic_url"
+                  class="img"
+                  style="width: 50px; height: 50px;border-radius: 5px;"
+                  alt
+                />
+              </div>
             </template>
           </el-table-column>
           <el-table-column property="style_color" label="颜色"></el-table-column>
@@ -386,6 +383,8 @@ export default {
       width: 50px;
       height: 50px;
       border-radius: 5px;
+      background-size: 50px 50px;
+      background-repeat: no-repeat;
     }
     .color {
       width: 50px;
