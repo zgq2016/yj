@@ -1,5 +1,9 @@
 <template>
+<<<<<<< HEAD
   <div class="homepage" v-if="power.indexOf('Z1000')!=-1">
+=======
+  <div class="homepage" >
+>>>>>>> c2c6333012cf391a8f5909c865c1ca8d6e242c6d
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>首页</el-breadcrumb-item>
@@ -263,6 +267,8 @@
         </div>
       </div>
     </div>
+
+    
     <!-- 公告信息 -->
     <el-dialog title="公告信息" :visible.sync="dialogVisible1" width="45%" center>
       <el-form :model="form" style="margin:0 20px" label-width="60px">
@@ -472,7 +478,6 @@ export default {
         let times = this.date1.split("-");
         this.xA = [];
         this.yA = [];
-        // console.log(this.getDaysInMonth(times[0], times[1]));
         this.xA = this.getDaysInMonth(times[0], times[1]);
         let res = await mouthWorkStatus({
           user_id: localStorage.getItem("user_id"),
@@ -522,7 +527,6 @@ export default {
       // console.log(this.yearMonth.split('-'));
       // 计算某月的具体日期
       let month_i = parseInt(mh, 10);
-      // console.log(this.getDaysInMonth(year,month_i));
       this.xA = this.getDaysInMonth(year, month_i);
       let res = await mouthWorkStatus({
         user_id: localStorage.getItem("user_id"),
@@ -539,6 +543,7 @@ export default {
           }
         });
       });
+      this.yA.push(10)
       this.date1 = this.yearMonth;
       this.drawLine();
       // console.log(res);
