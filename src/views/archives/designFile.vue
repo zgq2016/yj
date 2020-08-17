@@ -65,9 +65,13 @@
           style="width:100%;"
         >
           <el-table-column type="index" width="50" label="序号"></el-table-column>
-          <el-table-column align="center" width="70" label="图片">
+          <el-table-column align="center" width="80" label="图片">
             <template slot-scope="scope" property="style_pic_url">
-              <img :src="scope.row.style_pic_url" class="img" alt />
+              <el-image
+                style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
+                :src="scope.row.style_pic_url"
+                fit="cover"
+              ></el-image>
             </template>
           </el-table-column>
           <el-table-column align="center" property="stylename" label="名称"></el-table-column>
@@ -311,7 +315,6 @@ export default {
         width: 60px;
         height: 60px;
         border-radius: 5px;
-        
       }
     }
   }

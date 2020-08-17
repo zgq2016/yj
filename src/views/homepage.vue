@@ -263,7 +263,6 @@
         </div>
       </div>
     </div>
-
     <!-- 公告信息 -->
     <el-dialog title="公告信息" :visible.sync="dialogVisible1" width="45%" center>
       <el-form :model="form" style="margin:0 20px" label-width="60px">
@@ -312,7 +311,6 @@ import moment from "moment";
 export default {
   data() {
     return {
-      power: "",
       list: [],
       list2: [],
       dialogVisible: false,
@@ -336,7 +334,6 @@ export default {
     };
   },
   mounted() {
-    this.power = localStorage.getItem("power");
     this.drawLine();
     this.init();
     this.mouthWork();
@@ -473,6 +470,7 @@ export default {
         let times = this.date1.split("-");
         this.xA = [];
         this.yA = [];
+        // console.log(this.getDaysInMonth(times[0], times[1]));
         this.xA = this.getDaysInMonth(times[0], times[1]);
         let res = await mouthWorkStatus({
           user_id: localStorage.getItem("user_id"),
@@ -522,6 +520,7 @@ export default {
       // console.log(this.yearMonth.split('-'));
       // 计算某月的具体日期
       let month_i = parseInt(mh, 10);
+      // console.log(this.getDaysInMonth(year,month_i));
       this.xA = this.getDaysInMonth(year, month_i);
       let res = await mouthWorkStatus({
         user_id: localStorage.getItem("user_id"),
@@ -538,7 +537,6 @@ export default {
           }
         });
       });
-      this.yA.push(10);
       this.date1 = this.yearMonth;
       this.drawLine();
       // console.log(res);
