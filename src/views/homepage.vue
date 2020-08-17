@@ -1,5 +1,5 @@
 <template>
-  <div class="homepage">
+  <div class="homepage" v-if="power.indexOf('Z1000')!=-1">
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>首页</el-breadcrumb-item>
@@ -76,7 +76,7 @@
               <span>
                 <p>{{item.projecttype}}</p>
                 <p>{{item.projectname}}</p>
-                <p>{{item.name}}</p>
+                <p>{{item.user_name}}</p>
               </span>
             </li>
           </ul>
@@ -333,15 +333,10 @@ export default {
       works_2: [],
       works_3: [],
       works_4: [],
+      vs: false,
     };
   },
-  mounted() {
-    this.power = localStorage.getItem("power");
-    this.drawLine();
-    this.init();
-    this.mouthWork();
-    this.work();
-  },
+
   methods: {
     // 查看公告
     lookTitle(item) {
@@ -565,6 +560,8 @@ export default {
       let data2 = res2.data.data;
       this.list2 = data2;
       this.list2 = this.list2.slice(0, 3);
+
+      this.drawLine();
     },
     async work() {
       let res = await getDataList({
@@ -624,6 +621,17 @@ export default {
       return daysOfMonth;
     },
   },
+  mounted() {
+    this.power = localStorage.getItem("power");
+    if (this.power.indexOf("Z1000") != -1) {
+      this.init();
+      this.mouthWork();
+      this.work();
+    }
+  },
+  // updated() {
+  //   this.drawLine();
+  // },
 };
 </script>
 <style lang="less" scoped>
@@ -759,7 +767,7 @@ export default {
     .content_1 {
       margin-bottom: 25px;
       width: 100%;
-      height: 260px;
+      height: 265px;
       overflow: hidden;
       .hed {
         overflow: hidden;

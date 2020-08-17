@@ -110,7 +110,7 @@
             <el-table-column align="center" prop="stock_quantity" label="回货量"></el-table-column>
             <el-table-column align="center" width="95px" prop="create_time" label="预计回料时间"></el-table-column>
             <!-- <el-table-column align="center" prop="scheduledReceipt" label="入库量"></el-table-column> -->
-            <el-table-column align="center" prop="stock_quantity" label="库存量"></el-table-column>
+            <!-- <el-table-column align="center" prop="stock_quantity" label="库存量"></el-table-column> -->
             <el-table-column align="center" prop="amount" label="结算金额"></el-table-column>
             <el-table-column align="center" prop="balance" label="余结金额"></el-table-column>
           </el-table>
@@ -192,6 +192,12 @@ export default {
       console.log(res2);
       this.tableData = res2.data.data;
       this.total = res2.data.count;
+      this.tableData.map((v,i)=>{
+        v.details.map((j,k)=>{
+          v.stock_quantity += Number(j.quantity)
+
+        })
+      })
     },
   },
   mounted() {
