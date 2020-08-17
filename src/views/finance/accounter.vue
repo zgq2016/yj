@@ -7,7 +7,7 @@
       </el-breadcrumb>
     </div>
     <div v-if="power.indexOf('F5000100')!=-1" class="addStyle">
-      <div @click="dialogVisible = true">新增项目类型</div>
+      <div @click="dialogVisible = true">新增帐户</div>
     </div>
 
     <div class="table" style="width: 100%;margin:10px 0">
@@ -182,7 +182,7 @@ export default {
       obj: {},
       rules: {
         account_name: [
-          { required: true, message: "类型名称", trigger: "blur" },
+          { required: true, message: "账户名称", trigger: "blur" },
         ],
       },
     };

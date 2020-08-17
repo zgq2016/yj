@@ -58,8 +58,10 @@
       </div>
     </div>
     <div class="right">
-      <img class="img1" :src="designidea_pic_url0" alt />
-      <img class="img2" :src="designidea_pic_url1" alt />
+      <!-- <img class="img1" :src="designidea_pic_url0" alt />
+      <img class="img2" :src="designidea_pic_url1" alt />-->
+      <el-image :src="designidea_pic_url0" fit="fill" class="img1"></el-image>
+      <el-image :src="designidea_pic_url1" fit="fill" class="img2"></el-image>
     </div>
   </div>
 </template>
@@ -164,12 +166,12 @@ export default {
     margin-top: 100px;
     .img1 {
       width: 400px;
-      height: 500px;
+      // height: 500px;
       margin-bottom: 5px;
     }
     .img2 {
       width: 400px;
-      height: 500px;
+      // height: 500px;
     }
   }
 }

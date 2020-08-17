@@ -98,7 +98,7 @@
               :prop="'bank.'+index+'.bank'"
               :rules="bankRules.bank_bank"
             >
-              <el-select v-model="item.bank" placeholder="类别" style="width:200px">
+              <el-select v-model="item.bank" placeholder="银行名称" style="width:200px">
                 <el-option
                   v-for="item in options"
                   :key="item.id"
