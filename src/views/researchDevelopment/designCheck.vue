@@ -133,6 +133,11 @@
               :src="item.style_pic_url"
               fit="cover"
             ></el-image>
+            <!-- <img
+              :src="item.style_pic_url"
+              alt
+              style="width: 150px; height: 300px;border-radius: 10px;"
+            />-->
             <div style="color:#000">{{item.style_type}}</div>
             <div style="color:#000">{{item.stylename}}</div>
             <div style="color:#000">{{item.styleno}}</div>
@@ -248,6 +253,7 @@ export default {
       this.$router.push({
         path: `/development?id=${id}&TL=${30}&project_id=${this.obj.id}`,
       });
+      document.body.style = null;
     },
     editOutline() {
       let { id } = this.$route.query;
