@@ -1,5 +1,5 @@
 <template>
-  <div class="goodsCategory" v-if="power.indexOf('H1000400')!=-1">
+  <div class="goodsCategory">
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">

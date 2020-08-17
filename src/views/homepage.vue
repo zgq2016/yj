@@ -1,5 +1,5 @@
 <template>
-  <div class="homepage">
+  <div class="homepage" v-if="power.indexOf('A')!=-1">
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>首页</el-breadcrumb-item>
@@ -311,6 +311,7 @@ import moment from "moment";
 export default {
   data() {
     return {
+      power: "",
       list: [],
       list2: [],
       dialogVisible: false,
@@ -334,6 +335,7 @@ export default {
     };
   },
   mounted() {
+    this.power = localStorage.getItem("power");
     this.drawLine();
     this.init();
     this.mouthWork();
