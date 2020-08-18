@@ -22,8 +22,12 @@
           <el-table-column prop="remarks" :show-overflow-tooltip="true" label="备注" width="160"></el-table-column>
           <el-table-column align="center" label="操作">
             <template slot-scope="scope">
-              <div class="el-icon-edit btn" @click.stop="handleEdit(scope.$index, scope.row)"></div>
-              <div class="el-icon-delete btn" @click.stop="handleDelete(scope.$index, scope.row)"></div>
+              <el-tooltip content="编辑" placement="top" class="el-icon-edit btn">
+                <div @click="handleEdit(scope.$index, scope.row)"></div>
+              </el-tooltip>
+              <el-tooltip content="删除" placement="top" class="el-icon-delete btn">
+                <div @click="handleDelete(scope.$index, scope.row)"></div>
+              </el-tooltip>
             </template>
           </el-table-column>
         </el-table>

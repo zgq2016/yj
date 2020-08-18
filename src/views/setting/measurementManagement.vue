@@ -24,16 +24,22 @@
         v-if="power.indexOf('H3000300')!=-1||power.indexOf('H3000200')!=-1"
       >
         <template slot-scope="scope">
-          <div
-            v-if="power.indexOf('H3000300')!=-1"
+          <el-tooltip
+            content="编辑"
+            placement="top"
             class="el-icon-edit btn"
-            @click="handleEdit(scope.$index, scope.row)"
-          ></div>
-          <div
-            v-if="power.indexOf('H3000200')!=-1"
+            v-if="power.indexOf('H3000300')!=-1"
+          >
+            <div @click="handleEdit(scope.$index, scope.row)"></div>
+          </el-tooltip>
+          <el-tooltip
+            content="删除"
+            placement="top"
             class="el-icon-delete btn"
-            @click="handleDelete(scope.$index, scope.row)"
-          ></div>
+            v-if="power.indexOf('H3000200')!=-1"
+          >
+            <div @click="handleDelete(scope.$index, scope.row)"></div>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>

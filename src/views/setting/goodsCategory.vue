@@ -26,16 +26,22 @@
         v-if="power.indexOf('H1000300')!=-1||power.indexOf('H1000200')!=-1"
       >
         <template slot-scope="scope">
-          <div
+          <el-tooltip
+            content="编辑"
+            placement="top"
             v-if="power.indexOf('H1000300')!=-1"
             class="el-icon-edit btn"
-            @click="handleEdit(scope.$index, scope.row)"
-          ></div>
-          <div
+          >
+            <div @click="handleEdit(scope.$index, scope.row)"></div>
+          </el-tooltip>
+          <el-tooltip
+            content="删除"
+            placement="top"
             v-if="power.indexOf('H1000200')!=-1"
             class="el-icon-delete btn"
-            @click="handleDelete(scope.$index, scope.row)"
-          ></div>
+          >
+            <div @click="handleDelete(scope.$index, scope.row)"></div>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
@@ -54,7 +60,12 @@
           <el-input v-model="form.goods_category_name" style="width:80%;"></el-input>
         </el-form-item>
         <el-form-item label="上级分类" prop="goods_category_id">
-          <el-select v-model="form.goods_category_id" placeholder="可选/可不选" style="width:80%;" clearable>
+          <el-select
+            v-model="form.goods_category_id"
+            placeholder="可选/可不选"
+            style="width:80%;"
+            clearable
+          >
             <el-option
               v-for="item in options"
               :key="item.id"

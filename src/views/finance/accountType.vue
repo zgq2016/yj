@@ -6,32 +6,34 @@
         <el-breadcrumb-item>账目类型</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div v-if="power.indexOf('F6000100')!=-1" class="addStyle">
-      <div @click="dialogVisible = true">新增项目类型</div>
-    </div>
+    <div @click="dialogVisible = true" v-if="power.indexOf('F6000100')!=-1" class="addStyle">新增账目类型</div>
 
     <div class="table" style="width: 100%;margin:10px 0">
-      <el-table :data="data" size='mini' border style="width: 100%">
+      <el-table :data="data" size="mini" border style="width: 100%">
         <el-table-column fixed prop="account_type_name" label="类型名称"></el-table-column>
         <el-table-column prop="statusName" label="状态"></el-table-column>
         <el-table-column prop="remarks" label="备注"></el-table-column>
         <el-table-column prop="sort" label="排序"></el-table-column>
-        <el-table-column
-          label="操作"
-          width="100"
-          v-if="power.indexOf('F6000300')!=-1||power.indexOf('F6000200')!=-1"
-        >
+        <el-table-column label="操作" width="100">
           <template slot-scope="scope">
-            <div
-              v-if="power.indexOf('F6000300')!=-1"
-              class="el-icon-edit btn"
-              @click="handleEdit(scope.$index, scope.row)"
-            ></div>
-            <div
-              v-if="power.indexOf('F6000200')!=-1"
-              class="el-icon-delete btn"
-              @click="handleDelete(scope.$index, scope.row)"
-            ></div>
+            <div v-if="scope.row.is_origin ==0">
+              <el-tooltip
+                content="编辑"
+                placement="top"
+                v-if="power.indexOf('F6000300')!=-1"
+                class="el-icon-edit btn"
+              >
+                <div @click="handleEdit(scope.$index, scope.row)"></div>
+              </el-tooltip>
+              <el-tooltip
+                content="删除"
+                placement="top"
+                v-if="power.indexOf('F6000200')!=-1"
+                class="el-icon-delete btn"
+              >
+                <div @click="handleDelete(scope.$index, scope.row)"></div>
+              </el-tooltip>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -58,25 +60,25 @@
       :close-on-press-escape="false"
     >
       <el-form :model="obj" :rules="rules1" ref="obj" label-width="100px" class="demo-form">
-        <el-form-item label="类型名称" prop="account_type_name ">
+        <el-form-item label="类型名称" prop="account_type_name">
           <el-input v-model="obj.account_type_name" style="width:80%"></el-input>
         </el-form-item>
-        <el-form-item label="状态">
+        <el-form-item label="状态" prop="status">
           <el-radio-group v-model="obj.status" style="width:80%">
             <el-radio :label="'1'">启用</el-radio>
             <el-radio :label="'0'">禁用</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="备注">
+        <el-form-item label="备注" prop="remarks">
           <el-input type="textarea" v-model="obj.remarks" style="width:80%"></el-input>
         </el-form-item>
-        <el-form-item label="排序">
+        <el-form-item label="排序" prop="sort">
           <el-input v-model="obj.sort" style="width:80%" @input="handleObjInput"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleEditForm">提 交</el-button>
-        <el-button @click="handleEditClose">取 消</el-button>
+        <el-button type="primary" @click="handleEditForm('obj')">提 交</el-button>
+        <el-button @click="handleEditClose('obj')">取 消</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -93,22 +95,22 @@
         <el-form-item label="类型名称" prop="account_type_name">
           <el-input v-model="form.account_type_name" style="width:80%"></el-input>
         </el-form-item>
-        <el-form-item label="状态">
+        <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status" style="width:80%">
             <el-radio :label="1">启用</el-radio>
             <el-radio :label="0">禁用</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="备注">
+        <el-form-item label="备注" prop="remarks">
           <el-input type="textarea" v-model="form.remarks" style="width:80%"></el-input>
         </el-form-item>
-        <el-form-item label="排序">
+        <el-form-item label="排序" prop="sort">
           <el-input v-model="form.sort" style="width:80%" @input="handleInput"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleAddForm">提 交</el-button>
-        <el-button @click="handleClose">取 消</el-button>
+        <el-button type="primary" @click="handleAddForm('form')">提 交</el-button>
+        <el-button @click="handleClose('form')">取 消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -132,7 +134,7 @@ export default {
       data: [],
       dialogVisible: false,
       dialogVisible1: false,
-      form: { account_type_name: "", status: "", remarks: "", sort: "" },
+      form: { account_type_name: "", status: 1, remarks: "", sort: "" },
       obj: {},
       rules: {
         account_type_name: [
@@ -147,24 +149,18 @@ export default {
     };
   },
   methods: {
-    async handleAddForm() {
+    async handleAddForm(form) {
       this.form.sort = Number(this.form.sort);
       let res = await accountTypeAdd(this.form);
-      this.form.account_type_name = "";
-      this.form.status = "";
-      this.form.remarks = "";
-      this.form.sort = "";
+      this.$refs[form].resetFields();
       this.init();
       this.dialogVisible = false;
     },
-    async handleEditForm() {
+    async handleEditForm(form) {
       this.obj.sort = Number(this.obj.sort);
       let res = await accountTypeEdit(this.obj);
       console.log(res);
-      this.obj.account_type_name = "";
-      this.obj.status = "";
-      this.obj.remarks = "";
-      this.obj.sort = "";
+      this.$refs[form].resetFields();
       this.init();
       this.dialogVisible1 = false;
     },
@@ -174,22 +170,17 @@ export default {
     handleObjInput() {
       this.obj.sort = this.obj.sort.replace(/[^0-9-]+/, "");
     },
-    handleClose() {
-      this.form.account_type_name = "";
-      this.form.status = "";
-      this.form.remarks = "";
-      this.form.sort = "";
+    handleClose(form) {
+      this.$refs[form].resetFields();
       this.dialogVisible = false;
     },
-    handleEditClose() {
-      this.form.account_type_name = "";
-      this.form.status = "";
-      this.form.remarks = "";
-      this.form.sort = "";
+    handleEditClose(form) {
+      this.$refs[form].resetFields();
       this.dialogVisible1 = false;
       this.form.sort = "";
     },
     async handleEdit(index, row) {
+      console.log(row);
       let res = await accountTypeInfo({
         id: row.id,
       });
@@ -276,8 +267,8 @@ export default {
     margin-top: 10px;
     text-align: right;
   }
-  .table{
-     .el-table {
+  .table {
+    .el-table {
       /deep/.cell {
         font-weight: 500 !important;
       }
