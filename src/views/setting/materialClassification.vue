@@ -19,8 +19,12 @@
       <el-table-column prop="classname" label="分类名称" width="200"></el-table-column>
       <el-table-column align="right" label="操作">
         <template slot-scope="scope">
-          <div class="el-icon-edit btn" @click="handleEdit(scope.$index, scope.row)"></div>
-          <div class="el-icon-delete btn" @click="handleDelete(scope.$index, scope.row)"></div>
+          <el-tooltip content="编辑" placement="top" class="el-icon-edit btn">
+            <div @click="handleEdit(scope.$index, scope.row)"></div>
+          </el-tooltip>
+          <el-tooltip content="删除" placement="top" class="el-icon-delete btn">
+            <div @click="handleDelete(scope.$index, scope.row)"></div>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>

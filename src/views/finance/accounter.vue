@@ -6,9 +6,7 @@
         <el-breadcrumb-item>结算帐户</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div v-if="power.indexOf('F5000100')!=-1" class="addStyle">
-      <div @click="dialogVisible = true">新增帐户</div>
-    </div>
+    <div @click="dialogVisible = true" v-if="power.indexOf('F5000100')!=-1" class="addStyle">新增帐户</div>
 
     <div class="table" style="width: 100%;margin:10px 0">
       <el-table size="mini" :data="data" border style="width: 100%">
@@ -26,16 +24,22 @@
           v-if="power.indexOf('F5000300')!=-1||power.indexOf('F5000200')!=-1"
         >
           <template slot-scope="scope">
-            <div
+            <el-tooltip
+              content="编辑"
+              placement="top"
               v-if="power.indexOf('F5000300')!=-1"
               class="el-icon-edit btn"
-              @click="handleEdit(scope.$index, scope.row)"
-            ></div>
-            <div
+            >
+              <div @click="handleEdit(scope.$index, scope.row)"></div>
+            </el-tooltip>
+            <el-tooltip
+              content="删除"
+              placement="top"
               v-if="power.indexOf('F5000200')!=-1"
               class="el-icon-delete btn"
-              @click="handleDelete(scope.$index, scope.row)"
-            ></div>
+            >
+              <div @click="handleDelete(scope.$index, scope.row)"></div>
+            </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
@@ -65,19 +69,19 @@
         <el-form-item label="账户名称" prop="account_name">
           <el-input v-model="obj.account_name" style="width:80%"></el-input>
         </el-form-item>
-        <el-form-item label="账号">
+        <el-form-item label="账号" prop="account">
           <el-input v-model="obj.account" style="width:80%"></el-input>
         </el-form-item>
-        <el-form-item label="开户人">
+        <el-form-item label="开户人" prop="name">
           <el-input v-model="obj.name" style="width:80%"></el-input>
         </el-form-item>
-        <el-form-item label="状态">
+        <el-form-item label="状态" prop="status">
           <el-radio-group v-model="obj.status" style="width:80%">
             <el-radio :label="'1'">启用</el-radio>
             <el-radio :label="'0'">停用</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="账户类型">
+        <el-form-item label="账户类型" prop="account_type">
           <el-select v-model="obj.account_type" style="width:80%">
             <el-option
               v-for="item in balance"
@@ -87,16 +91,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="备注">
+        <el-form-item label="备注" prop="remarks">
           <el-input type="textarea" v-model="obj.remarks" style="width:80%"></el-input>
         </el-form-item>
-        <el-form-item label="排序">
+        <el-form-item label="排序" prop="sort">
           <el-input v-model="obj.sort" style="width:80%" @input="handleInput"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleEditForm">提 交</el-button>
-        <el-button @click="handleEditClose">取 消</el-button>
+        <el-button type="primary" @click="handleEditForm('obj')">提 交</el-button>
+        <el-button @click="handleEditClose('obj')">取 消</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -113,19 +117,19 @@
         <el-form-item label="账户名称" prop="account_name">
           <el-input v-model="form.account_name" style="width:80%"></el-input>
         </el-form-item>
-        <el-form-item label="账号">
+        <el-form-item label="账号" prop="account">
           <el-input v-model="form.account" style="width:80%"></el-input>
         </el-form-item>
-        <el-form-item label="开户人">
+        <el-form-item label="开户人" prop="name">
           <el-input v-model="form.name" style="width:80%"></el-input>
         </el-form-item>
-        <el-form-item label="状态">
+        <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status" style="width:80%">
             <el-radio :label="1">启用</el-radio>
             <el-radio :label="0">停用</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="账户类型">
+        <el-form-item label="账户类型" prop="account_type">
           <el-select v-model="form.account_type" style="width:80%">
             <el-option
               v-for="item in balance"
@@ -135,16 +139,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="备注">
+        <el-form-item label="备注" prop="remarks">
           <el-input type="textarea" v-model="form.remarks" style="width:80%"></el-input>
         </el-form-item>
-        <el-form-item label="排序">
+        <el-form-item label="排序" prop="sort">
           <el-input v-model="form.sort" style="width:80%" @input="handleInput"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleAddForm">提 交</el-button>
-        <el-button @click="handleClose">取 消</el-button>
+        <el-button type="primary" @click="handleAddForm('form')">提 交</el-button>
+        <el-button @click="handleClose('form')">取 消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -177,7 +181,7 @@ export default {
         account_type: "",
         remarks: "",
         sort: "",
-        status: "",
+        status: 1,
       },
       obj: {},
       rules: {
@@ -188,45 +192,27 @@ export default {
     };
   },
   methods: {
-    async handleAddForm() {
+    async handleAddForm(form) {
       // console.log(this.form);
       this.form.sort = Number(this.form.sort);
       let res = await balanceAccountAdd(this.form);
       console.log(res);
-      this.form.account_name = "";
-      this.form.account = "";
-      this.form.name = "";
-      this.form.account_type = "";
-      this.form.remarks = "";
-      this.form.sort = "";
-      this.form.status = "";
+      this.$refs[form].resetFields();
       this.init();
       this.dialogVisible = false;
     },
-    async handleEditForm() {
+    async handleEditForm(form) {
       console.log(this.obj);
       delete this.obj.balance;
       this.obj.sort = Number(this.obj.sort);
       let res = await balanceAccountEdit(this.obj);
       console.log(res);
-      this.obj.account_name = "";
-      this.obj.account = "";
-      this.obj.name = "";
-      this.obj.account_type = "";
-      this.obj.remarks = "";
-      this.obj.sort = "";
-      this.obj.status = "";
+      this.$refs[form].resetFields();
       this.init();
       this.dialogVisible1 = false;
     },
-    handleEditClose() {
-      this.obj.account_name = "";
-      this.obj.account = "";
-      this.obj.name = "";
-      this.obj.account_type = "";
-      this.obj.remarks = "";
-      this.obj.sort = "";
-      this.obj.status = "";
+    handleEditClose(form) {
+      this.$refs[form].resetFields();
       this.dialogVisible1 = false;
     },
     async handleEdit(index, row) {
@@ -258,14 +244,8 @@ export default {
           });
         });
     },
-    handleClose() {
-      this.form.account_name = "";
-      this.form.account = "";
-      this.form.name = "";
-      this.form.account_type = "";
-      this.form.remarks = "";
-      this.form.sort = "";
-      this.form.status = "";
+    handleClose(form) {
+      this.$refs[form].resetFields();
       this.dialogVisible = false;
     },
     handleInput() {

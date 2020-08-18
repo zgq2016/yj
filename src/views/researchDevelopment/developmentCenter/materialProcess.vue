@@ -65,12 +65,17 @@
                                 :key="index3"
                               >
                                 <img :src="item3.picurl" alt />
-                                <div>{{item3.color}} {{item3.color_no}}</div>
+                                <div>
+                                  <div>{{item3.color}}</div>
+                                  <div class="cardStyle_right_no">{{item3.color_no}}</div>
+                                </div>
                               </div>
                             </div>
                           </el-popover>
                           <div>{{item2.color||item2.materials_color_data[0].color}}</div>
-                          <div>{{item2.color_no||item2.materials_color_data[0].color_no}}</div>
+                          <div
+                            class="cardStyle_right_no"
+                          >{{item2.color_no||item2.materials_color_data[0].color_no}}</div>
                         </div>
                         <el-checkbox v-model="item2.isCheckList1" @change="isCheckListBox1(item2)"></el-checkbox>
                       </div>
@@ -120,7 +125,7 @@
             <div class="cardStyle_right">
               <div>
                 {{item1.color}}
-                <div>{{item1.color_no}}</div>
+                <div class="cardStyle_right_no">{{item1.color_no}}</div>
               </div>
               <div
                 class="restore"
@@ -185,7 +190,10 @@
                                 :key="index3"
                               >
                                 <img :src="item3.picurl" alt />
-                                <div>{{item3.color}} {{item3.color_no}}</div>
+                                <div>
+                                  {{item3.color}}
+                                  <div class="cardStyle_right_no">{{item3.color_no}}</div>
+                                </div>
                               </div>
                             </div>
                           </el-popover>
@@ -261,7 +269,10 @@
                       :key="index1"
                     >
                       <img :src="item1.picurl" alt />
-                      <div>{{item1.color}} {{item1.color_no}}</div>
+                      <div>
+                        <div>{{item1.color}}</div>
+                        <div class="cardStyle_right_no">{{item1.color_no}}</div>
+                      </div>
                     </div>
                   </div>
                 </el-popover>
@@ -982,6 +993,12 @@ export default {
   }
   .active {
     border: 1px solid #000;
+  }
+  .cardStyle_right_no {
+    width: 36px;
+    text-justify: newspaper;
+    word-break: break-all;
+    text-align: justify;
   }
 }
 </style>
