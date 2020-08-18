@@ -538,7 +538,6 @@ export default {
 
       this.date1 = this.yearMonth;
       this.drawLine();
-      console.log( this.yA);
     },
     async init() {
       // 快捷方式list
