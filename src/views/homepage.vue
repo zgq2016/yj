@@ -93,10 +93,10 @@
                 fit="cover"
               ></el-image>
               <span>
-                <p>{{item.style_type}}</p>
+                <p><strong>{{item.style_type}}</strong></p>
                 <p>{{item.stylename}}</p>
                 <p>{{item.style_color}}</p>
-                <p>{{item.name}}</p>
+                <p>{{item.username}}</p>
               </span>
             </li>
           </ul>
@@ -113,10 +113,10 @@
                 fit="cover"
               ></el-image>
               <span>
-                <p>{{item.style_type}}</p>
+                <p><strong>{{item.style_type}}</strong></p>
                 <p>{{item.stylename}}</p>
                 <p>{{item.style_color}}</p>
-                <p>{{item.name}}</p>
+                <p>{{item.username}}</p>
               </span>
             </li>
           </ul>
@@ -133,10 +133,10 @@
                 fit="cover"
               ></el-image>
               <span>
-                <p>{{item.style_type}}</p>
+                <p><strong>{{item.style_type}}</strong></p>
                 <p>{{item.stylename}}</p>
                 <p>{{item.style_color}}</p>
-                <p>{{item.name}}</p>
+                <p>{{item.username}}</p>
               </span>
             </li>
           </ul>
@@ -153,10 +153,10 @@
                 fit="cover"
               ></el-image>
               <span>
-                <p>{{item.style_type}}</p>
+                <p><strong>{{item.style_type}}</strong></p>
                 <p>{{item.stylename}}</p>
                 <p>{{item.style_color}}</p>
-                <p>{{item.name}}</p>
+                <p>{{item.username}}</p>
               </span>
             </li>
           </ul>
@@ -173,10 +173,10 @@
                 fit="cover"
               ></el-image>
               <span>
-                <p>{{item.style_type}}</p>
+                <p><strong>{{item.style_type}}</strong></p>
                 <p>{{item.stylename}}</p>
                 <p>{{item.style_color}}</p>
-                <p>{{item.name}}</p>
+                <p>{{item.user_name}}</p>
               </span>
             </li>
           </ul>
@@ -193,10 +193,10 @@
                 fit="cover"
               ></el-image>
               <span>
-                <p>{{item.style_type}}</p>
+                <p><strong>{{item.style_type}}</strong></p>
                 <p>{{item.stylename}}</p>
                 <p>{{item.style_color}}</p>
-                <p>{{item.name}}</p>
+                <p>{{item.user_name}}</p>
               </span>
             </li>
           </ul>
@@ -213,10 +213,10 @@
                 fit="cover"
               ></el-image>
               <span>
-                <p>{{item.style_type}}</p>
+                <p><strong>{{item.style_type}}</strong></p>
                 <p>{{item.stylename}}</p>
                 <p>{{item.style_color}}</p>
-                <p>{{item.name}}</p>
+                <p>{{item.user_name}}</p>
               </span>
             </li>
           </ul>
@@ -233,10 +233,10 @@
                 fit="cover"
               ></el-image>
               <span>
-                <p>{{item.style_type}}</p>
+                <p><strong>{{item.style_type}}</strong></p>
                 <p>{{item.stylename}}</p>
                 <p>{{item.style_color}}</p>
-                <p>{{item.name}}</p>
+                <p>{{item.user_name}}</p>
               </span>
             </li>
           </ul>
@@ -253,10 +253,10 @@
                 fit="cover"
               ></el-image>
               <span>
-                <p>{{item.style_type}}</p>
+                <p><strong>{{item.style_type}}</strong></p>
                 <p>{{item.stylename}}</p>
                 <p>{{item.style_color}}</p>
-                <p>{{item.name}}</p>
+                <p>{{item.user_name}}</p>
               </span>
             </li>
           </ul>
@@ -483,6 +483,7 @@ export default {
             }
           });
         });
+
         this.drawLine();
       } else {
         this.mouthWork();
@@ -529,13 +530,15 @@ export default {
       this.xA.map((j, k) => {
         data.map((v, i) => {
           if (v.day == j) {
-            this.yA.splice(i, 1, v.total);
+            this.yA.splice(k, 1, v.total);
           }
         });
       });
+      this.yA.push(10);
+
       this.date1 = this.yearMonth;
       this.drawLine();
-      // console.log(res);
+      console.log( this.yA);
     },
     async init() {
       // 快捷方式list
@@ -595,11 +598,11 @@ export default {
       this.works_2 = res2.data.data;
       this.works_3 = res2.data.data;
       this.works_4 = res3.data.data;
-      console.log(this.works_3);
+      console.log(res3);
     },
     rout1(id) {
-      this.$router.push({ path: `/designCheck?id=${id}` });
       document.body.style = null;
+      this.$router.push({ path: `/designCheck?id=${id}` });
     },
     rout2(id) {
       document.body.style = null;
@@ -740,9 +743,10 @@ export default {
       padding: 10px 0;
       background-color: #f9fafc;
     }
+
     @media screen and (max-width: 1510px) {
       .content_1 {
-        width: 1440px;
+        width: 1500px;
         .hed {
           width: 1220px;
         }
@@ -754,20 +758,19 @@ export default {
       }
       .content_2 {
         width: 1400px;
-        height: 690px;
+        height: 355px;
         overflow: hidden;
       }
       .content_3 {
         width: 1400px;
-        height: 690px;
+        height: 355px;
         overflow: hidden;
       }
     }
     .content_1 {
-      margin-bottom: 25px;
-      width: 100%;
-      height: 265px;
       overflow: hidden;
+      margin-bottom: 25px;
+      height: 265px;
       .hed {
         overflow: hidden;
         p {
@@ -825,7 +828,7 @@ export default {
       }
     }
     .content_2 {
-      height: 345px;
+      height: 355px;
       overflow: hidden;
       & > p {
         font-weight: 500;
@@ -838,6 +841,18 @@ export default {
           float: left;
           margin-right: 26px;
           margin-bottom: 25px;
+          span {
+            display: block;
+            margin-top: 5px;
+            p {
+              color: #000000;
+            }
+            p:last-of-type {
+              color: #999999;
+              padding-top: 3px;
+
+            }
+          }
         }
         li:hover {
           cursor: pointer;
@@ -846,7 +861,7 @@ export default {
       }
     }
     .content_3 {
-      height: 345px;
+      height: 355px;
       overflow: hidden;
       & > p {
         font-weight: 500;
@@ -859,6 +874,18 @@ export default {
           float: left;
           margin-right: 26px;
           margin-bottom: 25px;
+          span {
+            display: block;
+            margin-top: 5px;
+            p {
+              color: #000000;
+            }
+            p:last-of-type {
+              color: #999999;
+              padding-top: 3px;
+
+            }
+          }
         }
         li:hover {
           cursor: pointer;
