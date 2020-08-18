@@ -123,8 +123,7 @@
     <!-- 列表 -->
     <div class="dataList">
       <div class="list" v-for="(item, index) in data" :key="index">
-        <router-link :to="`/designCheck?id=${item.id}`">
-          <!-- <img :src="item.picurl" alt /> -->
+        <div @click="handleEdit(item)">
           <el-image
             v-if="item.picurl"
             style="width: 150px; height: 150px;
@@ -152,7 +151,7 @@
               alt
             />
           </div>
-        </router-link>
+        </div>
         <div class="information">
           <div class="projecttype">{{item.projecttype}}</div>
           <div class="detailed">{{item.projectname}}</div>
@@ -236,6 +235,14 @@ export default {
     };
   },
   methods: {
+    handleEdit(e) {
+      console.log(e);
+      let { id } = e;
+      this.$router.push({
+        path: `/designCheck?id=${id}`,
+      });
+      document.body.style = null;
+    },
     handleCommand(command) {
       // 新增意向订单 AddOpinionIndent
       if (command === "a") {
