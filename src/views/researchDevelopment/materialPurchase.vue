@@ -238,10 +238,10 @@ export default {
           v.purchase = "部分主料已下单";
         }
         if (v.purchase_status == "3") {
-          v.purchase = "3全部主料已下单";
+          v.purchase = "全部主料已下单";
         }
         if (v.purchase_status == "4") {
-          v.purchase = "4部分辅料已下单";
+          v.purchase = "部分辅料已下单";
         }
         if (v.purchase_status == "5") {
           v.purchase = "全部辅料已下单";

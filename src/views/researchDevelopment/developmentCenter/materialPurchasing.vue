@@ -43,8 +43,8 @@
               </div>
               <div class="cardStyle_right">
                 <div>
-                  {{item1.color}}
-                  <div>{{item1.color_no}}</div>
+                  <div>{{item1.color}}</div>
+                  <span class="cardStyle_right_no">{{item1.color_no}}</span>
                 </div>
               </div>
             </div>
@@ -137,7 +137,7 @@
                 :total="total1"
               ></el-pagination>
             </el-select>
-          </el-form-item> -->
+          </el-form-item>-->
           <el-upload
             class="avatar-uploader1"
             action="https://yj.ppp-pay.top/uploadpic.php"
@@ -188,7 +188,7 @@
                 :total="total1"
               ></el-pagination>
             </el-select>
-          </el-form-item> -->
+          </el-form-item>-->
           <el-form-item label="余结金额">
             <span style="width:50%" :model="form3.money1"></span>
           </el-form-item>
@@ -551,12 +551,17 @@ export default {
         }
         .cardStyle_right {
           display: flex;
-          flex-direction: column;
-          justify-content: space-around;
+          justify-content: center;
           align-items: center;
           width: 50px;
+          height: 100px;
           background-color: #f2f2f2;
           border-radius: 10px;
+          .cardStyle_right_no {
+            text-justify: newspaper;
+            word-break: break-all;
+            text-align: justify;
+          }
         }
       }
     }
