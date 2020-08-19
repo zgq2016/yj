@@ -33,106 +33,87 @@
           <el-input v-model="form.companyname" style="width:200px" placeholder="请填写名称"></el-input>
         </el-form-item>
         <div style="display:flex;">
-          <el-col :span="6">
-            <el-form-item label="分类" prop="mainclass">
-              <el-select
-                v-model="form.mainclass"
-                placeholder="请选择"
-                @change="handleClassDatasId($event)"
-                style="width:200px"
-              >
-                <el-option
-                  v-for="item in classData"
-                  :key="item.id"
-                  :label="item.classname"
-                  :value="item.id"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <div @click.capture="get_class_data">
-              <el-form-item prop="materials_class_name">
-                <el-select
-                  v-model="form.materials_class_name"
-                  placeholder="请选择"
-                  @change="handleClassDatasIds($event)"
-                  style="width:200px"
-                >
-                  <el-option
-                    v-for="item in class_datas.class_data"
-                    :key="item.id"
-                    :label="item.classname"
-                    :value="item.id"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </div>
-          </el-col>
+          <el-form-item label="分类" prop="mainclass">
+            <el-select
+              v-model="form.mainclass"
+              placeholder="请选择"
+              @change="handleClassDatasId($event)"
+              style="width:200px;"
+            >
+              <el-option
+                v-for="item in classData"
+                :key="item.id"
+                :label="item.classname"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item prop="materials_class_name">
+            <el-select
+              v-model="form.materials_class_name"
+              placeholder="请选择"
+              @change="handleClassDatasIds($event)"
+              style="width:200px"
+            >
+              <el-option
+                v-for="item in class_datas.class_data"
+                :key="item.id"
+                :label="item.classname"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
         </div>
 
         <div v-for="(item,index) in form.contact" :key="item.key" class="member_user_item">
-          <el-col :span="6">
-            <el-form-item
-              :label="`联系人${index+1}`"
-              :prop="'contact.'+index+'.contacts'"
-              :rules="contactRules.contact_contacts"
-            >
-              <el-input v-model="item.contacts" style="width:200px" placeholder="请填写联系人"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item :prop="'contact.'+index+'.phone'" :rules="contactRules.contact_phone">
-              <el-input v-model="item.phone" style="width:200px" placeholder="请填写联系电话"></el-input>
-            </el-form-item>
-          </el-col>
+          <el-form-item
+            :label="`联系人`"
+            :prop="'contact.'+index+'.contacts'"
+            :rules="contactRules.contact_contacts"
+          >
+            <el-input v-model="item.contacts" style="width:200px" placeholder="请填写联系人"></el-input>
+          </el-form-item>
+          <el-form-item :prop="'contact.'+index+'.phone'" :rules="contactRules.contact_phone">
+            <el-input v-model="item.phone" style="width:200px" placeholder="请填写联系电话"></el-input>
+          </el-form-item>
           <span v-if="index>0" class="deleteUser" @click="handleDeleteUser(index)">-</span>
         </div>
         <el-form-item>
           <span style="cursor: pointer;" @click="handleAddUsers">增加联系人</span>
         </el-form-item>
+        <el-form-item label="地址" prop="address">
+          <el-input v-model="form.address" style="width:500px" placeholder="详细地址"></el-input>
+        </el-form-item>
         <div v-for="(item,index) in form.bank" :key="item.key" class="member_account_item">
-          <el-col :span="6">
-            <el-form-item
-              :label="`账号信息${index+1}`"
-              :prop="'bank.'+index+'.bank'"
-              :rules="bankRules.bank_bank"
-            >
-              <el-select v-model="item.bank" placeholder="银行名称" style="width:200px">
-                <el-option
-                  v-for="item in options"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.name"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item :prop="'bank.'+index+'.name'" :rules="bankRules.bank_name">
-              <el-input v-model="item.name" style="width:200px" placeholder="收款人姓名"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item :prop="'bank.'+index+'.bankid'" :rules="bankRules.bank_bankid">
-              <el-input v-model="item.bankid" style="width:200px" placeholder="银行卡卡号"></el-input>
-            </el-form-item>
-          </el-col>
+          <el-form-item :label="`账号信息`">
+            <el-select v-model="item.bank" placeholder="银行名称" style="width:200px">
+              <el-option
+                v-for="item in options"
+                :key="item.id"
+                :label="item.name"
+                :value="item.name"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item :prop="'bank.'+index+'.name'">
+            <el-input v-model="item.name" style="width:200px" placeholder="收款人姓名"></el-input>
+          </el-form-item>
+          <el-form-item :prop="'bank.'+index+'.bankid'">
+            <el-input v-model="item.bankid" style="width:200px" placeholder="银行卡卡号"></el-input>
+          </el-form-item>
           <span v-if="index>0" class="deleteAccount" @click="handleDeleteAccount(index)">-</span>
         </div>
         <el-form-item label>
           <span style="cursor: pointer;" @click="handleAddAccount">增加账号信息</span>
         </el-form-item>
-        <el-form-item label="地址" prop="address">
-          <el-input v-model="form.address" style="width:600px" placeholder="详细地址"></el-input>
-        </el-form-item>
+
         <el-form-item label="是否开发票" prop="isbill">
           <el-radio-group v-model="form.isbill">
             <el-radio :label="'0'">不开</el-radio>
             <el-radio :label="'1'">开</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="税点" prop="tax">
+        <el-form-item label="税点" prop="tax" v-if="form.isbill=='1'">
           <el-input style="width:200px" v-model="form.tax" @input="handleInput"></el-input>%
         </el-form-item>
         <el-form-item label="备注">
@@ -302,7 +283,7 @@ export default {
         contact: [{ contacts: "", phone: "", id: "" }],
         ctime: "",
         id: "",
-        isbill: "",
+        isbill: "0",
         mainclass: "",
         mainclass_id: "",
         materials_class_id: "",
@@ -320,7 +301,7 @@ export default {
       // 表单规则
       rules: {
         companyname: [
-          { required: true, message: "请输入公司名称", trigger: "blur" },
+          { required: true, message: "公司简称,公司全称", trigger: "blur" },
         ],
         mainclass: [
           { required: true, message: "请选择分类", trigger: "change" },
@@ -331,10 +312,6 @@ export default {
         address: [
           { required: true, message: "请填写详细地址", trigger: "blur" },
         ],
-        tax: [{ required: true, message: "请填写税点", trigger: "blur" }],
-        isbill: [
-          { required: true, message: "请选择是否发票", trigger: "change" },
-        ],
       },
       contactRules: {
         contact_contacts: [
@@ -344,17 +321,17 @@ export default {
           { required: true, message: "请填写联系人号码", trigger: "blur" },
         ],
       },
-      bankRules: {
-        bank_bank: [
-          { required: true, message: "请选择银行", trigger: "change" },
-        ],
-        bank_name: [
-          { required: true, message: "请填写卡号名称", trigger: "blur" },
-        ],
-        bank_bankid: [
-          { required: true, message: "请填写银行卡号", trigger: "blur" },
-        ],
-      },
+      // bankRules: {
+      //   bank_bank: [
+      //     { required: true, message: "请选择银行", trigger: "change" },
+      //   ],
+      //   bank_name: [
+      //     { required: true, message: "请填写卡号名称", trigger: "blur" },
+      //   ],
+      //   bank_bankid: [
+      //     { required: true, message: "请填写银行卡号", trigger: "blur" },
+      //   ],
+      // },
     };
   },
   methods: {
@@ -542,7 +519,6 @@ export default {
       return this.$elUploadBeforeUpload(file);
     },
 
-    async get_class_data() {},
     async handleClassDatasId(e) {
       this.classDatasId = e;
       let res = await getMaterialsClassInfo({
@@ -640,9 +616,7 @@ export default {
         color: #fff;
         cursor: pointer;
         border-radius: 50px;
-        position: absolute;
-        left: 60%;
-        top: 20%;
+        margin: 10px 20px;
       }
     }
     .member_account_item {
@@ -660,9 +634,7 @@ export default {
         color: #fff;
         cursor: pointer;
         border-radius: 50px;
-        position: absolute;
-        left: 85%;
-        top: 20%;
+        margin: 10px 20px;
       }
     }
   }

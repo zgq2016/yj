@@ -483,6 +483,25 @@ export const designAgree = (data) => {
     data: data,
   });
 };
+export const getStylePurchase = (data) => {
+  return axios({
+    url: "?g=get_style_purchase",
+    method: "post",
+    data: data,
+  });
+};
+export const getStylePattern = (data) => {
+  return axios({
+    url: "?g=get_style_pattern",
+    method: "post",
+    data: data,
+  });
+};
+export const getStyleSample = (data) => {
+  return axios({
+    url: "?g=get_style_sample",
+    method: "post",
+    data: data,
+  });
+};
 
-// contacts、phone
-// bank、bankid、name

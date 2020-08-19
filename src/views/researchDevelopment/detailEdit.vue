@@ -149,7 +149,6 @@
       :show-close="false"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
-      width="40%"
       center
       class="dialog"
     >
@@ -660,7 +659,14 @@ export default {
     height: 150px;
     resize: none !important;
   }
+  @media screen and (max-width: 1430px) {
+    .dialog {
+      width: 1430px;
+    }
+  }
+
   .dialog {
+    width: 50vw;
     .upload {
       margin-bottom: 30px;
       width: 100px;
@@ -684,7 +690,6 @@ export default {
         opacity: 0;
         filter: alpha(opacity=0);
         cursor: pointer;
-        
       }
     }
     .info {

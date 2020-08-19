@@ -200,7 +200,7 @@
             <el-menu-item-group>
               <el-menu-item index="/goodsCategory" v-if="power.indexOf('H1000')!=-1">商品分类</el-menu-item>
               <el-menu-item index="/materialClassification" v-if="power.indexOf('H10000')!=-1">物料分类</el-menu-item>
-              <el-menu-item index="/plantManagement" v-if="power.indexOf('H11000')!=-1">工厂分类</el-menu-item>
+              <el-menu-item index="/plantManagement" v-if="power.indexOf('H11000')!=-1">加工分类与价格</el-menu-item>
               <el-menu-item index="/colorManagement" v-if="power.indexOf('H2000')!=-1">颜色管理</el-menu-item>
               <el-menu-item index="/measurementManagement" v-if="power.indexOf('H3000')!=-1">尺码管理</el-menu-item>
               <el-menu-item index="/materialManagement" v-if="power.indexOf('H4000')!=-1">材质管理</el-menu-item>

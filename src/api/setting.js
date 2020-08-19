@@ -345,6 +345,20 @@ export const register = (data) => {
     data: data,
   });
 };
+export const sizeStatusEdit  = (data) => {
+  return axios({
+    url: "?g=size_status_edit ",
+    method: "post",
+    data: data,
+  });
+};
+export const colorStatusEdit  = (data) => {
+  return axios({
+    url: "?g=color_status_edit ",
+    method: "post",
+    data: data,
+  });
+};
 
 // user_edit
 // 用户资料更新接口

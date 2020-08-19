@@ -105,19 +105,20 @@
             <el-option v-for="item in states" :key="item.id" :label="item.v" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <!-- <el-button type="primary" @click="handlesearch">查询</el-button> -->
+        <el-form-item>
+          <div class="addStyle" v-if="power.indexOf('A1000100')!=-1">
+            <el-dropdown trigger="click" @command="handleCommand">
+              <span class="el-dropdown-link">新增项目</span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="a">新增意向订单</el-dropdown-item>
+                <el-dropdown-item command="b">新增阶段工作</el-dropdown-item>
+                <el-dropdown-item command="c">新增企划系列</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
+        </el-form-item>
       </el-form>
       <!-- 新增项目 -->
-      <div class="addStyle" v-if="power.indexOf('A1000100')!=-1">
-        <el-dropdown trigger="click" @command="handleCommand">
-          <span class="el-dropdown-link">新增项目</span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="a">新增意向订单</el-dropdown-item>
-            <el-dropdown-item command="b">新增阶段工作</el-dropdown-item>
-            <el-dropdown-item command="c">新增企划系列</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </div>
     </div>
 
     <!-- 列表 -->
@@ -350,6 +351,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@media screen and (max-width: 1300px) {
+  .itemDesign {
+    width: 1300px;
+  }
+}
 .itemDesign {
   /deep/ .el-input__inner {
     width: 100%;
@@ -372,15 +378,10 @@ export default {
     border: none;
   }
   .form {
-    width: 1200px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
   }
   .addStyle {
-    margin: 0 30px 30px 0;
-    // text-align: right;
-
+    margin-left: 200px;
     .el-dropdown-link {
       border-radius: 15px;
       width: 120px;
@@ -395,6 +396,7 @@ export default {
       }
     }
   }
+
   .dataList {
     display: flex;
     flex-wrap: wrap;

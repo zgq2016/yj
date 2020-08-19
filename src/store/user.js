@@ -40,7 +40,7 @@ const actions = {
       console.log(res);
       // console.log(window.document.cookie)
       // console.log(window)
-      console.log(window.document);
+      // console.log(window.document);
       // router.push({ name: "homepage" });
       // 调用user下的mutations的方法
       store.commit("setUserInfo", res.data.data);

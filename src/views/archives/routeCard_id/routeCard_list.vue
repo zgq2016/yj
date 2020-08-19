@@ -187,7 +187,6 @@ export default {
     border: none;
   }
   .form {
-    width: 1200px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -198,8 +197,9 @@ export default {
       display: flex;
       flex-wrap: wrap;
       .list {
-        width: 300px;
-        margin: 0 20px 20px 0;
+        width: 260px;
+        height: 90px;
+        margin: 0 10px 10px 0;
         border-radius: 10px;
         overflow: hidden;
         background-color: #f2f2f2;
