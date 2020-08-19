@@ -75,11 +75,10 @@
           :data="tableData"
           size="mini"
           highlight-current-row
-          style="width: 100%"
         >
           <el-table-column align="center" type="index" width="50" label="序号"></el-table-column>
           <el-table-column align="center" prop="stylename" label="名称"></el-table-column>
-          <el-table-column align="center" width="80" label="图片">
+          <el-table-column align="center" label="图片">
             <template slot-scope="scope">
               <el-image
                 style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
@@ -274,15 +273,12 @@ export default {
     }
   }
   .form {
-    width: 1200px;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
   .addStyle {
     margin: 0 30px 30px 0;
-    // text-align: right;
-
     border-radius: 15px;
     width: 120px;
     height: 30px;

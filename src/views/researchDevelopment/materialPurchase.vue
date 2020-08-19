@@ -108,11 +108,28 @@
         <el-table-column align="center" property="purchase" label="状态"></el-table-column>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
-            <el-button
+            <div class="btn">
+              <div
+                v-if="(scope.row.purchase_status==='2'||scope.row.purchase_status==='4')&&scope.row.user_id==userid"
+                @click="pattern_apply(scope.$index, scope.row)"
+              >提交审核{{scope.row.user_id}},{{userid}}</div>
+              <!-- 2 4 -->
+              <div
+                @click="pattern_agree1(scope.$index, scope.row,1)"
+                v-if="scope.row.purchase_status==='3'"
+              >通过</div>
+              <div
+                @click="pattern_agree2(scope.$index, scope.row,0)"
+                v-if="scope.row.purchase_status==='3'"
+              >不通过</div>
+              <!-- 3 -->
+              <div @click="handleEdit(scope.$index, scope.row)">查看</div>
+            </div>
+            <!-- <el-button
               class="elbtn"
               size="mini"
               @click="handleEdit(scope.$index, scope.row)"
-            >{{"查看"}}</el-button>
+            >{{"查看"}}</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -140,6 +157,7 @@ import {
   getStylistList,
   getCategoryList,
   getStyleList,
+  getStylePurchase,
 } from "@/api/researchDevelopment";
 export default {
   data() {
@@ -222,7 +240,7 @@ export default {
     async init() {
       this.formInline["page"] = this.pageIndex;
       this.formInline["page_size"] = this.pageSize;
-      let res = await getStyleList(this.formInline);
+      let res = await getStylePurchase(this.formInline);
       console.log(res);
       this.count = res.data.count;
       let { data } = res.data;

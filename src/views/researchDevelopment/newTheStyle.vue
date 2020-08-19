@@ -44,27 +44,25 @@
               </el-form-item>
               <el-form-item label="品类" prop="style_type">
                 <div style="display:flex">
-                  <el-select v-model="form.style_type" placeholder="品类">
-                    <el-option
-                      v-for="item in categorys"
-                      :key="item.id"
-                      :label="item.style_type"
-                      :value="item.style_type"
-                    ></el-option>
-                  </el-select>
+                  <el-cascader
+                    v-model="form.style_type"
+                    :options="categorys"
+                    :props="optionProps1"
+                    @change="handleChange1"
+                    :show-all-levels="false"
+                  ></el-cascader>
                   <router-link to="/goodsCategory" style="margin-left:30px" target="_blank">新增品类</router-link>
                 </div>
               </el-form-item>
               <el-form-item label="颜色" prop="style_color">
                 <div style="display:flex">
-                  <el-select v-model="form.style_color">
-                    <el-option
-                      v-for="item in colors"
-                      :key="item.id"
-                      :label="item.color_name"
-                      :value="item.color_name"
-                    ></el-option>
-                  </el-select>
+                  <el-cascader
+                    v-model="form.style_color"
+                    :options="colors"
+                    :props="optionProps"
+                    @change="handleChange"
+                    :show-all-levels="false"
+                  ></el-cascader>
                   <router-link to="/colorManagement" style="margin-left:30px" target="_blank">新增颜色</router-link>
                 </div>
               </el-form-item>
@@ -124,14 +122,13 @@
                 <el-input v-model="obj.stylename" style="width:200px"></el-input>
               </el-form-item>
               <el-form-item label="品类" prop="style_type">
-                <el-select v-model="obj.style_type" placeholder="品类">
-                  <el-option
-                    v-for="item in categorys"
-                    :key="item.id"
-                    :label="item.style_type"
-                    :value="item.style_type"
-                  ></el-option>
-                </el-select>
+                <el-cascader
+                  v-model="obj.style_type"
+                  :options="categorys"
+                  :props="optionProps1"
+                  @change="handleChange1"
+                  :show-all-levels="false"
+                ></el-cascader>
               </el-form-item>
               <el-form-item label="年份" prop="year">
                 <el-select v-model="obj.year" placeholder="年份">
@@ -154,14 +151,13 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="颜色" prop="style_color_name">
-                <el-select v-model="obj.style_color_name">
-                  <el-option
-                    v-for="item in colors"
-                    :key="item.id"
-                    :label="item.color_name"
-                    :value="item.color_name"
-                  ></el-option>
-                </el-select>
+                <el-cascader
+                  v-model="obj.style_color_name"
+                  :options="colors"
+                  :props="optionProps"
+                  @change="handleChange"
+                  :show-all-levels="false"
+                ></el-cascader>
               </el-form-item>
             </el-form>
           </div>
@@ -416,9 +412,38 @@ export default {
       arr: [],
       user_id_data_length: "",
       color_code: "",
+      value: "",
+      optionProps: {
+        value: "color_name",
+        label: "color_name",
+        children: "children",
+      },
+      optionProps1: {
+        value: "style_type",
+        label: "style_type",
+        children: "children",
+      },
     };
   },
   methods: {
+    handleChange(e) {
+      let { oldId } = this.$route.query;
+      if (oldId === undefined) {
+        this.form.style_color = e[1];
+      }
+      if (oldId !== undefined) {
+        this.obj.style_color_name = e[1];
+      }
+    },
+    handleChange1(e) {
+      let { oldId } = this.$route.query;
+      if (oldId === undefined) {
+        this.form.style_type = e[1];
+      }
+      if (oldId !== undefined) {
+        this.obj.style_type = e[1];
+      }
+    },
     color_picker() {
       this.previews.url = "";
       this.defaultData.style_color_pic_url = "";
@@ -731,7 +756,7 @@ export default {
     },
     async getColor() {
       let res = await getColorSelect();
-      // console.log(res);
+      console.log(res);
       let { data } = res.data;
       this.colors = data;
     },

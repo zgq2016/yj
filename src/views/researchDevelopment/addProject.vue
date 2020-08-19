@@ -16,12 +16,7 @@
     <div class="main">
       <div class="upload" @click="handleImg">
         <!-- <img v-if="headImg" :src="headImg" alt /> -->
-        <el-image
-          v-if="headImg"
-          style="width: 150px; height: 150px"
-          :src="headImg"
-          fit="cover"
-        ></el-image>
+        <el-image v-if="headImg" style="width: 150px; height: 150px" :src="headImg" fit="cover"></el-image>
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </div>
       <!-- form -->
@@ -137,7 +132,6 @@
     <el-dialog
       title="上传图片"
       :visible.sync="centerDialogVisible"
-      width="40%"
       center
       class="dialog"
       :show-close="false"
@@ -637,6 +631,11 @@ export default {
     width: 500px;
     height: 150px;
     resize: none !important;
+  }
+  @media screen and (max-width: 1430px) {
+    .dialog {
+      width: 1430px;
+    }
   }
   .dialog {
     .upload {

@@ -120,10 +120,31 @@
           <el-table-column property="stylename" label="款式名称"></el-table-column>
           <el-table-column property="styleno" label="款号"></el-table-column>
           <el-table-column property="style_type" label="品类"></el-table-column>
-          <el-table-column label="操作" align="right">
+          <el-table-column property="design" label="状态"></el-table-column>
+          <el-table-column label="操作" width="200" align="center">
             <!-- 插槽：匿名插槽，具名插槽，数据插槽 -->
             <template v-slot="scope">
-              <div @click="handleEdit(scope.row)" class="check">查看</div>
+              <div class="btn">
+                <div @click="handleEdit(scope.row)">查看</div>
+                <!-- <el-button
+                size="mini"
+                v-if="scope.row.design_status==='3'||scope.row.design_status==='4'&&scope.row.user_id==userid"
+                @click="sample_apply(scope.$index, scope.row)"
+              >提交审核</el-button>
+              <el-button
+                size="mini"
+                v-if="scope.row.design_status==='3'&&scope.row.user_id==userid"
+                @click="cancel_sample_apply(scope.$index, scope.row)"
+                >撤回审核</el-button>-->
+                <div
+                  @click="design_apply(scope.$index, scope.row,1)"
+                  v-if="scope.row.design_status==='2'"
+                >通过</div>
+                <div
+                  @click="cancel_design_apply(scope.$index, scope.row,0)"
+                  v-if="scope.row.design_status==='2'"
+                >不通过</div>
+              </div>
             </template>
           </el-table-column>
         </el-table>
@@ -199,6 +220,7 @@ import {
   getProject,
   getProjectStyleList,
   projectStyleAddto,
+  designAgree,
 } from "@/api/researchDevelopment";
 export default {
   data() {
@@ -217,6 +239,16 @@ export default {
     };
   },
   methods: {
+    async design_apply(index, row, e) {
+      let res = await designAgree({ style_id: row.id, agree: e });
+      console.log(res);
+      this.init();
+    },
+    async cancel_design_apply(index, row, e) {
+      let res = await designAgree({ style_id: row.id, agree: e });
+      console.log(res);
+      this.init();
+    },
     switchover() {
       this.switchover_active = !this.switchover_active;
     },
@@ -273,15 +305,39 @@ export default {
     async init() {
       let { id } = this.$route.query;
       let res = await getProject({ id });
-      // console.log(res);
       this.obj = res.data.data;
       this.tableData = res.data.data.style_data;
+      this.tableData.map((v, i) => {
+        if (v.design_status == "0") {
+          v.design = "等待设计";
+        }
+        if (v.design_status == "1") {
+          v.design = "设计已上传";
+        }
+        if (v.design_status == "2") {
+          v.design = "设计审核中";
+        }
+        if (v.design_status == "3") {
+          v.design = "撤回审核";
+        }
+        if (v.design_status == "4") {
+          v.design = "设计不通过";
+        }
+        if (v.design_status == "5") {
+          v.design = "设计通过";
+        }
+      });
       console.log(this.tableData);
     },
   },
   async mounted() {
     this.init();
     this.power = localStorage.getItem("power");
+  },
+  computed: {
+    userid() {
+      return this.$store.state.userInfo.id;
+    },
   },
 };
 </script>
@@ -410,6 +466,14 @@ export default {
     float: left;
     div {
       margin: 1px 5px;
+    }
+  }
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    div {
+      margin: 0 10px;
     }
   }
 }

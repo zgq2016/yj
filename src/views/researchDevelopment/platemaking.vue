@@ -105,36 +105,28 @@
         <el-table-column property="season" label="季节"></el-table-column>
         <el-table-column property="stylist" label="设计师"></el-table-column>
         <el-table-column property="sample" label="状态"></el-table-column>
-        <el-table-column label="操作" width="400">
+        <el-table-column label="操作" width="400" align="center">
           <template slot-scope="scope">
-            <div style="display: flex;align-items: center;">
-              <el-button
-                class="elbtn"
-                size="mini"
+            <div class="btn">
+              <div
                 v-if="scope.row.sample_status==='2'||scope.row.sample_status==='4'&&scope.row.user_id==userid"
                 @click="sample_apply(scope.$index, scope.row)"
-              >提交审核</el-button>
+              >提交审核</div>
               <!-- 2 4 -->
-              <el-button
-                class="elbtn"
-                size="mini"
+              <div
                 v-if="scope.row.sample_status==='3'&&scope.row.user_id==userid"
                 @click="cancel_sample_apply(scope.$index, scope.row)"
-              >撤回审核</el-button>
-              <el-button
-                class="elbtn"
-                size="mini"
+              >撤回审核</div>
+              <div
                 @click="sample_agree1(scope.$index, scope.row,1)"
                 v-if="scope.row.sample_status==='3'"
-              >通过</el-button>
-              <el-button
-                class="elbtn"
-                size="mini"
+              >通过</div>
+              <div
                 @click="sample_agree2(scope.$index, scope.row,0)"
                 v-if="scope.row.sample_status==='3'"
-              >不通过</el-button>
+              >不通过</div>
               <!-- 3 -->
-              <el-button class="elbtn" size="mini" @click="handleEdit(scope.$index, scope.row)">查看</el-button>
+              <div @click="handleEdit(scope.$index, scope.row)">查看</div>
             </div>
           </template>
         </el-table-column>
@@ -162,7 +154,7 @@ import {
   getWestList,
   getStylistList,
   getCategoryList,
-  getStyleList,
+  getStyleSample,
   sampleApply,
   cancelSampleApply,
   sampleAgree,
@@ -269,7 +261,7 @@ export default {
     async init() {
       this.formInline["page"] = this.pageIndex;
       this.formInline["page_size"] = this.pageSize;
-      let res = await getStyleList(this.formInline);
+      let res = await getStyleSample(this.formInline);
       console.log(res);
       this.count = res.data.count;
       let { data } = res.data;
@@ -280,7 +272,7 @@ export default {
           v.sample = "等待纸样";
         }
         if (v.sample_status == "1") {
-          v.sample = "等待样衣制版";
+          v.sample = "等待制版";
         }
         if (v.sample_status == "2") {
           v.sample = "制版已上传";
@@ -373,6 +365,14 @@ export default {
   .el-pagination {
     margin: 20px;
     text-align: right;
+  }
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    div {
+      margin: 0 10px;
+    }
   }
 }
 </style>

@@ -38,7 +38,7 @@
         <el-tooltip
           content="提交审批"
           placement="top"
-          v-if="obj.design_status==='0'||obj.design_status==='2'"
+          v-if="obj.design_status==='1'||obj.design_status==='3'"
           class="edit"
           style="background-color: #f2f2f2;"
         >
@@ -54,7 +54,7 @@
         <el-tooltip
           content="设计审核中"
           placement="top"
-          v-if="obj.design_status==='1'"
+          v-if="obj.design_status==='2'"
           class="edit"
           style="background-color: #ffaf39;"
         >
@@ -70,7 +70,7 @@
         <el-tooltip
           content="设计通过"
           placement="top"
-          v-if="obj.design_status==='4'"
+          v-if="obj.design_status==='5'"
           class="edit"
           style="background-color: #01c46d;"
         >
@@ -83,11 +83,10 @@
             </svg>
           </div>
         </el-tooltip>
-
         <el-tooltip
           content="设计不通过"
           placement="top"
-          v-if="obj.design_status==='3'"
+          v-if="obj.design_status==='4'"
           class="edit"
           style="background-color: #fb3647;"
         >

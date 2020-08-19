@@ -18,6 +18,16 @@
     >
       <el-table-column prop="color_name" label="分类名称" width="200"></el-table-column>
       <el-table-column prop="sort" label="排序" width="200"></el-table-column>
+      <el-table-column prop="sort" label="启用/禁用" width="200">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.status"
+            :active-value="1"
+            :inactive-value="0"
+            @change="get_switch_active(scope.$index, scope.row)"
+          ></el-switch>
+        </template>
+      </el-table-column>
       <el-table-column
         align="right"
         label="操作"
@@ -129,11 +139,13 @@ import {
   colorAdd,
   colorDel,
   colorEdit,
+  colorStatusEdit,
 } from "@/api/setting.js";
 export default {
   data() {
     return {
       power: "",
+      switch_active: "",
       rules: {
         color_name: [
           { required: true, message: "请输入颜色名称", trigger: "blur" },
@@ -163,6 +175,10 @@ export default {
     };
   },
   methods: {
+    async get_switch_active(index, row) {
+      let res = await colorStatusEdit({ id: row.id, status: row.status });
+      this.init();
+    },
     handleClose() {
       this.$refs["form"].resetFields();
       this.centerDialogVisible = false;

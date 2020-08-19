@@ -13,12 +13,7 @@
     </div>
 
     <div class="form">
-      <el-form
-        :inline="true"
-        :model="formInline"
-        class="demo-form-inline"
-        style="position: relative;"
-      >
+      <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item>
           <el-select v-model="formInline.year" clearable placeholder="年份" style="width:120px">
             <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
@@ -66,8 +61,6 @@
             <el-option v-for="item in states" :key="item.id" :label="item.v" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-
-        <el-form-item></el-form-item>
       </el-form>
       <div class="addStyle" v-if="power.indexOf('A1000100')!=-1">
         <div @click="addOrders" v-if="power.indexOf('B1000700')!=-1">新增下单</div>
@@ -358,25 +351,21 @@ export default {
     }
   }
   .form {
-    width: 1200px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-  }
-  .addStyle {
-    margin: 0 30px 30px 0;
-    // text-align: right;
-
-    border-radius: 15px;
-    width: 120px;
-    height: 30px;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #000;
-    &:hover {
-      cursor: pointer;
+    // align-items: center;
+    .addStyle {
+      border-radius: 15px;
+      width: 120px;
+      height: 30px;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #000;
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
 

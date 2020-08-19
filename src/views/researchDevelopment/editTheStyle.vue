@@ -19,11 +19,6 @@
     <div class="main">
       <div class="styleNumber">
         <div class="upload" @click="handle_obj_style_pic_url">
-          <!-- <img v-if="obj.style_pic_url" :src="obj.style_pic_url" alt /> -->
-          <!-- <div
-            v-if="obj.style_pic_url"
-            :style="`background: url(${obj.style_pic_url}) no-repeat 0 -75px;width:150px;height:150px `"
-          ></div>-->
           <el-image
             v-if="obj.style_pic_url"
             style="width: 150px; height: 150px;margin-right: 5px;"
@@ -56,14 +51,21 @@
                 <el-input v-model="obj.stylename" style="width:200px"></el-input>
               </el-form-item>
               <el-form-item label="品类" prop="style_type">
-                <el-select v-model="obj.style_type" placeholder="品类">
+                <!-- <el-select v-model="obj.style_type" placeholder="品类">
                   <el-option
                     v-for="item in categorys"
                     :key="item.id"
                     :label="item.style_type"
                     :value="item.style_type"
                   ></el-option>
-                </el-select>
+                </el-select>-->
+                <el-cascader
+                  v-model="obj.style_type"
+                  :options="categorys"
+                  :props="optionProps1"
+                  @change="handleChange1"
+                  :show-all-levels="false"
+                ></el-cascader>
               </el-form-item>
               <el-form-item label="年份" prop="year">
                 <el-select v-model="obj.year" placeholder="年份">
@@ -86,14 +88,21 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="颜色" prop="style_color">
-                <el-select v-model="obj.style_color">
+                <!-- <el-select v-model="obj.style_color">
                   <el-option
                     v-for="item in colors"
                     :key="item.id"
                     :label="item.color_name"
                     :value="item.color_name"
                   ></el-option>
-                </el-select>
+                </el-select>-->
+                <el-cascader
+                  v-model="obj.style_color"
+                  :options="colors"
+                  :props="optionProps"
+                  @change="handleChange"
+                  :show-all-levels="false"
+                ></el-cascader>
               </el-form-item>
             </el-form>
           </div>
@@ -339,9 +348,25 @@ export default {
       navc: {},
       status: "",
       color_code: "",
+      optionProps1: {
+        value: "style_type",
+        label: "style_type",
+        children: "children",
+      },
+      optionProps: {
+        value: "color_name",
+        label: "color_name",
+        children: "children",
+      },
     };
   },
   methods: {
+    handleChange(e) {
+      this.obj.style_color = e[1];
+    },
+    handleChange1(e) {
+      this.obj.style_type = e[1];
+    },
     color_picker() {
       this.previews.url = "";
       this.obj.style_color_pic_url = "";

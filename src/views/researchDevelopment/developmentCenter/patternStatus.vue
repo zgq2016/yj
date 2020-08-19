@@ -140,7 +140,7 @@ import {
   styleMaterialsUseList,
   styleMaterialsUseEdit,
   stylePaperpatternDelList,
-  stylePaperpatternResume
+  stylePaperpatternResume,
 } from "@/api/researchDevelopment";
 export default {
   data() {
@@ -158,7 +158,7 @@ export default {
       MaterialsList: [],
       DelList: [],
 
-      antistopActive: false
+      antistopActive: false,
     };
   },
   methods: {
@@ -172,9 +172,9 @@ export default {
     },
     handleExceed(files, fileList) {
       this.$message.warning(
-        `当前限制选择 1 个文件，本次选择了 ${
-          files.length
-        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
+        `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+          files.length + fileList.length
+        } 个文件`
       );
     },
     // 成功
@@ -184,8 +184,9 @@ export default {
       let res = await stylePaperpatternAdd({
         style_id: this.obj.id,
         picurl,
-        uid: file.name
+        uid: file.name,
       });
+      console.log(res);
       this.init();
     },
     modification() {
@@ -204,7 +205,7 @@ export default {
         delete v.style_id;
       });
       let res = await styleMaterialsUseEdit({
-        style_materials_data: this.MaterialsList
+        style_materials_data: this.MaterialsList,
       });
       this.init();
       this.antistopActive = true;
@@ -228,7 +229,7 @@ export default {
       let res = await getStyle({ id });
       this.obj = res.data.data;
       let res1 = await stylePaperpatternList({ style_id: this.obj.id });
-      this.fileList = res1.data.data.map(v => {
+      this.fileList = res1.data.data.map((v) => {
         return { url: v.picurl, id: v.id, name: v.uid };
       });
       this.PaperpatternDelInit();
@@ -259,13 +260,13 @@ export default {
         this.$message.warning("已有数据,请先删除");
         return;
       }
-    }
+    },
   },
   mounted() {
     this.init();
     this.antistopActive = true;
     this.power = localStorage.getItem("power");
-  }
+  },
 };
 </script>
 
