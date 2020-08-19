@@ -87,9 +87,21 @@
             <el-tab-pane v-if="power.indexOf('A3000')!=-1" label="研发状态" name="/development"></el-tab-pane>
             <el-tab-pane v-if="power.indexOf('A4000')!=-1" label="设计版单" name="/designNote"></el-tab-pane>
             <el-tab-pane v-if="power.indexOf('A5000')!=-1" label="物料工艺" name="/materialProcess"></el-tab-pane>
-            <el-tab-pane v-if="power.indexOf('A6000')!=-1" label="版料采购" name="/materialPurchasing"></el-tab-pane>
-            <el-tab-pane v-if="power.indexOf('A7000')!=-1" label="纸样" name="/patternStatus"></el-tab-pane>
-            <el-tab-pane v-if="power.indexOf('A8000')!=-1" label="样衣" name="/sampleDress"></el-tab-pane>
+            <el-tab-pane
+              v-if="power.indexOf('A6000')!=-1&&this.obj.purchase_status!=0"
+              label="版料采购"
+              name="/materialPurchasing"
+            ></el-tab-pane>
+            <el-tab-pane
+              v-if="power.indexOf('A7000')!=-1&&this.obj.pattern_status!=0"
+              label="纸样"
+              name="/patternStatus"
+            ></el-tab-pane>
+            <el-tab-pane
+              v-if="power.indexOf('A8000')!=-1&&this.obj.sample_status!=0"
+              label="样衣"
+              name="/sampleDress"
+            ></el-tab-pane>
             <el-tab-pane v-if="TL===21" label="生产信息" name="/ProductionStyle"></el-tab-pane>
             <el-tab-pane v-if="TL===21" label="商品信息" name="/merchandiseNews"></el-tab-pane>
           </el-tabs>
@@ -141,10 +153,8 @@ export default {
     let { id } = this.$route.query;
     this.TL = this.$route.query.TL - 0;
     this.TL1 = this.$route.query.TL1 - 0;
-    // this.$router.push({ path: `/materialPurchasing?id=${id}` });
 
     this.power = localStorage.getItem("power");
-    console.log(this.power);
   },
   watch: {
     $route() {

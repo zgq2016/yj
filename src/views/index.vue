@@ -284,5 +284,10 @@ export default {
   /deep/.el-main {
     padding: 0;
   }
+  @media screen and (max-width: 1300px) {
+    body {
+      width: 1300px;
+    }
+  }
 }
 </style>

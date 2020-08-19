@@ -101,8 +101,14 @@
           size="mini"
           round
           @click="purchaseOrder"
-          v-if="power.indexOf('A6000500')!=-1"
+          v-if="power.indexOf('A6000500')!=-1&&this.obj.materials_status!=2"
         >生成采购单</el-button>
+        <el-button
+          size="mini"
+          round
+          disabled
+          v-if="power.indexOf('A6000500')!=-1&&this.obj.materials_status==2"
+        >采购单审核中</el-button>
       </div>
       <!-- 删除历史 -->
       <div class="del_history">
@@ -681,6 +687,7 @@ export default {
     async init() {
       let { id } = this.$route.query;
       let res = await getStyle({ id });
+      console.log(res);
       this.obj = res.data.data;
       if (this.obj.style_color_data.length > 0) {
         let res1 = await getStyleMaterialsList({

@@ -504,4 +504,11 @@ export const getStyleSample = (data) => {
     data: data,
   });
 };
+export const materialsAgree = (data) => {
+  return axios({
+    url: "?g=materials_agree",
+    method: "post",
+    data: data,
+  });
+};
 

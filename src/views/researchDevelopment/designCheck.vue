@@ -137,11 +137,11 @@
                 @click="cancel_sample_apply(scope.$index, scope.row)"
                 >撤回审核</el-button>-->
                 <div
-                  @click="design_apply(scope.$index, scope.row,1)"
+                  @click="design_agree(scope.$index, scope.row,1)"
                   v-if="scope.row.design_status==='2'"
                 >通过</div>
                 <div
-                  @click="cancel_design_apply(scope.$index, scope.row,0)"
+                  @click="design_agree(scope.$index, scope.row,0)"
                   v-if="scope.row.design_status==='2'"
                 >不通过</div>
               </div>
@@ -239,16 +239,16 @@ export default {
     };
   },
   methods: {
-    async design_apply(index, row, e) {
+    async design_agree(index, row, e) {
       let res = await designAgree({ style_id: row.id, agree: e });
       console.log(res);
       this.init();
     },
-    async cancel_design_apply(index, row, e) {
-      let res = await designAgree({ style_id: row.id, agree: e });
-      console.log(res);
-      this.init();
-    },
+    // async cancel_design_apply(index, row, e) {
+    //   let res = await designAgree({ style_id: row.id, agree: e });
+    //   console.log(res);
+    //   this.init();
+    // },
     switchover() {
       this.switchover_active = !this.switchover_active;
     },

@@ -112,17 +112,16 @@
                 v-if="(scope.row.pattern_status==='2'||scope.row.pattern_status==='4')&&scope.row.user_id==userid"
                 @click="pattern_apply(scope.$index, scope.row)"
               >提交审核{{scope.row.user_id}},{{userid}}</div>
-              <!-- 2 4 -->
               <div
                 v-if="scope.row.pattern_status==='3'&&scope.row.user_id==userid"
                 @click="cancel_pattern_apply(scope.$index, scope.row)"
               >撤回审核</div>
               <div
-                @click="pattern_agree1(scope.$index, scope.row,1)"
+                @click="pattern_agree(scope.$index, scope.row,1)"
                 v-if="scope.row.pattern_status==='3'"
               >通过</div>
               <div
-                @click="pattern_agree2(scope.$index, scope.row,0)"
+                @click="pattern_agree(scope.$index, scope.row,0)"
                 v-if="scope.row.pattern_status==='3'"
               >不通过</div>
               <!-- 3 -->
@@ -196,16 +195,16 @@ export default {
       console.log(res);
       this.init();
     },
-    async pattern_agree1(index, row, e) {
+    async pattern_agree(index, row, e) {
       let res = await patternAgree({ style_id: row.id, agree: e });
       console.log(res);
       this.init();
     },
-    async pattern_agree2(index, row, e) {
-      let res = await patternAgree({ style_id: row.id, agree: e });
-      console.log(res);
-      this.init();
-    },
+    // async pattern_agree2(index, row, e) {
+    //   let res = await patternAgree({ style_id: row.id, agree: e });
+    //   console.log(res);
+    //   this.init();
+    // },
     async cancel_pattern_apply(index, row) {
       let res = await cancelPatternApply({ style_id: row.id });
       console.log(res);
@@ -219,15 +218,19 @@ export default {
       this.$router.push({ path: `/patternStatus?id=${row.id}&TL=${2}` });
     },
     get_year() {
+      this.pageIndex = 1;
       this.init();
     },
     get_season() {
+      this.pageIndex = 1;
       this.init();
     },
     get_style_type() {
+      this.pageIndex = 1;
       this.init();
     },
     handleUser_id(e) {
+      this.pageIndex = 1;
       this.formInline.user_id = e;
       this.init();
     },
@@ -288,7 +291,7 @@ export default {
           v.pattern = "审阅不通过";
         }
         if (v.pattern_status == "6") {
-          v.pattern = "等待制版";
+          v.pattern = "审阅通过";
         }
       });
     },
