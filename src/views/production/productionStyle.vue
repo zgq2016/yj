@@ -733,7 +733,7 @@
                       <span>
                         <strong>加工价格：</strong>
                       </span>
-                      <span>&yen; {{item2.price}} </span>
+                      <span>&yen; {{item2.price}}</span>
                     </div>
                   </div>
                   <div class="factory_left_bottom">
@@ -1746,6 +1746,7 @@ export default {
       let res = await getSizeSelect();
       let { data } = res.data;
       this.sizes = data;
+      console.log(res);
     },
     // 确定增加批次
     async addDesign() {
@@ -2041,10 +2042,9 @@ export default {
           style_id: Number(id),
           produce_no: this.ob[this.active].produce_no,
         });
-
         let data1 = res.data.data;
+        console.log(res);
         // 显示批次下单信息
-        // console.log(res);
         let res2 = await getWestList();
         if (data1.length == 0) {
           // console.log(data1.length);
@@ -2055,6 +2055,7 @@ export default {
           this.showhide2 = false;
           this.showhide3 = false;
           this.show1 = true;
+          this.show = false;
         } else {
           this.tailorVB = true;
           this.shipmentVB = true;
@@ -2595,7 +2596,7 @@ export default {
             }
           });
         });
-        console.log(all1);
+        // console.log(all1);
 
         if (itemn == undefined) {
           itemn = this.active1;
@@ -3700,8 +3701,8 @@ export default {
     // console.log(this.obj);
     // console.log(this.obj.style_materials_color_data)
     // this.activities_endlong = res.data.data.style_log;
-    await this.init();
     this.test();
+    await this.init();
     this.init();
     this.int_i();
     this.init_r();

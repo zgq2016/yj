@@ -93,7 +93,9 @@
                 fit="cover"
               ></el-image>
               <span>
-                <p><strong>{{item.style_type}}</strong></p>
+                <p>
+                  <strong>{{item.style_type}}</strong>
+                </p>
                 <p>{{item.stylename}}</p>
                 <p>{{item.style_color}}</p>
                 <p>{{item.username}}</p>
@@ -103,7 +105,10 @@
         </div>
       </div>
       <div class="content_3">
-        <p>版料采购</p>
+        <div class="hed">
+          <p>版料采购</p>
+          <span @click.stop="$router.push({path: `/materialPurchase`})">更多</span>
+        </div>
         <div>
           <ul>
             <li @click.stop="rout2(item.id)" v-for="(item,index) in works_3" :key="index">
@@ -113,7 +118,9 @@
                 fit="cover"
               ></el-image>
               <span>
-                <p><strong>{{item.style_type}}</strong></p>
+                <p>
+                  <strong>{{item.style_type}}</strong>
+                </p>
                 <p>{{item.stylename}}</p>
                 <p>{{item.style_color}}</p>
                 <p>{{item.username}}</p>
@@ -123,7 +130,10 @@
         </div>
       </div>
       <div class="content_3">
-        <p>纸样</p>
+        <div class="hed">
+          <p>纸样</p>
+          <span @click.stop="$router.push({path: `/pattern`})">更多</span>
+        </div>
         <div>
           <ul>
             <li @click.stop="rout2(item.id)" v-for="(item,index) in works_3" :key="index">
@@ -133,7 +143,9 @@
                 fit="cover"
               ></el-image>
               <span>
-                <p><strong>{{item.style_type}}</strong></p>
+                <p>
+                  <strong>{{item.style_type}}</strong>
+                </p>
                 <p>{{item.stylename}}</p>
                 <p>{{item.style_color}}</p>
                 <p>{{item.username}}</p>
@@ -143,7 +155,10 @@
         </div>
       </div>
       <div class="content_3">
-        <p>制版</p>
+        <div class="hed">
+          <p>制版</p>
+          <span @click.stop="$router.push({path: `/platemaking`})">更多</span>
+        </div>
         <div>
           <ul>
             <li @click.stop="rout2(item.id)" v-for="(item,index) in works_3" :key="index">
@@ -153,7 +168,9 @@
                 fit="cover"
               ></el-image>
               <span>
-                <p><strong>{{item.style_type}}</strong></p>
+                <p>
+                  <strong>{{item.style_type}}</strong>
+                </p>
                 <p>{{item.stylename}}</p>
                 <p>{{item.style_color}}</p>
                 <p>{{item.username}}</p>
@@ -163,7 +180,10 @@
         </div>
       </div>
       <div class="content_3">
-        <p>生产下单</p>
+        <div class="hed">
+          <p>生产下单</p>
+          <span @click.stop="$router.push({path: `/productionOrders`})">更多</span>
+        </div>
         <div>
           <ul>
             <li @click.stop="rout2(item.id)" v-for="(item,index) in works_4" :key="index">
@@ -173,7 +193,9 @@
                 fit="cover"
               ></el-image>
               <span>
-                <p><strong>{{item.style_type}}</strong></p>
+                <p>
+                  <strong>{{item.style_type}}</strong>
+                </p>
                 <p>{{item.stylename}}</p>
                 <p>{{item.style_color}}</p>
                 <p>{{item.user_name}}</p>
@@ -183,7 +205,10 @@
         </div>
       </div>
       <div class="content_3">
-        <p>生产采购</p>
+        <div class="hed">
+          <p>生产采购</p>
+          <span @click.stop="$router.push({path: `/purchase`})">更多</span>
+        </div>
         <div>
           <ul>
             <li @click.stop="rout2(item.id)" v-for="(item,index) in works_4" :key="index">
@@ -193,7 +218,9 @@
                 fit="cover"
               ></el-image>
               <span>
-                <p><strong>{{item.style_type}}</strong></p>
+                <p>
+                  <strong>{{item.style_type}}</strong>
+                </p>
                 <p>{{item.stylename}}</p>
                 <p>{{item.style_color}}</p>
                 <p>{{item.user_name}}</p>
@@ -203,7 +230,10 @@
         </div>
       </div>
       <div class="content_3">
-        <p>生产排单</p>
+        <div class="hed">
+          <p>生产排单</p>
+          <span @click.stop="$router.push({path: `/productionScheduling`})">更多</span>
+        </div>
         <div>
           <ul>
             <li @click.stop="rout2(item.id)" v-for="(item,index) in works_4" :key="index">
@@ -213,7 +243,9 @@
                 fit="cover"
               ></el-image>
               <span>
-                <p><strong>{{item.style_type}}</strong></p>
+                <p>
+                  <strong>{{item.style_type}}</strong>
+                </p>
                 <p>{{item.stylename}}</p>
                 <p>{{item.style_color}}</p>
                 <p>{{item.user_name}}</p>
@@ -223,7 +255,10 @@
         </div>
       </div>
       <div class="content_3">
-        <p>裁剪</p>
+        <div class="hed">
+          <p>裁剪</p>
+          <span @click.stop="$router.push({path: `/tailor`})">更多</span>
+        </div>
         <div>
           <ul>
             <li @click.stop="rout2(item.id)" v-for="(item,index) in works_4" :key="index">
@@ -233,7 +268,9 @@
                 fit="cover"
               ></el-image>
               <span>
-                <p><strong>{{item.style_type}}</strong></p>
+                <p>
+                  <strong>{{item.style_type}}</strong>
+                </p>
                 <p>{{item.stylename}}</p>
                 <p>{{item.style_color}}</p>
                 <p>{{item.user_name}}</p>
@@ -243,7 +280,10 @@
         </div>
       </div>
       <div class="content_3">
-        <p>生产出货</p>
+        <div class="hed">
+          <p>生产出货</p>
+          <span @click.stop="$router.push({path: `/shipment`})">更多</span>
+        </div>
         <div>
           <ul>
             <li @click.stop="rout2(item.id)" v-for="(item,index) in works_4" :key="index">
@@ -253,7 +293,9 @@
                 fit="cover"
               ></el-image>
               <span>
-                <p><strong>{{item.style_type}}</strong></p>
+                <p>
+                  <strong>{{item.style_type}}</strong>
+                </p>
                 <p>{{item.stylename}}</p>
                 <p>{{item.style_color}}</p>
                 <p>{{item.user_name}}</p>
@@ -764,6 +806,9 @@ export default {
         width: 1400px;
         height: 355px;
         overflow: hidden;
+        .hed {
+          width: 1210px;
+        }
       }
     }
     .content_1 {
@@ -774,10 +819,10 @@ export default {
         overflow: hidden;
         p {
           float: left;
-          font-weight: 500;
+          font-weight: 600;
           margin: 10px 0;
           color: #000000;
-          font-size: 18px;
+          font-size: 16px;
         }
         span {
           float: right;
@@ -830,8 +875,8 @@ export default {
       height: 355px;
       overflow: hidden;
       & > p {
-        font-weight: 500;
-        font-size: 18px;
+        font-weight: 600;
+        font-size: 16px;
         margin: 10px 0;
         color: #000000;
       }
@@ -849,7 +894,6 @@ export default {
             p:last-of-type {
               color: #999999;
               padding-top: 3px;
-
             }
           }
         }
@@ -862,11 +906,19 @@ export default {
     .content_3 {
       height: 355px;
       overflow: hidden;
-      & > p {
-        font-weight: 500;
-        font-size: 18px;
-        margin: 10px 0;
-        color: #000000;
+      .hed {
+        overflow: hidden;
+        p {
+          float: left;
+          font-weight: 600;
+          margin: 10px 0;
+          color: #000000;
+          font-size: 16px;
+        }
+        span {
+          float: right;
+          cursor: pointer;
+        }
       }
       ul {
         li {
@@ -882,7 +934,6 @@ export default {
             p:last-of-type {
               color: #999999;
               padding-top: 3px;
-
             }
           }
         }
@@ -892,6 +943,9 @@ export default {
         }
       }
     }
+  }
+  .hed:hover {
+    color: red;
   }
 }
 </style>

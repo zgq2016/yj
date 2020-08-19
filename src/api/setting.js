@@ -228,7 +228,7 @@ export const userList = (data) => {
 // 用户密码更新接口
 export const userPassEdit = (data) => {
   return axios({
-    url: "?g=user_pass_edit",
+    url: "?g=user_info_edit",
     method: "post",
     data: data,
   });

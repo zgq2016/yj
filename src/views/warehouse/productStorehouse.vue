@@ -97,6 +97,7 @@
             :prop="'sizes.'+index"
             :label="item"
           ></el-table-column>
+
           <el-table-column align="center" prop="storehouse_name" label="仓库"></el-table-column>
           <el-table-column align="center" prop="unit" label="单位"></el-table-column>
           <el-table-column align="center" prop="total_quantity" label="当前库存"></el-table-column>
@@ -206,15 +207,27 @@ export default {
       });
       this.tableData = res1.data.data;
       this.total = res1.data.count;
-      console.log(this.tableData);
-      console.log(res1);
+      // console.log(this.tableData);
+      this.colors = [];
+      this.tableData.map((v, i) => {
+        for (let key in v.size_data) {
+          if (this.colors.indexOf(key) == -1) {
+            this.colors.push(key);
+          }
+        }
+      });
       this.tableData.map((v, i) => {
         v.sizes = [];
-        this.colors = [];
         for (let key in v.size_data) {
-          // console.log(key, v.size_data[key]);
-          this.colors.push(key);
-          v.sizes.push(v.size_data[key]);
+          this.colors.map((j, k) => {
+            if (j == key && v.sizes.length < this.colors.length) {
+              v.sizes.push(v.size_data[key]);
+            } else if (j == key && v.sizes.length == this.colors.length) {
+              v.sizes.splice(j, 0, v.size_data[key]);
+            } else if (v.sizes.length < this.colors.length) {
+              v.sizes.push(0);
+            }
+          });
         }
       });
     },

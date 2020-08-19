@@ -9,7 +9,13 @@
       </el-breadcrumb>
     </div>
     <el-button type="primary" @click="addAccounts">增加账户</el-button>
-    <el-table :data="tableData" style="width: 100%;margin: 20px 0;" row-key="id" border>
+    <el-table
+      :data="tableData"
+      @cell-mouse-enter="setUser"
+      style="width: 100%;margin: 20px 0;"
+      row-key="id"
+      border
+    >
       <el-table-column prop="name" label="用户名"></el-table-column>
       <el-table-column prop="role_name" label="权限角色"></el-table-column>
       <el-table-column prop="username" label="账号"></el-table-column>
@@ -29,22 +35,23 @@
     <el-dialog title="修改密码" :visible.sync="centerDialogVisible1" width="30%" center>
       <el-form ref="form" :rules="rules" :model="form" label-width="100px" resetFields>
         <el-form-item label="用户名:">
-          <span>{{form.name}}</span>
+          <el-input v-model="form.name" placeholder="请输入用户名" style="width:80%"></el-input>
+          <!-- <span>{{form.name}}</span> -->
         </el-form-item>
         <el-form-item label="账号:">
-          <span>{{form.username}}</span>
+          <!-- <span>{{form.username}}</span> -->
+          <el-input v-model="form.username" placeholder="请输入账号" style="width:80%"></el-input>
         </el-form-item>
-        <el-form-item prop="pwd" label="原密码:">
+        <el-form-item v-if="level >= form.level" label="原密码:">
           <el-input
             v-model="form.pwd"
             placeholder="请输入原密码"
             show-password
             id="pwd"
-            @blur="pwdblur"
             style="width:80%"
           ></el-input>
         </el-form-item>
-        <el-form-item prop="passworded" label="修改后密码:">
+        <el-form-item label="修改后密码:">
           <el-input
             v-model="form.passworded"
             placeholder="请输入修改后密码"
@@ -60,8 +67,8 @@
     </el-dialog>
 
     <el-dialog title="添加权限" :visible.sync="centerDialogVisible2" width="30%" center>
-      <el-form ref="form1" :model="form1" :rules="rules1" label-width="80px">
-        <el-form-item label="权限角色" prop="role_name">
+      <el-form ref="form1" :model="form1" :rules="rules1" label-width="100px">
+        <el-form-item label="权限角色：" prop="role_name">
           <el-select v-model="form1.role_name" placeholder="请选择">
             <el-option
               v-for="item in userRoleList"
@@ -71,7 +78,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="权限等级" prop="Access">
+        <el-form-item label="权限等级：" prop="Access">
           <el-select v-model="form1.Access" placeholder="请选择">
             <el-option
               v-for="item in Access_level"
@@ -88,18 +95,18 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="添加权限" :visible.sync="centerDialogVisible3" width="30%" center>
-      <el-form ref="form2" :model="form2" :rules="rules2" label-width="80px">
-        <el-form-item label="用户名" prop="name">
-          <el-input v-model="form2.name" placeholder="请输入用户名"></el-input>
+    <el-dialog title="添加账户" :visible.sync="centerDialogVisible3" width="30%" center>
+      <el-form ref="form2" :model="form2" :rules="rules2" label-width="100px">
+        <el-form-item label="用户名：" prop="name">
+          <el-input v-model="form2.name" style="width:80%" placeholder="请输入用户名"></el-input>
         </el-form-item>
-        <el-form-item label="手机号" prop="username">
-          <el-input v-model="form2.username" placeholder="请输入手机号"></el-input>
+        <el-form-item label="手机号：" prop="username">
+          <el-input v-model="form2.username" style="width:80%" placeholder="请输入手机号"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="password">
-          <el-input v-model="form2.password" placeholder="请输入密码" show-password></el-input>
+        <el-form-item label="密码：" prop="password">
+          <el-input v-model="form2.password" style="width:80%" placeholder="请输入密码" show-password></el-input>
         </el-form-item>
-        <el-form-item label="权限等级" prop="level">
+        <el-form-item label="权限等级：" prop="level">
           <el-select v-model="form2.level" placeholder="权限等级">
             <el-option
               v-for="item in Access_level"
@@ -109,7 +116,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="用户角色" prop="role">
+        <el-form-item label="用户角色：" prop="role">
           <el-select v-model="form2.role" placeholder="用户角色">
             <el-option
               v-for="item in userRoleList"
@@ -217,6 +224,7 @@ export default {
         },
       ],
       rules1: {},
+      level: 0,
     };
   },
   methods: {
@@ -269,13 +277,32 @@ export default {
       this.centerDialogVisible2 = false;
       this.init();
     },
+    setUser(row, column, cell, event) {
+      if (
+        localStorage.getItem("level") >= row.level &&
+        column.label == "操作"
+      ) {
+        if (localStorage.getItem("user_id") != row.id) {
+          cell.childNodes[0].childNodes[0].style.cursor = "not-allowed";
+          cell.childNodes[0].childNodes[1].style.cursor = "not-allowed";
+        } else if (localStorage.getItem("user_id") == row.id) {
+          cell.childNodes[0].childNodes[1].style.cursor = "not-allowed";
+        }
+      }
+    },
     async handleEditUser(index, row) {
-      this.form1.role_name = row.role_name;
-      this.form1.Access = row.Access;
-      this.form1.name = row.name;
-      this.form1.id = row.id;
+      //  localStorage.getItem("level")
+      // localStorage.setItem("user_id");
+      // if (localStorage.getItem("level") == 0) {
+      if (localStorage.getItem("level") < row.level) {
+        this.form1.role_name = row.role_name;
+        this.form1.Access = row.Access;
+        this.form1.name = row.name;
+        this.form1.id = row.id;
+        this.centerDialogVisible2 = true;
+      }
 
-      this.centerDialogVisible2 = true;
+      // }
     },
     get_goods_category_id(e) {
       this.goods_category_id = e;
@@ -291,25 +318,44 @@ export default {
         this.vb = false;
       }
     },
-    handleEditList() {
-      this.$refs["form"].validate(async (valid) => {
-        if (!valid) return;
-        if (!this.vb) {
-          let res = await userPassEdit({
-            id: this.form.id,
-            newpass: this.form.passworded,
-          });
-
-          this.centerDialogVisible1 = false;
-        }
+    async handleEditList() {
+      // this.$refs["form"].validate(async (valid) => {
+      //   if (!valid) return;
+      let res = await userPassEdit({
+        id: this.form.id,
+        username: this.form.username,
+        name: this.form.name,
+        oldpass: this.form.pwd,
+        newpass: this.form.passworded,
       });
-    },
+      if (res.data.error_code == 0) {
+        this.$message({
+          showClose: true,
+          message: res.data.msg,
+          type: "success",
+        });
+      } else {
+        this.$message({
+          showClose: true,
+          message: res.data.msg,
+          type: "error",
+        });
+      }
 
+      console.log(res);
+      this.centerDialogVisible1 = false;
+      // });
+    },
     async handleEdit(index, row) {
-      this.form.pwd = "";
-      this.form.passworded = "";
-      this.form = row;
-      this.centerDialogVisible1 = true;
+      if (
+        localStorage.getItem("level") < row.level ||
+        localStorage.getItem("user_id") == row.id
+      ) {
+        this.form.pwd = "";
+        this.form.passworded = "";
+        this.form = row;
+        this.centerDialogVisible1 = true;
+      }
     },
 
     handleSizeChange(val) {
@@ -345,6 +391,7 @@ export default {
     this.init();
     let res = await getRoleSelect();
     this.userRoleList = res.data.data;
+    this.level = localStorage.getItem("level");
   },
 };
 </script>
@@ -361,6 +408,7 @@ export default {
     margin: 0 10px;
     font-size: 16px;
   }
+
   /deep/textarea {
     width: 400px;
     height: 150px;
@@ -369,6 +417,9 @@ export default {
   .pagination {
     margin-top: 10px;
     text-align: right;
+  }
+  /deep/.el-dialog__body{
+    padding:25px 90px 30px; 
   }
 }
 // materialManagement
