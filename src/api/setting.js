@@ -359,10 +359,11 @@ export const colorStatusEdit  = (data) => {
     data: data,
   });
 };
+export const getFactoryModeData  = (data) => {
+  return axios({
+    url: "?g=get_factory_mode_data ",
+    method: "post",
+    data: data,
+  });
+};
 
-// user_edit
-// 用户资料更新接口
-// role_name、name
-
-// user_del
-// 用户删除接口

@@ -4,13 +4,20 @@
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>设置</el-breadcrumb-item>
-        <el-breadcrumb-item>工厂分类</el-breadcrumb-item>
+        <el-breadcrumb-item>加工分类与价格</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <!-- 添加工厂 -->
-    <div class="addClassify" @click="addClassify">添加工厂</div>
-    <el-table :data="tableData" style="width: 100%;margin: 20px 0;" row-key="id" border>
-      <el-table-column prop="mode_name" label="工厂名称"></el-table-column>
+    <div class="addClassify" @click="addClassify">添加类型</div>
+    <el-table
+      :data="tableData"
+      style="width: 100%;margin: 20px 0;"
+      border
+      row-key="Factory_id"
+      :tree-props="{children: 'children' , hasChildren: 'hasChildren'}"
+    >
+      <el-table-column prop="mode_name" label="加工类型"></el-table-column>
+      <el-table-column prop="price" label="加工价格"></el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-tooltip content="编辑" placement="top" class="el-icon-edit btn">
@@ -84,7 +91,7 @@
   </div>
 </template>
 <script>
-import { unitList, unitAdd, unitEdit, unitDel } from "@/api/setting.js";
+import { getFactoryModeData } from "@/api/setting.js";
 import {
   getMaterialsClass,
   materialsClassAdd,
@@ -103,6 +110,10 @@ import {
 export default {
   data() {
     return {
+      // aa(row) {
+      //   console.log(row);
+      //   return row.id + row.children;
+      // },
       power: "",
       tableData: [],
       centerDialogVisible: false, //添加工厂
@@ -157,9 +168,14 @@ export default {
     },
     async handleEdit(index, row) {
       console.log(row);
-      this.form.mode_name = row.mode_name;
-      this.form.id = row.id;
-      this.centerDialogVisible1 = true;
+      if (row.factory_mode_id == undefined) {
+        this.form.mode_name = row.mode_name;
+        this.form.id = row.id;
+        this.centerDialogVisible1 = true;
+      }
+      if (row.factory_mode_id != undefined) {
+        this.centerDialogVisible2 = true;
+      }
     },
     async handleDelete(index, row) {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
@@ -191,13 +207,21 @@ export default {
       this.init();
     },
     async init() {
-      let res = await getFactoryModeSelect({
+      let res = await getFactoryModeData({
         page: this.pageIndex,
         page_size: this.pageSize,
       });
       console.log(res);
       let { data, count } = res.data;
       this.tableData = data;
+      let aa = 1;
+      this.tableData.map((v) => {
+        v["Factory_id"] = aa++;
+        v["price"] = "";
+        v.children.map((v1) => {
+          v1["Factory_id"] = aa++;
+        });
+      });
       this.total = count;
     },
   },
