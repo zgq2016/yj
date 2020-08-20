@@ -286,7 +286,7 @@ export default {
       console.log(e);
       let { id } = e;
       this.$router.push({
-        path: `/development?id=${id}&TL=${30}&project_id=${this.obj.id}`,
+        path: `/designNote?id=${id}&TL=${30}&project_id=${this.obj.id}`,
       });
       document.body.style = null;
     },

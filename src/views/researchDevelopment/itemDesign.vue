@@ -261,29 +261,36 @@ export default {
     // 获取userid
     handleUser_id(e) {
       this.formInline.user_id = e;
+      this.pageIndex = 1;
       this.init();
     },
     // 获取customer_id
     handleCustomer_id(e) {
       this.formInline.customer_id = e;
+      this.pageIndex = 1;
       this.init();
     },
     // state
     handelState(e) {
       this.formInline.state = e;
+      this.pageIndex = 1;
       this.init();
     },
     // 搜索
     handlesearch() {
+      this.pageIndex = 1;
       this.init();
     },
     get_style_type() {
+      this.pageIndex = 1;
       this.init();
     },
     get_year() {
+      this.pageIndex = 1;
       this.init();
     },
     get_seasons() {
+      this.pageIndex = 1;
       this.init();
     },
     /* 获取数据 */
@@ -324,6 +331,7 @@ export default {
       this.formInline["page"] = this.pageIndex;
       this.formInline["page_size"] = this.pageSize;
       let res = await getDataList(this.formInline);
+      console.log(res);
       let { data, count } = res.data;
       this.data = data;
       for (let i = 0; i < this.data.length; i++) {
@@ -351,7 +359,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
 .itemDesign {
   /deep/ .el-input__inner {
     width: 100%;

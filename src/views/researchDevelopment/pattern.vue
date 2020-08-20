@@ -211,6 +211,7 @@ export default {
       this.init();
     },
     onSubmit() {
+      this.pageIndex = 1;
       this.init();
     },
     handleEdit(index, row) {

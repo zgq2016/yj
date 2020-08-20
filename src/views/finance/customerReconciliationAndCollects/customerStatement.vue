@@ -361,26 +361,31 @@ export default {
   methods: {
     gte_companyname(e) {
       console.log(e);
+      this.pageIndex = 1;
       this.formInline.customer_id = e.id;
       this.customer_id = e.companyname;
       this.supplierInit();
     },
     get_account_type_name(e) {
+      this.pageIndex = 1;
       console.log(e);
       this.formInline.account_type_id = e.id;
       this.account_type_name = e.account_type_name;
       this.supplierInit();
     },
     get_account_name(e) {
+      this.pageIndex = 1;
       console.log(e);
       this.formInline.balance_account_id = e.id;
       this.balance_account_id = e.account_name;
       this.supplierInit();
     },
     get_user_id(e) {
+      this.pageIndex = 1;
       this.supplierInit();
     },
     gte_date(e) {
+      this.pageIndex = 1;
       console.log(e);
       this.formInline["ctime_start"] = e === null ? "" : e[0];
       this.formInline["ctime_end"] = e === null ? "" : e[1];
@@ -398,6 +403,7 @@ export default {
       this.wests = data;
     },
     async onSubmit() {
+      this.pageIndex = 1;
       this.supplierInit();
     },
     handlePayment() {

@@ -166,12 +166,12 @@ export default {
       // console.log(index);
       if (this.TL === 1) {
         this.$router.push({
-          // path: "/development?id=" + row.id
-          path: `/development?id=${row.id}&TL=${20}`,
+          // path: "/designNote?id=" + row.id
+          path: `/designNote?id=${row.id}&TL=${20}`,
         });
       } else {
         this.$router.push({
-          path: `/development?id=${row.id}&TL=${21}`,
+          path: `/designNote?id=${row.id}&TL=${21}`,
         });
       }
     },

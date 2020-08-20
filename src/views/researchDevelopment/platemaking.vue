@@ -213,15 +213,19 @@ export default {
       this.init();
     },
     get_year() {
+      this.pageIndex = 1;
       this.init();
     },
     get_season() {
+      this.pageIndex = 1;
       this.init();
     },
     get_style_type() {
+      this.pageIndex = 1;
       this.init();
     },
     onSubmit() {
+      this.pageIndex = 1;
       this.init();
     },
     handleEdit(index, row) {
@@ -229,6 +233,7 @@ export default {
       this.$router.push({ path: `/sampleDress?id=${row.id}&TL=${3}` });
     },
     handleUser_id(e) {
+      this.pageIndex = 1;
       this.formInline.user_id = e;
       this.init();
     },

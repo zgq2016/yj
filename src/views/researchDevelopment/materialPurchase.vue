@@ -184,26 +184,31 @@ export default {
   },
   methods: {
     async materials_agree(index, row, e) {
-      console.log()
+      console.log();
       let res = await materialsAgree({ style_id: row.id, agree: e });
       this.init();
     },
     get_year() {
+      this.pageIndex = 1;
       this.init();
     },
     get_season() {
+      this.pageIndex = 1;
       this.init();
     },
     get_style_type() {
+      this.pageIndex = 1;
       this.init();
     },
     onSubmit() {
+      this.pageIndex = 1;
       this.init();
     },
     handleEdit(index, row) {
       this.$router.push({ path: `/materialPurchasing?id=${row.id}&TL=${1}` });
     },
     handleUser_id(e) {
+      this.pageIndex = 1;
       this.formInline.user_id = e;
       this.init();
     },

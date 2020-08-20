@@ -56,11 +56,18 @@ export default {
         if (!valid) return;
         // 调用actions的登录方法
         this.$store.dispatch("login", this.form).then((res) => {
-          if (res === true) {
+          console.log(res);
+          if (res.data.error_code == 0) {
             this.$message({
               showClose: true,
-              message: "登录成功",
+              message: res.data.msg,
               type: "success",
+            });
+          } else if (res.data.error_code == 1) {
+            this.$message({
+              showClose: true,
+              message: res.data.msg,
+              type: "error",
             });
           }
         });
@@ -120,8 +127,6 @@ export default {
     justify-content: center;
     align-items: center;
     // margin: 0 auto;
-    
-    
   }
 }
 </style>
