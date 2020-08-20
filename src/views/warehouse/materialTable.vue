@@ -82,9 +82,9 @@
               <template slot-scope="props">
                 <el-table
                   ref="singleTable"
-                  :header-cell-style="{background:'#eef1f6',color:'#606266'}"
                   :data="props.row.details"
                   border
+                  size="mini"
                   highlight-current-row
                   style="width: 100%"
                 >

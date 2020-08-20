@@ -27,11 +27,12 @@
           end-placeholder="结束日期"
           format="yyyy-MM-dd"
           value-format="yyyy-MM-dd"
+          @change="onSubmit"
         ></el-date-picker>
       </el-form-item>
 
       <el-form-item>
-        <el-select v-model="formInline.customer_id" size="small" clearable placeholder="客户">
+        <el-select v-model="formInline.customer_id" @change="onSubmit" size="small" clearable placeholder="客户">
           <el-option
             v-for="item in wests"
             :key="item.value"
@@ -42,7 +43,7 @@
       </el-form-item>
 
       <el-form-item>
-        <el-select v-model="formInline.state" size="small" clearable placeholder="状态">
+        <el-select v-model="formInline.state" @change="onSubmit" size="small" clearable placeholder="状态">
           <el-option v-for="item in states" :key="item.value" :label="item.state" :value="item.id"></el-option>
         </el-select>
       </el-form-item>

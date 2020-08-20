@@ -19,12 +19,12 @@
           <el-input v-model="formInline.styleno" placeholder="款号"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.year" clearable placeholder="年份">
+          <el-select v-model="formInline.year" @change="onSubmit" clearable placeholder="年份">
             <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.season" clearable placeholder="季节">
+          <el-select v-model="formInline.season" @change="onSubmit" clearable placeholder="季节">
             <el-option
               v-for="item in seasons"
               :key="item.id"
@@ -39,7 +39,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.style_type" clearable placeholder="类别">
+          <el-select v-model="formInline.style_type" @change="onSubmit" clearable placeholder="类别">
             <el-option
               v-for="item in categorys"
               :key="item.id"
@@ -50,7 +50,13 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button icon="el-icon-search" size="mini" circle class="search_button"></el-button>
+          <el-button
+            icon="el-icon-search"
+            size="mini"
+            @click="onSubmit"
+            circle
+            class="search_button"
+          ></el-button>
         </el-form-item>
       </el-form>
       <div class="table">
@@ -176,10 +182,12 @@ export default {
       }
     },
     async onSubmit() {
+      this.page = 1;
       this.init(this.formInline);
     },
     handleUser_id(v) {
       this.formInline.user_id = v;
+      this.onSubmit();
     },
     async getYear() {
       let res = await getYearList();
@@ -231,6 +239,7 @@ export default {
     handleSizeChange(val) {
       // console.log(val)
       this.page_size = val;
+      
       this.init(this.formInline);
     },
     handleCurrentChange(val) {

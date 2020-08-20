@@ -13,12 +13,12 @@
     </div>
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item>
-        <el-select v-model="formInline.year" clearable placeholder="年份" style="width:120px">
+        <el-select v-model="formInline.year" clearable placeholder="年份" @change="onSubmit" style="width:120px">
           <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="formInline.season" clearable placeholder="季节" style="width:120px">
+        <el-select v-model="formInline.season" clearable @change="onSubmit" placeholder="季节" style="width:120px">
           <el-option
             v-for="item in seasons"
             :key="item.id"
@@ -39,7 +39,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="formInline.style_type" clearable placeholder="类别" style="width:120px">
+        <el-select v-model="formInline.style_type" @change="onSubmit" clearable placeholder="类别" style="width:120px">
           <el-option
             v-for="item in categorys"
             :key="item.id"
@@ -51,6 +51,7 @@
       <el-form-item>
         <el-select
           v-model="formInline.procure_status"
+          @change="onSubmit"
           clearable
           placeholder="状态"
           style="width:120px"
@@ -70,7 +71,8 @@
       >
         <el-table-column type="index" label="序号"></el-table-column>
         <el-table-column align="center" label="图片">
-          <template align="center" slot-scope="scope" property="style_pic_url">            <el-image
+          <template align="center" slot-scope="scope" property="style_pic_url">
+            <el-image
               style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
               :src="scope.row.style_pic_url"
               fit="cover"
@@ -194,6 +196,7 @@ export default {
       });
     },
     onSubmit() {
+      this.page = 1;
       this.init(this.formInline);
     }, // 获取customer_id
     handleCustomer_id(e) {
@@ -259,6 +262,7 @@ export default {
     },
     async handleUser_id(e) {
       this.formInline.user_id = e;
+      this.onSubmit()
     },
     handleSizeChange(val) {
       // console.log(val)

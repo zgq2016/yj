@@ -212,7 +212,8 @@ export default {
       this.init();
     },
     onSubmit() {
-      this.init();
+      this.pageIndex = 1;
+      this.init(this.formInline);
     },
     handleEdit(index, row) {
       // console.log(index, row);

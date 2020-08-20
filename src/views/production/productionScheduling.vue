@@ -4,7 +4,7 @@
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>生产</el-breadcrumb-item>
-        <el-breadcrumb-item>生产排期</el-breadcrumb-item>
+        <el-breadcrumb-item>生产排单</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div style="margin-bottom:10px">
@@ -16,12 +16,12 @@
         <el-input v-model="formInline.styleno" placeholder="款号"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="formInline.year" clearable placeholder="年份" style="width:120px">
+        <el-select v-model="formInline.year"  @change="onSubmit" clearable placeholder="年份" style="width:120px">
           <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="formInline.season" clearable placeholder="季节" style="width:120px">
+        <el-select v-model="formInline.season"  @change="onSubmit" clearable placeholder="季节" style="width:120px">
           <el-option
             v-for="item in seasons"
             :key="item.id"
@@ -42,7 +42,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="formInline.style_type" clearable placeholder="类别" style="width:120px">
+        <el-select v-model="formInline.style_type"  @change="onSubmit" clearable placeholder="类别" style="width:120px">
           <el-option
             v-for="item in categorys"
             :key="item.id"
@@ -56,6 +56,7 @@
           v-model="formInline.factory_status"
           clearable
           placeholder="状态"
+          @change="onSubmit"
           style="width:120px"
         >
           <el-option v-for="item in states" :key="item.id" :label="item.v" :value="item.id"></el-option>
@@ -204,6 +205,7 @@ export default {
       });
     },
     onSubmit() {
+      this.page= 1
       this.init(this.formInline);
     }, // 获取customer_id
     handleCustomer_id(e) {
@@ -263,6 +265,7 @@ export default {
     },
     async handleUser_id(e) {
       this.formInline.user_id = e;
+      this.onSubmit()
     },
     handleSizeChange(val) {
       // console.log(val)

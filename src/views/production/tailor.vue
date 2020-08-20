@@ -13,12 +13,12 @@
     </div>
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item>
-        <el-select v-model="formInline.year" clearable placeholder="年份" style="width:120px">
+        <el-select v-model="formInline.year" @change="onSubmit" clearable placeholder="年份" style="width:120px">
           <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="formInline.season" clearable placeholder="季节" style="width:120px">
+        <el-select v-model="formInline.season" @change="onSubmit" clearable placeholder="季节" style="width:120px">
           <el-option
             v-for="item in seasons"
             :key="item.id"
@@ -39,7 +39,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="formInline.style_type" clearable placeholder="类别" style="width:120px">
+        <el-select v-model="formInline.style_type" @change="onSubmit" clearable placeholder="类别" style="width:120px">
           <el-option
             v-for="item in categorys"
             :key="item.id"
@@ -49,7 +49,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="formInline.cut_status" clearable placeholder="状态" style="width:120px">
+        <el-select v-model="formInline.cut_status" @change="onSubmit" clearable placeholder="状态" style="width:120px">
           <el-option v-for="item in states" :key="item.id" :label="item.v" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
@@ -192,7 +192,7 @@ export default {
       });
     },
     onSubmit() {
-      console.log("submit!");
+      this.page=1
       this.init(this.formInline);
     }, // 获取customer_id
     handleCustomer_id(e) {
@@ -200,6 +200,7 @@ export default {
     },
     async handleUser_id(e) {
       this.formInline.user_id = e;
+      this.onSubmit()
     },
     async getYear() {
       let res = await getYearList();
