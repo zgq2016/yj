@@ -500,9 +500,9 @@
                       <el-input style="width:200px;" placeholder="请输入金额" v-model="form2.amount"></el-input>
                     </el-form-item>
                   </div>
-                  <el-form-item prop="imageUrl">
+                  <!-- <el-form-item prop="imageUrl">
                     <el-input v-model="form2.imageUrl" v-if="false"></el-input>
-                  </el-form-item>
+                  </el-form-item>-->
                   <el-upload
                     class="avatar-uploader1"
                     action="https://yj.ppp-pay.top/uploadpic.php"
@@ -514,7 +514,9 @@
                     <i v-else class="el-icon-upload avatar-uploader-icon"></i>
                   </el-upload>
                   <div style="width:150px;margin:0 auto">
-                    <el-button @click="innerVisibled1 = false">取消</el-button>
+                    <el-button
+                      @click="function(){innerVisibled1 = false;this.$refs[form2].resetFields();}"
+                    >取消</el-button>
                     <el-button @click="allMaterial()">确定</el-button>
                   </div>
                 </el-form>
@@ -567,11 +569,13 @@
                     <img v-if="form3.imageUrl" :src="form3.imageUrl" class="avatar" />
                     <i v-else class="el-icon-upload avatar-uploader-icon"></i>
                   </el-upload>
-                  <el-form-item prop="imageUrl">
+                  <!-- <el-form-item prop="imageUrl">
                     <el-input v-model="form3.imageUrl" v-if="false"></el-input>
-                  </el-form-item>
+                  </el-form-item>-->
                   <div style="width:200px;margin:0 auto">
-                    <el-button @click="innerVisible = false">取消</el-button>
+                    <el-button
+                      @click="function(){innerVisible = false;this.$refs[form3].resetFields();}"
+                    >取消</el-button>
                     <el-button @click="partBack()">确定</el-button>
                   </div>
                 </el-form>
@@ -1123,7 +1127,7 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="centerDialogVisible1 = false">取 消</el-button>
+        <el-button @click="function(){centerDialogVisible1 = false;this.$refs[form4].resetFields();}">取 消</el-button>
         <el-button @click="addDesignColor">确 定</el-button>
       </span>
     </el-dialog>
@@ -2383,8 +2387,9 @@ export default {
           amount: this.form2.amount, //结算金额
           remarks: "", //原因备注
         });
-        console.log(res);
+        // console.log(res);
         this.int_i();
+        this.$refs["form2"].resetFields();
       });
     },
     // 部分回料
@@ -2404,7 +2409,7 @@ export default {
           remarks: "", //原因备注
         });
         this.int_i();
-        console.log(res);
+        this.$refs["form3"].resetFields();
       });
     },
     // 延迟回料
@@ -2424,7 +2429,7 @@ export default {
           remarks: this.form4.reason, //原因备注
         });
         this.int_i();
-        console.log(res);
+        this.$refs["form4"].resetFields();
       });
     },
     // 点击增加物料

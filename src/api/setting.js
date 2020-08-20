@@ -359,6 +359,13 @@ export const colorStatusEdit  = (data) => {
     data: data,
   });
 };
+export const userStatusEdit  = (data) => {
+  return axios({
+    url: "?g=user_status_edit",
+    method: "post",
+    data: data,
+  });
+};
 
 // user_edit
 // 用户资料更新接口

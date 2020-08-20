@@ -83,7 +83,10 @@
         </div>
       </div>
       <div class="content_2">
-        <p>项目款式</p>
+        <div class="hed">
+          <p>设计款式</p>
+          <span @click.stop="$router.push({path: `/designStyle`})">更多</span>
+        </div>
         <div>
           <ul>
             <li @click.stop="rout2(item.id)" v-for="(item,index) in works_2" :key="index">
@@ -136,7 +139,7 @@
         </div>
         <div>
           <ul>
-            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_3" :key="index">
+            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_3_1" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
                 :src="item.style_pic_url"
@@ -161,7 +164,7 @@
         </div>
         <div>
           <ul>
-            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_3" :key="index">
+            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_3_2" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
                 :src="item.style_pic_url"
@@ -346,14 +349,16 @@ import {
   mouthWorkStatus,
   myWork,
   myAssistWork,
-
-  getProduceProcureList,// 采购
-  getProduceFactoryList,//生产排单列表
-  getProduceCutList,// 生产裁剪
-  getProduceCompleteList,// 出货
+  getProduceProcureList, // 采购
+  getProduceFactoryList, //生产排单列表
+  getProduceCutList, // 生产裁剪
+  getProduceCompleteList, // 出货
+  getStylePurchase, // 版料采购
+  getStylePattern, // 纸样
+  getStyleSample, // 制版
 } from "@/api/home.js";
 import { produceAdd, getProduceList } from "@/api/production";
-import { getDataList, getStyleList } from "@/api/researchDevelopment";
+import { getDataList, getStyleAll } from "@/api/researchDevelopment";
 import moment from "moment";
 export default {
   data() {
@@ -377,6 +382,8 @@ export default {
       works_1: [],
       works_2: [],
       works_3: [],
+      works_3_1: [],
+      works_3_2: [],
       works_4: [],
       works_5: [],
       works_6: [],
@@ -637,10 +644,10 @@ export default {
       // });
       // this.works_2 = res1.data.data;
 
-      let res2 = await getStyleList({
-        page: 1,
-        page_size: 10,
-      });
+      // let res2 = await getStyleAll({
+      //   page: 1,
+      //   page_size: 10,
+      // });
       let res3 = await getProduceList({
         page: 1,
         page_size: 9,
@@ -661,8 +668,24 @@ export default {
         page: 1,
         page_size: 9,
       });
-      this.works_2 = res2.data.data;
-      this.works_3 = res2.data.data;
+      let res8 = await getStylePurchase({
+        page: 1,
+        page_size: 9,
+      });
+      let res9 = await getStylePattern({
+        page: 1,
+        page_size: 9,
+      });
+      let res10 = await getStyleSample({
+        page: 1,
+        page_size: 9,
+      });
+      // this.works_2 = res2.data.data;
+
+      this.works_3 = res8.data.data;
+      this.works_3_1 = res9.data.data;
+      this.works_3_2 = res10.data.data;
+
       this.works_4 = res3.data.data;
       this.works_5 = res4.data.data;
       this.works_6 = res5.data.data;
@@ -830,6 +853,9 @@ export default {
         width: 1400px;
         height: 355px;
         overflow: hidden;
+        .hed {
+          width: 1210px;
+        }
       }
       .content_3 {
         width: 1400px;
@@ -903,11 +929,19 @@ export default {
     .content_2 {
       height: 355px;
       overflow: hidden;
-      & > p {
-        font-weight: 600;
-        font-size: 16px;
-        margin: 10px 0;
-        color: #000000;
+      .hed {
+        overflow: hidden;
+        p {
+          float: left;
+          font-weight: 600;
+          margin: 10px 0;
+          color: #000000;
+          font-size: 16px;
+        }
+        span {
+          float: right;
+          cursor: pointer;
+        }
       }
       ul {
         li {

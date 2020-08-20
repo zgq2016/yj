@@ -20,6 +20,16 @@
       <el-table-column prop="role_name" label="权限角色"></el-table-column>
       <el-table-column prop="username" label="账号"></el-table-column>
       <el-table-column prop="Access" label="权限等级"></el-table-column>
+      <el-table-column label="启用/禁用" width="200">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.status"
+            :active-value="1"
+            :inactive-value="0"
+            @change="get_switch_active(scope.$index, scope.row)"
+          ></el-switch>
+        </template>
+      </el-table-column>
       <el-table-column align="center" width="100" label="操作">
         <template slot-scope="scope">
           <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
@@ -157,6 +167,7 @@ import {
   getRoleSelect,
   userEdit,
   register,
+  userStatusEdit,
 } from "@/api/setting.js";
 export default {
   data() {
@@ -228,6 +239,18 @@ export default {
     };
   },
   methods: {
+    async get_switch_active(index, row) {
+      let res = await userStatusEdit({ user_id: row.id, status: row.status });
+      if (res.data.error_code) {
+        this.$message({
+          showClose: true,
+          message: res.data.msg,
+          type: "error",
+        });
+      }
+
+      this.init();
+    },
     handlecloseAccounts(form) {
       this.$refs[form].resetFields();
       this.centerDialogVisible3 = false;
@@ -418,8 +441,8 @@ export default {
     margin-top: 10px;
     text-align: right;
   }
-  /deep/.el-dialog__body{
-    padding:25px 90px 30px; 
+  /deep/.el-dialog__body {
+    padding: 25px 90px 30px;
   }
 }
 // materialManagement
