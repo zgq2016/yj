@@ -76,3 +76,36 @@ export const myAssistWork = data => {
     data: data
   });
 };
+// 生产排单列表
+export const getProduceFactoryList = data => {
+  return axios({
+    url: "?g=get_produce_factory_list",
+    method: "post",
+    data: data
+  });
+};
+ 
+// 生产裁剪
+export const getProduceCutList = data => {
+  return axios({
+    url: "?g=get_produce_cut_list",
+    method: "post",
+    data: data
+  });
+};
+// 出货
+export const getProduceCompleteList = data => {
+  return axios({
+    url: "?g=get_produce_complete_list",
+    method: "post",
+    data: data
+  });
+};
+// 采购
+export const getProduceProcureList = data => {
+  return axios({
+    url: "?g=get_produce_procure_list",
+    method: "post",
+    data: data
+  });
+};

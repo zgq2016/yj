@@ -211,7 +211,7 @@
         </div>
         <div>
           <ul>
-            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_4" :key="index">
+            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_5" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
                 :src="item.style_pic_url"
@@ -236,7 +236,7 @@
         </div>
         <div>
           <ul>
-            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_4" :key="index">
+            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_6" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
                 :src="item.style_pic_url"
@@ -261,7 +261,7 @@
         </div>
         <div>
           <ul>
-            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_4" :key="index">
+            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_7" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
                 :src="item.style_pic_url"
@@ -286,7 +286,7 @@
         </div>
         <div>
           <ul>
-            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_4" :key="index">
+            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_8" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
                 :src="item.style_pic_url"
@@ -346,6 +346,11 @@ import {
   mouthWorkStatus,
   myWork,
   myAssistWork,
+
+  getProduceProcureList,// 采购
+  getProduceFactoryList,//生产排单列表
+  getProduceCutList,// 生产裁剪
+  getProduceCompleteList,// 出货
 } from "@/api/home.js";
 import { produceAdd, getProduceList } from "@/api/production";
 import { getDataList, getStyleList } from "@/api/researchDevelopment";
@@ -373,6 +378,10 @@ export default {
       works_2: [],
       works_3: [],
       works_4: [],
+      works_5: [],
+      works_6: [],
+      works_7: [],
+      works_8: [],
       vs: false,
       power: "",
     };
@@ -634,11 +643,31 @@ export default {
       });
       let res3 = await getProduceList({
         page: 1,
-        page_size: 10,
+        page_size: 9,
+      });
+      let res4 = await getProduceProcureList({
+        page: 1,
+        page_size: 9,
+      });
+      let res5 = await getProduceFactoryList({
+        page: 1,
+        page_size: 9,
+      });
+      let res6 = await getProduceCutList({
+        page: 1,
+        page_size: 9,
+      });
+      let res7 = await getProduceCompleteList({
+        page: 1,
+        page_size: 9,
       });
       this.works_2 = res2.data.data;
       this.works_3 = res2.data.data;
       this.works_4 = res3.data.data;
+      this.works_5 = res4.data.data;
+      this.works_6 = res5.data.data;
+      this.works_7 = res6.data.data;
+      this.works_8 = res7.data.data;
       console.log(res3);
     },
     rout1(id) {

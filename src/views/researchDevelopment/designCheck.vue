@@ -97,9 +97,9 @@
     <!-- table -->
     <div class="table" v-if="power.indexOf('A2000100')!=-1">
       <div v-if="switchover_active===false">
-        <el-table :data="tableData" size>
-          <el-table-column type="index"></el-table-column>
-          <el-table-column label="图片">
+        <el-table :data="tableData" size='mini'>
+          <el-table-column align="center" type="index"></el-table-column>
+          <el-table-column align="center" label="图片">
             <template slot-scope="scope" property="style_pic_url">
               <div style="display: flex;">
                 <el-image
@@ -116,12 +116,12 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column property="style_color" label="颜色"></el-table-column>
-          <el-table-column property="stylename" label="款式名称"></el-table-column>
-          <el-table-column property="styleno" label="款号"></el-table-column>
-          <el-table-column property="style_type" label="品类"></el-table-column>
-          <el-table-column property="design" label="状态"></el-table-column>
-          <el-table-column label="操作" width="200" align="center">
+          <el-table-column property="stylename" align="center" label="款式名称"></el-table-column>
+          <el-table-column property="styleno" align="center" label="款号"></el-table-column>
+          <el-table-column property="style_color" align="center" label="颜色"></el-table-column>
+          <el-table-column property="style_type" align="center" label="品类"></el-table-column>
+          <el-table-column property="design" align="center" label="状态"></el-table-column>
+          <el-table-column label="操作" align="center">
             <!-- 插槽：匿名插槽，具名插槽，数据插槽 -->
             <template v-slot="scope">
               <div class="btn">

@@ -79,7 +79,7 @@
       </el-form-item>-->
     </el-form>
     <div class="table">
-      <el-table ref="singleTable" :data="tableData" highlight-current-row style="width: 100%">
+      <el-table ref="singleTable" size='mini' :data="tableData" highlight-current-row style="width: 100%">
         <el-table-column align="center" label="序号" type="index" width="50"></el-table-column>
         <el-table-column align="center" label="图片" width="140">
           <template slot-scope="scope" property="style_pic_url">
@@ -106,7 +106,7 @@
         <el-table-column align="center" property="season" label="季节"></el-table-column>
         <el-table-column align="center" property="username" label="设计师"></el-table-column>
         <el-table-column align="center" property="purchase" label="状态"></el-table-column>
-        <el-table-column align="center" label="操作" width="400">
+        <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <div class="btn">
               <div
