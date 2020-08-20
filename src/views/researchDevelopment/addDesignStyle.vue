@@ -1,5 +1,5 @@
 <template>
-  <div class="editTheStyle">
+  <div class="editTheStyle" v-if="power.indexOf('A9000100')!=-1">
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">

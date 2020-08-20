@@ -591,7 +591,7 @@ export default {
       }
     },
     async default() {
-      let res = await getRole({ id: 17 });
+      let res = await getRole({ id: 1 });
       let obj = {};
       obj["power"] = JSON.parse(res.data.data[0].power);
       obj["remarks"] = res.data.data[0].remarks;
