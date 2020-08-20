@@ -511,5 +511,12 @@ export const materialsAgree = (data) => {
     data: data,
   });
 };
+export const getStyleAll = (data) => {
+  return axios({
+    url: "?g=get_style_all",
+    method: "post",
+    data: data,
+  });
+};
 
 

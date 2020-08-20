@@ -36,6 +36,7 @@
             </template>
             <el-menu-item-group>
               <el-menu-item index="/itemDesign" v-if="power.indexOf('A1000')!=-1">设计项目</el-menu-item>
+              <el-menu-item index="/designStyle" v-if="power.indexOf('A9000')!=-1">设计款式</el-menu-item>
               <el-menu-item index="/materialPurchase" v-if="power.indexOf('A4000')!=-1">版料采购</el-menu-item>
               <el-menu-item index="/pattern" v-if="power.indexOf('A7000')!=-1">纸样</el-menu-item>
               <el-menu-item index="/platemaking" v-if="power.indexOf('A8000')!=-1">制版</el-menu-item>
@@ -51,11 +52,11 @@
               </div>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/productionOrders" v-if="power.indexOf('A1000')!=-1">生产下单</el-menu-item>
-              <el-menu-item index="/purchase" v-if="power.indexOf('A2000')!=-1">生产采购</el-menu-item>
-              <el-menu-item index="/productionScheduling" v-if="power.indexOf('A3000')!=-1">生产排单</el-menu-item>
-              <el-menu-item index="/tailor" v-if="power.indexOf('A4000')!=-1">裁剪</el-menu-item>
-              <el-menu-item index="/shipment" v-if="power.indexOf('A5000')!=-1">生产出货</el-menu-item>
+              <el-menu-item index="/productionOrders" v-if="power.indexOf('B1000')!=-1">生产下单</el-menu-item>
+              <el-menu-item index="/purchase" v-if="power.indexOf('B2000')!=-1">生产采购</el-menu-item>
+              <el-menu-item index="/productionScheduling" v-if="power.indexOf('B3000')!=-1">生产排单</el-menu-item>
+              <el-menu-item index="/tailor" v-if="power.indexOf('B4000')!=-1">裁剪</el-menu-item>
+              <el-menu-item index="/shipment" v-if="power.indexOf('B5000')!=-1">生产出货</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
           <el-submenu index="4" v-if="power.indexOf('C')!=-1">

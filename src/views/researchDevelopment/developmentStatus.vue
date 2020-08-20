@@ -13,6 +13,7 @@
         <el-breadcrumb-item v-if="TL===3" :to="{ path: `/platemaking` }">制版</el-breadcrumb-item>
         <el-breadcrumb-item v-if="TL===20" :to="{ path: `/productionOrders` }">生产下单</el-breadcrumb-item>
         <el-breadcrumb-item v-if="TL===21" :to="{ path: `/designFile` }">款式档案</el-breadcrumb-item>
+        <el-breadcrumb-item v-if="TL===100" :to="{ path: `/designStyle` }">设计款式</el-breadcrumb-item>
         <el-breadcrumb-item>款式详细</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
