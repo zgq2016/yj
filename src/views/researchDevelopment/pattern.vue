@@ -78,9 +78,9 @@
       </el-form-item>-->
     </el-form>
     <div class="table">
-      <el-table ref="singleTable" :data="tableData" highlight-current-row style="width: 100%">
-        <el-table-column label="序号" type="index" width="50"></el-table-column>
-        <el-table-column label="图片" width="140">
+      <el-table ref="singleTable" size='mini' :data="tableData" highlight-current-row style="width: 100%">
+        <el-table-column label="序号" align="center" type="index" width="50"></el-table-column>
+        <el-table-column label="图片" align="center" width="140">
           <template slot-scope="scope" property="style_pic_url">
             <div style="display: flex;">
               <el-image
@@ -97,15 +97,15 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column property="stylename" label="名称"></el-table-column>
-        <el-table-column property="styleno" label="款号"></el-table-column>
-        <el-table-column property="style_color" label="颜色"></el-table-column>
-        <el-table-column property="style_type" label="品类"></el-table-column>
-        <el-table-column property="year" label="年份"></el-table-column>
-        <el-table-column property="season" label="季节"></el-table-column>
-        <el-table-column property="username" label="设计师"></el-table-column>
-        <el-table-column property="pattern" label="状态"></el-table-column>
-        <el-table-column label="操作" width="400" align="center">
+        <el-table-column property="stylename" align="center" label="名称"></el-table-column>
+        <el-table-column property="styleno" align="center" label="款号"></el-table-column>
+        <el-table-column property="style_color" align="center" label="颜色"></el-table-column>
+        <el-table-column property="style_type" align="center" label="品类"></el-table-column>
+        <el-table-column property="year" align="center" label="年份"></el-table-column>
+        <el-table-column property="season" align="center" label="季节"></el-table-column>
+        <el-table-column property="username" align="center" label="设计师"></el-table-column>
+        <el-table-column property="pattern" align="center" label="状态"></el-table-column>
+        <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <div class="btn">
               <div
