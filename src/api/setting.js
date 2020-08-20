@@ -345,25 +345,38 @@ export const register = (data) => {
     data: data,
   });
 };
-export const sizeStatusEdit  = (data) => {
+export const sizeStatusEdit = (data) => {
   return axios({
     url: "?g=size_status_edit ",
     method: "post",
     data: data,
   });
 };
-export const colorStatusEdit  = (data) => {
+export const colorStatusEdit = (data) => {
   return axios({
     url: "?g=color_status_edit ",
     method: "post",
     data: data,
   });
 };
-export const getFactoryModeData  = (data) => {
+export const getFactoryModeData = (data) => {
   return axios({
     url: "?g=get_factory_mode_data ",
     method: "post",
     data: data,
   });
 };
+export const setProcessPrice = (data) => {
+  return axios({
+    url: "?g=set_process_price ",
+    method: "post",
+    data: data,
+  });
+};
 
+/* 
+接口set_process_price
+参数factory_mode_id  加工类型id
+goods_category_id  商品类型id
+price   价格
+*/

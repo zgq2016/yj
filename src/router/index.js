@@ -5,10 +5,12 @@ import Index from "@/views/index.vue";
 import DesignFile from "@/views/archives/designFile.vue";
 import ItemDesign from "@/views/researchDevelopment/itemDesign.vue";
 import AddProject from "@/views/researchDevelopment/addProject.vue";
+import DesignStyle from "@/views/researchDevelopment/designStyle.vue";
 import PanelPurchase from "@/views/researchDevelopment/panelPurchase.vue";
 import NewTheStyle from "@/views/researchDevelopment/newTheStyle.vue";
 import MaterialPurchase from "@/views/researchDevelopment/materialPurchase.vue";
 import EditTheStyle from "@/views/researchDevelopment/editTheStyle.vue";
+import AddDesignStyle from "@/views/researchDevelopment/addDesignStyle.vue";
 import ClientManagement from "@/views/sell/clientManagement.vue";
 import AddClient from "@/views/sell/addClient.vue";
 import Check from "@/views/sell/check.vue";
@@ -131,6 +133,7 @@ const routes = [
       },
 
       { path: "/addProject", name: "AddProject", component: AddProject },
+      { path: "/designStyle", name: "DesignStyle", component: DesignStyle },
       {
         path: "/panelPurchase",
         name: "PanelPurchase",
@@ -145,6 +148,11 @@ const routes = [
       { path: "/pattern", name: "Pattern", component: Pattern },
       { path: "/platemaking", name: "Platemaking", component: Platemaking },
       { path: "/editTheStyle", name: "EditTheStyle", component: EditTheStyle },
+      {
+        path: "/addDesignStyle",
+        name: "AddDesignStyle",
+        component: AddDesignStyle,
+      },
 
       {
         path: "/clientManagement",

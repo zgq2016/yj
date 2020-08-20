@@ -36,6 +36,7 @@
             </template>
             <el-menu-item-group>
               <el-menu-item index="/itemDesign" v-if="power.indexOf('A1000')!=-1">设计项目</el-menu-item>
+              <el-menu-item index="/designStyle">设计款式</el-menu-item>
               <el-menu-item index="/materialPurchase" v-if="power.indexOf('A4000')!=-1">版料采购</el-menu-item>
               <el-menu-item index="/pattern" v-if="power.indexOf('A7000')!=-1">纸样</el-menu-item>
               <el-menu-item index="/platemaking" v-if="power.indexOf('A8000')!=-1">制版</el-menu-item>

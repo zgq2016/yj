@@ -31,7 +31,7 @@
     </el-table>
     <!-- 工厂分类 -->
     <el-dialog
-      title="工厂分类"
+      title="新增加工类型"
       :visible.sync="centerDialogVisible"
       width="30%"
       center
@@ -55,7 +55,31 @@
     </el-dialog>
     <!-- 编辑工厂 -->
     <el-dialog
-      title="编辑工厂"
+      title="编辑加工类型与价格"
+      :visible.sync="centerDialogVisible2"
+      width="30%"
+      center
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
+      <el-form ref="form1" :model="form1" label-width="80px" resetFields>
+        <el-form-item
+          label="商品价格"
+          prop="price"
+          :rules="[ { required: true, message: '请输入加工价格', trigger: 'blur' },]"
+        >
+          <el-input v-model="form1.price" style="width:80%"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleClose2">取 消</el-button>
+        <el-button type="primary" @click="handleEditList2">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 编辑工厂 -->
+    <el-dialog
+      title="编辑加工类型"
       :visible.sync="centerDialogVisible1"
       width="30%"
       center
@@ -91,7 +115,7 @@
   </div>
 </template>
 <script>
-import { getFactoryModeData } from "@/api/setting.js";
+import { getFactoryModeData, setProcessPrice } from "@/api/setting.js";
 import {
   getMaterialsClass,
   materialsClassAdd,
@@ -118,9 +142,13 @@ export default {
       tableData: [],
       centerDialogVisible: false, //添加工厂
       centerDialogVisible1: false, //编辑工厂
+      centerDialogVisible2: false, //编辑工厂
       region: "",
       form: {
         mode_name: "",
+      },
+      form1: {
+        price: "",
       },
       pageIndex: 1,
       pageSize: 10,
@@ -128,6 +156,20 @@ export default {
     };
   },
   methods: {
+    handleClose2(form) {
+      this.$refs["form1"].resetFields();
+      this.centerDialogVisible2 = false;
+    },
+    async handleEditList2(form) {
+      this.$refs["form1"].validate(async (valid) => {
+        if (!valid) return;
+        let res = await setProcessPrice(this.form1);
+        console.log(res);
+        this.$refs["form1"].resetFields();
+        this.init();
+        this.centerDialogVisible2 = false;
+      });
+    },
     handleClose() {
       this.form.mode_name = "";
       this.centerDialogVisible = false;
@@ -174,6 +216,8 @@ export default {
         this.centerDialogVisible1 = true;
       }
       if (row.factory_mode_id != undefined) {
+        this.form1["factory_mode_id"] = row.factory_mode_id;
+        this.form1["goods_category_id"] = row.id;
         this.centerDialogVisible2 = true;
       }
     },
