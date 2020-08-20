@@ -131,7 +131,7 @@ import {
   getWestList,
   getProduceOrderList,
 } from "@/api/researchDevelopment";
-import { getProduceList } from "@/api/production";
+import { getProduceCutList } from "@/api/production";
 export default {
   data() {
     return {
@@ -236,7 +236,7 @@ export default {
     async init(obj) {
       this.formInline.page = this.page;
       this.formInline.page_size = this.page_size;
-      let res = await getProduceList(this.formInline);
+      let res = await getProduceCutList(this.formInline);
       console.log(res);
       this.count = res.data.count;
       let { data } = res.data;

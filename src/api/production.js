@@ -257,7 +257,7 @@ export const getProduceCutList = (data) => {
   });
 };
 // 显示生产出货list接口
-export const getProduceCompleteList = (data) => {
+export const getProducePompleteList = (data) => {
   return axios({
     url: "?g=get_produce_complete_list",
     method: "post",

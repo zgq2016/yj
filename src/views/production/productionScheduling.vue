@@ -13,15 +13,24 @@
     </div>
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item>
-        <el-input v-model="formInline.styleno" placeholder="款号"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-select v-model="formInline.year"  @change="onSubmit" clearable placeholder="年份" style="width:120px">
+        <el-select
+          v-model="formInline.year"
+          @change="onSubmit"
+          clearable
+          placeholder="年份"
+          style="width:120px"
+        >
           <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="formInline.season"  @change="onSubmit" clearable placeholder="季节" style="width:120px">
+        <el-select
+          v-model="formInline.season"
+          @change="onSubmit"
+          clearable
+          placeholder="季节"
+          style="width:120px"
+        >
           <el-option
             v-for="item in seasons"
             :key="item.id"
@@ -42,7 +51,13 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="formInline.style_type"  @change="onSubmit" clearable placeholder="类别" style="width:120px">
+        <el-select
+          v-model="formInline.style_type"
+          @change="onSubmit"
+          clearable
+          placeholder="类别"
+          style="width:120px"
+        >
           <el-option
             v-for="item in categorys"
             :key="item.id"
@@ -140,7 +155,7 @@ import {
   getWestList,
   getProduceOrderList,
 } from "@/api/researchDevelopment";
-import { getProduceList } from "@/api/production";
+import { getProduceFactoryList } from "@/api/production";
 export default {
   data() {
     return {
@@ -205,7 +220,7 @@ export default {
       });
     },
     onSubmit() {
-      this.page= 1
+      this.page = 1;
       this.init(this.formInline);
     }, // 获取customer_id
     handleCustomer_id(e) {
@@ -245,7 +260,7 @@ export default {
     async init(obj) {
       this.formInline.page = this.page;
       this.formInline.page_size = this.page_size;
-      let res = await getProduceList(this.formInline);
+      let res = await getProduceFactoryList(this.formInline);
       this.count = res.data.count;
       let { data } = res.data;
       this.tableData = data;
@@ -265,7 +280,7 @@ export default {
     },
     async handleUser_id(e) {
       this.formInline.user_id = e;
-      this.onSubmit()
+      this.onSubmit();
     },
     handleSizeChange(val) {
       // console.log(val)
