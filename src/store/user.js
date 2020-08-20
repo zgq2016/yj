@@ -38,20 +38,23 @@ const actions = {
       data,
     }).then((res) => {
       console.log(res);
-      // console.log(window.document.cookie)
-      // console.log(window)
-      // console.log(window.document);
-      // router.push({ name: "homepage" });
-      // 调用user下的mutations的方法
-      store.commit("setUserInfo", res.data.data);
-      localStorage.setItem("power", this.state.userInfo.power);
-      localStorage.setItem("user_id", this.state.userInfo.id);
-      localStorage.setItem("itcast_pro_token", res.data.data.token);
-      localStorage.setItem("level", res.data.data.level);
-      router.push({ name: "Index" });
-      return true;
+      if (res.data.error_code === 0) {
+        // console.log(window.document.cookie)
+        // console.log(window)
+        // console.log(window.document);
+        // router.push({ name: "homepage" });
+        // 调用user下的mutations的方法
+        store.commit("setUserInfo", res.data.data);
+        localStorage.setItem("power", this.state.userInfo.power);
+        localStorage.setItem("user_id", this.state.userInfo.id);
+        localStorage.setItem("itcast_pro_token", res.data.data.token);
+        localStorage.setItem("level", res.data.data.level);
+        router.push({ name: "Index" });
+        return res;
+      } else {
+        return res;
+      }
     });
-    
   },
 };
 export const store = new Vuex.Store({ router, state, mutations, actions });

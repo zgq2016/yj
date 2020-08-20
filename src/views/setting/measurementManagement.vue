@@ -64,9 +64,6 @@
       :close-on-press-escape="false"
     >
       <el-form ref="form" :model="form" :rules="rules1" label-width="80px">
-        <el-form-item label="尺码名称" prop="size_name">
-          <el-input v-model="form.size_name" style="width:80%;"></el-input>
-        </el-form-item>
         <el-form-item label="上级分类" prop="size_id">
           <el-select v-model="form.size_id" placeholder="可选/可不选" style="width:80%;">
             <el-option
@@ -76,6 +73,12 @@
               :value="item.id"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="尺码名称" prop="size_name" v-if="form.size_id!==''">
+          <el-input v-model="form.size_name" style="width:80%;"></el-input>
+        </el-form-item>
+        <el-form-item label="尺码分类" prop="size_name" v-if="form.size_id===''">
+          <el-input v-model="form.size_name" style="width:80%;"></el-input>
         </el-form-item>
         <el-form-item label="排序" prop="sort">
           <el-input v-model="form.sort" style="width:80%;"></el-input>

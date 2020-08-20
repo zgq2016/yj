@@ -106,30 +106,19 @@
         <el-table-column align="center" property="season" label="季节"></el-table-column>
         <el-table-column align="center" property="username" label="设计师"></el-table-column>
         <el-table-column align="center" property="purchase" label="状态"></el-table-column>
-        <el-table-column align="center" label="操作">
+        <el-table-column align="center" label="操作" width="400">
           <template slot-scope="scope">
             <div class="btn">
               <div
-                v-if="(scope.row.purchase_status==='2'||scope.row.purchase_status==='4')&&scope.row.user_id==userid"
-                @click="pattern_apply(scope.$index, scope.row)"
-              >提交审核{{scope.row.user_id}},{{userid}}</div>
-              <!-- 2 4 -->
-              <div
-                @click="pattern_agree1(scope.$index, scope.row,1)"
-                v-if="scope.row.purchase_status==='3'"
+                @click="materials_agree(scope.$index, scope.row,1)"
+                v-if="scope.row.materials_status==='2'"
               >通过</div>
               <div
-                @click="pattern_agree2(scope.$index, scope.row,0)"
-                v-if="scope.row.purchase_status==='3'"
+                @click="materials_agree(scope.$index, scope.row,0)"
+                v-if="scope.row.materials_status==='2'"
               >不通过</div>
-              <!-- 3 -->
               <div @click="handleEdit(scope.$index, scope.row)">查看</div>
             </div>
-            <!-- <el-button
-              class="elbtn"
-              size="mini"
-              @click="handleEdit(scope.$index, scope.row)"
-            >{{"查看"}}</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -158,6 +147,7 @@ import {
   getCategoryList,
   getStyleList,
   getStylePurchase,
+  materialsAgree,
 } from "@/api/researchDevelopment";
 export default {
   data() {
@@ -193,22 +183,32 @@ export default {
     };
   },
   methods: {
+    async materials_agree(index, row, e) {
+      console.log();
+      let res = await materialsAgree({ style_id: row.id, agree: e });
+      this.init();
+    },
     get_year() {
+      this.pageIndex = 1;
       this.init();
     },
     get_season() {
+      this.pageIndex = 1;
       this.init();
     },
     get_style_type() {
+      this.pageIndex = 1;
       this.init();
     },
     onSubmit() {
+      this.pageIndex = 1;
       this.init();
     },
     handleEdit(index, row) {
       this.$router.push({ path: `/materialPurchasing?id=${row.id}&TL=${1}` });
     },
     handleUser_id(e) {
+      this.pageIndex = 1;
       this.formInline.user_id = e;
       this.init();
     },
@@ -333,6 +333,14 @@ export default {
   .el-pagination {
     margin: 20px;
     text-align: right;
+  }
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    div {
+      margin: 0 10px;
+    }
   }
 }
 </style>

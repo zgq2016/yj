@@ -52,6 +52,7 @@ export default {
 
 <style lang="less" scoped>
 .development {
+  
   .orderInformation {
     .el-steps {
       position: relative;

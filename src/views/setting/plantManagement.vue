@@ -4,14 +4,14 @@
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>设置</el-breadcrumb-item>
-        <el-breadcrumb-item>工厂管理</el-breadcrumb-item>
+        <el-breadcrumb-item>工厂分类</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <!-- 添加工厂 -->
     <div class="addClassify" @click="addClassify">添加工厂</div>
-    <el-table :data="tableData" style="width: 100%;margin: 20px 0;">
-      <el-table-column prop="mode_name" label="工厂名称" width="200"></el-table-column>
-      <el-table-column align="right" label="操作">
+    <el-table :data="tableData" style="width: 100%;margin: 20px 0;" row-key="id" border>
+      <el-table-column prop="mode_name" label="工厂名称"></el-table-column>
+      <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-tooltip content="编辑" placement="top" class="el-icon-edit btn">
             <div @click="handleEdit(scope.$index, scope.row)"></div>

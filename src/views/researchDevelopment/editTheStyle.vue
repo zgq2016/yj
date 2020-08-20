@@ -11,7 +11,7 @@
         >项目详细</el-breadcrumb-item>
         <el-breadcrumb-item
           v-if="navc.TL-0===30"
-          :to="{ path: `/development?id=${navc.id}&project_id=${navc.project_id}&TL=30` }"
+          :to="{ path: `/designNote?id=${navc.id}&project_id=${navc.project_id}&TL=30` }"
         >款式详细</el-breadcrumb-item>
         <el-breadcrumb-item>编辑款式</el-breadcrumb-item>
       </el-breadcrumb>
@@ -574,9 +574,9 @@ export default {
         let res = await styleEdit(obj);
         console.log(res);
         this.$router.push({
-          path: `/development?id=${this.$route.query.id}&TL=30&project_id=${this.$route.query.project_id}`,
+          path: `/designNote?id=${this.$route.query.id}&TL=30&project_id=${this.$route.query.project_id}`,
         });
-        // development?id=280&TL=30&project_id=139
+        // designNote?id=280&TL=30&project_id=139
       });
     },
     async handleDel() {

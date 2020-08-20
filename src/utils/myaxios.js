@@ -5,6 +5,7 @@ import { Loading, Message } from "element-ui";
 import _ from "lodash";
 
 var myaxios = axios.create({
+  // baseURL: "https://shesho.ppp-pay.top/webapi.php",
   baseURL: "https://yj.ppp-pay.top/webapi.php",
   timeout: 50000, //超时时长
 });

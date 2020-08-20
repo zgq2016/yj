@@ -368,29 +368,34 @@ export default {
   },
   methods: {
     get_Supplier(e) {
+      this.pageIndex = 1;
       this.formInline.supplier_id = e.address;
       this.supplier_id = e.value;
       this.supplierInit();
     },
     get_account_type_name(e) {
+      this.pageIndex = 1;
       console.log(e);
       this.formInline.account_type_id = e.id;
       this.account_type_id = e.account_type_name;
       this.supplierInit();
     },
     get_account_name(e) {
+      this.pageIndex = 1;
       console.log(e);
       this.formInline.balance_account_id = e.id;
       this.balance_account_id = e.account_name;
       this.supplierInit();
     },
     get_user_id(e) {
+      this.pageIndex = 1;
       console.log(e);
       this.formInline.user_id = e.id;
       this.user_id = e.name;
       this.supplierInit();
     },
     gte_date(e) {
+      this.pageIndex = 1;
       this.formInline["ctime_start"] = e === null ? "" : e[0];
       this.formInline["ctime_end"] = e === null ? "" : e[1];
       this.supplierInit();
@@ -402,8 +407,7 @@ export default {
       return this.$elUploadBeforeUpload(file);
     },
     async onSubmit() {
-      //
-
+      this.pageIndex = 1;
       this.supplierInit();
     },
     async querySearch(value, cb) {

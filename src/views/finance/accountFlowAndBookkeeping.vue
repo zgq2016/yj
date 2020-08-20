@@ -563,24 +563,28 @@ export default {
   },
   methods: {
     get_account_type_name(e) {
+      this.pageIndex = 1;
       console.log(e);
       this.formInline.account_type_id = e.id;
       this.account_type_name = e.account_type_name;
       this.init();
     },
     get_account_name(e) {
+      this.pageIndex = 1;
       console.log(e);
       this.formInline.balance_account_id = e.id;
       this.balance_account_id = e.account_name;
       this.init();
     },
     gte_date(e) {
+      this.pageIndex = 1;
       this.formInline["ctime_start"] = e === null ? "" : e[0];
       this.formInline["ctime_end"] = e === null ? "" : e[1];
       console.log(e);
       this.init();
     },
     get_user_id(e) {
+      this.pageIndex = 1;
       this.init();
     },
     handleCommand(command) {
@@ -602,6 +606,7 @@ export default {
     //   this.$print(tempNode); // 开始调用插件
     // },
     onsearch() {
+      this.pageIndex = 1;
       console.log(this.formInline);
       this.init();
     },

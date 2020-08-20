@@ -20,11 +20,6 @@
       <div class="basicInfo">基础信息</div>
       <div style="display: flex;justify-content: space-between;">
         <div class="content">
-          <!-- <img class="imgSrc" :src="obj.style_pic_url" alt /> -->
-          <!-- <div
-            class="imgSrc"
-            :style="`background: url(${obj.style_pic_url}) no-repeat 0 -75px;width:150px;height:150px`"
-          ></div>-->
           <el-image
             class="imgSrc"
             style="width: 150px; height: 150px;margin-right: 5px;"
@@ -71,25 +66,56 @@
                   </svg>
                 </div>
               </el-tooltip>
+
+              <div @click="get_view_log">查看日志</div>
             </div>
           </div>
         </div>
-        <!-- <span
-          class="el-icon-edit-outline"
-          style="font-size: 40px;color: #ffa500;cursor: pointer;width:40px;height:40px"
-          @click="editTheStyle"
-          v-if="power.indexOf('A2000300')!=-1||power.indexOf('A2000400')!=-1"
-        ></span>-->
       </div>
+
       <el-container>
+        <div class="orderInformation" style="margin-bottom: 20px;" v-if="log">
+          <el-steps finish-status="wait" :active="activities_endlong.length-1">
+            <el-step
+              style="width:100px"
+              v-for="(item_g, index_g) in activities_endlong"
+              :key="index_g"
+              title
+              description
+              icon="el-icon-success"
+            >
+              <template v-slot:title>
+                <div class="tt">
+                  <span>{{item_g.logname}}</span>
+                </div>
+              </template>
+              <template v-slot:description>
+                <div class="dt">
+                  <span>{{item_g.ctime}}</span>
+                </div>
+              </template>
+            </el-step>
+          </el-steps>
+        </div>
         <el-header>
           <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane v-if="power.indexOf('A3000')!=-1" label="研发状态" name="/development"></el-tab-pane>
             <el-tab-pane v-if="power.indexOf('A4000')!=-1" label="设计版单" name="/designNote"></el-tab-pane>
             <el-tab-pane v-if="power.indexOf('A5000')!=-1" label="物料工艺" name="/materialProcess"></el-tab-pane>
-            <el-tab-pane v-if="power.indexOf('A6000')!=-1" label="版料采购" name="/materialPurchasing"></el-tab-pane>
-            <el-tab-pane v-if="power.indexOf('A7000')!=-1" label="纸样" name="/patternStatus"></el-tab-pane>
-            <el-tab-pane v-if="power.indexOf('A8000')!=-1" label="样衣" name="/sampleDress"></el-tab-pane>
+            <el-tab-pane
+              v-if="power.indexOf('A6000')!=-1&&this.obj.purchase_status!=0"
+              label="版料采购"
+              name="/materialPurchasing"
+            ></el-tab-pane>
+            <el-tab-pane
+              v-if="power.indexOf('A7000')!=-1&&this.obj.pattern_status!=0"
+              label="纸样"
+              name="/patternStatus"
+            ></el-tab-pane>
+            <el-tab-pane
+              v-if="power.indexOf('A8000')!=-1&&this.obj.sample_status!=0"
+              label="样衣"
+              name="/sampleDress"
+            ></el-tab-pane>
             <el-tab-pane v-if="TL===21" label="生产信息" name="/ProductionStyle"></el-tab-pane>
             <el-tab-pane v-if="TL===21" label="商品信息" name="/merchandiseNews"></el-tab-pane>
           </el-tabs>
@@ -112,9 +138,14 @@ export default {
       activeName: "",
       TL: "",
       TL1: "",
+      activities_endlong: [],
+      log: false,
     };
   },
   methods: {
+    get_view_log() {
+      this.log = !this.log;
+    },
     handleClick(tab, event) {
       let { id, TL } = this.$route.query;
       // this.activeName = tab.name;
@@ -134,6 +165,7 @@ export default {
       this.obj = res.data.data;
       console.log(this.obj);
       this.activeName = this.$route.path;
+      this.activities_endlong = res.data.data.style_log;
     },
   },
   mounted() {
@@ -141,10 +173,8 @@ export default {
     let { id } = this.$route.query;
     this.TL = this.$route.query.TL - 0;
     this.TL1 = this.$route.query.TL1 - 0;
-    // this.$router.push({ path: `/materialPurchasing?id=${id}` });
 
     this.power = localStorage.getItem("power");
-    console.log(this.power);
   },
   watch: {
     $route() {
@@ -158,6 +188,78 @@ export default {
 .developmentStatus {
   .main {
     padding: 30px 40px;
+
+    .orderInformation {
+      .el-steps {
+        position: relative;
+        margin-bottom: 40px;
+        /deep/.el-step__icon {
+          width: 12px;
+          background-color: transparent;
+        }
+        .tt {
+          position: absolute;
+          span:first-of-type {
+            display: block;
+            font-size: 10px;
+            color: #666666;
+            em {
+              margin-left: 3px;
+              color: #999999;
+            }
+          }
+          span:last-of-type {
+            display: block;
+            font-size: 10px;
+            -webkit-transform: scale(0.8);
+            color: #999999;
+            margin-left: -10px;
+          }
+        }
+        .dt {
+          position: absolute;
+          top: 50px;
+          span {
+            display: block;
+            font-size: 10px;
+            float: left;
+          }
+        }
+        /deep/.el-step__icon-inner[class*="el-icon"]:not(.is-status) {
+          font-size: 12px;
+          font-weight: 400;
+          position: relative;
+        }
+        /deep/.el-step__title {
+          font-size: 12px;
+          line-height: 14px;
+        }
+        /deep/.el-step__icon {
+          width: 12px;
+        }
+        /deep/.el-step__head {
+          top: 30px;
+        }
+
+        /deep/.el-step__line {
+          width: auto;
+          margin-right: 20px;
+        }
+
+        /deep/.el-step {
+          // width: 100px;
+          flex-basis: 100px !important;
+          display: inline-block;
+        }
+        /deep/.el-step__main {
+          position: relative;
+          bottom: 20px;
+          .el-step__description {
+            padding-top: 20%;
+          }
+        }
+      }
+    }
     .basicInfo {
       font-size: 20px;
       font-weight: 600;

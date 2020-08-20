@@ -16,9 +16,9 @@
       border
       :tree-props="{children: 'color_data' , hasChildren: 'hasChildren'}"
     >
-      <el-table-column prop="color_name" label="分类名称" width="200"></el-table-column>
-      <el-table-column prop="sort" label="排序" width="200"></el-table-column>
-      <el-table-column prop="sort" label="启用/禁用" width="200">
+      <el-table-column prop="color_name" label="分类名称"></el-table-column>
+      <el-table-column prop="sort" label="排序"></el-table-column>
+      <el-table-column prop="sort" label="启用/禁用">
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.status"
@@ -29,8 +29,8 @@
         </template>
       </el-table-column>
       <el-table-column
-        align="right"
         label="操作"
+        width="200px"
         v-if="power.indexOf('H2000300')!=-1||power.indexOf('H2000200')!=-1"
       >
         <template slot-scope="scope">
@@ -64,9 +64,6 @@
       center
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="颜色名称" prop="color_name">
-          <el-input v-model="form.color_name" style="width:80%;"></el-input>
-        </el-form-item>
         <el-form-item label="上级分类" prop="color_id">
           <el-select v-model="form.color_id" placeholder="可选/可不选" style="width:80%;">
             <el-option
@@ -76,6 +73,12 @@
               :value="item.id"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="颜色名称" prop="color_name" v-if="form.color_id!==''">
+          <el-input v-model="form.color_name" style="width:80%;"></el-input>
+        </el-form-item>
+        <el-form-item label="颜色分类" prop="color_name" v-if="form.color_id===''">
+          <el-input v-model="form.color_name" style="width:80%;"></el-input>
         </el-form-item>
         <el-form-item label="排序" prop="sort">
           <el-input v-model="form.sort" style="width:80%;"></el-input>

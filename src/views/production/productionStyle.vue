@@ -13,7 +13,7 @@
         <el-breadcrumb-item v-if="TL===21" :to="{ path: '/designFile' }">款式档案</el-breadcrumb-item>
         <el-breadcrumb-item
           v-if="TL===21"
-          :to="{ path: `/development?id=${this.$route.query.id}&TL=21` }"
+          :to="{ path: `/designNote?id=${this.$route.query.id}&TL=21` }"
         >款式详细</el-breadcrumb-item>
         <el-breadcrumb-item>生产档案</el-breadcrumb-item>
       </el-breadcrumb>

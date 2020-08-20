@@ -366,29 +366,34 @@ export default {
   methods: {
     get_factory_id(e) {
       console.log(e);
+      this.pageIndex = 1;
       this.formInline.factory_id = e.id;
       this.factory_id = e.factory_name;
       this.supplierInit();
     },
     gte_date(e) {
+      this.pageIndex = 1;
       console.log(e);
       this.formInline["ctime_start"] = e === null ? "" : e[0];
       this.formInline["ctime_end"] = e === null ? "" : e[1];
       this.supplierInit();
     },
     get_account_name(e) {
+      this.pageIndex = 1;
       console.log(e);
       this.formInline.balance_account_id = e.id;
       this.balance_account_id = e.account_name;
       this.supplierInit();
     },
     get_user_id(e) {
+      this.pageIndex = 1;
       console.log(e);
       this.formInline.user_id = e.id;
       this.user_id = e.name;
       this.supplierInit();
     },
     get_account_type_name(e) {
+      this.pageIndex = 1;
       console.log(e);
       this.formInline.account_type_id = e.id;
       this.account_type_name = e.account_type_name;
@@ -401,6 +406,7 @@ export default {
       return this.$elUploadBeforeUpload(file);
     },
     async onSubmit() {
+      this.pageIndex = 1;
       console.log(this.formInline);
       this.supplierInit();
     },

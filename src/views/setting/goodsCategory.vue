@@ -16,14 +16,14 @@
       border
       :tree-props="{children: 'goods_category_data' , hasChildren: 'hasChildren'}"
     >
-      <el-table-column prop="goods_category_name" label="分类名称" width="200"></el-table-column>
-      <el-table-column prop="describe" label="分类描述" width="200"></el-table-column>
-      <el-table-column prop="sort" label="排序" width="200"></el-table-column>
-      <el-table-column prop="unit" label="单位" width="200"></el-table-column>
+      <el-table-column prop="goods_category_name" label="分类名称"></el-table-column>
+      <el-table-column prop="describe" label="分类描述"></el-table-column>
+      <el-table-column prop="sort" label="排序"></el-table-column>
+      <el-table-column prop="unit" label="单位"></el-table-column>
       <el-table-column
-        align="right"
         label="操作"
         v-if="power.indexOf('H1000300')!=-1||power.indexOf('H1000200')!=-1"
+        width="200"
       >
         <template slot-scope="scope">
           <el-tooltip
@@ -56,9 +56,6 @@
       :close-on-press-escape="false"
     >
       <el-form ref="form" :rules="rules1" :model="form" label-width="80px">
-        <el-form-item label="分类名称" prop="goods_category_name">
-          <el-input v-model="form.goods_category_name" style="width:80%;"></el-input>
-        </el-form-item>
         <el-form-item label="上级分类" prop="goods_category_id">
           <el-select
             v-model="form.goods_category_id"
@@ -73,6 +70,12 @@
               :value="item.id"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="商品名称" prop="goods_category_name" v-if="form.goods_category_id!==''">
+          <el-input v-model="form.goods_category_name" style="width:80%;"></el-input>
+        </el-form-item>
+        <el-form-item label="商品分类" prop="goods_category_name" v-if="form.goods_category_id===''">
+          <el-input v-model="form.goods_category_name" style="width:80%;"></el-input>
         </el-form-item>
         <el-form-item v-if="form.goods_category_id != ''" label="计量单位" prop="unit">
           <el-select v-model="form.unit" clearable placeholder="请选择" style="width:80%;">

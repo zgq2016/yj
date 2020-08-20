@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="productionOrders" v-if="power.indexOf('B1000300')!=-1">
     <div class="aa">
       <!-- 面包屑 -->
@@ -15,12 +15,24 @@
     <div class="form">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item>
-          <el-select v-model="formInline.year" clearable placeholder="年份" style="width:120px">
+          <el-select
+            v-model="formInline.year"
+            clearable
+            placeholder="年份"
+            style="width:120px"
+            @change="onSubmit"
+          >
             <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.season" clearable placeholder="季节" style="width:120px">
+          <el-select
+            v-model="formInline.season"
+            clearable
+            placeholder="季节"
+            style="width:120px"
+            @change="onSubmit"
+          >
             <el-option
               v-for="item in seasons"
               :key="item.id"
@@ -41,7 +53,13 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.style_type" clearable placeholder="类别" style="width:120px">
+          <el-select
+            v-model="formInline.style_type"
+            clearable
+            placeholder="类别"
+            style="width:120px"
+            @change="onSubmit"
+          >
             <el-option
               v-for="item in categorys"
               :key="item.id"
@@ -57,6 +75,7 @@
             clearable
             placeholder="状态"
             style="width:120px"
+            @change="onSubmit"
           >
             <el-option v-for="item in states" :key="item.id" :label="item.v" :value="item.id"></el-option>
           </el-select>
@@ -203,9 +222,9 @@ export default {
         column.label == "款号"
       ) {
         // this.$router.push({
-        //   path: "/development?id=" + row.style_id+TL
+        //   path: "/designNote?id=" + row.style_id+TL
         // });
-        this.$router.push({ path: `/development?id=${row.style_id}&TL=20` });
+        this.$router.push({ path: `/designNote?id=${row.style_id}&TL=20` });
       }
     },
     // 查看
@@ -231,12 +250,8 @@ export default {
     },
     // 查询
     async onSubmit() {
-      // console.log(this.formInline);
-
+      this.page = 1;
       this.init();
-    },
-    handleUser_id(v) {
-      console.log(v);
     },
     //  增加下单
     addOrders() {
@@ -271,7 +286,7 @@ export default {
       let { data } = res.data;
       this.wests = data;
     },
-    async init(obj) {
+    async init() {
       this.formInline.page = this.page;
       this.formInline.page_size = this.page_size;
       let res = await getProduceList(this.formInline);
@@ -294,6 +309,7 @@ export default {
     },
     async handleUser_id(e) {
       this.formInline.user_id = e;
+      this.onSubmit();
     },
     handleSizeChange(val) {
       this.page_size = val;

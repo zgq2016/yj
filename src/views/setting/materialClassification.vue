@@ -16,13 +16,23 @@
       border
       :tree-props="{children: 'class_data' , hasChildren: 'hasChildren'}"
     >
-      <el-table-column prop="classname" label="分类名称" width="200"></el-table-column>
-      <el-table-column align="right" label="操作">
+      <el-table-column prop="classname" label="分类名称"></el-table-column>
+      <el-table-column label="操作" width="200px">
         <template slot-scope="scope">
-          <el-tooltip content="编辑" placement="top" class="el-icon-edit btn">
+          <el-tooltip
+            content="编辑"
+            placement="top"
+            class="el-icon-edit btn"
+            v-if="scope.row.is_origin!==1"
+          >
             <div @click="handleEdit(scope.$index, scope.row)"></div>
           </el-tooltip>
-          <el-tooltip content="删除" placement="top" class="el-icon-delete btn">
+          <el-tooltip
+            content="删除"
+            placement="top"
+            class="el-icon-delete btn"
+            v-if="scope.row.is_origin!==1"
+          >
             <div @click="handleDelete(scope.$index, scope.row)"></div>
           </el-tooltip>
         </template>
@@ -39,9 +49,6 @@
       :close-on-press-escape="false"
     >
       <el-form ref="form" :rules="rules" :model="form" label-width="80px">
-        <el-form-item label="分类名称" prop="classname">
-          <el-input v-model="form.classname" style="width:80%;"></el-input>
-        </el-form-item>
         <el-form-item label="上级分类" prop="class_id">
           <el-select v-model="form.class_id" placeholder="可选/可不选" style="width:80%;" clearable>
             <el-option
@@ -51,6 +58,12 @@
               :value="item.id"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="物料名称" prop="classname" v-if="form.class_id!==''">
+          <el-input v-model="form.classname" style="width:80%;"></el-input>
+        </el-form-item>
+        <el-form-item label="物料分类" prop="classname" v-if="form.class_id===''">
+          <el-input v-model="form.classname" style="width:80%;"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
