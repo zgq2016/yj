@@ -110,6 +110,7 @@
         <el-table-column property="year" align="center" label="年份"></el-table-column>
         <el-table-column property="season" align="center" label="季节"></el-table-column>
         <el-table-column property="username" align="center" label="设计师"></el-table-column>
+        <el-table-column property="pattern_user_name" align="center" label="纸样师"></el-table-column>
         <el-table-column property="pattern" align="center" label="状态"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
@@ -130,7 +131,10 @@
                 @click="pattern_agree(scope.$index, scope.row,0)"
                 v-if="scope.row.pattern_status==='3'"
               >不通过</div>
-              <div v-if="scope.row.pattern_user_id=='0'" @click="get_style_pattern">领取</div>
+              <div
+                v-if="scope.row.pattern_user_id=='0'"
+                @click="get_style_pattern(scope.$index, scope.row)"
+              >领取</div>
               <!-- 3 -->
               <div @click="handleEdit(scope.$index, scope.row)">查看</div>
             </div>

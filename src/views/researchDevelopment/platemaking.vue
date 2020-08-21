@@ -110,6 +110,7 @@
         <el-table-column property="year" align="center" label="年份"></el-table-column>
         <el-table-column property="season" align="center" label="季节"></el-table-column>
         <el-table-column property="username" align="center" label="设计师"></el-table-column>
+        <el-table-column property="sample_user_name" align="center" label="制版师"></el-table-column>
         <el-table-column property="sample" align="center" label="状态"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
@@ -133,7 +134,7 @@
               >不通过</div>
               <div
                 v-if="scope.row.sample_user_id=='0'"
-                @click="get_style_sample(scope.$index, scope.row,)"
+                @click="get_style_sample(scope.$index, scope.row)"
               >领取</div>
               <!-- 3 -->
               <div @click="handleEdit(scope.$index, scope.row)">查看</div>
@@ -210,6 +211,7 @@ export default {
     },
     async get_style_sample(index, row) {
       let res = await styleSampleEdit({ style_id: row.id });
+      console.log(res)
       this.init();
     },
     async sample_agree(index, row, e) {
