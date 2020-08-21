@@ -92,9 +92,10 @@
             <li @click.stop="rout2(item.id)" v-for="(item,index) in works_2" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
-                :src="item.style_pic_url"
+                :src="item.style_pic_url? item.style_pic_url:img"
                 fit="cover"
               ></el-image>
+
               <span>
                 <p>
                   <strong>{{item.style_type}}</strong>
@@ -117,7 +118,7 @@
             <li @click.stop="rout2(item.id)" v-for="(item,index) in works_3" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
-                :src="item.style_pic_url"
+                :src="item.style_pic_url? item.style_pic_url:img"
                 fit="cover"
               ></el-image>
               <span>
@@ -142,7 +143,7 @@
             <li @click.stop="rout2(item.id)" v-for="(item,index) in works_3_1" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
-                :src="item.style_pic_url"
+                :src="item.style_pic_url? item.style_pic_url:img"
                 fit="cover"
               ></el-image>
               <span>
@@ -167,7 +168,7 @@
             <li @click.stop="rout2(item.id)" v-for="(item,index) in works_3_2" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
-                :src="item.style_pic_url"
+                :src="item.style_pic_url? item.style_pic_url:img"
                 fit="cover"
               ></el-image>
               <span>
@@ -192,7 +193,7 @@
             <li @click.stop="rout2(item.id)" v-for="(item,index) in works_4" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
-                :src="item.style_pic_url"
+                :src="item.style_pic_url? item.style_pic_url:img"
                 fit="cover"
               ></el-image>
               <span>
@@ -217,7 +218,7 @@
             <li @click.stop="rout2(item.id)" v-for="(item,index) in works_5" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
-                :src="item.style_pic_url"
+                :src="item.style_pic_url? item.style_pic_url:img"
                 fit="cover"
               ></el-image>
               <span>
@@ -242,7 +243,7 @@
             <li @click.stop="rout2(item.id)" v-for="(item,index) in works_6" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
-                :src="item.style_pic_url"
+                :src="item.style_pic_url? item.style_pic_url:img"
                 fit="cover"
               ></el-image>
               <span>
@@ -267,7 +268,7 @@
             <li @click.stop="rout2(item.id)" v-for="(item,index) in works_7" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
-                :src="item.style_pic_url"
+                :src="item.style_pic_url? item.style_pic_url:img"
                 fit="cover"
               ></el-image>
               <span>
@@ -292,7 +293,7 @@
             <li @click.stop="rout2(item.id)" v-for="(item,index) in works_8" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
-                :src="item.style_pic_url"
+                :src="item.style_pic_url? item.style_pic_url:img"
                 fit="cover"
               ></el-image>
               <span>
@@ -359,6 +360,7 @@ import {
 } from "@/api/home.js";
 import { produceAdd, getProduceList } from "@/api/production";
 import { getDataList, getStyleAll } from "@/api/researchDevelopment";
+import imgs from "@/assets/022.jpg";
 import moment from "moment";
 export default {
   data() {
@@ -391,6 +393,7 @@ export default {
       works_8: [],
       vs: false,
       power: "",
+      img: "",
     };
   },
   methods: {
@@ -644,10 +647,10 @@ export default {
       // });
       // this.works_2 = res1.data.data;
 
-      // let res2 = await getStyleAll({
-      //   page: 1,
-      //   page_size: 10,
-      // });
+      let res2 = await getStyleAll({
+        page: 1,
+        page_size: 10,
+      });
       let res3 = await getProduceList({
         page: 1,
         page_size: 9,
@@ -680,7 +683,7 @@ export default {
         page: 1,
         page_size: 9,
       });
-      // this.works_2 = res2.data.data;
+      this.works_2 = res2.data.data;
 
       this.works_3 = res8.data.data;
       this.works_3_1 = res9.data.data;
@@ -717,6 +720,8 @@ export default {
     },
   },
   mounted() {
+    this.img = imgs;
+    console.log(this.img);
     this.power = localStorage.getItem("power");
     if (this.power.indexOf("Z1000") != -1) {
       this.init();

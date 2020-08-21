@@ -414,6 +414,7 @@ export default {
     this.init();
     let res = await getRoleSelect();
     this.userRoleList = res.data.data;
+
     this.level = localStorage.getItem("level");
   },
 };
