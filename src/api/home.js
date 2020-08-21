@@ -109,3 +109,31 @@ export const getProduceProcureList = data => {
     data: data
   });
 };
+// 版料采购
+export const getStylePurchase = data => {
+  return axios({
+    url: "?g=get_style_purchase",
+    method: "post",
+    data: data
+  });
+};
+// 纸样
+export const getStylePattern = data => {
+  return axios({
+    url: "?g=get_style_pattern",
+    method: "post",
+    data: data
+  });
+};
+// 制版
+export const getStyleSample = data => {
+  return axios({
+    url: "?g=get_style_sample",
+    method: "post",
+    data: data
+  });
+};
+ 
+ 
+ 
+

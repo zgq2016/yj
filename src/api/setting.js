@@ -373,5 +373,12 @@ export const setProcessPrice = (data) => {
     data: data,
   });
 };
+export const userStatusEdit = (data) => {
+  return axios({
+    url: "?g=user_status_edit ",
+    method: "post",
+    data: data,
+  });
+};
 
 

@@ -18,7 +18,7 @@
     >
       <el-table-column prop="size_name" label="分类名称" width="200"></el-table-column>
       <el-table-column prop="sort" label="排序" width="200"></el-table-column>
-      <el-table-column prop="sort" label="启用/禁用" width="200">
+      <el-table-column  label="启用/禁用" width="200">
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.status"
