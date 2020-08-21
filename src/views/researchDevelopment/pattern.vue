@@ -78,7 +78,13 @@
       </el-form-item>-->
     </el-form>
     <div class="table">
-      <el-table ref="singleTable" size='mini' :data="tableData" highlight-current-row style="width: 100%">
+      <el-table
+        ref="singleTable"
+        size="mini"
+        :data="tableData"
+        highlight-current-row
+        style="width: 100%"
+      >
         <el-table-column label="序号" align="center" type="index" width="50"></el-table-column>
         <el-table-column label="图片" align="center" width="140">
           <template slot-scope="scope" property="style_pic_url">
@@ -124,6 +130,7 @@
                 @click="pattern_agree(scope.$index, scope.row,0)"
                 v-if="scope.row.pattern_status==='3'"
               >不通过</div>
+              <div v-if="scope.row.pattern_user_id=='0'" @click="get_style_pattern">领取</div>
               <!-- 3 -->
               <div @click="handleEdit(scope.$index, scope.row)">查看</div>
             </div>
@@ -157,6 +164,7 @@ import {
   patternApply,
   cancelPatternApply,
   patternAgree,
+  stylePatternEdit,
 } from "@/api/researchDevelopment";
 export default {
   data() {
@@ -192,6 +200,11 @@ export default {
   methods: {
     async pattern_apply(index, row) {
       let res = await patternApply({ style_id: row.id });
+      console.log(res);
+      this.init();
+    },
+    async get_style_pattern(index, row) {
+      let res = await stylePatternEdit({ style_id: row.id });
       console.log(res);
       this.init();
     },

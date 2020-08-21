@@ -518,5 +518,17 @@ export const getStyleAll = (data) => {
     data: data,
   });
 };
-
-
+export const stylePatternEdit = (data) => {
+  return axios({
+    url: "?g=style_pattern_edit",
+    method: "post",
+    data: data,
+  });
+};
+export const styleSampleEdit = (data) => {
+  return axios({
+    url: "?g=style_sample_edit",
+    method: "post",
+    data: data,
+  });
+};

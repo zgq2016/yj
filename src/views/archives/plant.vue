@@ -26,7 +26,12 @@
         <div class="form">
           <el-form :inline="true" :model="form" class="demo-form-inline">
             <el-form-item>
-              <el-select v-model="form.mode_id" clearable placeholder="请选择指派方式">
+              <el-select
+                v-model="form.mode_id"
+                clearable
+                placeholder="请选择指派方式"
+                @change="get_mode_name"
+              >
                 <el-option
                   v-for="item in menuList"
                   :key="item.value"
@@ -256,6 +261,10 @@ export default {
     };
   },
   methods: {
+    get_mode_name() {
+      this.page = 1;
+      this.onSubmit();
+    },
     handleSizeChange(val) {
       // console.log(val)
       this.page_size = val;
@@ -380,6 +389,7 @@ export default {
     },
     onSubmit() {
       // console.log(this.form);
+      this.page = 1;
       this.init(this.form);
     },
     // 点击menu

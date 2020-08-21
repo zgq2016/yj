@@ -78,7 +78,13 @@
       </el-form-item>-->
     </el-form>
     <div class="table">
-      <el-table ref="singleTable" size='mini' :data="tableData" highlight-current-row style="width: 100%">
+      <el-table
+        ref="singleTable"
+        size="mini"
+        :data="tableData"
+        highlight-current-row
+        style="width: 100%"
+      >
         <el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
         <el-table-column label="图片" align="center" width="140">
           <template slot-scope="scope" property="style_pic_url">
@@ -125,6 +131,10 @@
                 @click="sample_agree(scope.$index, scope.row,0)"
                 v-if="scope.row.sample_status==='3'"
               >不通过</div>
+              <div
+                v-if="scope.row.sample_user_id=='0'"
+                @click="get_style_sample(scope.$index, scope.row,)"
+              >领取</div>
               <!-- 3 -->
               <div @click="handleEdit(scope.$index, scope.row)">查看</div>
             </div>
@@ -150,6 +160,7 @@
 import {
   getYearList,
   getSeasonList,
+  styleSampleEdit,
   // getProjectStyleList,
   getWestList,
   getStylistList,
@@ -195,6 +206,10 @@ export default {
     async sample_apply(index, row) {
       let res = await sampleApply({ style_id: row.id });
       console.log(res);
+      this.init();
+    },
+    async get_style_sample(index, row) {
+      let res = await styleSampleEdit({ style_id: row.id });
       this.init();
     },
     async sample_agree(index, row, e) {
