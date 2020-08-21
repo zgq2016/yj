@@ -58,7 +58,14 @@
       </el-form>
     </el-dialog>
     <!-- 修改公告 -->
-    <el-dialog title="修改公告" @close="closed" :close-on-click-modal='false' :visible.sync="dialogVisible1" width="40%" center>
+    <el-dialog
+      title="修改公告"
+      @close="closed"
+      :close-on-click-modal="false"
+      :visible.sync="dialogVisible1"
+      width="40%"
+      center
+    >
       <el-form
         :model="ruleForm"
         :rules="rules1"
@@ -142,7 +149,6 @@ export default {
     closed() {
       this.$refs["ruleForm"].resetFields();
       this.init();
-      
     },
     // 删除该公告
     delBulletin(row) {

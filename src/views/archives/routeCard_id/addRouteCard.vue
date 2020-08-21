@@ -155,7 +155,7 @@
         </el-form-item>
         <el-form-item label="到货时间" prop="arrival_time">
           <!-- <el-date-picker v-model="form.arrival_time" type="date" placeholder="选择日期"></el-date-picker> -->
-          <el-input v-model="form.arrival_time" placeholder="到货时间" style="width:200px"></el-input>天
+          <el-input v-model="form.arrival_time" placeholder="到货时间" style="width:200px"></el-input>
         </el-form-item>
         <el-form-item label="备注">
           <el-input type="textarea" v-model="form.remarks" placeholder="备注"></el-input>

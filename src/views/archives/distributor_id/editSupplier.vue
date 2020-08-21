@@ -347,7 +347,6 @@ export default {
     },
     //上传图片（点击上传按钮）
     finish(type) {
-      console.log(this.status);
       // let _this = this;
       let formData = new FormData();
       // 输出
@@ -462,7 +461,6 @@ export default {
       })
         .then(async () => {
           let res = await supplierDel({ id: this.obj.id });
-          console.log(res);
           this.$router.push({ path: "/distributor_list" });
           this.$message({
             type: "success",
@@ -482,9 +480,7 @@ export default {
         if (!valid) return;
         // 调用actions的登录方法
 
-        console.log(this.obj);
         let res = await supplierEdit(this.obj);
-        console.log(res);
         this.$router.go(-1);
 
         this.$router.push({ path: `/listDeital?id=${data.id}&TL=${data.TL}` });
@@ -523,9 +519,7 @@ export default {
       this.options = data;
     },
     handleAvatarSuccessCard(res, file) {
-      console.log(res);
       this.obj.cardpicurl = res.data.pic_file_url;
-      console.log(this.cardpicurl);
     },
     handleAvatarSuccessPanels(res, file) {
       this.obj.compicurl = res.data.pic_file_url;
@@ -540,7 +534,6 @@ export default {
       let res = await getMaterialsClassInfo({
         id: this.classDatasId || this.obj.mainclass_id,
       });
-      console.log(res);
       let { data } = res.data;
       this.class_datas = data;
       this.obj.materials_class_id = "";
@@ -558,7 +551,6 @@ export default {
     let { id } = this.$route.query;
     let res = await getSupplierInfo({ id });
     this.obj = res.data.data;
-    console.log(this.obj);
     this.getBankName();
     let res1 = await getMaterialsClass();
     this.classData = res1.data.data;

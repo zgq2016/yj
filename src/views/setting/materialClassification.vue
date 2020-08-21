@@ -167,12 +167,10 @@ export default {
     handleClose(form) {
       this.$refs["form"].resetFields();
       this.centerDialogVisible = false;
-      this.init();
     },
     handleClose1(obj) {
       this.$refs["obj"].resetFields();
       this.centerDialogVisible1 = false;
-      this.init();
     },
     handleEditList(obj) {
       this.$refs["obj"].validate(async (valid) => {

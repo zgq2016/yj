@@ -129,12 +129,10 @@ export default {
     handleClose() {
       this.form.material_name = "";
       this.centerDialogVisible = false;
-      this.init();
     },
     handleClose1() {
       this.form.material_name = "";
       this.centerDialogVisible1 = false;
-      this.init();
     },
     handleNewList() {
       this.$refs["form"].validate(async (valid) => {

@@ -121,12 +121,10 @@ export default {
     handleClose() {
       this.form.season_name = "";
       this.centerDialogVisible = false;
-      this.init();
     },
     handleClose1() {
       this.form.season_name = "";
       this.centerDialogVisible1 = false;
-      this.init();
     },
     async handleNewList() {
       this.$refs["form"].validate(async (valid) => {
