@@ -11,7 +11,7 @@
     <div class="form">
       <el-form :inline="true" :model="form" class="demo-form-inline">
         <el-form-item>
-          <el-input v-model="form.companyname" placeholder="公司名称关键字"></el-input>
+          <el-input v-model="form.keyword" placeholder="公司名称关键字"></el-input>
         </el-form-item>
         <el-form-item>
           <el-input v-model="form.contacts" placeholder="联系人"></el-input>

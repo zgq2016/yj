@@ -161,6 +161,7 @@
           <div class="updatetime">提交于 {{item.ctime}}</div>
         </div>
       </div>
+      <div class="message">{{message}}</div>
     </div>
     <!-- 分页 -->
     <el-pagination
@@ -212,6 +213,7 @@ export default {
       user_id: "",
       customer_id: "",
       stateId: "",
+      message: "",
       states: [
         {
           v: "未下单",
@@ -331,6 +333,7 @@ export default {
       this.formInline["page"] = this.pageIndex;
       this.formInline["page_size"] = this.pageSize;
       let res = await getDataList(this.formInline);
+      // if (res.data.error_code === 0) {
       console.log(res);
       let { data, count } = res.data;
       this.data = data;
@@ -344,6 +347,10 @@ export default {
         }
       }
       this.total = count;
+      // }
+      // if (res.data.error_code === 1) {
+
+      //  }
     },
   },
   mounted() {
@@ -354,6 +361,13 @@ export default {
     this.getCategory();
     this.getWest();
     this.power = localStorage.getItem("power");
+  },
+  watch: {
+    data() {
+      if (this.data.length == 0) {
+        this.message = "无数据";
+      }
+    },
   },
 };
 </script>
@@ -403,6 +417,17 @@ export default {
   .dataList {
     display: flex;
     flex-wrap: wrap;
+    .message {
+      font-size: 20px;
+      font-weight: 600;
+      width: 100%;
+      margin: 20px;
+      background-color: #f2f2f2;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
     .list {
       display: flex;
       width: 350px;

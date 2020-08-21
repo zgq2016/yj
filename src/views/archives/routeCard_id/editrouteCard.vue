@@ -155,7 +155,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="到货时间" prop="arrival_time">
-          <el-input v-model="obj.arrival_time" placeholder="到货时间" style="width:200px"></el-input>
+          <el-input v-model="obj.arrival_time" placeholder="到货时间" style="width:200px"></el-input>天
         </el-form-item>
         <el-form-item label="备注">
           <el-input type="textarea" v-model="obj.remarks" placeholder="备注"></el-input>

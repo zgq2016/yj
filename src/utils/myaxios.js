@@ -46,7 +46,7 @@ var toHideLoading = _.debounce(() => {
     loading.close();
   }
   loading = null;
-}, 100);
+}, 500);
 
 //添加请求拦截器
 myaxios.interceptors.request.use(
@@ -87,6 +87,7 @@ myaxios.interceptors.response.use(
         localStorage.setItem("time_co", new Date().getTime());
       }
     }
+    // console.log(response);
     //判断当前请求是否设置了不显示Loading（不显示自然无需隐藏）
     if (response.config.headers.showLoading !== false) {
       hideLoading();

@@ -226,6 +226,7 @@
                   :autoCropWidth="option.autoCropWidth"
                   :autoCropHeight="option.autoCropHeight"
                   :fixedBox="option.fixedBox"
+                  enlarge="100"
                   @realTime="realTime"
                   @imgLoad="imgLoad"
                 ></vueCropper>
@@ -676,9 +677,7 @@ export default {
         obj["color_code"] = this.form.color_code;
         let res = await projectStyleAdd(obj);
         console.log(res);
-        this.$router.push({
-          path: `/designNote?id=${res.data.data[0].id}&designRemark=${0}`,
-        });
+
       });
     },
     async handleClick() {

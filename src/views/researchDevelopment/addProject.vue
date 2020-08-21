@@ -168,6 +168,7 @@
                   :autoCropWidth="option.autoCropWidth"
                   :autoCropHeight="option.autoCropHeight"
                   :fixedBox="option.fixedBox"
+                  enlarge="100"
                   @realTime="realTime"
                   @imgLoad="imgLoad"
                 ></vueCropper>
@@ -511,10 +512,6 @@ export default {
       this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
-
-        // if (this.id == "a") this.form.projecttype = 0;
-        // if (this.id == "b") this.form.projecttype = 1;
-        // if (this.id == "c") this.form.projecttype = 2;
         let { id } = this.$route.query;
         delete this.form.west;
         delete this.form.stylist;
@@ -551,8 +548,14 @@ export default {
           obj["customer_id"] = "";
         }
         let res = await getAddProject(obj);
-        console.log(res);
-        this.$router.push({ name: "ItemDesign" });
+        if (res.data.error_code == 0) {
+          console.log(res);
+          this.$message.success(res.data.msg);
+          this.$router.push({ name: "ItemDesign" });
+        }
+        if (res.data.error_code == 1) {
+          this.$message.error(res.data.msg);
+        }
       });
     },
     handleCustomer_id(e) {

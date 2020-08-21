@@ -8,7 +8,7 @@
       </el-breadcrumb>
     </div>
     <div style="margin-bottom:10px">
-      <el-input placeholder="单据编号" v-model="companyname" clearable style="width:200px"></el-input>
+      <el-input placeholder="供应商名称" v-model="form.companyname" clearable style="width:200px"></el-input>
       <el-button
         icon="el-icon-search"
         size="mini"
@@ -19,21 +19,15 @@
     </div>
     <div class="form">
       <el-form :inline="true" class="demo-form-inline">
-        <el-form-item prop="class_id">
-          <el-select
-            v-model="form.class_id"
-            placeholder="选择物料"
+        <el-form-item>
+          <el-cascader
+            v-model="form.materials_class_id"
+            :options="classData"
+            :props="optionProps"
+            @change="handleChange"
+            :show-all-levels="false"
             clearable
-            @change="get_classData($event)"
-            style="width:100px"
-          >
-            <el-option
-              v-for="item in classData"
-              :key="item.id"
-              :label="item.classname"
-              :value="item"
-            ></el-option>
-          </el-select>
+          ></el-cascader>
         </el-form-item>
       </el-form>
       <div class="addStyle" @click="addSupplier" v-if="power.indexOf('E2000100')!=-1">新增</div>
@@ -100,36 +94,33 @@ export default {
       pageSize: 24,
       total: 0,
       classData: [],
-      form: {
-        class_id: "",
+      form: { materials_class_id: "", companyname: "" },
+      optionProps: {
+        value: "id",
+        label: "classname",
+        children: "class_data",
       },
     };
   },
   methods: {
-    get_classData() {},
+    handleChange(e) {
+      this.form["materials_class_id"] = e[1];
+      this.init();
+    },
     handleSearch() {
-      if (this.companyname === "") {
-        this.data.id = 0;
-        this.init();
-      } else {
-        this.data.id = this.data.id;
-        this.init();
-      }
+      this.init();
     },
     addSupplier() {
-      // console.log(this.data.id || 0);
       this.$router.push({ path: `/addSupplier?id=${this.data.id || 0}&TL=0` });
     },
     listDeital(item) {
       this.$router.push({ path: `/listDeital?id=${item.id}&TL=1` });
     },
     async init() {
-      let res = await getSupplierList({
-        materials_class_id: this.data.id || "",
-        page: this.pageIndex,
-        page_size: this.pageSize,
-        companyname: this.companyname,
-      });
+      this.form["page"] = this.pageIndex;
+      this.form["page_size"] = this.pageSize;
+      this.form["companyname"] = this.form.companyname;
+      let res = await getSupplierList(this.form);
       console.log(res);
       let { data, count } = res.data;
       this.total = count;
@@ -145,6 +136,7 @@ export default {
     },
     async getClassData() {
       let res = await getMaterialsClass();
+      console.log(res);
       let { data } = res.data;
       this.classData = data;
     },

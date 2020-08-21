@@ -374,9 +374,4 @@ export const setProcessPrice = (data) => {
   });
 };
 
-/* 
-接口set_process_price
-参数factory_mode_id  加工类型id
-goods_category_id  商品类型id
-price   价格
-*/
+

@@ -12,11 +12,7 @@
     <el-container>
       <div>
         <div style="margin-bottom:10px">
-          <el-input
-            v-model="form.companyname"
-            style="width:200px;margin-right:10px"
-            placeholder="工厂名称"
-          ></el-input>
+          <el-input v-model="form.keyword" style="width:200px;margin-right:10px" placeholder="工厂名称"></el-input>
           <el-input v-model="form.contacts" style="width:200px;margin-right:10px" placeholder="联系人"></el-input>
           <el-input v-model="form.phone" style="width:200px;margin-right:10px" placeholder="电话"></el-input>
           <el-button
@@ -537,8 +533,8 @@ export default {
     margin: 20px;
     float: right;
   }
-  .table{
-     .el-table {
+  .table {
+    .el-table {
       /deep/.cell {
         font-weight: 500 !important;
       }

@@ -35,7 +35,7 @@
                 <div>大货量单价：{{upData.wsale_price}}</div>
                 <div>幅宽：{{upData.unit}}</div>
                 <div>是否有货：{{upData.instock}}</div>
-                <div>到货时间：{{upData.arrival_time}}</div>
+                <div>到货时间：{{upData.arrival_time}}天</div>
                 <div class="bz">备注：{{upData.remarks}}</div>
               </div>
             </div>

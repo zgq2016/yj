@@ -3,11 +3,12 @@
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>档案库</el-breadcrumb-item>
-        <el-breadcrumb-item>供应商</el-breadcrumb-item>
+        <el-breadcrumb-item>物料工艺卡</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div style="margin-bottom:10px">
-      <el-input placeholder="单据编号" v-model="companyname" clearable style="width:200px"></el-input>
+      <el-input placeholder="工艺卡名称" v-model="form.materialsname" clearable style="width:200px"></el-input>
+
       <el-button
         icon="el-icon-search"
         size="mini"
@@ -19,7 +20,7 @@
     <div class="form">
       <el-form :inline="true" class="demo-form-inline">
         <el-form-item prop="class_id">
-          <el-select
+          <!-- <el-select
             v-model="form.class_id"
             placeholder="选择物料"
             clearable
@@ -32,7 +33,15 @@
               :label="item.classname"
               :value="item"
             ></el-option>
-          </el-select>
+          </el-select>-->
+          <el-cascader
+            v-model="form.materials_class_id"
+            :options="classData"
+            :props="optionProps"
+            @change="handleChange"
+            :show-all-levels="false"
+            clearable
+          ></el-cascader>
         </el-form-item>
       </el-form>
       <div class="addStyle" @click="addRouteCard" v-if="power.indexOf('E2000100')!=-1">新增</div>
@@ -58,7 +67,7 @@
             </div>
             <div>{{item.materialsname}}</div>
             <div>内部编号:{{item.materialsno}}</div>
-            <div v-if="item.supplier_data.length>0">{{item.supplier_data[0].supplier_companyname}}</div>
+            <div v-if="item.supplier_data.length>0">{{item.supplier_data[0].supplier_materialsname}}</div>
           </div>
         </div>
       </div>
@@ -89,26 +98,27 @@ export default {
   data() {
     return {
       power: "",
-      companyname: "", //搜索
+      materialsname: "", //搜索
       SupplierList: [], //列表数据
       pageIndex: 1,
       pageSize: 24,
       total: 0,
       classData: [],
-      form: {
-        class_id: "",
+      form: { materials_class_id: "", materialsname: "" },
+      optionProps: {
+        value: "id",
+        label: "classname",
+        children: "class_data",
       },
     };
   },
   methods: {
+    handleChange(e) {
+      this.form["materials_class_id"] = e[1];
+      this.init();
+    },
     handleSearch() {
-      if (this.companyname === "") {
-        this.data.id = 0;
-        this.init();
-      } else {
-        this.data.id = this.data.id;
-        this.init();
-      }
+      this.init();
     },
     routeCardDeital(item) {
       this.$router.push({ path: `/routeCardDeital?id=${item.id}&TL=1` });
@@ -117,17 +127,21 @@ export default {
       this.$router.push({ path: `/addRouteCard` });
     },
     async init() {
-      let res = await getMaterialsList({
-        materials_class_id: this.data.id || 0,
-        page: this.pageIndex,
-        page_size: this.pageSize,
-        companyname: this.companyname,
-      });
+      this.form["page"] = this.pageIndex;
+      this.form["page_size"] = this.pageSize;
+      this.form["materialsname"] = this.form.materialsname;
+      let res = await getMaterialsList(this.form);
       console.log(res);
       let { data, count } = res.data;
       this.total = count;
       this.SupplierList = data;
       console.log(this.SupplierList);
+    },
+    async getClassData() {
+      let res = await getMaterialsClass();
+      console.log(res);
+      let { data } = res.data;
+      this.classData = data;
     },
     handleSizeChange(val) {
       this.pageSize = val;
@@ -140,6 +154,7 @@ export default {
   },
   mounted() {
     this.init();
+    this.getClassData();
     this.power = localStorage.getItem("power");
   },
   watch: {
