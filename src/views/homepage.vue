@@ -36,7 +36,7 @@
           </el-col>
         </el-row>
       </div>
-      <div class="content_1">
+      <div class="content_1" v-if="power.indexOf('Z2000')!=-1">
         <div class="hed">
           <p>设计项目</p>
           <span @click.stop="$router.push({path: `/itemDesign`})">更多</span>
@@ -82,7 +82,7 @@
           </ul>
         </div>
       </div>
-      <div class="content_2">
+      <div class="content_2" v-if="power.indexOf('Z3000')!=-1">
         <div class="hed">
           <p>设计款式</p>
           <span @click.stop="$router.push({path: `/designStyle`})">更多</span>
@@ -108,7 +108,7 @@
           </ul>
         </div>
       </div>
-      <div class="content_3">
+      <div class="content_3" v-if="power.indexOf('Z4000')!=-1">
         <div class="hed">
           <p>版料采购</p>
           <span @click.stop="$router.push({path: `/materialPurchase`})">更多</span>
@@ -133,7 +133,7 @@
           </ul>
         </div>
       </div>
-      <div class="content_3">
+      <div class="content_3" v-if="power.indexOf('Z5000')!=-1">
         <div class="hed">
           <p>纸样</p>
           <span @click.stop="$router.push({path: `/pattern`})">更多</span>
@@ -158,7 +158,7 @@
           </ul>
         </div>
       </div>
-      <div class="content_3">
+      <div class="content_3" v-if="power.indexOf('Z6000')!=-1">
         <div class="hed">
           <p>制版</p>
           <span @click.stop="$router.push({path: `/platemaking`})">更多</span>
@@ -183,7 +183,7 @@
           </ul>
         </div>
       </div>
-      <div class="content_3">
+      <div class="content_3" v-if="power.indexOf('Z7000')!=-1">
         <div class="hed">
           <p>生产下单</p>
           <span @click.stop="$router.push({path: `/productionOrders`})">更多</span>
@@ -208,7 +208,7 @@
           </ul>
         </div>
       </div>
-      <div class="content_3">
+      <div class="content_3" v-if="power.indexOf('Z8000')!=-1">
         <div class="hed">
           <p>生产采购</p>
           <span @click.stop="$router.push({path: `/purchase`})">更多</span>
@@ -233,7 +233,7 @@
           </ul>
         </div>
       </div>
-      <div class="content_3">
+      <div class="content_3" v-if="power.indexOf('Z9000')!=-1">
         <div class="hed">
           <p>生产排单</p>
           <span @click.stop="$router.push({path: `/productionScheduling`})">更多</span>
@@ -258,7 +258,7 @@
           </ul>
         </div>
       </div>
-      <div class="content_3">
+      <div class="content_3" v-if="power.indexOf('Z10000')!=-1">
         <div class="hed">
           <p>裁剪</p>
           <span @click.stop="$router.push({path: `/tailor`})">更多</span>
@@ -283,7 +283,7 @@
           </ul>
         </div>
       </div>
-      <div class="content_3">
+      <div class="content_3" v-if="power.indexOf('Z11000')!=-1">
         <div class="hed">
           <p>生产出货</p>
           <span @click.stop="$router.push({path: `/shipment`})">更多</span>

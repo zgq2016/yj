@@ -133,11 +133,14 @@
                 v-if="scope.row.sample_status==='3'"
               >不通过</div>
               <div
-                v-if="scope.row.sample_user_id=='0'"
+                v-if="scope.row.sample_user_id==0"
                 @click="get_style_sample(scope.$index, scope.row)"
               >领取</div>
               <!-- 3 -->
-              <div @click="handleEdit(scope.$index, scope.row)">查看</div>
+              <div
+                @click="handleEdit(scope.$index, scope.row)"
+                v-if="scope.row.sample_user_id!=0"
+              >查看</div>
             </div>
           </template>
         </el-table-column>
@@ -211,7 +214,7 @@ export default {
     },
     async get_style_sample(index, row) {
       let res = await styleSampleEdit({ style_id: row.id });
-      console.log(res)
+      console.log(res);
       this.init();
     },
     async sample_agree(index, row, e) {

@@ -22,13 +22,13 @@
           <el-table-column prop="remarks" :show-overflow-tooltip="true" label="备注" width="160"></el-table-column>
           <el-table-column align="center" label="操作">
             <template slot-scope="scope">
-              <el-tooltip content="复制" placement="top">
+              <el-tooltip content="复制" placement="top" v-if="scope.row.id!==1">
                 <div class="el-icon-document-copy btn" @click="handlecopy(scope.$index, scope.row)"></div>
               </el-tooltip>
-              <el-tooltip content="编辑" placement="top">
+              <el-tooltip content="编辑" placement="top" v-if="scope.row.id!==1">
                 <div class="el-icon-edit btn" @click="handleEdit(scope.$index, scope.row)"></div>
               </el-tooltip>
-              <el-tooltip content="删除" placement="top">
+              <el-tooltip content="删除" placement="top" v-if="scope.row.id!==1">
                 <div class="el-icon-delete btn" @click="handleDelete(scope.$index, scope.row)"></div>
               </el-tooltip>
             </template>
