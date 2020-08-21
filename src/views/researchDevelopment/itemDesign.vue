@@ -161,7 +161,8 @@
           <div class="updatetime">提交于 {{item.ctime}}</div>
         </div>
       </div>
-      <div class="message">{{message}}</div>
+      <!-- 无数据 -->
+      <!-- <div class="message" v-if="message!==''">{{message}}</div> -->
     </div>
     <!-- 分页 -->
     <el-pagination
