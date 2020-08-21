@@ -68,15 +68,17 @@
         </el-form-item>
         <el-form-item>
           <div style="display: flex;justify-content: space-between;align-items: center;">
-            <el-dropdown trigger="click" @command="handleCommand" placement="bottom">
-              <span class="el-icon-more"></span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="a">账户互转</el-dropdown-item>
-                <el-dropdown-item command="b">期初调整</el-dropdown-item>
-                <el-dropdown-item command="c" v-print="'#printTest'">打印</el-dropdown-item>
-                <el-dropdown-item command="d">导出</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
+            <el-tooltip class="edit" content="更多" placement="top">
+              <el-dropdown trigger="click" @command="handleCommand" placement="bottom">
+                <span class="el-icon-more"></span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item command="a">账户互转</el-dropdown-item>
+                  <el-dropdown-item command="b">期初调整</el-dropdown-item>
+                  <el-dropdown-item command="c" v-print="'#printTest'">打印</el-dropdown-item>
+                  <el-dropdown-item command="d">导出</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </el-tooltip>
             <div
               class="addStyle"
               style="background-color: #e3e3e3;color: #fff;"
