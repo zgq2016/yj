@@ -592,7 +592,6 @@ export default {
       let { data } = res.data;
       this.materials = data;
       this.total = res.data.count;
-
     },
     async stock() {
       // 仓库
@@ -619,6 +618,8 @@ export default {
 <style lang="less" scoped>
 .material {
   .main {
+    overflow: hidden;
+
     .el-pagination {
       margin: 20px;
       text-align: right;
@@ -679,6 +680,11 @@ export default {
         cursor: pointer;
       }
     }
+    @media screen and (max-width: 1440px) {
+      .table {
+        width: 1440px;
+      }
+    }
     .table {
       .box {
         overflow: hidden;
@@ -686,12 +692,11 @@ export default {
           cursor: pointer;
           overflow: hidden;
           float: left;
-          width: 30%;
-          margin-left: 3%;
-          margin-top: 15px;
+          width: 370px;
+          margin-top: 20px;
           .left {
             float: left;
-            width: 80%;
+            width: 270px;
             overflow: hidden;
             border-radius: 12px;
             background: #f2f2f2;
@@ -716,6 +721,7 @@ export default {
           .right {
             border-radius: 12px;
             background: #f2f2f2;
+            width: 100px;
             height: 104px;
             line-height: 40px;
             float: left;

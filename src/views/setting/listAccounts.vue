@@ -79,12 +79,12 @@
     <el-dialog title="添加权限" :visible.sync="centerDialogVisible2" width="30%" center>
       <el-form ref="form1" :model="form1" :rules="rules1" label-width="100px">
         <el-form-item label="权限角色：" prop="role_name">
-          <el-select v-model="form1.role_name" placeholder="请选择">
+          <el-select v-model="form1.role_name" @change="role" placeholder="请选择">
             <el-option
               v-for="item in userRoleList"
-              :key="item.id"
+              :key="item.value"
               :label="item.role_name"
-              :value="item.role_name"
+              :value="item.id"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -285,8 +285,15 @@ export default {
       this.$refs[form].resetFields();
       this.centerDialogVisible2 = false;
     },
+    role(val) {
+      this.userRoleList.map((v, i) => {
+        if (val == v.id) {
+          this.form1.role_id = val;
+          this.form1.role_name = v.role_name;
+        }
+      });
+    },
     async handleEditUserList(form) {
-      console.log(this.form1);
       if (this.form1.Access === "管理") {
         this.form1.level = 1;
       }
@@ -296,8 +303,14 @@ export default {
       delete this.form1.Access;
       let res = await userEdit(this.form1);
       this.$refs[form].resetFields();
-      console.log(res);
       this.centerDialogVisible2 = false;
+      if (res.data.error_code) {
+        this.$message({
+          showClose: true,
+          message: res.data.msg,
+          type: "error",
+        });
+      }
       this.init();
     },
     setUser(row, column, cell, event) {
@@ -317,11 +330,13 @@ export default {
       //  localStorage.getItem("level")
       // localStorage.setItem("user_id");
       // if (localStorage.getItem("level") == 0) {
+      console.log(row);
       if (localStorage.getItem("level") < row.level) {
         this.form1.role_name = row.role_name;
         this.form1.Access = row.Access;
         this.form1.name = row.name;
         this.form1.id = row.id;
+        this.form1.role_id = row.role;
         this.centerDialogVisible2 = true;
       }
 
