@@ -54,7 +54,7 @@
           ></el-cascader>
         </el-form-item>
 
-        <el-form-item label="名称">
+        <el-form-item label="名称" prop="name">
           <el-input v-model="form.name" style="width:80%;"></el-input>
         </el-form-item>
 
@@ -91,7 +91,7 @@
       :close-on-press-escape="false"
     >
       <el-form ref="obj" :model="obj" :rules="rules" label-width="80px" resetFields>
-        <el-form-item label="名称" prop="name">
+        <el-form-item label="名称">
           <el-input v-model="obj.name" style="width:80%;"></el-input>
         </el-form-item>
 
@@ -166,14 +166,10 @@ export default {
         checkStrictly: true,
       },
       rules: {
-        goods_category_name: [
-          { required: true, message: "请输入分类名称", trigger: "blur" },
-        ],
+        name: [{ required: true, message: "请输入名称", trigger: "blur" }],
       },
       rules1: {
-        goods_category_name: [
-          { required: true, message: "请输入分类名称", trigger: "blur" },
-        ],
+        name: [{ required: true, message: "请输入名称", trigger: "blur" }],
       },
       tableData: [],
       centerDialogVisible: false, //添加分类
@@ -198,11 +194,14 @@ export default {
       console.log(val);
     },
     handleClose(form) {
-      this.$refs["form"].resetFields();
       this.centerDialogVisible = false;
       this.vh1 = false;
+      this.form = { auth: 1 };
+      // this.$refs[form].resetFields();
+      // console.log(this.$refs[form]);
     },
     handleClose1() {
+      this.$refs["obj"].resetFields();
       this.centerDialogVisible1 = false;
       this.vh1 = false;
     },
@@ -215,13 +214,11 @@ export default {
         if (this.obj.pid == "无") {
           this.obj.pid = 0;
         }
-        this.obj.pid = this.obj.pid.pop();
-        console.log(this.obj);
+        if (this.obj.pid.length>0) {
+          this.obj.pid = this.obj.pid.pop();
+        }
         let res = await menuEdit(this.obj);
         console.log(res);
-        this.$refs["obj"].resetFields();
-        this.obj.goods_category_id = 0;
-        this.region = "";
         this.centerDialogVisible1 = false;
         this.init();
       });
@@ -251,42 +248,22 @@ export default {
           });
         });
     },
-    // get_goods_category_id(e) {
-    //   console.log(e);
-    //   // this.form.goods_category_id = e;
-    //   this.obj.pid = e;
-    //   // this.vh1 = true;
-    // },
     async addClassify() {
-      // if (this.tableData.length === 0) {
-      //   this.region = "";
-      // }
       this.centerDialogVisible = true;
-      // if (this.tableData.length > 0) {
-      //   this.region = "";
-      //   let res = await goodsCategoryInfo();
-      //   console.log(res);
-      //   let { data } = res.data;
-      //   this.options = data;
-      //   this.centerDialogVisible = true;
-      // }
     },
     async handleNewList(form) {
       this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
-        // if (this.tableData.length === 0) {
-        //   let res = await goodsCategoryAdd(this.form);
-        //   console.log(res);
-        //   this.$refs["form"].resetFields();
-        //   this.centerDialogVisible = false;
-        //   this.init();
-        // }
-        this.form.pid = this.form.pid.pop();
+        if (this.form.pid.length>0) {
+          this.form.pid = this.form.pid.pop();
+        }
+
         if (this.form.pid == "" || this.form.pid == undefined) {
           this.form.pid = 0;
         }
         let res = await menuAdd(this.form);
-        this.$refs["form"].resetFields();
+        // this.$refs["form"].resetFields();
+        this.form = { auth: 1 };
         this.centerDialogVisible = false;
         this.init();
       });

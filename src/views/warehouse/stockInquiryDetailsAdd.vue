@@ -43,9 +43,9 @@
               clearable
               v-model="form.factory_name"
               @change="factorChange"
-              @visible-change="vschange"
               placeholder="请选择厂商"
             >
+              <!-- @visible-change="vschange" -->
               <el-option
                 v-for="item in factorys"
                 :key="item.id"

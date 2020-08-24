@@ -105,7 +105,9 @@ export default {
   methods: {
     handleChange(e) {
       this.pageIndex = 1;
-      this.form["materials_class_id"] = e[1];
+      if (e != undefined) {
+        this.form["materials_class_id"] = e.pop();
+      }
       this.init();
     },
     handleSearch() {

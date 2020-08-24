@@ -115,7 +115,9 @@ export default {
   methods: {
     handleChange(e) {
       this.pageIndex = 1;
-      this.form["materials_class_id"] = e[1];
+      if (e != undefined) {
+        this.form["materials_class_id"] = e.pop();
+      }
       this.init();
     },
     handleSearch() {
@@ -210,7 +212,7 @@ export default {
   }
   .main {
     padding: 20px 0;
-   
+
     .data_list {
       display: flex;
       flex-wrap: wrap;

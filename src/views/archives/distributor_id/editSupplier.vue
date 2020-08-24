@@ -66,6 +66,7 @@
               </el-select>
             </el-form-item>
           </div>
+          <span class="rot" @click="rot">新增分类</span>
         </div>
 
         <div v-for="(item,index) in obj.contact_data" :key="item.key" class="member_user_item">
@@ -326,6 +327,9 @@ export default {
     };
   },
   methods: {
+    rot() {
+      this.$router.push({ path: `/materialClassification` });
+    },
     cancel() {
       if (this.headImg === "") {
         this.option.img = "";
@@ -613,6 +617,16 @@ export default {
     }
   }
   .form {
+    .rot {
+      height: 40px;
+      line-height: 40px;
+      display: block;
+      margin-left: 20px;
+    }
+    .rot:hover {
+      cursor: pointer;
+      color: coral;
+    }
     .member_user_item {
       border-bottom: 1px #eee dashed;
       position: relative;
@@ -629,7 +643,7 @@ export default {
         color: #fff;
         cursor: pointer;
         border-radius: 50px;
-      margin: 10px 20px;
+        margin: 10px 20px;
       }
     }
     .member_account_item {
@@ -647,7 +661,7 @@ export default {
         color: #fff;
         cursor: pointer;
         border-radius: 50px;
-      margin: 10px 20px;
+        margin: 10px 20px;
       }
     }
   }

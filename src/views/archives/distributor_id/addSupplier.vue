@@ -25,7 +25,21 @@
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </div>
       </div>
+      <el-upload
+        class="upload-demo"
+        ref="upload"
+        action="https://yj.ppp-pay.top/webapi.php?g=test"
+        :auto-upload="true"
+        name="image"
+        :show-file-list='false'
+        :on-success='recognition'
+      >
+        <el-button slot="trigger" size="small" type="primary">图片内容识别</el-button>
+        <!-- <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button> -->
+        <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
+      </el-upload>
     </div>
+
     <!-- form -->
     <div class="form">
       <el-form :model="form" ref="form" :rules="rules" label-width="100px">
@@ -63,8 +77,8 @@
               ></el-option>
             </el-select>
           </el-form-item>
+          <span class="rot" @click="rot">新增分类</span>
         </div>
-
         <div v-for="(item,index) in form.contact" :key="item.key" class="member_user_item">
           <el-form-item
             :label="`联系人`"
@@ -124,6 +138,7 @@
         </el-form-item>
       </el-form>
     </div>
+
     <el-dialog
       title="上传图片"
       :visible.sync="centerDialogVisible"
@@ -232,6 +247,8 @@ import {
   supplierDel,
   getMaterialsClass,
   getMaterialsClassInfo,
+  discern,
+  basicAccurate,
 } from "@/api/archives";
 
 import { VueCropper } from "vue-cropper";
@@ -298,6 +315,7 @@ export default {
       class_datas: [],
       class_data_name: "",
       classDatasId: "",
+      imgs: "",
       // 表单规则
       rules: {
         companyname: [
@@ -335,6 +353,18 @@ export default {
     };
   },
   methods: {
+    // submitUpload() {
+    //   this.$refs.upload.submit();
+    // },
+    // handleRemove(file, fileList) {
+    //   console.log(file, fileList);
+    // },
+    // handlePreview(file) {
+    //   console.log(file);
+    // },
+    rot() {
+      this.$router.push({ path: `/materialClassification` });
+    },
     cancel() {
       if (this.headImg === "") {
         this.option.img = "";
@@ -354,9 +384,16 @@ export default {
     rotateRight() {
       this.$refs.cropper.rotateRight();
     },
+    // *******************识别内容********************
+    async recognition(response, file, fileList) {
+      console.log(response);
+     
+    },
     //上传图片（点击上传按钮）
     finish(type) {
-      console.log(this.status);
+      // console.log(this.status);
+      console.log(type);
+      // imgs
       // let _this = this;
       let formData = new FormData();
       // 输出
@@ -419,6 +456,7 @@ export default {
       var _this = this;
       //上传图片
       var file = e.target.files[0];
+      // console.log(e, num);
       _this.fileName = file.name;
       if (!/\.(gif|jpg|jpeg|png|bmp|GIF|JPG|PNG)$/.test(e.target.value)) {
         alert("图片类型必须是.gif,jpeg,jpg,png,bmp中的一种");
@@ -429,10 +467,13 @@ export default {
         let data;
         if (typeof e.target.result === "object") {
           // 把Array Buffer转化为blob 如果是base64不需要
+
           data = window.URL.createObjectURL(new Blob([e.target.result]));
         } else {
           data = e.target.result;
         }
+        // this.imgs = JSON.parse(JSON.stringify(data));
+
         if (num === 1) {
           _this.option.img = data;
         } else if (num === 2) {
@@ -552,7 +593,7 @@ export default {
     display: flex;
     .upload_card {
       display: flex;
-      width: 40%;
+      width: 20%;
       height: 200px;
       .upload_name {
         margin: 0 30px;
@@ -576,7 +617,7 @@ export default {
     }
     .upload_panels {
       display: flex;
-      width: 40%;
+      width: 20%;
       height: 200px;
       .upload_name {
         margin: 0 30px;
@@ -600,6 +641,16 @@ export default {
     }
   }
   .form {
+    .rot {
+      height: 40px;
+      line-height: 40px;
+      display: block;
+      margin-left: 20px;
+    }
+    .rot:hover {
+      cursor: pointer;
+      color: coral;
+    }
     .member_user_item {
       border-bottom: 1px #eee dashed;
       position: relative;

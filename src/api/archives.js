@@ -229,3 +229,19 @@ export const factoryModeDel = (data) => {
     data: data,
   });
 };
+// 文字识别普通
+export const discern = (data) => {
+  return axios({
+    url: "?g=test",
+    method: "post",
+    data: data,
+  });
+};
+// 工厂加工方式删除接口
+export const basicAccurate = (data) => {
+  return axios({
+    url: "?g=basicAccurate",
+    method: "post",
+    data: data,
+  });
+};

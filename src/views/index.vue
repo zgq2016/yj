@@ -199,7 +199,7 @@
               </div>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/menus">菜单</el-menu-item>
+              <!-- <el-menu-item index="/menus">菜单</el-menu-item> -->
               <el-menu-item index="/goodsCategory" v-if="power.indexOf('H1000')!=-1">商品分类</el-menu-item>
               <el-menu-item index="/materialClassification" v-if="power.indexOf('H10000')!=-1">物料分类</el-menu-item>
               <el-menu-item index="/plantManagement" v-if="power.indexOf('H11000')!=-1">加工分类与价格</el-menu-item>

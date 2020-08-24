@@ -120,14 +120,22 @@
             :prop="'color_data.'+index+'.color'"
             :rules="color_dataRules.color_data_color"
           >
-            <el-select v-model="item.color" placeholder="请选择" style="width:200px">
+            <el-cascader
+              v-model="item.color"
+              :options="colors"
+              :props="optionProps"
+              :show-all-levels="false"
+            ></el-cascader>
+              <!-- @change="handleChange" -->
+
+            <!-- <el-select v-model="item.color" placeholder="请选择" style="width:200px">
               <el-option
                 v-for="item in colors"
                 :key="item.id"
                 :label="item.color_name"
                 :value="item.color_name"
               ></el-option>
-            </el-select>
+            </el-select> -->
           </el-form-item>
           <el-form-item
             :prop="'color_data.'+index+'.color_no'"
@@ -155,7 +163,7 @@
         </el-form-item>
         <el-form-item label="到货时间" prop="arrival_time">
           <!-- <el-date-picker v-model="form.arrival_time" type="date" placeholder="选择日期"></el-date-picker> -->
-          <el-input v-model="form.arrival_time" placeholder="到货时间" style="width:200px"></el-input>
+          <el-input v-model="form.arrival_time" placeholder="到货时间" style="width:200px"></el-input> 天
         </el-form-item>
         <el-form-item label="备注">
           <el-input type="textarea" v-model="form.remarks" placeholder="备注"></el-input>
@@ -282,6 +290,11 @@ export default {
   data() {
     return {
       //剪切图片上传
+       optionProps: {
+        value: "id",
+        label: "color_name",
+        children: "children",
+      },
       crap: false,
       previews: {},
       option: {
@@ -315,7 +328,7 @@ export default {
             id: "",
           },
         ],
-        instock: "",
+        instock: "0",
         material_data: [
           {
             content: "",

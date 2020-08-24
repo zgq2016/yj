@@ -121,14 +121,12 @@
             :prop="'color_data.'+index+'.color'"
             :rules="color_dataRules.color_data_color"
           >
-            <el-select v-model="item.color" placeholder="请选择" style="width:200px">
-              <el-option
-                v-for="item in colors"
-                :key="item.id"
-                :label="item.color_name"
-                :value="item.color_name"
-              ></el-option>
-            </el-select>
+            <el-cascader
+              v-model="item.color"
+              :options="colors"
+              :props="optionProps"
+              :show-all-levels="false"
+            ></el-cascader>
           </el-form-item>
           <el-form-item
             :prop="'color_data.'+index+'.color_no'"
@@ -150,8 +148,8 @@
         </el-form-item>
         <el-form-item label="是否有货" prop="instock">
           <el-radio-group v-model="obj.instock">
-            <el-radio :label="'0'">是</el-radio>
-            <el-radio :label="'1'">否</el-radio>
+            <el-radio :label="0">是</el-radio>
+            <el-radio :label="1">否</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="到货时间" prop="arrival_time">
@@ -290,6 +288,11 @@ export default {
   },
   data() {
     return {
+      optionProps: {
+        value: "id",
+        label: "color_name",
+        children: "children",
+      },
       power: "",
       //剪切图片上传
       crap: false,

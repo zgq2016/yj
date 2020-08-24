@@ -18,6 +18,8 @@
     >
       <el-table-column prop="mode_name" label="加工类型"></el-table-column>
       <el-table-column prop="price" label="加工价格"></el-table-column>
+      <el-table-column prop="sort" label="排序"></el-table-column>
+      <el-table-column prop="remarks" label="备注"></el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-tooltip content="编辑" placement="top" class="el-icon-edit btn">
@@ -45,7 +47,19 @@
           prop="mode_name"
           :rules="[ { required: true, message: '请输入工厂名称', trigger: 'blur' },]"
         >
-          <el-input v-model="form.mode_name" style="width:80%"></el-input>
+          <el-input v-model="form.mode_name" placeholder="请输入工厂名称" style="width:80%"></el-input>
+        </el-form-item>
+        <el-form-item label="排序">
+          <el-input v-model="form.sort" placeholder="请输入内容" style="width:80%"></el-input>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input
+            v-model="form.remarks"
+            type="textarea"
+            :rows="3"
+            placeholder="请输入内容"
+            style="width:80%"
+          ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -67,9 +81,22 @@
         <el-form-item
           label="商品价格"
           prop="price"
+          placeholder="请输入商品价格"
           :rules="[ { required: true, message: '请输入加工价格', trigger: 'blur' },]"
         >
           <el-input v-model="form1.price" style="width:80%"></el-input>
+        </el-form-item>
+        <el-form-item label="排序">
+          <el-input v-model="form1.sort" placeholder="请输入排序" style="width:80%"></el-input>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input
+            v-model="form1.remarks"
+            type="textarea"
+            :rows="3"
+            placeholder="请输入内容"
+            style="width:80%"
+          ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -94,6 +121,18 @@
           :rules="[ { required: true, message: '请输入工厂名称', trigger: 'blur' },]"
         >
           <el-input v-model="form.mode_name" style="width:80%"></el-input>
+        </el-form-item>
+        <el-form-item label="排序">
+          <el-input v-model="form.sort" placeholder="请输入排序" style="width:80%"></el-input>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input
+            v-model="form.remarks"
+            type="textarea"
+            :rows="3"
+            placeholder="请输入内容"
+            style="width:80%"
+          ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
