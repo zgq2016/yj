@@ -168,7 +168,6 @@
                   :autoCropWidth="option.autoCropWidth"
                   :autoCropHeight="option.autoCropHeight"
                   :fixedBox="option.fixedBox"
-                  enlarge="100"
                   @realTime="realTime"
                   @imgLoad="imgLoad"
                 ></vueCropper>
@@ -220,8 +219,6 @@
             title="下载"
             @click="down('blob')"
           />
-
-          <!-- <el-button class="oper" value="↓" title="下载" @click="down('blob')" circle></el-button> -->
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -259,10 +256,8 @@ import {
   getStylistList,
   getAddProject,
 } from "@/api/researchDevelopment.js";
-
 import { VueCropper } from "vue-cropper";
 import { Api } from "@/js/api.js"; //接口url配置文件
-
 export default {
   components: {
     VueCropper,
@@ -424,6 +419,7 @@ export default {
           this.modelSrc = img;
           formData.append("file", data, this.fileName);
           Api(formData).then((response) => {
+            console.log(response);
             this.headImg = response.data.data.pic_file_url;
             this.imgFile = "";
             this.$message({
@@ -682,7 +678,6 @@ export default {
       }
       .info-item {
         margin-top: 15px;
-
         label {
           display: inline-block;
           width: 100px;
@@ -706,7 +701,6 @@ export default {
         }
       }
     }
-
     .cropper-content {
       display: flex;
       display: -webkit-flex;

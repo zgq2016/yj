@@ -11,6 +11,8 @@ import { store } from "./store/user";
 // 注意 我使用的imageConversion版本为2.1.1，需要使用下面的形式导入
 import * as imageConversion from "image-conversion";
 import echarts from "echarts";
+import VueCropper from "vue-cropper";
+
 Vue.prototype.$echarts = echarts;
 Vue.prototype.$elUploadBeforeUpload = function(file) {
   //图片大小超过4M,长度超过2000就压缩
@@ -58,7 +60,9 @@ router.beforeEach((to, from, next) => {
 Vue.config.productionTip = false;
 Vue.use(Print);
 Vue.use(ElementUI);
+Vue.use(VueCropper);
 new Vue({
+  VueCropper,
   router,
   store,
   render: (h) => h(App),

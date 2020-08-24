@@ -172,7 +172,6 @@
                   :autoCropWidth="option.autoCropWidth"
                   :autoCropHeight="option.autoCropHeight"
                   :fixedBox="option.fixedBox"
-                  enlarge="100"
                   @realTime="realTime"
                   @imgLoad="imgLoad"
                 ></vueCropper>

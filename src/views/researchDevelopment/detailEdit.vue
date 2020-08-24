@@ -183,7 +183,6 @@
                   :autoCropWidth="option.autoCropWidth"
                   :autoCropHeight="option.autoCropHeight"
                   :fixedBox="option.fixedBox"
-                  enlarge="100"
                   @realTime="realTime"
                   @imgLoad="imgLoad"
                 ></vueCropper>
@@ -667,7 +666,6 @@ export default {
   }
 
   .dialog {
-    width: 50vw;
     .upload {
       margin-bottom: 30px;
       width: 100px;
