@@ -381,4 +381,35 @@ export const userStatusEdit = (data) => {
   });
 };
 
+export const getMenuList = (data) => {
+  return axios({
+    url: "?g=get_menu_list ",
+    method: "post",
+    data: data,
+  });
+};
+// 编辑
+export const menuEdit = (data) => {
+  return axios({
+    url: "?g=menu_edit ",
+    method: "post",
+    data: data,
+  });
+};
+// 
+export const menuAdd = (data) => {
+  return axios({
+    url: "?g=menu_add ",
+    method: "post",
+    data: data,
+  });
+};
+export const menuDel = (data) => {
+  return axios({
+    url: "?g=menu_del ",
+    method: "post",
+    data: data,
+  });
+};
+
 

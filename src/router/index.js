@@ -37,6 +37,7 @@ import AddRouteCard from "@/views/archives/routeCard_id/addRouteCard.vue";
 import RouteCardDeital from "@/views/archives/routeCard_id/routeCardDeital.vue";
 import EditrouteCard from "@/views/archives/routeCard_id/editrouteCard.vue";
 import GoodsCategory from "@/views/setting/goodsCategory.vue";
+import Menus from "@/views/setting/menus.vue";
 import ColorManagement from "@/views/setting/colorManagement.vue";
 import MeasurementManagement from "@/views/setting/measurementManagement.vue";
 import MaterialManagement from "@/views/setting/materialManagement.vue";
@@ -178,6 +179,11 @@ const routes = [
         path: "/goodsCategory",
         name: "GoodsCategory",
         component: GoodsCategory,
+      },
+      {
+        path: "/menus",
+        name: "Menus",
+        component: Menus,
       },
       {
         path: "/colorManagement",

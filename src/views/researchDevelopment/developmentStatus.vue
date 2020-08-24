@@ -68,7 +68,8 @@
                 </div>
               </el-tooltip>
 
-              <div @click="get_view_log">查看日志</div>
+              <div class="jour" v-if="!log" @click="get_view_log">查看日志</div>
+              <div class="jour" v-else @click="get_view_log">隐藏日志</div>
             </div>
           </div>
         </div>
@@ -199,11 +200,13 @@ export default {
           background-color: transparent;
         }
         .tt {
-          position: absolute;
+          // position: absolute;
+          span {
+            font-size: 14px;
+          }
           span:first-of-type {
             display: block;
-            font-size: 10px;
-            color: #666666;
+            // color: #666666;
             em {
               margin-left: 3px;
               color: #999999;
@@ -211,9 +214,8 @@ export default {
           }
           span:last-of-type {
             display: block;
-            font-size: 10px;
             -webkit-transform: scale(0.8);
-            color: #999999;
+            // color: #999999;
             margin-left: -10px;
           }
         }
@@ -289,6 +291,19 @@ export default {
           align-items: center;
           cursor: pointer;
           margin-right: 15px;
+        }
+        .jour {
+          margin: 5px 0;
+          width: 80px;
+          height: 25px;
+          line-height: 25px;
+          background: #f2f2f2;
+          text-align: center;
+          border-radius: 8px;
+        }
+        .jour:hover {
+          cursor: pointer;
+          background: #dad1d1;
         }
         div {
           margin: 0 0 5px 0px;

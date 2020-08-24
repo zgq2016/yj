@@ -45,6 +45,9 @@
                 <div>加工费：</div>
                 <div>工艺费：</div>
                 <div>总成本：</div>
+                <br />
+                <div class="jour" v-if="!jour" @click="journal">查看日志</div>
+                <div class="jour" v-else @click="journal">隐藏日志</div>
               </div>
             </div>
           </div>
@@ -75,7 +78,7 @@
         </span>
       </el-dialog>
       <!-- 步骤条 -->
-      <div v-if="ob[active]">
+      <div v-if="ob[active]&&jour">
         <el-steps
           :space="120"
           :active="ob[active].logDatas.length-1"
@@ -88,7 +91,6 @@
           </el-step>
         </el-steps>
       </div>
-
       <el-tabs style="margin-bottom:150px;" v-model="activeNames" @click.stop="handleClick">
         <el-tab-pane label="下单信息" v-if="showhide1&&power.indexOf('B1000300')!=-1" name="1">
           <div class="orderInformation">
@@ -1127,7 +1129,9 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="function(){centerDialogVisible1 = false;this.$refs[form4].resetFields();}">取 消</el-button>
+        <el-button
+          @click="function(){centerDialogVisible1 = false;this.$refs[form4].resetFields();}"
+        >取 消</el-button>
         <el-button @click="addDesignColor">确 定</el-button>
       </span>
     </el-dialog>
@@ -1516,9 +1520,14 @@ export default {
       factorys: [],
       activeNames: "1",
       t_size1: [],
+      jour: false, //日志显示隐藏
     };
   },
   methods: {
+    // 日志显示隐藏
+    journal(rol) {
+      this.jour = !this.jour;
+    },
     //
     handleChange(val) {
       // console.log(val);
@@ -3761,6 +3770,19 @@ export default {
           div {
             margin: 5px;
             font-size: 14px;
+          }
+          .jour {
+            margin: 5px 0;
+            width: 80px;
+            height: 25px;
+            line-height: 25px;
+            background: #f2f2f2;
+            text-align: center;
+            border-radius: 8px;
+          }
+          .jour:hover {
+            cursor: pointer;
+            background: #dad1d1;
           }
         }
       }

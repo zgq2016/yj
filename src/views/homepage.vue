@@ -55,22 +55,22 @@
               </div>
               <div>
                 <div v-if="item.picurl==''">
-                  <img
+                  <el-image
                     style="width: 290px; height: 160px;border-radius: 10px;"
                     v-if="item.projecttype=='【意向订单】'"
-                    src="./../assets/意向.jpg"
+                    :src="img1"
                     alt
                   />
-                  <img
+                  <el-image
                     style="width: 290px; height: 160px;border-radius: 10px;"
                     v-if="item.projecttype=='【阶段工作】'"
-                    src="./../assets/阶段.jpg"
+                    :src="img2"
                     alt
                   />
-                  <img
+                  <el-image
                     style="width: 290px; height: 160px;border-radius: 10px;"
                     v-if="item.projecttype=='【企划系列】'"
-                    src="./../assets/系列.jpg"
+                    :src="img3"
                     alt
                   />
                 </div>
@@ -373,6 +373,9 @@ import {
 import { produceAdd, getProduceList } from "@/api/production";
 import { getDataList, getStyleAll } from "@/api/researchDevelopment";
 import imgs from "@/assets/022.jpg";
+import imgs1 from "@/assets/意向.jpg";
+import imgs2 from "@/assets/阶段.jpg";
+import imgs3 from "@/assets/系列.jpg";
 import moment from "moment";
 export default {
   data() {
@@ -406,6 +409,9 @@ export default {
       vs: false,
       power: "",
       img: "",
+      img1: "",
+      img2: "",
+      img3: "",
     };
   },
   methods: {
@@ -714,7 +720,7 @@ export default {
     },
     rout2(id) {
       document.body.style = null;
-      this.$router.push({ path: `/development?id=${id}` });
+      this.$router.push({ path: `/developmentStatus?id=${id}` });
     },
     //根据某年某月计算出具体日期
     getDaysInMonth(year, month) {
@@ -733,6 +739,9 @@ export default {
   },
   mounted() {
     this.img = imgs;
+    this.img1 = imgs1;
+    this.img2 = imgs2;
+    this.img3 = imgs3;
     console.log(this.img);
     this.power = localStorage.getItem("power");
     if (this.power.indexOf("Z1000") != -1) {
@@ -875,7 +884,7 @@ export default {
       }
       .content_2 {
         width: 1400px;
-        height: 355px;
+        height: 375px;
         overflow: hidden;
 
         .hed {
@@ -884,7 +893,7 @@ export default {
       }
       .content_3 {
         width: 1400px;
-        height: 355px;
+        height: 375px;
         overflow: hidden;
 
         .hed {
@@ -909,7 +918,7 @@ export default {
         p {
           float: left;
           font-weight: 600;
-          margin: 10px 0;
+          margin: 20px 0;
           color: #000000;
           font-size: 16px;
         }
@@ -932,7 +941,9 @@ export default {
       ul {
         li:hover {
           cursor: pointer;
-          animation: animations 0.1s linear forwards;
+          .el-image {
+            animation: animations 0.1s linear forwards;
+          }
         }
         li {
           float: left;
@@ -961,7 +972,7 @@ export default {
       }
     }
     .content_2 {
-      height: 355px;
+      height: 375px;
       overflow: hidden;
       .tet {
         h4 {
@@ -976,7 +987,7 @@ export default {
         p {
           float: left;
           font-weight: 600;
-          margin: 10px 0;
+          margin: 20px 0;
           color: #000000;
           font-size: 16px;
         }
@@ -1004,12 +1015,14 @@ export default {
         }
         li:hover {
           cursor: pointer;
-          animation: animations 0.1s linear forwards;
+          .el-image {
+            animation: animations 0.1s linear forwards;
+          }
         }
       }
     }
     .content_3 {
-      height: 355px;
+      height: 375px;
       overflow: hidden;
       .tet {
         h4 {
@@ -1024,7 +1037,7 @@ export default {
         p {
           float: left;
           font-weight: 600;
-          margin: 10px 0;
+          margin: 20px 0;
           color: #000000;
           font-size: 16px;
         }
@@ -1052,7 +1065,9 @@ export default {
         }
         li:hover {
           cursor: pointer;
-          animation: animations 0.1s linear forwards;
+          .el-image {
+            animation: animations 0.1s linear forwards;
+          }
         }
       }
     }
