@@ -1,5 +1,5 @@
 <template>
-  <div class="goodsCategory" v-if="power.indexOf('H3000400')!=-1">
+  <div class="goodsCategory" v-if="permission.indexOf('measurementManagement')!=-1">
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -8,7 +8,7 @@
       </el-breadcrumb>
     </div>
     <!-- 添加尺码 -->
-    <div class="addClassify" @click="addClassify" v-if="power.indexOf('H3000100')!=-1">添加尺码</div>
+    <div class="addClassify" @click="addClassify" v-if="permission.indexOf('size_add')!=-1">添加尺码</div>
     <el-table
       :data="tableData"
       style="width: 100%;margin: 20px 0;"
@@ -18,7 +18,7 @@
     >
       <el-table-column prop="size_name" label="分类名称" width="200"></el-table-column>
       <el-table-column prop="sort" label="排序" width="200"></el-table-column>
-      <el-table-column  label="启用/禁用" width="200">
+      <el-table-column  label="启用/禁用" v-if="permission.indexOf('size_status_edit')!=-1" width="200">
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.status"
@@ -31,14 +31,13 @@
       <el-table-column
         align="right"
         label="操作"
-        v-if="power.indexOf('H3000300')!=-1||power.indexOf('H3000200')!=-1"
       >
         <template slot-scope="scope">
           <el-tooltip
             content="编辑"
             placement="top"
             class="el-icon-edit btn"
-            v-if="power.indexOf('H3000300')!=-1"
+            v-if="permission.indexOf('size_edit')!=-1"
           >
             <div @click="handleEdit(scope.$index, scope.row)"></div>
           </el-tooltip>
@@ -46,7 +45,7 @@
             content="删除"
             placement="top"
             class="el-icon-delete btn"
-            v-if="power.indexOf('H3000200')!=-1"
+            v-if="permission.indexOf('size_del')!=-1"
           >
             <div @click="handleDelete(scope.$index, scope.row)"></div>
           </el-tooltip>
@@ -148,6 +147,7 @@ export default {
   data() {
     return {
       switch_active: "",
+      permission:[],
       power: "",
       rules: {
         size_name: [
@@ -298,7 +298,8 @@ export default {
   },
   mounted() {
     this.init();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+     this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

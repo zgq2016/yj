@@ -1,5 +1,5 @@
 <template>
-  <div class="homepage" v-if="power.indexOf('Z1000')!=-1">
+  <div class="homepage" v-if="permission.indexOf('homepage')!=-1">
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>首页</el-breadcrumb-item>
@@ -8,13 +8,13 @@
     <div class="main">
       <div class="header">
         <el-row :gutter="20">
-          <el-col :span="8">
+          <el-col :span="8" v-if="permission.indexOf('mouth_work_status')!=-1">
             <div class="grid-content bg-purples">
               <span class="fonts">【当月工作状况】</span>
               <div id="myChart"></div>
             </div>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="8" v-if="permission.indexOf('notice_index_list')!=-1">
             <div class="grid-content bg-purple">
               <span class="fonts" @click.stop="$router.push({path: `/announcements`})">【公司公告】</span>
               <ul v-if="nav_list.length>0">
@@ -25,7 +25,7 @@
               <h4 v-else>暂无公告信息</h4>
             </div>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="8" v-if="permission.indexOf('warn_list')!=-1">
             <div class="grid-content bg-purple">
               <span class="fonts">【提醒信息】</span>
               <ul v-if="list2.length>0">
@@ -38,7 +38,7 @@
           </el-col>
         </el-row>
       </div>
-      <div class="content_1" v-if="power.indexOf('Z2000')!=-1">
+      <div class="content_1" v-if="permission.indexOf('Z2000')!=-1">
         <div class="hed">
           <p>设计项目</p>
           <span @click.stop="$router.push({path: `/itemDesign`})">更多</span>
@@ -85,7 +85,7 @@
           <h4 v-else>暂无项目信息</h4>
         </div>
       </div>
-      <div class="content_2" v-if="power.indexOf('Z3000')!=-1">
+      <div class="content_2" v-if="permission.indexOf('Z3000')!=-1">
         <div class="hed">
           <p>设计款式</p>
           <span @click.stop="$router.push({path: `/designStyle`})">更多</span>
@@ -112,7 +112,7 @@
           <h4 v-else>暂无款式信息</h4>
         </div>
       </div>
-      <div class="content_3" v-if="power.indexOf('Z4000')!=-1">
+      <div class="content_3" v-if="permission.indexOf('Z4000')!=-1">
         <div class="hed">
           <p>版料采购</p>
           <span @click.stop="$router.push({path: `/materialPurchase`})">更多</span>
@@ -138,7 +138,7 @@
           <h4 v-else>暂无版料采购信息</h4>
         </div>
       </div>
-      <div class="content_3" v-if="power.indexOf('Z5000')!=-1">
+      <div class="content_3" v-if="permission.indexOf('Z5000')!=-1">
         <div class="hed">
           <p>纸样</p>
           <span @click.stop="$router.push({path: `/pattern`})">更多</span>
@@ -164,7 +164,7 @@
           <h4 v-else>暂无纸样信息</h4>
         </div>
       </div>
-      <div class="content_3" v-if="power.indexOf('Z6000')!=-1">
+      <div class="content_3" v-if="permission.indexOf('Z6000')!=-1">
         <div class="hed">
           <p>制版</p>
           <span @click.stop="$router.push({path: `/platemaking`})">更多</span>
@@ -190,7 +190,7 @@
           <h4 v-else>暂无制版信息</h4>
         </div>
       </div>
-      <div class="content_3" v-if="power.indexOf('Z7000')!=-1">
+      <div class="content_3" v-if="permission.indexOf('Z7000')!=-1">
         <div class="hed">
           <p>生产下单</p>
           <span @click.stop="$router.push({path: `/productionOrders`})">更多</span>
@@ -216,7 +216,7 @@
           <h4 v-else>暂无生产下单信息</h4>
         </div>
       </div>
-      <div class="content_3" v-if="power.indexOf('Z8000')!=-1">
+      <div class="content_3" v-if="permission.indexOf('Z8000')!=-1">
         <div class="hed">
           <p>生产采购</p>
           <span @click.stop="$router.push({path: `/purchase`})">更多</span>
@@ -242,7 +242,7 @@
           <h4 v-else>暂无生产采购信息</h4>
         </div>
       </div>
-      <div class="content_3" v-if="power.indexOf('Z9000')!=-1">
+      <div class="content_3" v-if="permission.indexOf('Z9000')!=-1">
         <div class="hed">
           <p>生产排单</p>
           <span @click.stop="$router.push({path: `/productionScheduling`})">更多</span>
@@ -268,7 +268,7 @@
           <h4 v-else>暂无生产排单信息</h4>
         </div>
       </div>
-      <div class="content_3" v-if="power.indexOf('Z10000')!=-1">
+      <div class="content_3" v-if="permission.indexOf('Z10000')!=-1">
         <div class="hed">
           <p>裁剪</p>
           <span @click.stop="$router.push({path: `/tailor`})">更多</span>
@@ -294,7 +294,7 @@
           <h4 v-else>暂无裁剪信息</h4>
         </div>
       </div>
-      <div class="content_3" v-if="power.indexOf('Z11000')!=-1">
+      <div class="content_3" v-if="permission.indexOf('Z11000')!=-1">
         <div class="hed">
           <p>生产出货</p>
           <span @click.stop="$router.push({path: `/shipment`})">更多</span>
@@ -412,6 +412,7 @@ export default {
       img1: "",
       img2: "",
       img3: "",
+      permission: [],
     };
   },
   methods: {
@@ -619,10 +620,7 @@ export default {
       this.drawLine();
     },
     async init() {
-      // 快捷方式list
-      let res = await shortcutKeyUserList();
-      let { data } = res.data;
-      this.feature = data;
+    
       // 公司公告
       let res1 = await noticeIndexList({
         page_size: 10,
@@ -744,11 +742,11 @@ export default {
     this.img3 = imgs3;
     console.log(this.img);
     this.power = localStorage.getItem("power");
-    if (this.power.indexOf("Z1000") != -1) {
-      this.init();
-      this.mouthWork();
-      this.work();
-    }
+    this.permission = localStorage.getItem("permission").split(",");
+    // console.log(this.permission);
+    this.init();
+    this.mouthWork();
+    this.work();
   },
   // updated() {
   //   this.drawLine();

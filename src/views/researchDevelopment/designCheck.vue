@@ -38,7 +38,7 @@
           <el-tooltip
             class="edit"
             style="margin-right: 12px;background-color: #f2f2f2;"
-            v-if="power.indexOf('A1000300')!=-1||power.indexOf('A1000400')!=-1"
+            v-if="permission.indexOf('project_edit')!=-1 || permission.indexOf('project_del')!=-1"
             content="编辑"
             placement="top"
           >
@@ -85,9 +85,9 @@
               style="background-color: #f2f2f2;color: #5e5e5e;"
               class="addStyle"
               @click="addTheStyle"
-              v-if="power.indexOf('A2000200')!=-1"
+              v-if="permission.indexOf('get_project_style_list')!=-1"
             >添加款式</span>
-            <span class="addStyle" @click="newTheStyle" v-if="power.indexOf('A2000200')!=-1">新增款式</span>
+            <span class="addStyle" @click="newTheStyle" v-if="permission.indexOf('project_style_add')!=-1">新增款式</span>
           </div>
         </div>
       </div>
@@ -95,7 +95,7 @@
     <!-- add -->
 
     <!-- table -->
-    <div class="table" v-if="power.indexOf('A2000100')!=-1">
+    <div class="table" v-if="permission.indexOf('get_project')!=-1">
       <div v-if="switchover_active===false">
         <el-table :data="tableData" size='mini'>
           <el-table-column align="center" type="index"></el-table-column>
@@ -125,7 +125,7 @@
             <!-- 插槽：匿名插槽，具名插槽，数据插槽 -->
             <template v-slot="scope">
               <div class="btn">
-                <div @click="handleEdit(scope.row)">查看</div>
+                <div @click="handleEdit(scope.row)" v-if="permission.indexOf('get_style')!=-1">查看</div>
                 <!-- <el-button
                 size="mini"
                 v-if="scope.row.design_status==='3'||scope.row.design_status==='4'&&scope.row.user_id==userid"
@@ -138,11 +138,11 @@
                 >撤回审核</el-button>-->
                 <div
                   @click="design_agree(scope.$index, scope.row,1)"
-                  v-if="scope.row.design_status==='2'"
+                  v-if="scope.row.design_status==='2'&&permission.indexOf('design_agree')!=-1"
                 >通过</div>
                 <div
                   @click="design_agree(scope.$index, scope.row,0)"
-                  v-if="scope.row.design_status==='2'"
+                  v-if="scope.row.design_status==='2'&&permission.indexOf('design_agree')!=-1"
                 >不通过</div>
               </div>
             </template>
@@ -233,7 +233,7 @@ export default {
       pageSize: 9,
       total: 0,
       styleList: [],
-
+      permission:[],
       power: "",
       switchover_active: false,
     };
@@ -332,7 +332,8 @@ export default {
   },
   async mounted() {
     this.init();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
   computed: {
     userid() {

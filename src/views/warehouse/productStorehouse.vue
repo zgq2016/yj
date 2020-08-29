@@ -1,5 +1,5 @@
 <template>
-  <div class="productStorehouse" v-if="power.indexOf('C1000100')!=-1">
+  <div class="productStorehouse" v-if="permission.indexOf('productStorehouse')!=-1">
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -104,8 +104,8 @@
       </div>
     </div>
     <div class="btn">
-      <el-button size="mini" v-if="power.indexOf('C1000200')!=-1">导出</el-button>
-      <el-button v-print="'#printTest'" size="mini" v-if="power.indexOf('C1000300')!=-1">打印</el-button>
+      <el-button size="mini" >导出</el-button>
+      <el-button v-print="'#printTest'" size="mini">打印</el-button>
     </div>
     <!-- 分页 -->
     <el-pagination
@@ -153,6 +153,7 @@ export default {
       colors: [],
       ware: [],
       cate: [],
+      permission:[]
     };
   },
   methods: {
@@ -234,7 +235,8 @@ export default {
   mounted() {
     this.init();
     this.store();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

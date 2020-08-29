@@ -54,7 +54,7 @@
       <router-link
         :to="`/editSupplier?id=${obj.id}&TL=2`"
         :data="obj"
-        v-if="power.indexOf('E1000200')!=-1||power.indexOf('E1000300')!=-1"
+        v-if="permission.indexOf('editSupplier')!=-1"
       >
         <span class="el-icon-edit" style="font-size: 30px;cursor: pointer;"></span>
       </router-link>
@@ -78,6 +78,7 @@ export default {
       obj: {},
       dialogVisible: false,
       dialogVisible1: false,
+      permission:[]
     };
   },
   methods: {
@@ -101,7 +102,8 @@ export default {
     if (this.obj.isbill === "1") {
       this.obj.isbill = "不开";
     }
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
     console.log(this.power);
   },
 };

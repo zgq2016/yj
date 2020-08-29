@@ -1,5 +1,5 @@
 <template>
-  <div class="platemaking" v-if="power.indexOf('A8000300')!=-1">
+  <div class="platemaking" v-if="permission.indexOf('designStyle')!=-1">
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -73,7 +73,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <div class="addStyle" @click="addStyle">
+          <div class="addStyle" v-if="permission.indexOf('project_style_add')!=-1" @click="addStyle">
             <div>新增款式</div>
           </div>
         </el-form-item>
@@ -112,9 +112,9 @@
         <el-table-column property="year" align="center" label="年份"></el-table-column>
         <el-table-column property="season" align="center" label="季节"></el-table-column>
         <el-table-column property="username" align="center" label="设计师"></el-table-column>
-        <el-table-column property="sample" align="center" label="状态"></el-table-column>
+        <el-table-column property="design" align="center" label="状态"></el-table-column>
         <el-table-column label="操作" align="center">
-          <template slot-scope="scope">
+          <template v-if="permission.indexOf('get_style')!=-1"  slot-scope="scope">
             <div class="btn">
               <!-- <div
                 v-if="scope.row.sample_status==='2'||scope.row.sample_status==='4'&&scope.row.user_id==userid"
@@ -196,6 +196,7 @@ export default {
         { name: "制版中", id: 2 },
         { name: "完成上传", id: 3 },
       ],
+      permission:[]
     };
   },
   methods: {
@@ -283,26 +284,23 @@ export default {
       this.tableData = data;
       // console.log(this.tableData);
       this.tableData.map((v, i) => {
-        if (v.sample_status == "0") {
-          v.sample = "等待纸样";
+       if (v.design_status == "0") {
+          v.design = "等待设计";
         }
-        if (v.sample_status == "1") {
-          v.sample = "等待制版";
+        if (v.design_status == "1") {
+          v.design = "设计已上传";
         }
-        if (v.sample_status == "2") {
-          v.sample = "制版已上传";
+        if (v.design_status == "2") {
+          v.design = "设计审核中";
         }
-        if (v.sample_status == "3") {
-          v.sample = "样衣审核中";
+        if (v.design_status == "3") {
+          v.design = "撤回审核";
         }
-        if (v.sample_status == "4") {
-          v.sample = "取消审核";
+        if (v.design_status == "4") {
+          v.design = "设计不通过";
         }
-        if (v.sample_status == "5") {
-          v.sample = "审阅不通过";
-        }
-        if (v.sample_status == "6") {
-          v.sample = "制版完成";
+        if (v.design_status == "5") {
+          v.design = "设计通过";
         }
       });
     },
@@ -322,7 +320,8 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
   computed: {
     userid() {

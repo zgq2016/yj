@@ -346,9 +346,17 @@ export default {
             storehouse_id: this.form.storehouse_id,
           });
           console.log(res);
-          this.$router.push({
-            path: `/ProductionStyle?id=${e.style_id}&activeNames=2`,
-          });
+          if (res.data.error_code) {
+            this.$message({
+              showClose: true,
+              message: res.data.msg,
+              type: "error",
+            });
+          } else {
+            this.$router.push({
+              path: `/ProductionStyle?id=${e.style_id}&activeNames=2`,
+            });
+          }
         }
         if (this.$route.query.tabName === "版料采购") {
           this.form.finishTime = moment(this.form.finishTime).format(
@@ -369,9 +377,17 @@ export default {
             storehouse_id: this.form.storehouse_id,
           });
           console.log(res);
-          this.$router.push({
-            path: `/materialPurchasing?id=${this.$route.query.style_id}`,
-          });
+          if (res.data.error_code) {
+            this.$message({
+              showClose: true,
+              message: res.data.msg,
+              type: "error",
+            });
+          } else {
+            this.$router.push({
+              path: `/materialPurchasing?id=${this.$route.query.style_id}`,
+            });
+          }
         }
       });
     },

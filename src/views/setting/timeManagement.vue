@@ -1,5 +1,5 @@
 <template>
-  <div class="colorManagement" v-if="power.indexOf('H5000400')!=-1">
+  <div class="colorManagement" v-if="permission.indexOf('timeManagement')!=-1">
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -8,20 +8,19 @@
       </el-breadcrumb>
     </div>
     <!-- 添加季节 -->
-    <div class="addClassify" v-if="power.indexOf('H5000100')!=-1" @click="addClassify">添加季节</div>
+    <div class="addClassify" v-if="permission.indexOf('season_add')!=-1" @click="addClassify">添加季节</div>
     <el-table :data="tableData" style="width: 100%;margin: 20px 0;">
       <el-table-column prop="season_name" label="季节名称" width="200"></el-table-column>
       <el-table-column
         align="right"
         label="操作"
-        v-if="power.indexOf('H5000200')!=-1||power.indexOf('H5000300')!=-1"
       >
         <template slot-scope="scope">
           <el-tooltip
             content="编辑"
             placement="top"
             class="el-icon-edit btn"
-            v-if="power.indexOf('H5000300')!=-1"
+            v-if="permission.indexOf('season_edit')!=-1"
           >
             <div @click="handleEdit(scope.$index, scope.row)"></div>
           </el-tooltip>
@@ -29,7 +28,7 @@
             content="删除"
             placement="top"
             class="el-icon-delete btn"
-            v-if="power.indexOf('H5000200')!=-1"
+            v-if="permission.indexOf('season_del')!=-1"
           >
             <div @click="handleDelete(scope.$index, scope.row)"></div>
           </el-tooltip>
@@ -115,6 +114,7 @@ export default {
       pageIndex: 1,
       pageSize: 10,
       total: 0,
+      permission:[]
     };
   },
   methods: {
@@ -202,7 +202,8 @@ export default {
   },
   mounted() {
     this.init();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+     this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

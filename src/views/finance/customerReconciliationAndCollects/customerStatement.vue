@@ -1,5 +1,5 @@
 <template>
-  <div class="supplierReconciliationAndPayment">
+  <div class="supplierReconciliationAndPayment" >
     <div style="margin-bottom:10px">
       <el-input placeholder="单据编号" v-model="formInline.account_no" clearable style="width:200px"></el-input>
       <el-button icon="el-icon-search" size="mini" circle class="search_button" @click="onSubmit"></el-button>
@@ -72,9 +72,10 @@
         </el-form-item>
         <el-form-item>
           <div style="display: flex;justify-content: space-between;align-items: center;">
-            <div class="addStyle" @click="handlePayment">收款</div>
+            <div class="addStyle" v-if="permission.indexOf('customer_account_add')!=-1" @click="handlePayment">收款</div>
             <div
               class="addStyle"
+               v-if="permission.indexOf('customer_account_add')!=-1"
               style="background-color: #e3e3e3;color: #fff;"
               @click="beginninGbalanceAdjustment"
             >期初调整</div>
@@ -166,11 +167,11 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="操作人" prop="user_id">
+        <!-- <el-form-item label="操作人" prop="user_id">
           <el-select v-model="form.user_id" style="width:70%;">
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="结算账户" prop="balance_account_id">
           <el-select v-model="form.balance_account_id" style="width:70%;">
             <el-option
@@ -237,11 +238,11 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="操作人" prop="user_id">
+        <!-- <el-form-item label="操作人" prop="user_id">
           <el-select v-model="form1.user_id" style="width:70%;">
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="实付金额" prop="pay_money">
           <el-input v-model="form1.pay_money" placeholder="请输入内容" style="width:70%;"></el-input>
         </el-form-item>
@@ -302,7 +303,7 @@ export default {
       dialogVisible1: false,
       form: {
         customer_id: "",
-        user_id: "",
+        // user_id: "",
         balance_account_id: "",
         cope_money: 0,
         pay_money: "",
@@ -314,7 +315,7 @@ export default {
       },
       form1: {
         customer_id: "",
-        user_id: "",
+        // user_id: "",
         cope_money: 0,
         pay_money: "",
         opay_money: 0,
@@ -346,7 +347,7 @@ export default {
         date: "",
         account_type_id: "",
         balance_account_id: "",
-        user_id: "",
+        // user_id: "",
         odd: "",
       },
       Suppliers: [],
@@ -356,6 +357,7 @@ export default {
       stylists: [],
       wests: [],
       status: "",
+      permission:[]
     };
   },
   methods: {
@@ -424,7 +426,7 @@ export default {
         this.form1.opay_money = Number(this.form1.opay_money);
         this.form1.pay_money = Number(this.form1.pay_money);
         this.form1.total_money = Number(this.form1.total_money);
-        this.form1.account_type_id = 0;
+        this.form1.account_type_id = 5;
         this.form1.balance_account_id = 0;
         let res = await customerAccountAdd(this.form1);
         console.log(res);
@@ -526,6 +528,7 @@ export default {
       this.$route.query.companyname === "" ? "" : this.$route.query.companyname;
     this.formInline.customer_id =
       this.$route.query.customer_id === "" ? "" : this.$route.query.customer_id;
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

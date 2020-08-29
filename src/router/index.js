@@ -17,7 +17,7 @@ import Check from "@/views/sell/check.vue";
 import DesignCheck from "@/views/researchDevelopment/designCheck.vue";
 import DetailEdit from "@/views/researchDevelopment/detailEdit.vue";
 import DevelopmentStatus from "@/views/researchDevelopment/developmentStatus.vue";
-import Development from "@/views/researchDevelopment/developmentCenter/development.vue";
+// import Development from "@/views/researchDevelopment/developmentCenter/development.vue";
 import DesignNote from "@/views/researchDevelopment/developmentCenter/designNote.vue";
 import Print from "@/views/print.vue";
 import MaterialProcess from "@/views/researchDevelopment/developmentCenter/materialProcess.vue";
@@ -347,11 +347,11 @@ const routes = [
         name: "DevelopmentStatus",
         component: DevelopmentStatus,
         children: [
-          {
-            path: "/development",
-            name: "Development",
-            component: Development,
-          },
+          // {
+          //   path: "/development",
+          //   name: "Development",
+          //   component: Development,
+          // },
           {
             path: "/designNote",
             name: "DesignNote",

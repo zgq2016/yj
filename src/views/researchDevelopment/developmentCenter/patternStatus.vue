@@ -2,7 +2,7 @@
   <div class="patternStatus">
     <div class="pattern">
       <!-- 纸样文件 -->
-      <div class="patternFile" v-if="power.indexOf('A7000300')!=-1">
+      <div class="patternFile" v-if="permission.indexOf('style_paperpattern_list')!=-1">
         <div class="patternFileName">纸样文件</div>
         <div class="upload">
           <el-upload
@@ -16,7 +16,7 @@
             :file-list="fileList"
             :on-exceed="handleExceed"
           >
-            <el-button size="small" type="primary" v-if="power.indexOf('A7000100')!=-1">点击上传</el-button>
+            <el-button size="small" type="primary" v-if="permission.indexOf('style_paperpattern_add')!=-1">点击上传</el-button>
           </el-upload>
         </div>
       </div>
@@ -40,7 +40,7 @@
         </div>
       </div>-->
       <!-- 物料用量 -->
-      <div class="materialUsage" v-if="power.indexOf('A7000600')!=-1">
+      <div class="materialUsage" v-if="permission.indexOf('style_materials_use_list')!=-1">
         <div class="materialUsageName">物料用量</div>
         <div class="cardList">
           <div class="card" v-for="(item, index) in MaterialsList" :key="index">
@@ -100,7 +100,7 @@
             </div>
           </div>
         </div>
-        <div v-if="power.indexOf('A7000500')!=-1">
+        <div v-if="permission.indexOf('style_materials_use_edit')!=-1">
           <div v-if="antistopActive==true">
             <el-button @click="modification" type="primary">修改</el-button>
           </div>
@@ -114,7 +114,7 @@
       <!-- 删除历史 -->
       <div class="delHistory">
         <div class="delHistoryName">删除历史</div>
-        <div class="delList">
+        <div class="delList" v-if="permission.indexOf('style_paperpattern_del_list')!=-1">
           <div class="list" v-for="(item, index) in DelList" :key="index">
             <div class="list_name">
               <!-- <div class="img">
@@ -124,7 +124,7 @@
               <div style="margin-right:5px">{{item.name}}</div>
               <div>提交于: {{item.del_time}}</div>
             </div>
-            <div class="restore" @click="Resume(item)" v-if="power.indexOf('A7000400')!=-1">还原</div>
+            <div class="restore" @click="Resume(item)" v-if="permission.indexOf('style_paperpattern_resume')!=-1">还原</div>
           </div>
         </div>
       </div>
@@ -159,6 +159,7 @@ export default {
       DelList: [],
 
       antistopActive: false,
+      permission:[]
     };
   },
   methods: {
@@ -207,8 +208,16 @@ export default {
       let res = await styleMaterialsUseEdit({
         style_materials_data: this.MaterialsList,
       });
-      this.init();
-      this.antistopActive = true;
+      if (res.data.error_code) {
+        this.$message({
+          showClose: true,
+          message: res.data.msg,
+          type: "error",
+        });
+      } else {
+        this.init();
+        this.antistopActive = true;
+      }
     },
     async handleInputMaxusage(e, index) {
       this.MaterialsList.map((v, i) => {
@@ -255,7 +264,15 @@ export default {
     async Resume(e) {
       if (this.fileList.length === 0) {
         let res = await stylePaperpatternResume({ id: e.id });
-        this.init();
+        if (res.data.error_code) {
+          this.$message({
+            showClose: true,
+            message: res.data.msg,
+            type: "error",
+          });
+        } else {
+          this.init();
+        }
       } else {
         this.$message.warning("已有数据,请先删除");
         return;
@@ -265,7 +282,8 @@ export default {
   mounted() {
     this.init();
     this.antistopActive = true;
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

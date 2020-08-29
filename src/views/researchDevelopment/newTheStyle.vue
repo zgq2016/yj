@@ -676,6 +676,15 @@ export default {
         obj["color_code"] = this.form.color_code;
         let res = await projectStyleAdd(obj);
         console.log(res);
+        if (res.data.error_code) {
+          this.$message({
+            showClose: true,
+            message: res.data.msg,
+            type: "error",
+          });
+        } else {
+          this.$router.push({ path: `/designNote?id=${res.data.data[0].id}` });
+        }
       });
     },
     async handleClick() {
@@ -704,7 +713,15 @@ export default {
         console.log(obj);
         let res = await projectStyleAdd(obj);
         console.log(res);
-        this.$router.go(-1);
+        if (res.data.error_code) {
+          this.$message({
+            showClose: true,
+            message: res.data.msg,
+            type: "error",
+          });
+        } else {
+          this.$router.go(-1);
+        }
       });
     },
     async handleClick1() {

@@ -1,5 +1,5 @@
 <template>
-  <div class="materialStorage" v-if="power.indexOf('C4000100')!=-1">
+  <div class="materialStorage" v-if="permission.indexOf('materialStorage')!=-1">
     <!-- 面包屑 -->
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -143,6 +143,7 @@ export default {
       ware: [],
       options: [],
       sizes: [],
+      permission: [],
     };
   },
   methods: {
@@ -207,7 +208,8 @@ export default {
     this.init();
     this.stock();
     this.sized();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>
@@ -257,7 +259,7 @@ export default {
       height: 60px;
       border-radius: 5px;
     }
-     .el-table {
+    .el-table {
       /deep/.cell {
         font-weight: 500 !important;
       }

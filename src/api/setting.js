@@ -245,7 +245,7 @@ export const roleList = (data) => {
 // 角色列表接口
 export const roleAdd = (data) => {
   return axios({
-    url: "?g=role_add",
+    url: "?g=role_add_new",
     method: "post",
     data: data,
   });
@@ -269,7 +269,7 @@ export const getPower = (data) => {
 //角色详细接口
 export const getRole = (data) => {
   return axios({
-    url: "?g=get_role",
+    url: "?g=get_role_new",
     method: "post",
     data: data,
   });
@@ -277,7 +277,7 @@ export const getRole = (data) => {
 //编辑角色
 export const roleEdit = (data) => {
   return axios({
-    url: "?g=role_edit",
+    url: "?g=role_edit_new",
     method: "post",
     data: data,
   });

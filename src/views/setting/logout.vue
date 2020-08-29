@@ -36,7 +36,8 @@ export default {
       if (res !== true) {
         // this.$message.success("退出成功");
       }
-      localStorage.removeItem("power");
+      // localStorage.removeItem("power");
+      localStorage.clear()
       this.$router.push({
         path: `/Login`
       });

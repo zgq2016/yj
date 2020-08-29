@@ -117,12 +117,12 @@
       </div>
       <div class="display:flex">
         <el-button
-          v-if="power.indexOf('A2000300')!=-1"
+          v-if="permission.indexOf('style_edit')!=-1"
           round
           style="margin:30px  100px 30px 250px"
           @click="handleEdit"
         >编辑</el-button>
-        <el-button v-if="power.indexOf('A2000400')!=-1" round @click="handleDel">删除</el-button>
+        <el-button v-if="permission.indexOf('style_del')!=-1" round @click="handleDel">删除</el-button>
       </div>
     </div>
     <el-dialog
@@ -283,6 +283,7 @@ export default {
   },
   data() {
     return {
+      permission:[],
       power: "",
       headImg: "",
       //剪切图片上传
@@ -573,25 +574,43 @@ export default {
         obj["color_code"] = this.obj.color_code;
         let res = await styleEdit(obj);
         console.log(res);
-        this.$router.push({
-          path: `/designNote?id=${this.$route.query.id}&TL=30&project_id=${this.$route.query.project_id}`,
-        });
+        if (res.data.error_code) {
+          this.$message({
+            showClose: true,
+            message: res.data.msg,
+            type: "error",
+          });
+        } else {
+          this.$router.push({
+            path: `/designNote?id=${this.$route.query.id}&TL=30&project_id=${this.$route.query.project_id}`,
+          });
+        }
         // designNote?id=280&TL=30&project_id=139
       });
     },
     async handleDel() {
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该款式, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
         .then(async () => {
           let res = await styleDel({ id: this.obj.id });
-          this.$router.push({ path: `/designCheck?id=${this.obj.project_id}` });
-          this.$message({
-            type: "success",
-            message: "删除成功!",
-          });
+          if (res.data.error_code) {
+            this.$message({
+              showClose: true,
+              message: res.data.msg,
+              type: "error",
+            });
+          } else {
+            this.$router.push({
+              path: `/designCheck?id=${this.obj.project_id}`,
+            });
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+          }
         })
         .catch(() => {
           this.$message({
@@ -662,7 +681,8 @@ export default {
     this.getstylist();
     this.getCategory();
     this.getStyleno();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(',');
     console.log(this.power);
   },
 };

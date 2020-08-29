@@ -1,14 +1,14 @@
 <template>
-  <div class="listAccounts">
+  <div class="listAccounts" v-if="permission.indexOf('listAccounts')!=-1">
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>设置</el-breadcrumb-item>
         <el-breadcrumb-item>账户管理</el-breadcrumb-item>
-        <el-breadcrumb-item>账户列表</el-breadcrumb-item>
+        <el-breadcrumb-item>用户列表</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <el-button type="primary" @click="addAccounts">增加账户</el-button>
+    <el-button type="primary" v-if="permission.indexOf('register')!=-1" @click="addAccounts">增加账户</el-button>
     <el-table
       :data="tableData"
       @cell-mouse-enter="setUser"
@@ -20,7 +20,7 @@
       <el-table-column prop="role_name" label="权限角色"></el-table-column>
       <el-table-column prop="username" label="账号"></el-table-column>
       <el-table-column prop="Access" label="权限等级"></el-table-column>
-      <el-table-column label="启用/禁用" width="200">
+      <el-table-column label="启用/禁用" v-if="permission.indexOf('user_status_edit')!=-1" width="200">
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.status"
@@ -32,10 +32,10 @@
       </el-table-column>
       <el-table-column align="center" width="100" label="操作">
         <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
+          <el-tooltip class="item" effect="dark" content="编辑" v-if="permission.indexOf('user_info_edit')!=-1" placement="top-start">
             <div class="el-icon-s-tools btn" @click="handleEdit(scope.$index, scope.row)"></div>
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="设置权限" placement="top-start">
+          <el-tooltip class="item" effect="dark" content="设置权限" v-if="permission.indexOf('user_edit')!=-1" placement="top-start">
             <div class="el-icon-edit btn" @click="handleEditUser(scope.$index, scope.row)"></div>
           </el-tooltip>
         </template>
@@ -172,6 +172,7 @@ import {
 export default {
   data() {
     return {
+      permission:[],
       tableData: [],
       centerDialogVisible: false, //添加分类
       centerDialogVisible1: false, //编辑分类
@@ -431,6 +432,7 @@ export default {
     this.userRoleList = res.data.data;
 
     this.level = localStorage.getItem("level");
+     this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="authorityManagement">
+  <div class="authorityManagement" v-if="permission.indexOf('color_status_edit')!=-1"> 
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -22,13 +22,13 @@
           <el-table-column prop="remarks" :show-overflow-tooltip="true" label="备注" width="160"></el-table-column>
           <el-table-column align="center" label="操作">
             <template slot-scope="scope">
-              <el-tooltip content="复制" placement="top" v-if="scope.row.id!==1">
+              <el-tooltip content="复制" placement="top" v-if="scope.row.id!==1&&permission.indexOf('role_add')!=-1">
                 <div class="el-icon-document-copy btn" @click="handlecopy(scope.$index, scope.row)"></div>
               </el-tooltip>
-              <el-tooltip content="编辑" placement="top" v-if="scope.row.id!==1">
+              <el-tooltip content="编辑" v-if="permission.indexOf('role_edit')!=-1" placement="top" >
                 <div class="el-icon-edit btn" @click="handleEdit(scope.$index, scope.row)"></div>
               </el-tooltip>
-              <el-tooltip content="删除" placement="top" v-if="scope.row.id!==1">
+              <el-tooltip content="删除"  placement="top" v-if="scope.row.id!==1&&permission.indexOf('role_del')!=-1">
                 <div class="el-icon-delete btn" @click="handleDelete(scope.$index, scope.row)"></div>
               </el-tooltip>
             </template>
@@ -41,7 +41,7 @@
             <div class="role_info_tit">角色信息</div>
             <div class="role_info_con">提示: 员工的角色权限修改后需要退出重新登录才会生效。</div>
           </div>
-          <el-button type="primary" size="mini" @click="The_new_role">新增角色</el-button>
+          <el-button type="primary" size="mini" v-if="permission.indexOf('role_add')!=-1" @click="The_new_role">新增角色</el-button>
         </div>
         <div style="display:flex">
           <div style="margin:10px">名称: {{obj.role_name}}</div>
@@ -55,7 +55,7 @@
           </div>
           <div v-for="(item, index) in obj.power" :key="index" style="display:flex;">
             <div class="stair" :style="item.children*height">
-              <el-checkbox v-model="item.checked" disabled>{{item.power_name}}</el-checkbox>
+              <el-checkbox v-model="item.checked" disabled>{{item.name}}</el-checkbox>
             </div>
             <div>
               <div v-for="(item1, index1) in item.children" :key="index1" style="display:flex">
@@ -64,7 +64,7 @@
                     v-model="item1.checked"
                     v-if="item1.power_name!=='0'"
                     disabled
-                  >{{item1.power_name}}</el-checkbox>
+                  >{{item1.name}}</el-checkbox>
                 </div>
                 <div class="three_level_A">
                   <div v-for="(item2, index2) in item1.children" :key="index2">
@@ -73,7 +73,7 @@
                         v-model="item2.checked"
                         v-if="item2.power_name!=='0'"
                         disabled
-                      >{{item2.power_name}}</el-checkbox>
+                      >{{item2.name}}</el-checkbox>
                     </div>
                   </div>
                 </div>
@@ -88,7 +88,7 @@
             <div class="role_info_tit">角色信息</div>
             <div class="role_info_con">提示: 员工的角色权限修改后需要退出重新登录才会生效。</div>
           </div>
-          <el-button type="primary" size="mini" @click="The_new_role">新增角色</el-button>
+          <el-button type="primary" size="mini" v-if="permission.indexOf('role_add')!=-1" @click="The_new_role">新增角色</el-button>
         </div>
         <div style="display:flex">
           <div style="margin:10px">名称: {{data.role_name}}</div>
@@ -102,7 +102,7 @@
           </div>
           <div v-for="(item, index) in data.power" :key="index" style="display:flex;">
             <div class="stair" :style="item.children*height">
-              <el-checkbox v-model="item.checked" disabled>{{item.power_name}}</el-checkbox>
+              <el-checkbox v-model="item.checked" disabled>{{item.name}}</el-checkbox>
             </div>
             <div>
               <div v-for="(item1, index1) in item.children" :key="index1" style="display:flex">
@@ -111,7 +111,7 @@
                     v-model="item1.checked"
                     v-if="item1.power_name!=='0'"
                     disabled
-                  >{{item1.power_name}}</el-checkbox>
+                  >{{item1.name}}</el-checkbox>
                 </div>
                 <div class="three_level_A">
                   <div v-for="(item2, index2) in item1.children" :key="index2">
@@ -120,7 +120,7 @@
                         v-model="item2.checked"
                         v-if="item2.power_name!=='0'"
                         disabled
-                      >{{item2.power_name}}</el-checkbox>
+                      >{{item2.name}}</el-checkbox>
                     </div>
                   </div>
                 </div>
@@ -135,7 +135,7 @@
             <div class="role_info_tit">角色信息</div>
             <div class="role_info_con">提示: 员工的角色权限修改后需要退出重新登录才会生效。</div>
           </div>
-          <el-button type="primary" size="mini" @click="handleAddRole">保存</el-button>
+          <el-button type="primary" size="mini" v-if="permission.indexOf('role_edit')!=-1" @click="handleAddRole">保存</el-button>
         </div>
         <div class="role_form">
           <el-form :inline="true" :model="form" ref="form" :rules="rules" class="demo-form-inline">
@@ -147,6 +147,7 @@
             </el-form-item>
           </el-form>
         </div>
+
         <div class="power_list">
           <div class="power_list_tlt">
             <div class="power_list_tlt_A">一级</div>
@@ -159,7 +160,7 @@
                 <el-checkbox
                   v-model="item.checked"
                   @change="stair_checked_add(item,index)"
-                >{{item.power_name}}</el-checkbox>
+                >{{item.name}}</el-checkbox>
               </div>
               <div>
                 <div v-for="(item1, index1) in item.children" :key="index1" style="display:flex">
@@ -168,7 +169,7 @@
                       v-model="item1.checked"
                       v-if="item1.power_name!=='0'"
                       @change="second_checked_add(item,index,item1,index1)"
-                    >{{item1.power_name}}</el-checkbox>
+                    >{{item1.name}}</el-checkbox>
                   </div>
                   <div class="three_level_A">
                     <div v-for="(item2, index2) in item1.children" :key="index2">
@@ -177,7 +178,7 @@
                           v-model="item2.checked"
                           v-if="item2.power_name!=='0'"
                           @change="three_checked_add(item,index,item1,index1,item2,index2)"
-                        >{{item2.power_name}}</el-checkbox>
+                        >{{item2.name}}</el-checkbox>
                       </div>
                     </div>
                   </div>
@@ -187,13 +188,14 @@
           </div>
         </div>
       </div>
+
       <div class="right" v-if="status===4">
         <div class="role_info">
           <div class="role_info_name">
             <div class="role_info_tit">角色信息</div>
             <div class="role_info_con">提示: 员工的角色权限修改后需要退出重新登录才会生效。</div>
           </div>
-          <el-button type="primary" size="mini" @click="handleEditRole">保存修改</el-button>
+          <el-button type="primary" size="mini" v-if="permission.indexOf('role_edit')!=-1" @click="handleEditRole">保存修改</el-button>
         </div>
         <div class="role_form">
           <el-form :inline="true" :model="edit" ref="edit" :rules="rules1" class="demo-form-inline">
@@ -216,7 +218,7 @@
               <el-checkbox
                 v-model="item.checked"
                 @change="stair_checked_edit(item,index)"
-              >{{item.power_name}}</el-checkbox>
+              >{{item.name}}</el-checkbox>
             </div>
             <div>
               <div v-for="(item1, index1) in item.children" :key="index1" style="display:flex">
@@ -225,7 +227,7 @@
                     v-model="item1.checked"
                     v-if="item1.power_name!=='0'"
                     @change="second_checked_edit(item,index,item1,index1)"
-                  >{{item1.power_name}}</el-checkbox>
+                  >{{item1.name}}</el-checkbox>
                 </div>
                 <div class="three_level_A">
                   <div v-for="(item2, index2) in item1.children" :key="index2">
@@ -234,7 +236,7 @@
                         v-model="item2.checked"
                         v-if="item2.power_name!=='0'"
                         @change="three_checked_edit(item,index,item1,index1,item2,index2)"
-                      >{{item2.power_name}}</el-checkbox>
+                      >{{item2.name}}</el-checkbox>
                     </div>
                   </div>
                 </div>
@@ -307,6 +309,7 @@ export default {
       checked: false,
       height: "100px",
       status: 1,
+      permission:[]
     };
   },
   methods: {
@@ -461,6 +464,22 @@ export default {
     handleNewList() {
       this.$refs["copy"].validate(async (valid) => {
         if (!valid) return;
+        this.copy.permission = [];
+        this.copy.power.map((v, i) => {
+          if (v.checked) {
+            this.copy.permission.push(v.id);
+            v.children.map((j, k) => {
+              if (j.checked) {
+                this.copy.permission.push(j.id);
+                j.children.map((y, u) => {
+                  if (y.checked) {
+                    this.copy.permission.push(y.id);
+                  }
+                });
+              }
+            });
+          }
+        });
         let res = await roleAdd(this.copy);
         this.copy.role_name = "";
         this.copy.remarks = "";
@@ -475,10 +494,27 @@ export default {
         if (!valid) return;
         // 调用actions的登录方法
         let obj = {};
+        this.edit.permission = [];
+        console.log(this.edit);
+        this.edit.power.map((v, i) => {
+          if (v.checked) {
+            this.edit.permission.push(v.id);
+            v.children.map((j, k) => {
+              if (j.checked) {
+                this.edit.permission.push(j.id);
+                j.children.map((y, u) => {
+                  if (y.checked) {
+                    this.edit.permission.push(y.id);
+                  }
+                });
+              }
+            });
+          }
+        });
         obj["remarks"] = this.edit.remarks;
         obj["role_name"] = this.edit.role_name;
-        obj["id"] = this.edit.id;
-        obj["power"] = this.edit.power;
+        obj["role_id"] = this.edit.id;
+        obj["permission"] = this.edit.permission;
         let res = await roleEdit(obj);
         console.log(res);
         this.edit.role_name = "";
@@ -491,12 +527,22 @@ export default {
     handleEdit(index, row) {
       getRole({ id: row.id }).then((res) => {
         let obj = {};
-        obj["power"] = JSON.parse(res.data.data[0].power);
-        obj["remarks"] = res.data.data[0].remarks;
-        obj["role_name"] = res.data.data[0].role_name;
-        obj["id"] = res.data.data[0].id;
+        console.log(res.data);
+        obj["power"] = res.data.data.permission;
+        obj["remarks"] = res.data.data.remarks;
+        obj["role_name"] = res.data.data.role_name;
+        obj["id"] = res.data.data.id;
         this.edit = obj;
         this.status = 4;
+        this.edit.power.map((v) => {
+          v.checked = v.checked ? true : false;
+          v.children.map((v1) => {
+            v1.checked = v1.checked ? true : false;
+            v1.children.map((v2) => {
+              v2.checked = v2.checked ? true : false;
+            });
+          });
+        });
       });
     },
     handleDelete(index, row) {
@@ -522,17 +568,20 @@ export default {
           });
         });
     },
-    The_new_role() {
+    async The_new_role() {
       this.status = 2;
-      this.getPowerList();
+      // this.getPowerList();
+      let res = await getRole({ id: 0 });
+      this.form["power"] = res.data.data;
+      console.log(this.form);
     },
     async handlecopy(index, row) {
       let res = await getRole({ id: row.id });
       let obj = {};
-      obj["power"] = JSON.parse(res.data.data[0].power);
-      obj["remarks"] = res.data.data[0].remarks;
-      obj["role_name"] = res.data.data[0].role_name;
-      obj["id"] = res.data.data[0].id;
+      obj["power"] = res.data.data.permission;
+      obj["remarks"] = res.data.data.remarks;
+      obj["role_name"] = res.data.data.role_name;
+      // obj["id"] = res.data.data[0].id;
       console.log(obj);
       this.copy = obj;
       this.centerDialogVisible = true;
@@ -540,7 +589,32 @@ export default {
     async handleAddRole() {
       this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
+        console.log(this.form);
+        this.form.permission = [];
+        this.form.power.map((v, i) => {
+          if (v.checked) {
+            this.form.permission.push(v.id);
+            v.children.map((j, k) => {
+              if (j.checked) {
+                this.form.permission.push(j.id);
+                j.children.map((y, u) => {
+                  if (y.checked) {
+                    this.form.permission.push(y.id);
+                  }
+                });
+              }
+            });
+          }
+        });
         let res = await roleAdd(this.form);
+        if (res.data.error_code) {
+          this.$message({
+            showClose: true,
+            message: res.data.msg,
+            type: "error",
+          });
+        }
+        console.log(res);
         this.form.role_name = "";
         this.form.remarks = "";
         this.form.power.map((v, i) => {
@@ -559,6 +633,7 @@ export default {
     },
     async getPowerList() {
       let res = await getPower();
+      console.log(res.data.data);
       res.data.data.map((v, i) => {
         if (v.children.length === 0) {
           v.children.push({ power_name: "0", children: [] });
@@ -582,22 +657,34 @@ export default {
       if (column.label != "操作") {
         let res = await getRole({ id: row.id });
         let obj = {};
-        obj["power"] = JSON.parse(res.data.data[0].power);
-        obj["remarks"] = res.data.data[0].remarks;
-        obj["role_name"] = res.data.data[0].role_name;
-        obj["id"] = res.data.data[0].id;
+        obj["power"] = res.data.data.permission;
+        obj["remarks"] = res.data.data.remarks;
+        obj["role_name"] = res.data.data.role_name;
+        obj["id"] = res.data.data.id;
+
         this.data = obj;
+        this.data.power.map((v) => {
+          v.checked = v.checked ? true : false;
+          v.children.map((v1) => {
+            v1.checked = v1.checked ? true : false;
+            v1.children.map((v2) => {
+              v2.checked = v2.checked ? true : false;
+            });
+          });
+        });
         this.status = 3;
       }
     },
     async default() {
       let res = await getRole({ id: 1 });
       let obj = {};
-      obj["power"] = JSON.parse(res.data.data[0].power);
-      obj["remarks"] = res.data.data[0].remarks;
-      obj["role_name"] = res.data.data[0].role_name;
-      obj["id"] = res.data.data[0].id;
+      console.log(res);
+      obj["power"] = res.data.data.permission;
+      obj["remarks"] = res.data.data.remarks;
+      obj["role_name"] = res.data.data.role_name;
+      obj["id"] = res.data.data.id;
       this.obj = obj;
+      console.log(this.obj);
     },
     async init() {
       let res = await roleList();
@@ -609,6 +696,8 @@ export default {
   mounted() {
     this.init();
     this.default();
+    // console.log(this.form);
+     this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>
@@ -684,7 +773,7 @@ export default {
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 150px;
+            width: 180px;
             height: 30px;
             border: 1px solid #ccc;
           }
@@ -699,13 +788,17 @@ export default {
         }
         .stair {
           width: 100px;
+          min-height: 40px;
+          max-height: auto;
           display: flex;
           align-items: center;
           justify-content: center;
           border: 1px solid #ccc;
         }
         .second_level {
-          width: 150px;
+          width: 180px;
+          min-height: 40px;
+          max-height: auto;
           border: 1px solid #ccc;
           display: flex;
           align-items: center;
@@ -713,13 +806,13 @@ export default {
         }
         .three_level_A {
           width: 600px;
-          height: 60px;
+          height: auto;
           border: 1px solid #ccc;
           .three_level_B {
             float: left;
-            height: 20px;
-            line-height: 20px;
-            padding: 0 5px;
+            height: 25px;
+            line-height: 25px;
+            margin: 8px;
           }
         }
       }

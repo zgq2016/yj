@@ -1,5 +1,5 @@
 <template>
-  <div class="goodsCategory" v-if="power.indexOf('H1000400')!=-1">
+  <div class="goodsCategory" v-if="permission.indexOf('goodsCategory')!=-1">
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -8,7 +8,7 @@
       </el-breadcrumb>
     </div>
     <!-- 添加分类 -->
-    <div class="addClassify" v-if="power.indexOf('H1000100')!=-1" @click="addClassify">添加分类</div>
+    <div class="addClassify" v-if="permission.indexOf('goods_category_add')!=-1" @click="addClassify">添加分类</div>
     <el-table
       :data="tableData"
       style="width: 100%;margin: 20px 0;"
@@ -22,14 +22,13 @@
       <el-table-column prop="unit" label="单位"></el-table-column>
       <el-table-column
         label="操作"
-        v-if="power.indexOf('H1000300')!=-1||power.indexOf('H1000200')!=-1"
         width="200"
       >
         <template slot-scope="scope">
           <el-tooltip
             content="编辑"
             placement="top"
-            v-if="power.indexOf('H1000300')!=-1"
+            v-if="permission.indexOf('goods_category_edit')!=-1"
             class="el-icon-edit btn"
           >
             <div @click="handleEdit(scope.$index, scope.row)"></div>
@@ -37,7 +36,7 @@
           <el-tooltip
             content="删除"
             placement="top"
-            v-if="power.indexOf('H1000200')!=-1"
+            v-if="permission.indexOf('goods_category_del')!=-1"
             class="el-icon-delete btn"
           >
             <div @click="handleDelete(scope.$index, scope.row)"></div>
@@ -175,6 +174,7 @@ import { getUnitSelect } from "@/api/archives";
 export default {
   data() {
     return {
+      permission:[],
       units: [],
       power: "",
       rules: {
@@ -332,7 +332,8 @@ export default {
   mounted() {
     this.init();
     this.getUnit();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

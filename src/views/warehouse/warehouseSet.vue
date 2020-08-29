@@ -1,5 +1,5 @@
 <template>
-  <div class="warehouseSet" v-if="power.indexOf('C5000400')!=-1">
+  <div class="warehouseSet" v-if="permission.indexOf('warehouseSet')!=-1">
     <!-- 面包屑 -->
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -28,29 +28,13 @@
             size="small"
             type="primary"
             @click="addWarehouse"
-            v-if="power.indexOf('C5000100')!=-1"
+            v-if="permission.indexOf('storehouse_add')!=-1"
           >+增加仓库</el-button>
         </el-form>
       </div>
     </div>
     <div class="center table">
-      <el-table :data="ware" row-key="id" size="mini"> 
-        <el-table-column align="center" width="90" label="操作">
-          <template slot-scope="scope">
-            <div
-              style="width:20px;float:left"
-              class="el-icon-edit btn"
-              @click="handleEdit(scope.$index, scope.row)"
-              v-if="power.indexOf('C5000300')!=-1"
-            ></div>
-            <div
-              style="width:20px;float:right"
-              class="el-icon-delete btn"
-              @click="handleDelete(scope.$index, scope.row)"
-              v-if="power.indexOf('C5000200')!=-1"
-            ></div>
-          </template>
-        </el-table-column>
+      <el-table :data="ware" row-key="id" size="mini">
         <el-table-column property="storehouse_name" align="center" label="仓库名称"></el-table-column>
         <el-table-column property="contacts" align="center" label="负责人"></el-table-column>
         <el-table-column property="storehouse_type" align="center" label="仓库类型"></el-table-column>
@@ -59,6 +43,22 @@
         <el-table-column property="utime" width="90" align="center" label="更新时间"></el-table-column>
         <el-table-column property="sort" align="center" label="排序"></el-table-column>
         <el-table-column property="state" align="center" label="状态"></el-table-column>
+        <el-table-column align="center" width="90" label="操作">
+          <template slot-scope="scope">
+            <div
+              style="width:20px;float:left"
+              class="el-icon-edit btn"
+              @click="handleEdit(scope.$index, scope.row)"
+              v-if="permission.indexOf('storehouse_edit')!=-1"
+            ></div>
+            <div
+              style="width:20px;float:right"
+              class="el-icon-delete btn"
+              @click="handleDelete(scope.$index, scope.row)"
+              v-if="permission.indexOf('storehouse_del')!=-1"
+            ></div>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <!-- 分页 -->
@@ -223,6 +223,7 @@ export default {
       page: 1,
       page_size: 9,
       count: 0,
+      permission:[]
     };
   },
   methods: {
@@ -396,7 +397,8 @@ export default {
   async mounted() {
     this.getStylist();
     this.init();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

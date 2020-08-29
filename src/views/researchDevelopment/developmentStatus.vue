@@ -54,7 +54,7 @@
               <el-tooltip
                 class="edit"
                 style="background-color: #f2f2f2;"
-                v-if="power.indexOf('A2000300')!=-1||power.indexOf('A2000400')!=-1"
+                v-if="permission.indexOf('style_edit')!=-1||permission.indexOf('style_del')!=-1"
                 content="编辑"
                 placement="top"
               >
@@ -101,20 +101,20 @@
         </div>
         <el-header>
           <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane v-if="power.indexOf('A4000')!=-1" label="设计版单" name="/designNote"></el-tab-pane>
-            <el-tab-pane v-if="power.indexOf('A5000')!=-1" label="物料工艺" name="/materialProcess"></el-tab-pane>
+            <el-tab-pane v-if="permission.indexOf('designNote')!=-1" label="设计版单" name="/designNote"></el-tab-pane>
+            <el-tab-pane v-if="permission.indexOf('materialProcess')!=-1" label="物料工艺" name="/materialProcess"></el-tab-pane>
             <el-tab-pane
-              v-if="power.indexOf('A6000')!=-1&&this.obj.purchase_status!=0"
+              v-if="permission.indexOf('materialPurchasing')!=-1&&this.obj.purchase_status!=0"
               label="版料采购"
               name="/materialPurchasing"
             ></el-tab-pane>
             <el-tab-pane
-              v-if="power.indexOf('A7000')!=-1&&this.obj.pattern_status!=0"
+              v-if="permission.indexOf('patternStatus')!=-1&&this.obj.pattern_status!=0"
               label="纸样"
               name="/patternStatus"
             ></el-tab-pane>
             <el-tab-pane
-              v-if="power.indexOf('A8000')!=-1&&this.obj.sample_status!=0"
+              v-if="permission.indexOf('sampleDress')!=-1&&this.obj.sample_status!=0"
               label="样衣"
               name="/sampleDress"
             ></el-tab-pane>
@@ -136,6 +136,7 @@ export default {
   data() {
     return {
       power: "",
+      permission:[],
       obj: {},
       activeName: "",
       TL: "",
@@ -176,7 +177,8 @@ export default {
     this.TL = this.$route.query.TL - 0;
     this.TL1 = this.$route.query.TL1 - 0;
 
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
   watch: {
     $route() {

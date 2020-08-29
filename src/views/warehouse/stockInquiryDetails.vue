@@ -14,13 +14,13 @@
           <h4>入库单-{{form.no}}-{{'zaan'}}</h4>
         </div>
         <div class="rh_right">
-          <el-button size="mini" type="primary" v-if="power.indexOf('C2000200')!=-1">扫码</el-button>
-          <el-button size="mini" type="primary" v-if="power.indexOf('C2000300')!=-1">导入</el-button>
+          <el-button size="mini" type="primary">扫码</el-button>
+          <el-button size="mini" type="primary">导入</el-button>
           <el-button
             size="mini"
             @click="addCreateWare"
             type="primary"
-            v-if="power.indexOf('C2000400')!=-1"
+            v-if="permission.indexOf('book_stock_order_add')!=-1"
           >新增入库单</el-button>
         </div>
       </div>
@@ -82,7 +82,11 @@
                 style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
                 :src="scope.row.style_pic_url"
                 fit="cover"
-              ></el-image>
+              >
+                <div slot="error" class="image-slot">
+                  <i class="el-icon-picture-outline"></i>
+                </div>
+              </el-image>
             </template>
           </el-table-column>
           <el-table-column prop="stylename" align="center" label="商品"></el-table-column>
@@ -126,7 +130,7 @@
             <el-form-item>
               <el-button
                 size="small"
-                v-if="this.$route.query.state==1"
+                v-if="this.$route.query.state==1&&permission.indexOf('book_stock_order_edit')"
                 @click="sketch(4)"
                 type="primary"
               >撤销</el-button>
@@ -159,6 +163,7 @@ export default {
       power: "",
       form: {},
       actionsLenght: 0,
+      permission: [],
     };
   },
   methods: {
@@ -319,7 +324,8 @@ export default {
     },
   },
   mounted() {
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
     this.init();
   },
 };
@@ -388,7 +394,7 @@ export default {
         }
         /deep/.el-step__main {
           position: relative;
-          bottom: 10px;
+          bottom: 5px;
           .el-step__description {
             padding-top: 20%;
           }

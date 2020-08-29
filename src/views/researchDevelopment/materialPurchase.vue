@@ -1,5 +1,5 @@
 <template>
-  <div class="materialPurchase" v-if="power.indexOf('A6000200')!=-1">
+  <div class="materialPurchase" v-if="permission.indexOf('materialPurchasing')!=-1">
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -79,7 +79,13 @@
       </el-form-item>-->
     </el-form>
     <div class="table">
-      <el-table ref="singleTable" size='mini' :data="tableData" highlight-current-row style="width: 100%">
+      <el-table
+        ref="singleTable"
+        size="mini"
+        :data="tableData"
+        highlight-current-row
+        style="width: 100%"
+      >
         <el-table-column align="center" label="序号" type="index" width="50"></el-table-column>
         <el-table-column align="center" label="图片" width="140">
           <template slot-scope="scope" property="style_pic_url">
@@ -111,13 +117,16 @@
             <div class="btn">
               <div
                 @click="materials_agree(scope.$index, scope.row,1)"
-                v-if="scope.row.materials_status==='2'"
+                v-if="scope.row.materials_status==='2'&&permission.indexOf('materials_agree')!=-1"
               >通过</div>
               <div
                 @click="materials_agree(scope.$index, scope.row,0)"
-                v-if="scope.row.materials_status==='2'"
+                v-if="scope.row.materials_status==='2'&&permission.indexOf('materials_agree')!=-1"
               >不通过</div>
-              <div @click="handleEdit(scope.$index, scope.row)">查看</div>
+              <div
+                v-if="scope.row.materials_status !='2'&&permission.indexOf('get_style_purchase')!=-1"
+                @click="handleEdit(scope.$index, scope.row)"
+              >查看</div>
             </div>
           </template>
         </el-table-column>
@@ -181,6 +190,7 @@ export default {
         { name: "延时回料", id: 3 },
         { name: "全部回料", id: 4 },
       ],
+      permission: [],
     };
   },
   methods: {
@@ -286,7 +296,8 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

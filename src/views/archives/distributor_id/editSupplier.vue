@@ -26,12 +26,52 @@
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </div>
       </div>
+      <el-upload
+        class="upload-demo"
+        ref="upload"
+        action="https://shesho.ppp-pay.top/webapi.php?g=test"
+        :auto-upload="true"
+        name="image"
+        :show-file-list="false"
+        :on-success="recognition"
+        :on-error="errorRecognition"
+        :before-upload="beforeRecognition"
+        :file-list="fileList"
+      >
+        <el-button slot="trigger" size="small" type="primary">图片内容识别</el-button>
+      </el-upload>
+
+      <div
+        v-loading="loading"
+        element-loading-text="识别内容中"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(0, 0, 0, 0.8)"
+        class="image-content"
+      >
+        <ul>
+          <li>*注意：识别内容存在差异，谨慎修改！</li>
+          <li v-for="(item,index) in contents" :key="index">{{item.words}}</li>
+        </ul>
+        <div v-if="fileList1">
+          <el-image
+            style="width: 100%; height: 300px;"
+            fit="scale-down"
+            title="点击放大"
+            :src="fileList1"
+            :preview-src-list="[fileList1]"
+          ></el-image>
+          <!-- fit="scale-down" -->
+        </div>
+      </div>
     </div>
     <!-- form -->
     <div class="form">
       <el-form :model="obj" ref="obj" :rules="rules" label-width="100px">
         <el-form-item label="公司名称" prop="companyname">
           <el-input v-model="obj.companyname" style="width:200px" placeholder="请填写名称"></el-input>
+        </el-form-item>
+        <el-form-item label="公司全称">
+          <el-input v-model="obj.alias_name" style="width:200px" placeholder="请填写公司全称"></el-input>
         </el-form-item>
         <div style="display:flex;">
           <el-form-item label="分类" prop="mainclass">
@@ -81,7 +121,13 @@
             :prop="'contact_data.'+index+'.phone'"
             :rules="contact_dataRules.contact_data_phone"
           >
-            <el-input v-model="item.phone" style="width:200px" placeholder="请填写联系电话"></el-input>
+            <el-input
+              v-model="item.phone"
+              style="width:200px"
+              class="it"
+              @blur="itphone(item.phone,index)"
+              placeholder="请填写联系电话"
+            ></el-input>
           </el-form-item>
           <span v-if="index>0" class="deleteUser" @click="handleDeleteUser(index)">-</span>
         </div>
@@ -107,7 +153,13 @@
             <el-input v-model="item.name" style="width:200px" placeholder="收款人姓名"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-input v-model="item.bankid" style="width:200px" placeholder="银行卡卡号"></el-input>
+            <el-input
+              v-model="item.bankid"
+              class="ib"
+              @blur="ibBankid(item.bankid,index)"
+              style="width:200px"
+              placeholder="银行卡卡号"
+            ></el-input>
           </el-form-item>
           <span v-if="index>0" class="deleteAccount" @click="handleDeleteAccount(index)">-</span>
         </div>
@@ -129,12 +181,12 @@
         </el-form-item>
         <el-form-item>
           <el-button
-            v-if="power.indexOf('E1000300')!=-1"
+            v-if="permission.indexOf('supplier_edit')!=-1"
             @click="handleEdit"
             style="padding:10px 50px;border-radius: 10px;"
           >保存</el-button>
           <el-button
-            v-if="power.indexOf('E1000200')!=-1"
+            v-if="permission.indexOf('supplier_del')!=-1"
             @click="handleDel"
             style="padding:10px 50px;border-radius: 10px;"
           >删除</el-button>
@@ -290,6 +342,7 @@ export default {
       class_datas: [],
       class_data_name: "",
       classDatasId: "",
+      permission:[],
       // 表单规则
       rules: {
         companyname: [
@@ -324,9 +377,75 @@ export default {
       //     { required: true, message: "请填写银行卡号", trigger: "blur" },
       //   ],
       // },
+      loading: false,
+      headImg: "",
+      fileList: [],
+      fileList1: "",
+      contents: [],
+      imgs: [],
+      vs1: false,
+      vs2: false,
     };
   },
   methods: {
+    // *******************识别内容********************
+    beforeRecognition() {
+      this.loading = true;
+    },
+    errorRecognition() {
+      this.loading = false;
+    },
+    async recognition(response, file, fileList) {
+      this.loading = false;
+      this.fileList1 = URL.createObjectURL(file.raw);
+      this.imgs.push(URL.createObjectURL(file.raw));
+      this.contents = response.data.words_result;
+      this.contents = this.contents.filter((v) => {
+        return !/^\d{1,3}$/.test(v.words);
+      });
+    },
+    ibBankid(val, index) {
+      let input = document.getElementsByClassName("ib")[index].children[0];
+      let nodes = document.getElementsByClassName("ib")[index];
+      let div = document.createElement("div");
+      div.className = "error";
+      div.style.color = "#F56C6C";
+      div.innerHTML = "请输入正确的银行卡码";
+      if (nodes.children.length < 2) {
+        nodes.appendChild(div);
+      }
+
+      if (/^([1-9]{1})(\d{14}|\d{18})$/.test(val)) {
+        input.style.border = "1px solid #DCDFE6";
+        nodes.removeChild(nodes.children[1]);
+        this.vs1 = false;
+      } else {
+        input.style.border = "1px solid #F56C6C";
+        this.vs1 = true;
+      }
+    },
+    itphone(val, index) {
+      let input = document.getElementsByClassName("it")[index].children[0];
+      let nodes = document.getElementsByClassName("it")[index];
+      let div = document.createElement("div");
+      div.className = "error";
+      div.style.color = "#F56C6C";
+      div.innerHTML = "请输入正确的号码";
+      if (nodes.children.length < 2) {
+        nodes.appendChild(div);
+      }
+      if (
+        /^1[3456789]\d{9}$/.test(val) ||
+        /^(0[0-9]{2,3}-)?[2-9][0-9]{6,7}$/.test(val)
+      ) {
+        input.style.border = "1px solid #DCDFE6";
+        nodes.removeChild(nodes.children[1]);
+        this.vs2 = false;
+      } else {
+        input.style.border = "1px solid #F56C6C";
+        this.vs2 = true;
+      }
+    },
     rot() {
       this.$router.push({ path: `/materialClassification` });
     },
@@ -458,18 +577,26 @@ export default {
         .replace("$#$", ".");
     },
     async handleDel() {
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该供应商, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
         .then(async () => {
           let res = await supplierDel({ id: this.obj.id });
-          this.$router.push({ path: "/distributor_list" });
-          this.$message({
-            type: "success",
-            message: "删除成功!",
-          });
+          if (res.data.error_code) {
+            this.$message({
+              showClose: true,
+              message: res.data.msg,
+              type: "error",
+            });
+          } else {
+            this.$router.push({ path: "/distributor_list" });
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+          }
         })
         .catch(() => {
           this.$message({
@@ -481,13 +608,23 @@ export default {
     async handleEdit() {
       let data = this.$route.query;
       this.$refs["obj"].validate(async (valid) => {
-        if (!valid) return;
+        if (!valid || !this.vs1 || !this.vs2) return;
         // 调用actions的登录方法
 
         let res = await supplierEdit(this.obj);
-        this.$router.go(-1);
 
-        this.$router.push({ path: `/listDeital?id=${data.id}&TL=${data.TL}` });
+        // this.$router.go(-1);
+        if (res.data.error_code) {
+          this.$message({
+            showClose: true,
+            message: res.data.msg,
+            type: "error",
+          });
+        } else {
+          this.$router.push({
+            path: `/listDeital?id=${data.id}&TL=${data.TL}`,
+          });
+        }
       });
     },
     // 新增联系人
@@ -559,6 +696,7 @@ export default {
     let res1 = await getMaterialsClass();
     this.classData = res1.data.data;
     this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>
@@ -566,10 +704,11 @@ export default {
 <style lang="less" scoped>
 .addSupplier {
   .upload {
+    position: relative;
     display: flex;
     .upload_card {
       display: flex;
-      width: 40%;
+      width: 350px;
       height: 200px;
       .upload_name {
         margin: 0 30px;
@@ -593,7 +732,7 @@ export default {
     }
     .upload_panels {
       display: flex;
-      width: 40%;
+      width: 350px;
       height: 200px;
       .upload_name {
         margin: 0 30px;
@@ -612,6 +751,36 @@ export default {
           display: flex;
           justify-content: center;
           align-items: center;
+        }
+      }
+    }
+    .upload-demo {
+      height: 30px;
+      // margin-left: 10px;
+    }
+
+    .image-content {
+      position: absolute;
+      left: 920px;
+      width: 500px;
+      height: auto;
+      border: 1px solid #cccccc;
+      z-index: 33;
+      ul {
+        padding: 10px;
+        li {
+          margin-bottom: 5px;
+        }
+        li:first-of-type {
+          font-weight: 600;
+          margin: 8px;
+        }
+      }
+      /deep/.el-image-viewer__wrapper {
+        img {
+          width: auto;
+          height: auto;
+          max-height: auto;
         }
       }
     }

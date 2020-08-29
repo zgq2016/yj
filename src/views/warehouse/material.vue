@@ -1,5 +1,5 @@
 <template>
-  <div class="material" v-if="power.indexOf('C3000100')!=-1">
+  <div class="material" v-if="permission.indexOf('material')!=-1">
     <!-- 面包屑 -->
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -98,16 +98,11 @@
         <el-form-item>
           <div style="display: flex;justify-content: space-between;align-items: center;">
             <div class="addStyle">展示统计数据</div>
-            <div class="addStyle" @click="handleCard" v-if="power.indexOf('C3000200')!=-1">采购</div>
+            <div class="addStyle" @click="handleCard" >采购</div>
+            <!-- v-if="permission.indexOf('C3000200')!=-1" -->
           </div>
         </el-form-item>
-        <!-- <el-button
-          type="primary"
-          size="small"
-          style="float:right;margin-right:35px;"
-          @click="handleCard"
-          v-if="power.indexOf('C3000200')!=-1"
-        >采购</el-button>-->
+       
       </el-form>
 
       <div class="table">
@@ -154,7 +149,7 @@
           <router-link
             :to="`/addRouteCard?`"
             style="margin-left:30px"
-            v-if="power.indexOf('C3000400')!=-1"
+            v-if="permission.indexOf('materials_add')!=-1"
           >新增主料卡</router-link>
         </div>
         <div class="searchCard">
@@ -243,9 +238,9 @@
             <el-select v-model="form1.balance_account_id" style="width:60%;" placeholder="请选择支付方式">
               <el-option
                 v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                :key="item.id"
+                :label="item.account_name"
+                :value="item.id"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -402,6 +397,7 @@ export default {
       class_datas: [],
       classDatasId: "",
       ware: [],
+      permission:[]
     };
   },
   methods: {
@@ -409,6 +405,7 @@ export default {
       // 结算账户
       let res3 = await balanceAccountSelect();
       this.options = res3.data.data;
+      console.log(res3);
     },
     // 获取分类
     async getClassData() {
@@ -611,7 +608,8 @@ export default {
     this.init();
     this.stock();
     this.balanc();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

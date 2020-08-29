@@ -1,5 +1,5 @@
 <template>
-  <div class="goodsCategory" v-if="power.indexOf('H2000400')!=-1">
+  <div class="goodsCategory" v-if="permission.indexOf('colorManagement')!=-1">
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -8,7 +8,7 @@
       </el-breadcrumb>
     </div>
     <!-- 添加颜色 -->
-    <div class="addClassify" v-if="power.indexOf('H2000100')!=-1" @click="addClassify">添加颜色</div>
+    <div class="addClassify" v-if="permission.indexOf('color_add')!=-1" @click="addClassify">添加颜色</div>
     <el-table
       :data="tableData"
       style="width: 100%;margin: 20px 0;"
@@ -18,7 +18,7 @@
     >
       <el-table-column prop="color_name" label="分类名称"></el-table-column>
       <el-table-column prop="sort" label="排序"></el-table-column>
-      <el-table-column prop="sort" label="启用/禁用">
+      <el-table-column prop="sort"  v-if="permission.indexOf('color_status_edit')!=-1" label="启用/禁用">
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.status"
@@ -31,14 +31,13 @@
       <el-table-column
         label="操作"
         width="200px"
-        v-if="power.indexOf('H2000300')!=-1||power.indexOf('H2000200')!=-1"
       >
         <template slot-scope="scope">
           <el-tooltip
             content="编辑"
             placement="top"
             class="el-icon-edit btn"
-            v-if="power.indexOf('H2000300')!=-1"
+            v-if="permission.indexOf('color_edit')!=-1"
           >
             <div @click="handleEdit(scope.$index, scope.row)"></div>
           </el-tooltip>
@@ -46,7 +45,7 @@
             content="删除"
             placement="top"
             class="el-icon-delete btn"
-            v-if="power.indexOf('H2000200')!=-1"
+            v-if="permission.indexOf('color_del')!=-1"
           >
             <div @click="handleDelete(scope.$index, scope.row)"></div>
           </el-tooltip>
@@ -175,6 +174,7 @@ export default {
       total: 0,
       goods_category_id: "",
       rowLevel: "",
+      permission:[]
     };
   },
   methods: {
@@ -296,7 +296,8 @@ export default {
   },
   mounted() {
     this.init();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

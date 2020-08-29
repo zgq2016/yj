@@ -1,5 +1,5 @@
 <template>
-  <div class="routeCard_list">
+  <div class="routeCard_list" v-if="permission.indexOf('routeCard_list')!=-1">
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>档案库</el-breadcrumb-item>
@@ -44,7 +44,7 @@
           ></el-cascader>
         </el-form-item>
       </el-form>
-      <div class="addStyle" @click="addRouteCard" v-if="power.indexOf('E2000100')!=-1">新增</div>
+      <div class="addStyle" @click="addRouteCard" v-if="permission.indexOf('materials_add')!=-1">新增</div>
     </div>
     <!-- main -->
     <div class="main">
@@ -110,6 +110,7 @@ export default {
         label: "classname",
         children: "class_data",
       },
+      permission:[]
     };
   },
   methods: {
@@ -159,7 +160,8 @@ export default {
   mounted() {
     this.init();
     this.getClassData();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
   watch: {
     data() {

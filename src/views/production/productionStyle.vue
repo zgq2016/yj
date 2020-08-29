@@ -63,7 +63,7 @@
             :class="active===index?'active':''"
           >
             <div class="color">下单批次：{{index+1}}</div>
-            <div class="el-icon-close" @click.stop="styleColorDel(item,index)"></div>
+            <div class="el-icon-close"  v-if="permission.indexOf('produce_del')!=-1"  @click.stop="styleColorDel(item,index)"></div>
           </div>
         </div>
         <!-- <div class="placeAnOrderBatch">下单批次：2</div> -->
@@ -80,7 +80,7 @@
       <!-- 步骤条 -->
       <div v-if="ob[active]&&jour">
         <el-steps
-          :space="120"
+          :space="125"
           :active="ob[active].logDatas.length-1"
           align-center
           finish-status="wait"
@@ -92,7 +92,7 @@
         </el-steps>
       </div>
       <el-tabs style="margin-bottom:150px;" v-model="activeNames" @click.stop="handleClick">
-        <el-tab-pane label="下单信息" v-if="showhide1&&power.indexOf('B1000300')!=-1" name="1">
+        <el-tab-pane label="下单信息" v-if="showhide1&&permission.indexOf('productionOrders')!=-1" name="1">
           <div class="orderInformation">
             <!-- <div style="margin-left:50px;">请先增加批次</div> -->
             <!-- 没数据或者修改 -->
@@ -273,7 +273,7 @@
                     style="width:100px;position:absolute;right:100px;top:20px;"
                     @click="omit(index)"
                     round
-                    v-if="power.indexOf('B1000200')!=-1"
+                    v-if="permission.indexOf('produce_order_del')!=-1"
                   >删除</el-button>
                   <hr style="border:1px dashed #999999" />
                 </div>
@@ -296,7 +296,7 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item v-if="ascertain1&&power.indexOf('B1000100')!=-1" style=" float:right;">
+              <el-form-item v-if="ascertain1&&permission.indexOf('produce_order_add')!=-1" style=" float:right;">
                 <el-button @click="clickOrders()">确认下单</el-button>
               </el-form-item>
             </el-form>
@@ -319,7 +319,7 @@
                   </div>
                 </div>
                 <el-button
-                  v-if="ascertain1&&power.indexOf('B1000400')!=-1"
+                  v-if="ascertain1&&permission.indexOf('produce_order_edit')!=-1"
                   style="width:100px;position:absolute;right:100px;top:20px;"
                   @click="btnModify()"
                   round
@@ -329,7 +329,7 @@
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="采购" v-if="showhide2&&power.indexOf('B2000300')!=-1" name="2">
+        <el-tab-pane label="采购" v-if="showhide2&&permission.indexOf('purchase')!=-1" name="2">
           <div class="purchase" v-if="king1">
             <div class="color">
               <span
@@ -353,7 +353,7 @@
                           <div class="cardStyle_left_content_name">
                             <div>{{item1.mainclass}}</div>
                             <div
-                              v-if="power.indexOf('B2000200')!=-1"
+                              v-if="permission.indexOf('produce_order_procure_del')!=-1"
                               class="el-icon-close"
                               @click="procureDel(item1)"
                             ></div>
@@ -398,7 +398,7 @@
                       :active="item1.produce_order_procure_log_data.length-1"
                     >
                       <el-step
-                        style="width:125px"
+                        style="width:130px"
                         v-for="(item_g, index_g) in item1.produce_order_procure_log_data"
                         :key="index_g"
                         title
@@ -432,7 +432,7 @@
                         </template>
                       </el-step>
                     </el-steps>
-                    <div v-if="item1.produce_order_procure_log_data&&power.indexOf('B2000400')!=-1">
+                    <div v-if="item1.produce_order_procure_log_data&&permission.indexOf('produce_order_procure_log_add')!=-1">
                       <el-button
                         style="margin-left:10px"
                         size="mini"
@@ -613,11 +613,11 @@
               size="mini"
               @click="handleMaterialsCard"
               round
-              v-if="power.indexOf('B2000100')!=-1"
+              v-if="permission.indexOf('produce_order_procure_add')!=-1"
             >+ 增加物料</el-button>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="生产排单" v-if="showhide3&&power.indexOf('B3000300')!=-1" name="3">
+        <el-tab-pane label="生产排单" v-if="showhide3&&permission.indexOf('productionScheduling')!=-1" name="3">
           <div class="tailor">
             <!-- 无数据 -->
             <div v-if="!vb" class="productionArranged">
@@ -685,7 +685,7 @@
                     type="danger"
                     @click="factoryDel(item.id,index)"
                     round
-                    v-if="power.indexOf('B3000200')!=-1"
+                    v-if="permission.indexOf('produce_factory_order_del')!=-1"
                   >删除</el-button>
                   <hr style="border:1px dashed #999999" />
                 </div>
@@ -714,7 +714,7 @@
               <el-button
                 @click="arranged"
                 round
-                v-if="ascertain2&&power.indexOf('B3000100')!=-1"
+                v-if="ascertain2&&permission.indexOf('produce_factory_order_add')!=-1"
                 style="float:right;margin-bottom:15px;"
               >确认排单</el-button>
             </div>
@@ -752,13 +752,13 @@
 
                 <hr style="border:1px dashed #999999" />
               </div>
-              <div class="factory_right" v-if="ascertain2&&power.indexOf('B3000400')!=-1">
+              <div class="factory_right" v-if="ascertain2&&permission.indexOf('produce_factory_order_edit')!=-1">
                 <el-button round type="info" @click="factoryEidt()">修改</el-button>
               </div>
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="裁剪" v-if="showhide4&&power.indexOf('B4000300')!=-1" name="4">
+        <el-tab-pane label="裁剪" v-if="showhide4&&permission.indexOf('tailor')!=-1" name="4">
           <div class="tailor">
             <div>
               <!-- <div v-if="tailorList.category>0"> -->
@@ -792,7 +792,7 @@
                     type="danger"
                     style="position:absolute;right:10%;top:5%;"
                     @click="tailorDel(item.id,index)"
-                    v-if="power.indexOf('B4000200')!=-1"
+                    v-if="permission.indexOf('produce_cut_order_del')!=-1"
                   >删除</el-button>
                   <div @click.stop="ide(index)">
                     <span>裁床单：</span>
@@ -840,7 +840,7 @@
                 </div>
               </div>
               <el-button
-                v-if="showhide3&&power.indexOf('B4000400')!=-1&&vb1"
+                v-if="showhide3&&permission.indexOf('produce_cut_order_edit')!=-1&&vb1"
                 style="position:absolute;right:10%;top:0;"
                 round
                 type="info"
@@ -849,12 +849,12 @@
             </div>
             <div class="add" v-if="!vb1">
               <el-button size="mini" v-if="tailorVB" @click="tailoradd" round>+ 增加床次</el-button>
-              <el-button @click="tailored" v-if="ascertain3&&power.indexOf('B4000100')!=-1" round>确定</el-button>
+              <el-button @click="tailored" v-if="ascertain3&&permission.indexOf('produce_cut_order_add')!=-1" round>确定</el-button>
             </div>
             <!-- </div> -->
           </div>
         </el-tab-pane>
-        <el-tab-pane label="出货" v-if="showhide5&&power.indexOf('B5000300')!=-1" name="5">
+        <el-tab-pane label="出货" v-if="showhide5&&permission.indexOf('shipment')!=-1" name="5">
           <div class="shipment">
             <div class="shipmentList">
               <!-- 无数据 -->
@@ -928,7 +928,7 @@
                     type="danger"
                     style="position:absolute;top:5%;right:10%"
                     @click="completeDel(item.id_c,index)"
-                    v-if="power.indexOf('B5000300')!=-1"
+                    v-if="permission.indexOf('produce_complete_del')!=-1"
                   >删除</el-button>
                   <!-- <el-form-item label="出货方式:" style="width:250px;margin-left:120px;font-size:16px;">
                     <el-radio-group @change="radioChange($event,item)" v-model="item.shipping_type">
@@ -1055,12 +1055,12 @@
                 round
                 type="info"
                 @click="completeEdit()"
-                v-if="power.indexOf('B5000400')!=-1&&vb2"
+                v-if="permission.indexOf('produce_complete_edit')!=-1&&vb2"
               >修改</el-button>
             </div>
             <div class="add" v-if="!vb2">
               <el-button @click="goDownAdd" v-if="shipmentVB" round>+增加出货批次</el-button>
-              <el-button @click="goDownlist" v-if="power.indexOf('B5000100')!=-1" round>确定</el-button>
+              <el-button @click="goDownlist" v-if="permission.indexOf('produce_complete_add')!=-1" round>确定</el-button>
             </div>
           </div>
         </el-tab-pane>
@@ -1521,6 +1521,7 @@ export default {
       activeNames: "1",
       t_size1: [],
       jour: false, //日志显示隐藏
+      permission:[]
     };
   },
   methods: {
@@ -3730,7 +3731,8 @@ export default {
     // this.logData();
     this.TL = this.$route.query.TL - 0;
 
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
     // console.log(this.power);
   },
 };

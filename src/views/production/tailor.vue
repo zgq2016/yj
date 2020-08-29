@@ -1,5 +1,5 @@
 <template>
-  <div class="tailor" v-if="power.indexOf('B4000300')!=-1">
+  <div class="tailor" v-if="permission.indexOf('tailor')!=-1">
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -82,7 +82,7 @@
         <el-table-column align="center" property="season" label="季节"></el-table-column>
         <el-table-column align="center" property="user_name" label="设计师"></el-table-column>
         <el-table-column align="center" property="state" label="状态"></el-table-column>
-        <el-table-column align="center" label="操作">
+        <el-table-column align="center" v-if="permission.indexOf('produce_info')!=-1" label="操作">
           <template slot-scope="scope">
             <el-button
               class="elbtn"
@@ -93,7 +93,7 @@
             <el-button
               class="elbtn"
               size="mini"
-              v-if="scope.row.cut_status==0"
+              v-if="scope.row.cut_status==0&&permission.indexOf('produce_cut_order_add')!=-1"
               @click="handleEdit(scope.$index, scope.row)"
             >{{"裁剪"}}</el-button>
           </template>
@@ -103,8 +103,8 @@
     <div style="display: flex;justify-content: space-between;align-items: center;">
       <!-- 打印  导出-->
       <div class="btn">
-        <el-button v-print="'#printTest'" size="mini" v-if="power.indexOf('B4000500')!=-1">打印</el-button>
-        <el-button size="mini" v-if="power.indexOf('B4000600')!=-1">导出</el-button>
+        <el-button v-print="'#printTest'" size="mini" >打印</el-button>
+        <el-button size="mini" >导出</el-button>
       </div>
       <!-- 分页 -->
       <el-pagination
@@ -175,6 +175,7 @@ export default {
       tableData: [],
       count: 0,
       number: 123,
+      permission:[]
     };
   },
   methods: {
@@ -273,7 +274,8 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
     console.log(this.power);
   },
 };

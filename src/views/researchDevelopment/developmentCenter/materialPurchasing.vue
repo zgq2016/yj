@@ -1,6 +1,6 @@
 <template>
   <div class="materialPurchasing">
-    <div class="material_purchase_name" v-if="power.indexOf('A6000100')!=-1">
+    <div class="material_purchase_name" v-if="permission.indexOf('materialPurchasing')!=-1">
       <div
         v-for="(item, index) in obj.style_color_data"
         :key="index"
@@ -15,7 +15,7 @@
         <el-divider direction="vertical"></el-divider>
       </div>
     </div>
-    <div v-if="power.indexOf('A6000200')!=-1">
+    <div v-if="permission.indexOf('get_style_purchase')!=-1">
       <div v-for="(item, index) in style_materials" :key="index">
         <div class="content" v-for="(item1, index1) in item.style_materials_data" :key="index1">
           <div class="card">
@@ -30,7 +30,7 @@
                     <div
                       class="el-icon-close"
                       style="cursor: pointer;"
-                      v-if="item1.style_purchase_log_data.length===0&&power.indexOf('A6000400')!=-1"
+                      v-if="item1.style_purchase_log_data.length===0&&permission.indexOf('style_purchase_del')!=-1"
                       @click.stop="handleStyleMaterialsDel(item1)"
                     ></div>
                   </div>
@@ -93,13 +93,13 @@
                 size="mini"
                 round
                 @click="goPanelPurchase(item1)"
-                v-if="item1.style_purchase_log_data.length===0&&power.indexOf('A6000300')!=-1"
+                v-if="item1.style_purchase_log_data.length===0&&permission.indexOf('purchase_edit')!=-1"
               >{{"采购录入"}}</el-button>
               <el-button
                 size="mini"
                 round
                 @click="updateStatus(item1)"
-                v-if="item1.style_purchase_log_data.length>0&&item1.style_purchase_log_data[item1.style_purchase_log_data.length-1].state!=='3'&&power.indexOf('A6000300')!=-1"
+                v-if="item1.style_purchase_log_data.length>0&&item1.style_purchase_log_data[item1.style_purchase_log_data.length-1].state!=='3'&&permission.indexOf('style_purchase_log_add')!=-1"
               >{{"更新状态"}}</el-button>
               <!-- &&item1.style_purchase_log_data[item1.style_purchase_log_data.length-1].logname!=='全部回料' -->
             </div>
@@ -331,6 +331,7 @@ export default {
         //   { required: true, message: "请输入仓库", trigger: "blur" },
         // ],
       },
+      permission: [],
     };
   },
   methods: {
@@ -410,7 +411,7 @@ export default {
     },
     updateStatus() {},
     async handleStyleMaterialsDel(e) {
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该物料, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -420,11 +421,19 @@ export default {
           let res = await stylePurchaseDel({
             id: e.id,
           });
-          this.init();
-          this.$message({
-            type: "success",
-            message: "删除成功!",
-          });
+          if (res.data.error_code) {
+            this.$message({
+              showClose: true,
+              message: res.data.msg,
+              type: "error",
+            });
+          } else {
+            this.init();
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+          }
         })
         .catch(() => {
           this.$message({
@@ -497,7 +506,8 @@ export default {
   mounted() {
     this.init();
     this.storehouseInit();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

@@ -230,11 +230,12 @@ export const factoryModeDel = (data) => {
   });
 };
 // 文字识别普通
-export const discern = (data) => {
+export const discern = (data,config) => {
   return axios({
     url: "?g=test",
     method: "post",
     data: data,
+    config
   });
 };
 // 工厂加工方式删除接口

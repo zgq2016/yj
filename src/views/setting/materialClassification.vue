@@ -1,5 +1,5 @@
 <template>
-  <div class="goodsCategory">
+  <div class="goodsCategory" v-if="permission.indexOf('materialClassification')!=-1">
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -8,7 +8,7 @@
       </el-breadcrumb>
     </div>
     <!-- 添加分类 -->
-    <div class="addClassify" @click="addClassify">添加分类</div>
+    <div class="addClassify" v-if="permission.indexOf('materials_class_add')!=-1" @click="addClassify">添加分类</div>
     <el-table
       :data="tableData"
       style="width: 100%;margin: 20px 0;"
@@ -23,7 +23,8 @@
             content="编辑"
             placement="top"
             class="el-icon-edit btn"
-            v-if="scope.row.is_origin!==1"
+            v-if="scope.row.is_origin!==1&&permission.indexOf('get_materials_class_edit')!=-1"
+            
           >
             <div @click="handleEdit(scope.$index, scope.row)"></div>
           </el-tooltip>
@@ -31,7 +32,7 @@
             content="删除"
             placement="top"
             class="el-icon-delete btn"
-            v-if="scope.row.is_origin!==1"
+            v-if="scope.row.is_origin!==1&&permission.indexOf('materials_class_del')!=-1"
           >
             <div @click="handleDelete(scope.$index, scope.row)"></div>
           </el-tooltip>
@@ -133,6 +134,7 @@ import {
 export default {
   data() {
     return {
+      permission:[],
       classData: [],
       power: "",
       rules: {
@@ -262,7 +264,8 @@ export default {
   },
   mounted() {
     this.init();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

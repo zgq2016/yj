@@ -2,7 +2,7 @@
   <div class="materialProcess">
     <div class="main">
       <!-- 增加款式颜色 -->
-      <div style="display:flex" v-if="power.indexOf('A5000300')!=-1">
+      <div style="display:flex" v-if="permission.indexOf('get_style_materials_list')!=-1">
         <div class="color_num" v-for="(item, index) in obj.style_color_data" :key="index">
           <div
             style="display: flex;justify-content: center;align-items: center;"
@@ -11,17 +11,17 @@
           >
             <div class="color">{{item.style_color_name}}</div>
             <div
-              v-if="power.indexOf('A5000200')!=-1"
+              v-if="permission.indexOf('project_style_color_del')!=-1"
               class="el-icon-close"
               @click.stop="styleColorDel(item)"
             ></div>
           </div>
         </div>
-        <div class="addColor" @click="addKindColor" v-if="power.indexOf('A5000100')!=-1">增加款式颜色</div>
+        <div class="addColor" @click="addKindColor" v-if="permission.indexOf('project_style_color_add')!=-1">增加款式颜色</div>
         <!--  -->
       </div>
       <!-- 数据 -->
-      <div v-if="style_color_data_length!==0&&power.indexOf('A5000700')!=-1">
+      <div v-if="style_color_data_length!==0&&permission.indexOf('get_style_materials_list')!=-1">
         <div class="cardList" v-for="(item, index) in cardList" :key="index">
           <div style="display: flex;justify-content: space-between;align-items: flex-end;">
             <div>
@@ -37,7 +37,7 @@
                           <div class="cardStyle_left_content_name">
                             <div>{{item2.materials_mainclass_name}} ({{item2.materials_class_name}})</div>
                             <div
-                              v-if="power.indexOf('A5000600')!=-1"
+                              v-if="permission.indexOf('project_style_materials_del')!=-1"
                               class="el-icon-close"
                               style="cursor: pointer;"
                               @click.stop="handleStyleMaterialsDel(item2)"
@@ -89,7 +89,7 @@
               size="mini"
               round
               @click="handleMaterialsCard(item)"
-              v-if="power.indexOf('A5000500')!=-1"
+              v-if="permission.indexOf('project_style_materials_add')!=-1"
             >添加{{item.materialsCard}}</el-button>
           </div>
           <el-divider content-position="right">{{item.materials}}</el-divider>
@@ -101,13 +101,13 @@
           size="mini"
           round
           @click="purchaseOrder"
-          v-if="power.indexOf('A6000500')!=-1&&this.obj.materials_status!=2"
+          v-if="permission.indexOf('style_purchase_add')!=-1&&this.obj.materials_status!=2&&this.obj.design_status==5"
         >生成采购单</el-button>
         <el-button
           size="mini"
           round
           disabled
-          v-if="power.indexOf('A6000500')!=-1&&this.obj.materials_status==2"
+          v-if="this.obj.materials_status==2"
         >采购单审核中</el-button>
       </div>
       <!-- 删除历史 -->
@@ -136,7 +136,7 @@
               <div
                 class="restore"
                 @click="handleRestore(item1)"
-                v-if="power.indexOf('A5000800')!=-1"
+                v-if="permission.indexOf('project_style_materials_hfdel')!=-1"
               >还原</div>
             </div>
           </div>
@@ -144,14 +144,22 @@
       </div>
     </div>
     <el-dialog title="增加款式颜色" :visible.sync="centerDialogVisible" width="30%" center class="dialog">
-      <el-select v-model="designColor" placeholder="请选择">
+      <!-- <el-select v-model="designColor" placeholder="请选择">
         <el-option
           v-for="(item,index) in options"
           :key="index"
           :label="item.color_name"
           :value="item.color_name"
         ></el-option>
-      </el-select>
+      </el-select>-->
+      <el-cascader
+        v-model="designColor"
+        :options="options"
+        :props="optionProps"
+        :show-all-levels="false"
+        @change="handleChange"
+      ></el-cascader>
+
       <div v-if="style_color_data_length!==0">
         <div class="cardList" v-for="(item, index) in cardList" :key="index">
           <div style="display: flex;justify-content: space-between;align-items: flex-end;">
@@ -239,7 +247,7 @@
         <router-link
           to="/addRouteCard"
           style="margin-left:30px"
-          v-if="power.indexOf('A5000400')!=-1"
+          v-if="permission.indexOf('materials_add')!=-1"
           target="_blank"
         >新增主料卡</router-link>
       </div>
@@ -329,6 +337,12 @@ import {
 export default {
   data() {
     return {
+      permission: [],
+      optionProps: {
+        value: "color_name",
+        label: "color_name",
+        children: "children",
+      },
       power: "",
       designColor: "",
       obj: {},
@@ -388,10 +402,22 @@ export default {
     };
   },
   methods: {
+    handleChange() {
+      this.designColor = this.designColor.pop();
+    },
+
     async handleRestore(item1) {
       let res = await projectStyleMaterialsHfdel({ id: item1.id });
-      this.init();
-      this.delListInit();
+      if (res.data.error_code) {
+        this.$message({
+          showClose: true,
+          message: res.data.msg,
+          type: "error",
+        });
+      } else {
+        this.init();
+        this.delListInit();
+      }
     },
     async addKindColor() {
       this.centerDialogVisible = true;
@@ -417,20 +443,28 @@ export default {
       }
     },
     async handleStyleMaterialsDel(item) {
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该物料, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
         .then(async () => {
           let res = await projectStyleMaterialsDel({ id: item.id });
-          this.active = 0;
-          this.init();
-          this.delListInit();
-          this.$message({
-            type: "success",
-            message: "删除成功!",
-          });
+          if (res.data.error_code) {
+            this.$message({
+              showClose: true,
+              message: res.data.msg,
+              type: "error",
+            });
+          } else {
+            this.active = 0;
+            this.init();
+            this.delListInit();
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+          }
         })
         .catch(() => {
           this.$message({
@@ -462,9 +496,17 @@ export default {
           materials_color_id,
         });
         console.log(res);
-        this.active = 0;
-        this.init();
-        this.centerDialogVisible1 = false;
+        if (res.data.error_code) {
+          this.$message({
+            showClose: true,
+            message: res.data.msg,
+            type: "error",
+          });
+        } else {
+          this.active = 0;
+          this.init();
+          this.centerDialogVisible1 = false;
+        }
       });
     },
     handleColourNumber(item, item1) {
@@ -487,7 +529,15 @@ export default {
         id: item2.id,
         materials_color_id: item3.id,
       });
-      this.visible2 = false;
+      if (res.data.error_code) {
+        this.$message({
+          showClose: true,
+          message: res.data.msg,
+          type: "error",
+        });
+      } else {
+        this.visible2 = false;
+      }
     },
     handlePopoverId(item) {
       this.popoverId = item.id;
@@ -525,7 +575,7 @@ export default {
       this.total = count;
     },
     async styleColorDel(item) {
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该颜色, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -536,11 +586,19 @@ export default {
             style_id: id,
             style_color_name: item.style_color_name,
           });
-          this.init();
-          this.$message({
-            type: "success",
-            message: "删除成功!",
-          });
+          if (res.data.error_code) {
+            this.$message({
+              showClose: true,
+              message: res.data.msg,
+              type: "error",
+            });
+          } else {
+            this.init();
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+          }
         })
         .catch(() => {
           this.$message({
@@ -564,9 +622,17 @@ export default {
             style_id: id,
             style_color_name: this.designColor,
           });
-          this.init();
-          this.centerDialogVisible = false;
-          this.designColor = "";
+          if (res.data.error_code) {
+            this.$message({
+              showClose: true,
+              message: res.data.msg,
+              type: "error",
+            });
+          } else {
+            this.init();
+            this.centerDialogVisible = false;
+            this.designColor = "";
+          }
         }
         if (this.isCheckListBoxEvent.isCheckList === true) {
           let obj = {};
@@ -576,9 +642,17 @@ export default {
 
           let res = await projectStyleMaterialsListAdd(obj);
           console.log(res);
-          this.init();
-          this.active = 0;
-          this.centerDialogVisible = false;
+          if (res.data.error_code) {
+            this.$message({
+              showClose: true,
+              message: res.data.msg,
+              type: "error",
+            });
+          } else {
+            this.init();
+            this.active = 0;
+            this.centerDialogVisible = false;
+          }
         }
       }
     },
@@ -638,6 +712,7 @@ export default {
         style_color_name: item.style_color_name,
       });
       console.log(res);
+
       if (res.data.data.length !== 0) {
         res.data.data.forEach((v, i) => {
           v.style_materials_data.forEach((v1, i1) => {
@@ -646,6 +721,7 @@ export default {
           });
         });
       }
+
       this.card = res.data.data;
       this.handleAllCheck(false);
     },
@@ -679,8 +755,16 @@ export default {
             style_materials_list_id_data,
           });
           console.log(res);
-          this.$router.push({ path: `/materialPurchasing?id=${id}` });
-          this.init();
+          if (res.data.error_code) {
+            this.$message({
+              showClose: true,
+              message: res.data.msg,
+              type: "error",
+            });
+          } else {
+            this.$router.push({ path: `/materialPurchasing?id=${id}` });
+            this.init();
+          }
         });
       }
     },
@@ -740,7 +824,8 @@ export default {
   mounted() {
     this.init();
     this.delListInit();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

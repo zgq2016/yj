@@ -129,12 +129,12 @@
           </el-form-item>
           <el-form-item>
             <el-button
-              v-if="power.indexOf('A1000300')!=-1"
+              v-if="permission.indexOf('project_edit')!=-1"
               @click="handleKeep"
               style="padding:10px 50px;border-radius: 15px;"
             >保存</el-button>
             <el-button
-              v-if="power.indexOf('A1000400')!=-1"
+              v-if="permission.indexOf('project_del')!=-1"
               @click="handleDel"
               style="padding:10px 50px;border-radius: 15px;"
             >删除</el-button>
@@ -366,6 +366,7 @@ export default {
       arr: [],
       user_id_data_length: "",
       user_level: "",
+      permission:[]
     };
   },
   methods: {
@@ -518,18 +519,26 @@ export default {
     },
     handleDel() {
       let { id } = this.$route.query;
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该订单, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
         .then(async () => {
           let res = await projectDel({ id });
-          this.$router.push({ name: "Index" });
-          this.$message({
-            type: "success",
-            message: "删除成功!",
-          });
+          if (res.data.error_code) {
+            this.$message({
+              showClose: true,
+              message: res.data.msg,
+              type: "error",
+            });
+          } else {
+            this.$router.push({ name: "Index" });
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+          }
         })
         .catch(() => {
           this.$message({
@@ -563,8 +572,16 @@ export default {
 
         let res = await projectEdit(this.obj);
         console.log(res);
-        let { id } = this.$route.query;
-        this.$router.push({ path: `/designCheck?id=${id}` });
+        if (res.data.error_code) {
+          this.$message({
+            showClose: true,
+            message: res.data.msg,
+            type: "error",
+          });
+        } else {
+          let { id } = this.$route.query;
+          this.$router.push({ path: `/designCheck?id=${id}` });
+        }
       });
     },
     handleChange(e) {
@@ -623,8 +640,9 @@ export default {
     this.getSeason();
     this.getstylist();
 
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
     this.user_level = localStorage.getItem("level");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

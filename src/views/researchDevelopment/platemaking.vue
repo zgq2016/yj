@@ -1,5 +1,5 @@
 <template>
-  <div class="platemaking" v-if="power.indexOf('A8000300')!=-1">
+  <div class="platemaking" v-if="permission.indexOf('platemaking')!=-1">
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -116,30 +116,30 @@
           <template slot-scope="scope">
             <div class="btn">
               <div
-                v-if="scope.row.sample_status==='2'||scope.row.sample_status==='4'&&scope.row.user_id==userid"
+                v-if="scope.row.sample_status==='2'||scope.row.sample_status==='4'&&scope.row.user_id==userid&&permission.indexOf('sample_agree')!=-1"
                 @click="sample_apply(scope.$index, scope.row)"
               >提交审核</div>
               <!-- 2 4 -->
               <div
-                v-if="scope.row.sample_status==='3'&&scope.row.user_id==userid"
+                v-if="scope.row.sample_status==='3'&&scope.row.user_id==userid&&permission.indexOf('sample_agree')!=-1"
                 @click="cancel_sample_apply(scope.$index, scope.row)"
               >撤回审核</div>
               <div
                 @click="sample_agree(scope.$index, scope.row,1)"
-                v-if="scope.row.sample_status==='3'"
+                v-if="scope.row.sample_status==='3'&&permission.indexOf('sample_agree')!=-1"
               >通过</div>
               <div
                 @click="sample_agree(scope.$index, scope.row,0)"
-                v-if="scope.row.sample_status==='3'"
+                v-if="scope.row.sample_status==='3'&&permission.indexOf('sample_agree')!=-1"
               >不通过</div>
               <div
-                v-if="scope.row.sample_user_id==0"
+                v-if="scope.row.sample_user_id==0&&permission.indexOf('style_sample_edit')!=-1"
                 @click="get_style_sample(scope.$index, scope.row)"
               >领取</div>
               <!-- 3 -->
               <div
                 @click="handleEdit(scope.$index, scope.row)"
-                v-if="scope.row.sample_user_id!=0"
+                v-if="scope.row.sample_user_id!=0&&permission.indexOf('get_style_sample')!=-1"
               >查看</div>
             </div>
           </template>
@@ -177,6 +177,7 @@ import {
 export default {
   data() {
     return {
+      permission:[],
       power: "",
       formInline: {
         styleno: "",
@@ -332,7 +333,8 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
   computed: {
     userid() {

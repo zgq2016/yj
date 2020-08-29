@@ -1,27 +1,28 @@
 <template>
-  <div class="colorManagement" v-if="power.indexOf('H4000400')!=-1">
+  <div class="colorManagement" v-if="permission.indexOf('materialManagement')!=-1">
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>设置</el-breadcrumb-item>
-        <el-breadcrumb-item>材质管理</el-breadcrumb-item>
+        <el-breadcrumb-item>成份管理</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <!-- 添加材质 -->
-    <div class="addClassify" v-if="power.indexOf('H4000100')!=-1" @click="addClassify">添加材质</div>
+    <div class="addClassify" v-if="permission.indexOf('material_add')!=-1" @click="addClassify">添加成份</div>
     <el-table :data="tableData" style="width: 100%;margin: 20px 0;">
-      <el-table-column prop="material_name" label="材质名称" width="200"></el-table-column>
+      <el-table-column prop="material_name" label="成份名称" width="200"></el-table-column>
+      <el-table-column prop="short_name" label="英文缩写" width="200"></el-table-column>
+      <el-table-column prop="eng_name" label="英文名称" width="200"></el-table-column>
       <el-table-column
         align="right"
         label="操作"
-        v-if="power.indexOf('H4000300')!=-1||power.indexOf('H4000200')!=-1"
       >
         <template slot-scope="scope">
           <el-tooltip
             content="编辑"
             placement="top"
             class="el-icon-edit btn"
-            v-if="power.indexOf('H4000300')!=-1"
+            v-if="permission.indexOf('material_edit')!=-1"
           >
             <div @click="handleEdit(scope.$index, scope.row)"></div>
           </el-tooltip>
@@ -29,7 +30,7 @@
             content="删除"
             placement="top"
             class="el-icon-delete btn"
-            v-if="power.indexOf('H4000200')!=-1"
+            v-if="permission.indexOf('material_del')!=-1"
           >
             <div @click="handleDelete(scope.$index, scope.row)"></div>
           </el-tooltip>
@@ -54,6 +55,12 @@
         >
           <el-input v-model="form.material_name" style="width:80%;"></el-input>
         </el-form-item>
+        <el-form-item label="英文缩写">
+          <el-input v-model="form.short_name" style="width:80%;"></el-input>
+        </el-form-item>
+        <el-form-item label="英文名称">
+          <el-input v-model="form.eng_name" style="width:80%;"></el-input>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleClose">取 消</el-button>
@@ -77,6 +84,12 @@
           :rules="[ { required: true, message: '请输入材质名称', trigger: 'blur' },]"
         >
           <el-input v-model="form.material_name" style="width:80%;"></el-input>
+        </el-form-item>
+        <el-form-item label="英文缩写">
+          <el-input v-model="form.short_name" style="width:80%;"></el-input>
+        </el-form-item>
+        <el-form-item label="英文名称">
+          <el-input v-model="form.eng_name" style="width:80%;"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -111,6 +124,7 @@ import {
 export default {
   data() {
     return {
+      permission:[],
       power: "",
       tableData: [],
       centerDialogVisible: false, //添加材质
@@ -127,11 +141,11 @@ export default {
   },
   methods: {
     handleClose() {
-      this.form.material_name = "";
+      this.form = {};
       this.centerDialogVisible = false;
     },
     handleClose1() {
-      this.form.material_name = "";
+      this.form = {};
       this.centerDialogVisible1 = false;
     },
     handleNewList() {
@@ -140,8 +154,15 @@ export default {
         // 调用actions的登录方法
 
         let res = await materialAdd(this.form);
-        this.form.material_name = "";
+        this.form = {};
         this.init();
+        if (res.data.error_code) {
+          this.$message({
+            showClose: true,
+            message: res.data.msg,
+            type: "error",
+          });
+        }
         this.centerDialogVisible = false;
       });
     },
@@ -149,8 +170,8 @@ export default {
       this.$refs["form"].validate(async (valid) => {
         let res = await materialEdit(this.form);
         console.log(res);
-        this.form.material_name = "";
-        this.form.id = "";
+        this.form = {};
+        // this.form.id = "";
         this.init();
         this.centerDialogVisible1 = false;
       });
@@ -160,8 +181,8 @@ export default {
     },
     async handleEdit(index, row) {
       console.log(row);
-      this.form.material_name = row.material_name;
-      this.form.id = row.id;
+      this.form = row;
+      // this.form.id = row.id;
       this.centerDialogVisible1 = true;
     },
     async handleDelete(index, row) {
@@ -172,14 +193,24 @@ export default {
       })
         .then(async () => {
           let res = await materialDel({ id: row.id });
+          if (res.data.error_code) {
+            this.$message({
+              showClose: true,
+              message: res.data.msg,
+              type: "error",
+            });
+          } else {
+            this.$message({
+              showClose: true,
+              type: "success",
+              message: "删除成功!",
+            });
+          }
           this.init();
-          this.$message({
-            type: "success",
-            message: "删除成功!",
-          });
         })
         .catch(() => {
           this.$message({
+            showClose: true,
             type: "info",
             message: "已取消删除",
           });
@@ -206,7 +237,8 @@ export default {
   },
   mounted() {
     this.init();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+     this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

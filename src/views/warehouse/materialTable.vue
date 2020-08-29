@@ -1,10 +1,13 @@
 <template>
-  <div class="materialTable" v-if="power.indexOf('C3000300')!=-1">
-    <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item>仓库</el-breadcrumb-item>
-      <el-breadcrumb-item>物料库存查询</el-breadcrumb-item>
-      <el-breadcrumb-item>物料库存详情</el-breadcrumb-item>
-    </el-breadcrumb>
+  <div class="materialTable" >
+    <div class="aa">
+      <el-breadcrumb separator="/" class="breadcrumb">
+        <el-breadcrumb-item>仓库</el-breadcrumb-item>
+        <el-breadcrumb-item>物料库存查询</el-breadcrumb-item>
+        <el-breadcrumb-item>物料库存详情</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
+
     <div class="main">
       <div class="info">
         <!-- header -->
@@ -102,13 +105,13 @@
               width="90"
               label="采购批次"
             ></el-table-column>
-            <el-table-column align="center" width="90px" prop="create_time" label="采购时间"></el-table-column>
+            <el-table-column align="center" width="100px" prop="create_time" label="采购时间"></el-table-column>
             <el-table-column align="center" prop="color_no" label="色卡"></el-table-column>
             <el-table-column align="center" prop="amountPurchased" label="采购量"></el-table-column>
             <el-table-column align="center" prop="price" label="单价"></el-table-column>
             <el-table-column align="center" prop="deposit" label="订金"></el-table-column>
             <el-table-column align="center" prop="stock_quantity" label="回货量"></el-table-column>
-            <el-table-column align="center" width="95px" prop="create_time" label="预计回料时间"></el-table-column>
+            <el-table-column align="center" width="100px" prop="create_time" label="预计回料时间"></el-table-column>
             <!-- <el-table-column align="center" prop="scheduledReceipt" label="入库量"></el-table-column> -->
             <!-- <el-table-column align="center" prop="stock_quantity" label="库存量"></el-table-column> -->
             <el-table-column align="center" prop="amount" label="结算金额"></el-table-column>
@@ -192,16 +195,15 @@ export default {
       console.log(res2);
       this.tableData = res2.data.data;
       this.total = res2.data.count;
-      this.tableData.map((v,i)=>{
-        v.details.map((j,k)=>{
-          v.stock_quantity += Number(j.quantity)
-
-        })
-      })
+      this.tableData.map((v, i) => {
+        v.details.map((j, k) => {
+          v.stock_quantity += Number(j.quantity);
+        });
+      });
     },
   },
   mounted() {
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
     this.init();
     this.materials();
   },

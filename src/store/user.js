@@ -45,6 +45,7 @@ const actions = {
         // router.push({ name: "homepage" });
         // 调用user下的mutations的方法
         store.commit("setUserInfo", res.data.data);
+        localStorage.setItem("permission", this.state.userInfo.permission);
         localStorage.setItem("power", this.state.userInfo.power);
         localStorage.setItem("user_id", this.state.userInfo.id);
         localStorage.setItem("itcast_pro_token", res.data.data.token);

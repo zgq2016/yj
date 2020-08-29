@@ -1,5 +1,5 @@
 <template>
-  <div class="accountFlowAndBookkeeping" v-if="power.indexOf('F2000100')!=-1">
+  <div class="accountFlowAndBookkeeping" v-if="permission.indexOf('accountFlowAndBookkeeping')!=-1">
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>财务</el-breadcrumb-item>
@@ -72,8 +72,8 @@
               <el-dropdown trigger="click" @command="handleCommand" placement="bottom">
                 <span class="el-icon-more"></span>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item command="a">账户互转</el-dropdown-item>
-                  <el-dropdown-item command="b">期初调整</el-dropdown-item>
+                  <el-dropdown-item v-if="permission.indexOf('my_account_add')!=-1" command="a">账户互转</el-dropdown-item>
+                  <el-dropdown-item v-if="permission.indexOf('my_account_add')!=-1" command="b">期初调整</el-dropdown-item>
                   <el-dropdown-item command="c" v-print="'#printTest'">打印</el-dropdown-item>
                   <el-dropdown-item command="d">导出</el-dropdown-item>
                 </el-dropdown-menu>
@@ -82,22 +82,26 @@
             <div
               class="addStyle"
               style="background-color: #e3e3e3;color: #fff;"
-              v-if="power.indexOf('F2000300')!=-1"
+              v-if="permission.indexOf('my_account_add')!=-1"
               @click="onexpend"
             >支出</div>
-            <div class="addStyle" v-if="power.indexOf('F2000200')!=-1" @click="onincome">收入</div>
+            <div
+              class="addStyle"
+              v-if="permission.indexOf('my_account_add')!=-1"
+              @click="onincome"
+            >收入</div>
             <!-- <div
               class="addStyle"
-              v-if="power.indexOf('F2000400')!=-1"
+              v-if="permission.indexOf('F2000400')!=-1"
               @click="onAccounttransfers"
             >账户互转</div>
             <div
               class="addStyle"
-              v-if="power.indexOf('F2000500')!=-1"
+              v-if="permission.indexOf('F2000500')!=-1"
               @click="onbalanceadjustment"
             >期初调整</div>
-            <div class="addStyle" v-if="power.indexOf('F2000600')!=-1" v-print="'#printTest'">打印</div>
-            <div class="addStyle" v-if="power.indexOf('F2000700')!=-1">导出</div>-->
+            <div class="addStyle" v-if="permission.indexOf('F2000600')!=-1" v-print="'#printTest'">打印</div>
+            <div class="addStyle" v-if="permission.indexOf('F2000700')!=-1">导出</div>-->
           </div>
         </el-form-item>
       </el-form>
@@ -434,6 +438,7 @@ import {
 export default {
   data() {
     return {
+      permission: [],
       total_cope_money: "",
       total_pay_money: "",
       total_opay_money: "",
@@ -796,7 +801,8 @@ export default {
     this.getBalanceAccountType();
     this.getSettlementModes();
     this.getTransactionType();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

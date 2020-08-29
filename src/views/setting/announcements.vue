@@ -1,5 +1,5 @@
 <template>
-  <div class="announcements">
+  <div class="announcements" v-if="permission.indexOf('announcements')!=-1" >
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>设置</el-breadcrumb-item>
@@ -7,7 +7,7 @@
       </el-breadcrumb>
     </div>
     <div class="main">
-      <el-button type="primary" size="small" @click="bulletin">发公告</el-button>
+      <el-button type="primary" size="small"  v-if="permission.indexOf('notice_add')!=-1" @click="bulletin">发公告</el-button>
       <el-table
         :data="tableData"
         style="width: 100%;margin-top:20px;cursor: pointer;"
@@ -20,8 +20,8 @@
         <el-table-column prop="text" label="内容"></el-table-column>
         <el-table-column align="center" fixed="right" label="操作" width="100">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
-            <el-button type="text" @click="delBulletin(scope.row)" size="small">删除</el-button>
+            <el-button @click="handleClick(scope.row)" type="text"  v-if="permission.indexOf('notice_edit')!=-1" size="small">修改</el-button>
+            <el-button type="text" @click="delBulletin(scope.row)"  v-if="permission.indexOf('notice_del')!=-1" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -96,6 +96,7 @@ import { noticeList, noticeAdd, noticeEdit, noticeDel } from "@/api/setting.js";
 export default {
   data() {
     return {
+      permission:[],
       tableData: [],
       ruleForm: {},
       rules: {
@@ -210,6 +211,7 @@ export default {
   },
   mounted() {
     this.init();
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

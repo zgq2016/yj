@@ -22,12 +22,12 @@
         <el-form-item>
           <!--   -->
           <el-button
-            v-if="power.indexOf('D1000300')!=-1"
+            v-if="permission.indexOf('customer_edit')!=-1"
             @click="handleEdit"
             style="padding:10px 50px;border-radius: 15px;"
           >保存</el-button>
           <el-button
-            v-if="power.indexOf('D1000200')!=-1"
+            v-if="permission.indexOf('customer_del')!=-1"
             @click="handleDel"
             style="padding:10px 50px;border-radius: 15px;"
           >删除</el-button>
@@ -42,6 +42,7 @@ import { getCustomer, getEdit, customerDel } from "@/api/sell.js";
 export default {
   data() {
     return {
+      permission:[],
       power: "",
       form: {
         companyname: "",
@@ -104,7 +105,8 @@ export default {
     let res = await getCustomer({ id });
     this.form = res.data.data;
     console.log(res);
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
     console.log(this.power);
   },
 };

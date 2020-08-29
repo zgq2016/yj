@@ -1,12 +1,16 @@
 <template>
-  <div class="accountType" v-if="power.indexOf('F6000400')!=-1">
+  <div class="accountType" v-if="permission.indexOf('accountType')!=-1">
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>财务</el-breadcrumb-item>
         <el-breadcrumb-item>账目类型</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div @click="dialogVisible = true" v-if="power.indexOf('F6000100')!=-1" class="addStyle">新增账目类型</div>
+    <div
+      @click="dialogVisible = true"
+      v-if="permission.indexOf('account_type_add')!=-1"
+      class="addStyle"
+    >新增账目类型</div>
 
     <div class="table" style="width: 100%;margin:10px 0">
       <el-table :data="data" size="mini" border style="width: 100%">
@@ -20,16 +24,16 @@
               <el-tooltip
                 content="编辑"
                 placement="top"
-                v-if="power.indexOf('F6000300')!=-1"
                 class="el-icon-edit btn"
+                v-if="permission.indexOf('account_type_edit')!=-1"
               >
                 <div @click="handleEdit(scope.$index, scope.row)"></div>
               </el-tooltip>
               <el-tooltip
                 content="删除"
                 placement="top"
-                v-if="power.indexOf('F6000200')!=-1"
                 class="el-icon-delete btn"
+                v-if="permission.indexOf('account_type_del')!=-1"
               >
                 <div @click="handleDelete(scope.$index, scope.row)"></div>
               </el-tooltip>
@@ -146,6 +150,7 @@ export default {
           { required: true, message: "类型名称", trigger: "blur" },
         ],
       },
+      permission: [],
     };
   },
   methods: {
@@ -237,7 +242,8 @@ export default {
   },
   mounted() {
     this.init();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

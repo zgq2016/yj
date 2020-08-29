@@ -1,5 +1,5 @@
 <template>
-  <div class="designNote" v-if="power.indexOf('A4000200')!=-1">
+  <div class="designNote" v-if="permission.indexOf('designNote')!=-1">
     <div v-if="designRemark===0">
       <el-input type="textarea" v-model="obj.designidea" class="textarea"></el-input>
       <div class="drawing">图纸</div>
@@ -14,6 +14,7 @@
       >
         <i class="el-icon-plus"></i>
       </el-upload>
+
       <el-dialog :visible.sync="dialogVisible">
         <img width="100%" :src="dialogImageUrl" alt />
       </el-dialog>
@@ -136,6 +137,7 @@ import {
   styleDesignideaPicDel,
   designApply,
   cancelDesignApply,
+  styleDesignEdit,
 } from "@/api/researchDevelopment";
 import Print from "@/components/print.vue";
 export default {
@@ -148,6 +150,7 @@ export default {
       dialogImageUrl: "",
       dialogVisible: false,
       img_list: [], //图片数据
+      permission: [],
     };
   },
   methods: {
@@ -167,14 +170,23 @@ export default {
     async handleKeep() {
       let { id } = this.$route.query;
       let { designidea } = this.obj;
-      let res = await styleEdit({ id, designidea });
-      this.init();
-      this.designRemark = 1;
+      let res = await styleDesignEdit({ id, designidea });
+      if (res.data.error_code) {
+        this.$message({
+          showClose: true,
+          message: res.data.msg,
+          type: "error",
+        });
+      } else {
+        this.init();
+        this.designRemark = 1;
+      }
     }, //成功
     async handleSuccess(response, file, fileList) {
       let style_id = this.$route.query.id - 0;
       let { pic_file_url } = response.data;
       let picurl = pic_file_url;
+
       let res = await styleDesignideaPicAdd({ style_id, picurl });
     },
     // 移除
@@ -185,9 +197,19 @@ export default {
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
+      
     },
     beforeUpload(file) {
-      return this.$elUploadBeforeUpload(file);
+      if (this.permission.indexOf("style_designidea_pic_add") != -1) {
+        return this.$elUploadBeforeUpload(file);
+      } else {
+        this.$message({
+          showClose: true,
+          message: "无权操作",
+          type: "error",
+        });
+        return false;
+      }
     },
     async init() {
       let { id } = this.$route.query;
@@ -205,7 +227,8 @@ export default {
       this.designRemark = this.$route.query.designRemark - 0;
     }
     this.init();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

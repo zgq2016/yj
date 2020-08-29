@@ -15,6 +15,43 @@
         <img v-if="obj.picurl" :src="obj.picurl" />
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </div>
+      <el-upload
+        class="upload-demo"
+        ref="upload"
+        action="https://shesho.ppp-pay.top/webapi.php?g=test"
+        :auto-upload="true"
+        name="image"
+        :show-file-list="false"
+        :on-success="recognition"
+        :on-error="errorRecognition"
+        :before-upload="beforeRecognition"
+        :file-list="fileList"
+      >
+        <el-button slot="trigger" size="small" type="primary">图片内容识别</el-button>
+      </el-upload>
+
+      <div
+        v-loading="loading"
+        element-loading-text="识别内容中"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(0, 0, 0, 0.8)"
+        class="image-content"
+      >
+        <ul>
+          <li>*注意：识别内容存在差异，谨慎修改！</li>
+          <li v-for="(item,index) in contents" :key="index">{{item.words}}</li>
+        </ul>
+        <div v-if="fileList1">
+          <el-image
+            style="width: 100%; height: 300px;"
+            fit="scale-down"
+            title="点击放大"
+            :src="fileList1"
+            :preview-src-list="[fileList1]"
+          ></el-image>
+          <!-- fit="scale-down" -->
+        </div>
+      </div>
     </div>
     <!-- form -->
     <el-col class="form" style="margin-top:20px">
@@ -73,6 +110,7 @@
               </el-select>
             </el-form-item>
           </div>
+          <span class="rot" @click="rot">新增分类</span>
         </div>
         <div v-for="(item,index) in obj.material_data" :key="item.key" class="member_user_item">
           <el-form-item
@@ -84,7 +122,7 @@
               <el-option
                 v-for="item in materials"
                 :key="item.id"
-                :label="item.material_name"
+                :label="item.name"
                 :value="item.material_name"
               ></el-option>
             </el-select>
@@ -146,13 +184,13 @@
         <el-form-item>
           <span style="cursor: pointer;" @click="handleColor">添加颜色</span>
         </el-form-item>
-        <el-form-item label="是否有货" prop="instock">
+        <el-form-item label="是否有货" >
           <el-radio-group v-model="obj.instock">
-            <el-radio :label="0">是</el-radio>
-            <el-radio :label="1">否</el-radio>
+            <el-radio :label="'0'">是</el-radio>
+            <el-radio :label="'1'">否</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="到货时间" prop="arrival_time">
+        <el-form-item label="到货时间" >
           <el-input v-model="obj.arrival_time" placeholder="到货时间" style="width:200px"></el-input>天
         </el-form-item>
         <el-form-item label="备注">
@@ -160,12 +198,12 @@
         </el-form-item>
         <el-form-item>
           <el-button
-            v-if="power.indexOf('E2000300')!=-1"
+            v-if="permission.indexOf('materials_edit')!=-1"
             @click="handleEdit"
             style="padding:10px 50px;border-radius: 10px;"
           >保存</el-button>
           <el-button
-            v-if="power.indexOf('E2000200')!=-1"
+            v-if="permission.indexOf('materials_del')!=-1"
             @click="handleDel"
             style="padding:10px 50px;border-radius: 10px;"
           >删除</el-button>
@@ -267,7 +305,6 @@
 </template>
 
 <script>
-import moment from "moment";
 import {
   getSupplierSelect,
   getUnitSelect,
@@ -289,7 +326,7 @@ export default {
   data() {
     return {
       optionProps: {
-        value: "id",
+        value: "color_name",
         label: "color_name",
         children: "children",
       },
@@ -397,15 +434,41 @@ export default {
       },
       color_dataRules: {
         color_data_color: [
-          { required: true, message: "请选择颜色", trigger: "blur" },
+          { required: true, message: "请选择颜色", trigger: "change" },
         ],
         color_data_color_no: [
           { required: true, message: "请输入颜色编号", trigger: "blur" },
         ],
       },
+      loading: false,
+      headImg: "",
+      fileList: [],
+      fileList1: "",
+      contents: [],
+      imgs: [],
+      permission:[]
     };
   },
   methods: {
+    rot() {
+      this.$router.push({ path: `/materialClassification` });
+    },
+    // *******************识别内容********************
+    beforeRecognition() {
+      this.loading = true;
+    },
+    errorRecognition() {
+      this.loading = false;
+    },
+    async recognition(response, file, fileList) {
+      this.loading = false;
+      this.fileList1 = URL.createObjectURL(file.raw);
+      this.imgs.push(URL.createObjectURL(file.raw));
+      this.contents = response.data.words_result;
+      this.contents = this.contents.filter((v) => {
+        return !/^\d{1,3}$/.test(v.words);
+      });
+    },
     //放大/缩小
     changeScale(num) {
       console.log("changeScale");
@@ -649,6 +712,9 @@ export default {
           delete this.obj["supplier_companyname"];
           delete this.obj["materials_supplier_data"];
           console.log(this.obj);
+          this.obj.color_data.map((v, i) => {
+            if (v.color instanceof Array) v.color = v.color.pop();
+          });
           let res = await materialsEdit(this.obj);
           console.log(res);
           this.$router.go(-1);
@@ -676,7 +742,8 @@ export default {
     this.getUnit();
     this.getColor();
     this.getMaterialList();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>
@@ -684,6 +751,7 @@ export default {
 <style lang="less" scoped>
 .addRouteCard {
   .upload {
+    float: left;
     width: 150px;
     height: 150px;
     border-radius: 10px;
@@ -699,10 +767,51 @@ export default {
       align-items: center;
     }
   }
+  .upload-demo {
+    float: left;
+    height: 30px;
+    margin-left: 100px;
+  }
+
+  .image-content {
+    position: absolute;
+    left: 920px;
+    width: 500px;
+    height: auto;
+    border: 1px solid #cccccc;
+    z-index: 33;
+    ul {
+      padding: 10px;
+      li {
+        margin-bottom: 5px;
+      }
+      li:first-of-type {
+        font-weight: 600;
+        margin: 8px;
+      }
+    }
+    /deep/.el-image-viewer__wrapper {
+      img {
+        width: auto;
+        height: auto;
+        max-height: auto;
+      }
+    }
+  }
   /deep/textarea {
     width: 500px;
     height: 150px;
     resize: none !important;
+  }
+  .rot {
+    height: 40px;
+    line-height: 40px;
+    display: block;
+    margin-left: 20px;
+  }
+  .rot:hover {
+    cursor: pointer;
+    color: coral;
   }
   .member_user_item {
     border-bottom: 1px #eee dashed;

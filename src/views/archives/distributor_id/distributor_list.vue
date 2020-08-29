@@ -1,6 +1,6 @@
 <template>
   <!--  v-if="data.id=data.id||0" -->
-  <div class="right_list">
+  <div class="right_list" v-if="permission.indexOf('distributor_list')!=-1">
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>档案库</el-breadcrumb-item>
@@ -30,7 +30,7 @@
           ></el-cascader>
         </el-form-item>
       </el-form>
-      <div class="addStyle" @click="addSupplier" v-if="power.indexOf('E2000100')!=-1">新增</div>
+      <div class="addStyle" @click="addSupplier" v-if="permission.indexOf('supplier_add')!=-1">新增</div>
     </div>
 
     <!-- main -->
@@ -87,6 +87,7 @@ export default {
   },
   data() {
     return {
+      permission:[],
       power: "",
       companyname: "", //搜索
       SupplierList: [], //列表数据
@@ -149,6 +150,7 @@ export default {
     this.init();
     this.getClassData();
     this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
   watch: {
     data() {

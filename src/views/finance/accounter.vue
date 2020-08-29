@@ -1,12 +1,12 @@
 <template>
-  <div class="accounter">
+  <div class="accounter"  v-if="permission.indexOf('accounter')!=-1">
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb" v-if="power.indexOf('F5000400')!=-1">
+      <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>财务</el-breadcrumb-item>
         <el-breadcrumb-item>结算帐户</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div @click="dialogVisible = true" v-if="power.indexOf('F5000100')!=-1" class="addStyle">新增帐户</div>
+    <div @click="dialogVisible = true" v-if="permission.indexOf('balance_account_add')!=-1" class="addStyle">新增帐户</div>
 
     <div class="table" style="width: 100%;margin:10px 0">
       <el-table size="mini" :data="data" border style="width: 100%">
@@ -21,13 +21,12 @@
         <el-table-column
           label="操作"
           width="100"
-          v-if="power.indexOf('F5000300')!=-1||power.indexOf('F5000200')!=-1"
         >
           <template slot-scope="scope">
             <el-tooltip
               content="编辑"
               placement="top"
-              v-if="power.indexOf('F5000300')!=-1"
+              v-if="permission.indexOf('balance_account_edit')!=-1"
               class="el-icon-edit btn"
             >
               <div @click="handleEdit(scope.$index, scope.row)"></div>
@@ -35,7 +34,7 @@
             <el-tooltip
               content="删除"
               placement="top"
-              v-if="power.indexOf('F5000200')!=-1"
+              v-if="permission.indexOf('balance_account_del')!=-1"
               class="el-icon-delete btn"
             >
               <div @click="handleDelete(scope.$index, scope.row)"></div>
@@ -189,6 +188,7 @@ export default {
           { required: true, message: "账户名称", trigger: "blur" },
         ],
       },
+      permission:[]
     };
   },
   methods: {
@@ -293,7 +293,8 @@ export default {
   mounted() {
     this.get_balance();
     this.init();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

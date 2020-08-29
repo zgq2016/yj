@@ -14,8 +14,8 @@
           <h4>入库单-{{form.no}}-{{'zaan'}}</h4>
         </div>
         <div class="rh_right">
-          <el-button size="mini" type="primary" v-if="power.indexOf('C2000200')!=-1">扫码</el-button>
-          <el-button size="mini" type="primary" v-if="power.indexOf('C2000300')!=-1">导入</el-button>
+          <el-button size="mini" type="primary">扫码</el-button>
+          <el-button size="mini" type="primary">导入</el-button>
           <el-button size="mini" type="primary" @click="tables">新建入库单</el-button>
         </div>
       </div>
@@ -141,7 +141,11 @@
                 style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
                 :src="scope.row.style_pic_url"
                 fit="cover"
-              ></el-image>
+              >
+                <div slot="error" class="image-slot">
+                  <i class="el-icon-picture-outline"></i>
+                </div>
+              </el-image>
             </template>
           </el-table-column>
           <el-table-column prop="stylename" width="110" align="center" label="商品">
@@ -323,19 +327,19 @@
             <el-form-item>
               <el-button
                 size="small"
-                v-if="power.indexOf('C2000500')!=-1"
+                v-if="permission.indexOf('book_stock_order_add')!=-1"
                 type="primary"
                 @click="sketch(0)"
               >草稿</el-button>
               <el-button
-                v-if="power.indexOf('C2000600')!=-1"
+                v-if="permission.indexOf('book_stock_order_add')!=-1"
                 type="primary"
                 size="small"
                 @click="sketch(1)"
               >入库</el-button>
               <el-button
                 size="small"
-                v-if="this.$route.query.state==0&&power.indexOf('C20001000')!=-1"
+                v-if="this.$route.query.state==0&&permission.indexOf('book_stock_order_del')!=-1"
                 @click="delStock"
                 type="primary"
               >删除</el-button>
@@ -425,6 +429,7 @@ export default {
       indexk: 0,
       dialogFormVisible: false,
       clone: "",
+      permission: [],
     };
   },
   methods: {
@@ -1100,7 +1105,8 @@ export default {
     },
   },
   mounted() {
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
     this.init();
     this.store();
     this.factory();
@@ -1192,7 +1198,7 @@ export default {
         }
         /deep/.el-step__main {
           position: relative;
-          bottom: 10px;
+          bottom: 5px;
           .el-step__description {
             padding-top: 20%;
           }

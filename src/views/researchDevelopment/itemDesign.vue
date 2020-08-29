@@ -1,5 +1,5 @@
 <template>
-  <div class="itemDesign" v-if="power.indexOf('A1000200')!=-1">
+  <div class="itemDesign" v-if="permission.indexOf('itemDesign')!=-1">
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -106,7 +106,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <div class="addStyle" v-if="power.indexOf('A1000100')!=-1">
+          <div class="addStyle" v-if="permission.indexOf('project_add')!=-1">
             <el-dropdown trigger="click" @command="handleCommand">
               <span class="el-dropdown-link">新增项目</span>
               <el-dropdown-menu slot="dropdown">
@@ -122,9 +122,9 @@
     </div>
 
     <!-- 列表 -->
-    <div class="dataList">
-      <div class="list" v-for="(item, index) in data" :key="index">
-        <div @click="handleEdit(item)">
+    <div class="dataList"  v-if="permission.indexOf('get_project_list')!=-1">
+      <div class="list" v-for="(item, index) in data" :key="index" >
+        <div @click="handleEdit(item)"  >
           <el-image
             v-if="item.picurl"
             style="width: 150px; height: 150px;
@@ -192,6 +192,7 @@ import {
 export default {
   data() {
     return {
+      permission: [],
       data: [],
       years: [],
       seasons: [],
@@ -361,7 +362,8 @@ export default {
     this.getStylist();
     this.getCategory();
     this.getWest();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
   watch: {
     data() {

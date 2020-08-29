@@ -1,6 +1,5 @@
 <template>
-  <!--  v-if="power.indexOf('C2000100')!=-1" -->
-  <div class="stockInquiry">
+  <div class="stockInquiry" v-if="permission.indexOf('stockInquiry')!=-1" >
     <!-- 面包屑 -->
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -56,19 +55,12 @@
       <!-- <el-form-item label="状态:"></el-form-item> -->
       <el-form-item>
         <div style="display: flex;justify-content: space-between;align-items: center;">
-          <div class="addStyle" v-if="power.indexOf('C2000900')!=-1">批量打印</div>
-          <div class="addStyle" v-if="power.indexOf('C2000400')!=-1" @click="addCreateWare">新增入库单</div>
+          <div class="addStyle">批量打印</div>
+          <div class="addStyle" v-if="permission.indexOf('book_stock_order_add')!=-1" @click="addCreateWare">新增入库单</div>
         </div>
       </el-form-item>
     </el-form>
-    <!-- <div class="box" style="margin-bottom:10px;">
-      <el-button
-        size="mini"
-        @click="addCreateWare"
-        type="primary"
-        v-if="power.indexOf('C2000400')!=-1"
-      >新增入库单</el-button>
-    </div>-->
+   
     <div class="table">
       <el-table
         :data="tableData"
@@ -86,7 +78,7 @@
         <el-table-column align="center" prop="account_name" label="结算账户"></el-table-column>
         <el-table-column align="center" prop="pay_price" label="实付金额"></el-table-column>
         <el-table-column align="center" prop="remark" label="备注"></el-table-column>
-        <el-table-column fixed="right" label="操作" width="100">
+        <el-table-column fixed="right"  v-if="permission.indexOf('book_stock_order_info')!=-1" label="操作" width="100">
           <template slot-scope="scope">
             <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
           </template>
@@ -147,6 +139,7 @@ export default {
         { name: "已撤销", state: 4 },
       ],
       tableData: [],
+      permission: [],
     };
   },
   methods: {
@@ -231,7 +224,8 @@ export default {
     },
   },
   mounted() {
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
     this.factory();
     this.init();
   },

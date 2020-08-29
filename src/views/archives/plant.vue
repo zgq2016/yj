@@ -1,5 +1,5 @@
 <template>
-  <div class="distributor">
+  <div class="distributor" v-if="permission.indexOf('plant')!=-1">
     <!-- 面包屑 -->
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -41,7 +41,7 @@
               </el-select>
             </el-form-item>
           </el-form>
-          <div class="addStyle" @click="addClient">新增工厂</div>
+          <div class="addStyle" v-if="permission.indexOf('factory_add')!=-1" @click="addClient">新增工厂</div>
         </div>
         <el-table
           :data="tableData"
@@ -55,7 +55,7 @@
           <el-table-column prop="mode_name" align="center" label="指派方式"></el-table-column>
           <el-table-column label="操作" align="center">
             <template v-slot="scope">
-              <div @click="handleEdit1(scope.row)" class="check">查看</div>
+              <div @click="handleEdit1(scope.row)" v-if="permission.indexOf('factory_edit')!=-1" class="check">查看</div>
             </template>
           </el-table-column>
         </el-table>
@@ -258,6 +258,7 @@ export default {
       count: 0,
       TL: "",
       row_mode: {},
+      permission:[]
     };
   },
   methods: {
@@ -457,6 +458,7 @@ export default {
   },
   mounted() {
     this.init();
+    this.permission = localStorage.getItem("permission").split(",");
   },
   watch: {
     itemList() {

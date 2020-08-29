@@ -1,5 +1,5 @@
 <template>
-  <div class="platemaking">
+  <div class="platemaking"  v-if="permission.indexOf('ExaminationAndApprovalWork')!=-1">
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -77,10 +77,16 @@
         </el-select>
       </el-form-item>-->
     </el-form>
-    <div class="table">
-      <el-table ref="singleTable" :data="tableData" highlight-current-row style="width: 100%">
-        <el-table-column label="序号" type="index" width="50"></el-table-column>
-        <el-table-column label="图片" width="140">
+    <div class="table" v-if="permission.indexOf('get_style_approve')!=-1">
+      <el-table
+        ref="singleTable"
+        size="mini"
+        :data="tableData"
+        highlight-current-row
+        style="width: 100%"
+      >
+        <el-table-column align="center" label="序号" type="index" width="50"></el-table-column>
+        <el-table-column align="center" label="图片" width="140">
           <template slot-scope="scope" property="style_pic_url">
             <el-image
               style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
@@ -89,19 +95,19 @@
             ></el-image>
           </template>
         </el-table-column>
-        <el-table-column property="stylename" label="名称"></el-table-column>
-        <el-table-column property="styleno" label="款号"></el-table-column>
-        <el-table-column width="90" property="style_color" label="颜色"></el-table-column>
-        <el-table-column property="style_type" label="品类"></el-table-column>
-        <el-table-column property="year" label="年份"></el-table-column>
-        <el-table-column property="season" label="季节"></el-table-column>
-        <el-table-column property="name" label="设计师"></el-table-column>
-        <el-table-column property="aa" label="状态"></el-table-column>
-        <el-table-column label="操作" width="400">
+        <el-table-column align="center" property="stylename" label="名称"></el-table-column>
+        <el-table-column align="center" property="styleno" label="款号"></el-table-column>
+        <el-table-column align="center" property="style_color" label="颜色"></el-table-column>
+        <el-table-column align="center" property="style_type" label="品类"></el-table-column>
+        <el-table-column align="center" property="year" label="年份"></el-table-column>
+        <el-table-column align="center" property="season" label="季节"></el-table-column>
+        <el-table-column align="center" property="name" label="设计师"></el-table-column>
+        <el-table-column align="center" property="aa" label="状态"></el-table-column>
+        <el-table-column align="center" width='200' label="操作">
           <template slot-scope="scope">
             <div style="display: flex;align-items: center;">
               <router-link
-                v-if="scope.row.design_status===1"
+                v-if="scope.row.design_status===2"
                 :to="`/designNote?id=${scope.row.id}`"
                 target="_blank"
               >
@@ -164,6 +170,7 @@ import {
   designAgree,
   patternAgree,
   sampleAgree,
+  materialsAgree,
 } from "@/api/researchDevelopment";
 import { getStyleApprove } from "@/api/examineAndApprove";
 export default {
@@ -186,7 +193,7 @@ export default {
       wests: [],
       obj: {},
       page: 1,
-      page_size: 10,
+      page_size: 9,
       count: 0,
       stylist: "",
       state: "",
@@ -196,31 +203,38 @@ export default {
         { name: "制版中", id: 2 },
         { name: "完成上传", id: 3 },
       ],
+      permission:[]
     };
   },
   methods: {
     async pattern_agree1(index, row, e) {
       console.log(index, row, e);
-      if (row.design_status === 1) {
+      if (row.design_status == 2) {
         let res = await designAgree({ style_id: row.id, agree: e });
         this.init();
-      } else if (row.pattern_status === 3) {
+      } else if (row.pattern_status == 3) {
         let res = await patternAgree({ style_id: row.id, agree: e });
         this.init();
-      } else if (row.sample_status === 3) {
+      } else if (row.sample_status == 3) {
         let res = await sampleAgree({ style_id: row.id, agree: e });
+        this.init();
+      } else if (row.materials_status == 2) {
+        let res = await materialsAgree({ style_id: row.id, agree: e });
         this.init();
       }
     },
     async pattern_agree2(index, row, e) {
-      if (row.design_status === 1) {
+      if (row.design_status == 2) {
         let res = await designAgree({ style_id: row.id, agree: e });
         this.init();
-      } else if (row.pattern_status === 3) {
+      } else if (row.pattern_status == 3) {
         let res = await patternAgree({ style_id: row.id, agree: e });
         this.init();
-      } else if (row.sample_status === 3) {
+      } else if (row.sample_status == 3) {
         let res = await sampleAgree({ style_id: row.id, agree: e });
+        this.init();
+      } else if (row.materials_status == 2) {
+        let res = await materialsAgree({ style_id: row.id, agree: e });
         this.init();
       }
     },
@@ -275,12 +289,14 @@ export default {
       let { data } = res.data;
       this.tableData = data;
       this.tableData.map((v, i) => {
-        if (v.design_status === 1) {
+        if (v.design_status == 2) {
           v.aa = "版单审核中";
-        } else if (v.pattern_status === 3) {
+        } else if (v.pattern_status == 3) {
           v.aa = "纸样审核中";
-        } else if (v.sample_status === 3) {
+        } else if (v.sample_status == 3) {
           v.aa = "样衣审核中";
+        } else if (v.materials_status == 2) {
+          v.aa = "采购单审核中";
         }
       });
     },
@@ -300,7 +316,8 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
   computed: {
     userid() {
@@ -336,6 +353,11 @@ export default {
       width: 60px;
       height: 60px;
       border-radius: 5px;
+    }
+    .el-table {
+      /deep/.cell {
+        font-weight: 500 !important;
+      }
     }
   }
   .form {

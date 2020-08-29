@@ -87,6 +87,9 @@ myaxios.interceptors.response.use(
         localStorage.setItem("time_co", new Date().getTime());
       }
     }
+    if (response.data.error_code == -1002) {
+      Message.error(response.data.msg);
+    }
     // console.log(response);
     //判断当前请求是否设置了不显示Loading（不显示自然无需隐藏）
     if (response.config.headers.showLoading !== false) {

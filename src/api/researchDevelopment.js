@@ -532,3 +532,10 @@ export const styleSampleEdit = (data) => {
     data: data,
   });
 };
+export const styleDesignEdit = (data) => {
+  return axios({
+    url: "?g=style_design_edit",
+    method: "post",
+    data: data,
+  });
+};

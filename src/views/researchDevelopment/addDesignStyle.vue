@@ -1,5 +1,5 @@
 <template>
-  <div class="editTheStyle" v-if="power.indexOf('A9000100')!=-1">
+  <div class="editTheStyle" v-if="permission.indexOf('project_style_add')!=-1">
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -69,7 +69,7 @@
                   :show-all-levels="false"
                 ></el-cascader>
               </el-form-item>
-              <el-form-item label="指派设计师" prop="season">
+              <el-form-item v-if="level != 2" label="指派设计师">
                 <el-select v-model="form.user_id" @change="handleUser_id($event)">
                   <el-option
                     v-for="item in stylists"
@@ -79,7 +79,7 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="指派助理">
+              <el-form-item v-if="level != 2" label="指派助理">
                 <div style="display:flex">
                   <div v-for="(item, index) in arr" :key="index">{{item.name}},</div>
                   <div @click="handleAddAssistant" style="margin-left:20px">添加助理</div>
@@ -100,8 +100,13 @@
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </div>
       </div>
-      <div class="display:flex">
-        <el-button round style="margin:30px  100px 30px 250px" @click="handleEdit">保存</el-button>
+      <div style="display:flex">
+        <el-button round style="margin:30px  100px 30px 250px;float:left" @click="handleEdit">保存</el-button>
+        <el-button
+          round
+          style="margin:30px  100px 30px 250px;float:left"
+          @click="handleClickEdit"
+        >保存并编辑设计版单</el-button>
       </div>
     </div>
     <el-dialog
@@ -285,6 +290,7 @@ export default {
       fileName: "", //本机文件地址
       downImg: "#",
       imgFile: "",
+      permission: [],
       uploadImgRelaPath: "", //上传后的图片的地址（不带服务器域名）
       centerDialogVisible: false,
       centerDialogVisible1: false,
@@ -308,13 +314,15 @@ export default {
       rules: {
         stylename: [{ required: true, message: "请输入名称", trigger: "blur" }],
         style_type: [
-          { required: true, message: "请输入品类", trigger: "blur" },
+          { required: true, message: "请输入品类", trigger: "change" },
         ],
-        year: [{ required: true, message: "请输入年份", trigger: "blur" }],
-        season: [{ required: true, message: "请输入季节", trigger: "blur" }],
-        user_id: [{ required: true, message: "请输入设计师", trigger: "blur" }],
+        year: [{ required: true, message: "请输入年份", trigger: "change" }],
+        season: [{ required: true, message: "请输入季节", trigger: "change" }],
+        user_id: [
+          { required: true, message: "请输入设计师", trigger: "change" },
+        ],
         style_color: [
-          { required: true, message: "请输入颜色", trigger: "blur" },
+          { required: true, message: "请输入颜色", trigger: "change" },
         ],
       },
       Assistant: false,
@@ -334,14 +342,15 @@ export default {
         label: "color_name",
         children: "children",
       },
+      level: "",
     };
   },
   methods: {
     handleChange(e) {
-      this.form.style_color = e[1];
+      this.form.style_color = e.pop();
     },
     handleChange1(e) {
-      this.form.style_type = e[1];
+      this.form.style_type = e.pop();
     },
     color_picker() {
       this.previews.url = "";
@@ -518,6 +527,48 @@ export default {
       this.status = 2;
       this.centerDialogVisible = true;
     },
+    async handleClickEdit() {
+      this.$refs["form"].validate(async (valid) => {
+        if (!valid) return;
+        // 调用actions的登录方法
+        let form = {};
+        this.arr.map((v) => {
+          v["user_id"] = v.id;
+          delete v.checked;
+          delete v.ctime;
+          delete v.last_login_time;
+          delete v.name;
+          delete v.role;
+          delete v.username;
+          delete v.id;
+        });
+        form["style_pic_url"] = this.form.style_pic_url;
+        form["style_color_pic_url"] = this.form.style_color_pic_url;
+        form["stylename"] = this.form.stylename;
+        form["styleno"] = this.form.styleno;
+        form["project_id"] = 0;
+        form["season"] = this.form.season;
+        form["year"] = this.form.year;
+        form["style_type"] = this.form.style_type;
+        form["style_color"] = this.form.style_color;
+        form["user_id"] = this.form.user_id;
+        form["user_id_data"] = this.arr;
+        form["color_code"] = this.form.color_code;
+        let res = await projectStyleAdd(form);
+        console.log(res);
+        if (res.data.error_code) {
+          this.$message({
+            showClose: true,
+            message: res.data.msg,
+            type: "error",
+          });
+        } else {
+          this.$router.push({ path: `/designNote?id=${res.data.data[0].id}` });
+        }
+
+        // designNote?id=280&TL=30&project_id=139
+      });
+    },
     async handleEdit() {
       console.log(this.arr);
       this.$refs["form"].validate(async (valid) => {
@@ -548,9 +599,18 @@ export default {
         form["color_code"] = this.form.color_code;
         let res = await projectStyleAdd(form);
         console.log(res);
-        this.$router.push({
-          path: `/designStyle`,
-        });
+        if (res.data.error_code) {
+          this.$message({
+            showClose: true,
+            message: res.data.msg,
+            type: "error",
+          });
+        } else {
+          this.$router.push({
+            path: `/designStyle`,
+          });
+        }
+
         // designNote?id=280&TL=30&project_id=139
       });
     },
@@ -597,7 +657,9 @@ export default {
     this.getstylist();
     this.getCategory();
     this.getStyleno();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.level = localStorage.getItem("level");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

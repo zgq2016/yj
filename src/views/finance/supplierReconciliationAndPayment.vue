@@ -1,5 +1,8 @@
 <template>
-  <div class="supplierReconciliationAndPayment" v-if="power.indexOf('F4000100')!=-1">
+  <div
+    class="supplierReconciliationAndPayment"
+    v-if="permission.indexOf('supplierReconciliationAndPayment')!=-1"
+  >
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>财务</el-breadcrumb-item>
@@ -78,24 +81,23 @@
         </el-form-item>
         <el-form-item>
           <div style="display: flex;justify-content: space-between;align-items: center;">
-            <div class="addStyle" v-if="power.indexOf('F4000200')!=-1" @click="handlePayment">付款</div>
             <div
               class="addStyle"
-              v-if="power.indexOf('F4000300')!=-1"
+              v-if="permission.indexOf('supplier_account_add')!=-1"
+              @click="handlePayment"
+            >付款</div>
+            <div
+              class="addStyle"
+              v-if="permission.indexOf('supplier_account_add')!=-1"
               @click="beginninGbalanceAdjustment"
               style="background-color: #e3e3e3;color: #fff;"
             >期初调整</div>
             <div
               class="addStyle"
               style="background-color: #e3e3e3;color: #fff;"
-              v-if="power.indexOf('F4000400')!=-1"
               v-print="'#printTest'"
             >打印</div>
-            <div
-              class="addStyle"
-              style="background-color: #e3e3e3;color: #fff;"
-              v-if="power.indexOf('F4000500')!=-1"
-            >导出</div>
+            <div class="addStyle" style="background-color: #e3e3e3;color: #fff;">导出</div>
           </div>
         </el-form-item>
       </el-form>
@@ -124,7 +126,7 @@
           </div>
         </div>
       </div>
-      <div class="table">
+      <div class="table" >
         <el-table :data="tableData" border size="mini">
           <el-table-column :show-overflow-tooltip="true" prop="ctime" label="业务时间"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" prop="account_no" label="单据编号"></el-table-column>
@@ -173,11 +175,11 @@
             style="width:70%;"
           ></el-autocomplete>
         </el-form-item>
-        <el-form-item label="操作人" prop="user_id">
+        <!-- <el-form-item label="操作人" prop="user_id">
           <el-select v-model="form.user_id" style="width:70%;">
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="结算账户" prop="balance_account_id">
           <el-select v-model="form.balance_account_id" style="width:70%;">
             <el-option
@@ -244,11 +246,11 @@
             style="width:70%;"
           ></el-autocomplete>
         </el-form-item>
-        <el-form-item label="操作人" prop="user_id">
+        <!-- <el-form-item label="操作人" prop="user_id">
           <el-select v-model="form1.user_id" style="width:70%;">
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="实付金额" prop="pay_money">
           <el-input v-model="form1.pay_money" placeholder="请输入内容" style="width:70%;"></el-input>
         </el-form-item>
@@ -287,6 +289,7 @@ import { getSupplierSelect } from "@/api/archives";
 export default {
   data() {
     return {
+      permission:[],
       power: "",
       total_cope_money: "",
       total_pay_money: "",
@@ -302,7 +305,7 @@ export default {
       form: {
         supplier_companyname: "",
         supplier_id: "",
-        user_id: "",
+        // user_id: "",
         balance_account_id: "",
         cope_money: 0,
         pay_money: "",
@@ -315,7 +318,7 @@ export default {
       form1: {
         supplier_id: "",
         supplier_companyname: "",
-        user_id: "",
+        // user_id: "",
         cope_money: 0,
         pay_money: "",
         opay_money: 0,
@@ -364,6 +367,7 @@ export default {
       account_type_id: "",
       balance_account_id: "",
       user_id: "",
+      permission: [],
     };
   },
   methods: {
@@ -453,7 +457,7 @@ export default {
         this.form1.opay_money = Number(this.form1.opay_money);
         this.form1.pay_money = Number(this.form1.pay_money);
         this.form1.total_money = Number(this.form1.total_money);
-        this.form1.account_type_id = 0;
+        this.form1.account_type_id = 5;
         this.form1.balance_account_id = 0;
         delete this.form1.supplier_companyname;
         let res = await supplierAccountAdd(this.form1);
@@ -556,7 +560,8 @@ export default {
     this.getStylist();
     this.getBalanceAccount();
     this.getBalanceAccountType();
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

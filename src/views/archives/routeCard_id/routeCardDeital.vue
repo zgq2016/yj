@@ -44,7 +44,7 @@
         <router-link
           :to="`/editrouteCard?id=${upData.id}&TL=2`"
           :data="upData"
-          v-if="power.indexOf('E2000200')!=-1||power.indexOf('E2000300')!=-1"
+          v-if="permission.indexOf('materials_edit')!=-1"
         >
           <span class="el-icon-edit" style="font-size: 30px;cursor: pointer;"></span>
         </router-link>
@@ -98,6 +98,7 @@ export default {
       obj: {},
       dialogVisible: false,
       dialogVisible1: false,
+      permission:[]
     };
   },
   methods: {
@@ -127,8 +128,9 @@ export default {
       this.upData.instock = "否";
     }
     this.init();
-    this.power = localStorage.getItem("power");
-    console.log(this.power);
+    // this.power = localStorage.getItem("power");
+    // console.log(this.power);
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

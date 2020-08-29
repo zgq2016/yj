@@ -1,5 +1,5 @@
 <template>
-  <div class="designFile" v-if="power.indexOf('E3000100')!=-1">
+  <div class="designFile" v-if="permission.indexOf('designFile')!=-1">
     <!-- 面包屑 -->
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -93,6 +93,7 @@
                 size="mini"
                 style="float:left;"
                 @click="handleEdit(scope.$index, scope.row)"
+                v-if="permission.indexOf('get_style')!=-1"
               >{{"查看"}}</el-button>
             </template>
           </el-table-column>
@@ -104,7 +105,7 @@
       <!-- 打印  导出-->
       <div class="btn">
         <el-button v-print="'#printTest'" size="mini">打印</el-button>
-        <el-button @click="OrderCreate" size="mini">生成下单表</el-button>
+        <el-button @click="OrderCreate" v-if="permission.indexOf('produce_lotadd')!=-1" size="mini">生成下单表</el-button>
         <el-button size="mini">导出</el-button>
       </div>
       <!-- 分页 -->
@@ -164,6 +165,7 @@ export default {
       count: 0,
       tableData: [],
       ids: [],
+      permission: [],
     };
   },
   methods: {
@@ -302,8 +304,9 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
-    this.power = localStorage.getItem("power");
-    console.log(this.power);
+    // this.power = localStorage.getItem("power");
+    this.permission = localStorage.getItem("permission").split(",");
+    // console.log(this.power);
   },
   watch: {
     $route() {
