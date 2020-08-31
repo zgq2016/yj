@@ -264,6 +264,14 @@ export const getProducePompleteList = (data) => {
     data: data,
   });
 };
+// 显示生产出货list接口
+export const produceFactoryProcessPrice = (data) => {
+  return axios({
+    url: "?g=produce_factory_process_price",
+    method: "post",
+    data: data,
+  });
+};
 
 // // 批次日志
 // export const produceLogData = data => {

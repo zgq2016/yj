@@ -620,7 +620,6 @@ export default {
       this.drawLine();
     },
     async init() {
-    
       // 公司公告
       let res1 = await noticeIndexList({
         page_size: 10,
@@ -642,75 +641,90 @@ export default {
       this.drawLine();
     },
     async work() {
-      let res = await getDataList({
-        page: 1,
-        page_size: 5,
-      });
-
-      console.log(res);
-      this.works_1 = res.data.data;
-      this.works_1.map((v, i) => {
-        if (v.projecttype == 0) {
-          v.projecttype = "【意向订单】";
-        } else if (v.projecttype == 1) {
-          v.projecttype = "【阶段工作】";
-        } else if (v.projecttype == 2) {
-          v.projecttype = "【企划系列】";
-        }
-      });
+      if (this.permission.indexOf("Z2000") != -1) {
+        let res = await getDataList({
+          page: 1,
+          page_size: 5,
+        });
+        this.works_1 = res.data.data;
+        this.works_1.map((v, i) => {
+          if (v.projecttype == 0) {
+            v.projecttype = "【意向订单】";
+          } else if (v.projecttype == 1) {
+            v.projecttype = "【阶段工作】";
+          } else if (v.projecttype == 2) {
+            v.projecttype = "【企划系列】";
+          }
+        });
+      }
       // let res1 = await myAssistWork({
       //   limit: 20,
       // });
       // this.works_2 = res1.data.data;
-
-      let res2 = await getStyleAll({
-        page: 1,
-        page_size: 10,
-      });
-      let res3 = await getProduceList({
-        page: 1,
-        page_size: 9,
-      });
-      let res4 = await getProduceProcureList({
-        page: 1,
-        page_size: 9,
-      });
-      let res5 = await getProduceFactoryList({
-        page: 1,
-        page_size: 9,
-      });
-      let res6 = await getProduceCutList({
-        page: 1,
-        page_size: 9,
-      });
-      let res7 = await getProduceCompleteList({
-        page: 1,
-        page_size: 9,
-      });
-      let res8 = await getStylePurchase({
-        page: 1,
-        page_size: 9,
-      });
-      let res9 = await getStylePattern({
-        page: 1,
-        page_size: 9,
-      });
-      let res10 = await getStyleSample({
-        page: 1,
-        page_size: 9,
-      });
-      this.works_2 = res2.data.data;
-
-      this.works_3 = res8.data.data;
-      this.works_3_1 = res9.data.data;
-      this.works_3_2 = res10.data.data;
-
-      this.works_4 = res3.data.data;
-      this.works_5 = res4.data.data;
-      this.works_6 = res5.data.data;
-      this.works_7 = res6.data.data;
-      this.works_8 = res7.data.data;
-      console.log(res3);
+      if (this.permission.indexOf("Z3000") != -1) {
+        let res2 = await getStyleAll({
+          page: 1,
+          page_size: 10,
+        });
+        this.works_2 = res2.data.data;
+      }
+      if (this.permission.indexOf("Z7000") != -1) {
+        let res3 = await getProduceList({
+          page: 1,
+          page_size: 9,
+        });
+        this.works_4 = res3.data.data;
+      }
+      if (this.permission.indexOf("Z8000") != -1) {
+        let res4 = await getProduceProcureList({
+          page: 1,
+          page_size: 9,
+        });
+        this.works_5 = res4.data.data;
+      }
+      if (this.permission.indexOf("Z9000") != -1) {
+        let res5 = await getProduceFactoryList({
+          page: 1,
+          page_size: 9,
+        });
+        this.works_6 = res5.data.data;
+      }
+      if (this.permission.indexOf("Z10000") != -1) {
+        let res6 = await getProduceCutList({
+          page: 1,
+          page_size: 9,
+        });
+        this.works_7 = res6.data.data;
+      }
+      if (this.permission.indexOf("Z11000") != -1) {
+        let res7 = await getProduceCompleteList({
+          page: 1,
+          page_size: 9,
+        });
+        this.works_8 = res7.data.data;
+      }
+      if (this.permission.indexOf("Z4000") != -1) {
+        let res8 = await getStylePurchase({
+          page: 1,
+          page_size: 9,
+        });
+        this.works_3 = res8.data.data;
+      }
+      if (this.permission.indexOf("Z5000") != -1) {
+        let res9 = await getStylePattern({
+          page: 1,
+          page_size: 9,
+        });
+        this.works_3_1 = res9.data.data;
+      }
+      if (this.permission.indexOf("Z6000") != -1) {
+        let res10 = await getStyleSample({
+          page: 1,
+          page_size: 9,
+        });
+        this.works_3_2 = res10.data.data;
+      }
+      // console.log(res3);
     },
     rout1(id) {
       document.body.style = null;
@@ -741,7 +755,7 @@ export default {
     this.img2 = imgs2;
     this.img3 = imgs3;
     console.log(this.img);
-    this.power = localStorage.getItem("power");
+    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
     // console.log(this.permission);
     this.init();

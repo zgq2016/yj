@@ -7,3 +7,17 @@ export const getStyleApprove = (data) => {
     data: data,
   });
 };
+export const isApproval = (data) => {
+  return axios({
+    url: "?g=is_approval",
+    method: "post",
+    data: data,
+  });
+};
+export const approvalEdit = (data) => {
+  return axios({
+    url: "?g=approval_edit",
+    method: "post",
+    data: data,
+  });
+};

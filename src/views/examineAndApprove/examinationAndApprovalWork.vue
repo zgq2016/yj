@@ -1,5 +1,5 @@
 <template>
-  <div class="platemaking"  v-if="permission.indexOf('ExaminationAndApprovalWork')!=-1">
+  <div class="platemaking" v-if="permission.indexOf('ExaminationAndApprovalWork')!=-1">
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -76,6 +76,10 @@
           <el-option v-for="item in states" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </el-form-item>-->
+      <div style="float:right;">
+        <el-button size="small" @click="approval(0)" v-if="is_approval" round type="info">关闭审批</el-button>
+        <el-button size="small" @click="approval(1)" v-else round type="info">开启审批</el-button>
+      </div>
     </el-form>
     <div class="table" v-if="permission.indexOf('get_style_approve')!=-1">
       <el-table
@@ -103,7 +107,7 @@
         <el-table-column align="center" property="season" label="季节"></el-table-column>
         <el-table-column align="center" property="name" label="设计师"></el-table-column>
         <el-table-column align="center" property="aa" label="状态"></el-table-column>
-        <el-table-column align="center" width='200' label="操作">
+        <el-table-column align="center" width="200" label="操作">
           <template slot-scope="scope">
             <div style="display: flex;align-items: center;">
               <router-link
@@ -172,7 +176,11 @@ import {
   sampleAgree,
   materialsAgree,
 } from "@/api/researchDevelopment";
-import { getStyleApprove } from "@/api/examineAndApprove";
+import {
+  getStyleApprove,
+  isApproval,
+  approvalEdit,
+} from "@/api/examineAndApprove";
 export default {
   data() {
     return {
@@ -203,10 +211,30 @@ export default {
         { name: "制版中", id: 2 },
         { name: "完成上传", id: 3 },
       ],
-      permission:[]
+      permission: [],
+      is_approval: 0,
     };
   },
   methods: {
+    async approval(is_approval) {
+      let res = await approvalEdit({
+        is_approval,
+      });
+      if (!res.data.error_code) {
+        this.is_approval = is_approval;
+        this.$message({
+          showClose: true,
+          message: res.data.msg,
+          type: "success",
+        });
+      } else {
+        this.$message({
+          showClose: true,
+          message: res.data.msg,
+          type: "error",
+        });
+      }
+    },
     async pattern_agree1(index, row, e) {
       console.log(index, row, e);
       if (row.design_status == 2) {
@@ -309,7 +337,7 @@ export default {
       this.init();
     },
   },
-  mounted() {
+  async mounted() {
     this.getYear();
     this.getSeason();
     this.getStylist();
@@ -318,6 +346,8 @@ export default {
     this.init();
     // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
+    let res = await isApproval();
+    this.is_approval = res.data.data.is_approval;
   },
   computed: {
     userid() {

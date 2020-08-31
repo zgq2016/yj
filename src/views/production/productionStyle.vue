@@ -63,7 +63,11 @@
             :class="active===index?'active':''"
           >
             <div class="color">下单批次：{{index+1}}</div>
-            <div class="el-icon-close"  v-if="permission.indexOf('produce_del')!=-1"  @click.stop="styleColorDel(item,index)"></div>
+            <div
+              class="el-icon-close"
+              v-if="permission.indexOf('produce_del')!=-1"
+              @click.stop="styleColorDel(item,index)"
+            ></div>
           </div>
         </div>
         <!-- <div class="placeAnOrderBatch">下单批次：2</div> -->
@@ -92,7 +96,11 @@
         </el-steps>
       </div>
       <el-tabs style="margin-bottom:150px;" v-model="activeNames" @click.stop="handleClick">
-        <el-tab-pane label="下单信息" v-if="showhide1&&permission.indexOf('productionOrders')!=-1" name="1">
+        <el-tab-pane
+          label="下单信息"
+          v-if="showhide1&&permission.indexOf('productionOrders')!=-1"
+          name="1"
+        >
           <div class="orderInformation">
             <!-- <div style="margin-left:50px;">请先增加批次</div> -->
             <!-- 没数据或者修改 -->
@@ -296,7 +304,10 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item v-if="ascertain1&&permission.indexOf('produce_order_add')!=-1" style=" float:right;">
+              <el-form-item
+                v-if="ascertain1&&permission.indexOf('produce_order_add')!=-1"
+                style=" float:right;"
+              >
                 <el-button @click="clickOrders()">确认下单</el-button>
               </el-form-item>
             </el-form>
@@ -432,7 +443,9 @@
                         </template>
                       </el-step>
                     </el-steps>
-                    <div v-if="item1.produce_order_procure_log_data&&permission.indexOf('produce_order_procure_log_add')!=-1">
+                    <div
+                      v-if="item1.produce_order_procure_log_data&&permission.indexOf('produce_order_procure_log_add')!=-1"
+                    >
                       <el-button
                         style="margin-left:10px"
                         size="mini"
@@ -617,7 +630,11 @@
             >+ 增加物料</el-button>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="生产排单" v-if="showhide3&&permission.indexOf('productionScheduling')!=-1" name="3">
+        <el-tab-pane
+          label="生产排单"
+          v-if="showhide3&&permission.indexOf('productionScheduling')!=-1"
+          name="3"
+        >
           <div class="tailor">
             <!-- 无数据 -->
             <div v-if="!vb" class="productionArranged">
@@ -644,7 +661,7 @@
                   >
                     <el-select
                       v-model="item.mode[0].name"
-                      @change="select_l(index)"
+                      @change="select_l($event,index)"
                       placeholder="指派方式"
                       style="width:150px"
                     >
@@ -752,7 +769,10 @@
 
                 <hr style="border:1px dashed #999999" />
               </div>
-              <div class="factory_right" v-if="ascertain2&&permission.indexOf('produce_factory_order_edit')!=-1">
+              <div
+                class="factory_right"
+                v-if="ascertain2&&permission.indexOf('produce_factory_order_edit')!=-1"
+              >
                 <el-button round type="info" @click="factoryEidt()">修改</el-button>
               </div>
             </div>
@@ -849,7 +869,11 @@
             </div>
             <div class="add" v-if="!vb1">
               <el-button size="mini" v-if="tailorVB" @click="tailoradd" round>+ 增加床次</el-button>
-              <el-button @click="tailored" v-if="ascertain3&&permission.indexOf('produce_cut_order_add')!=-1" round>确定</el-button>
+              <el-button
+                @click="tailored"
+                v-if="ascertain3&&permission.indexOf('produce_cut_order_add')!=-1"
+                round
+              >确定</el-button>
             </div>
             <!-- </div> -->
           </div>
@@ -1060,7 +1084,11 @@
             </div>
             <div class="add" v-if="!vb2">
               <el-button @click="goDownAdd" v-if="shipmentVB" round>+增加出货批次</el-button>
-              <el-button @click="goDownlist" v-if="permission.indexOf('produce_complete_add')!=-1" round>确定</el-button>
+              <el-button
+                @click="goDownlist"
+                v-if="permission.indexOf('produce_complete_add')!=-1"
+                round
+              >确定</el-button>
             </div>
           </div>
         </el-tab-pane>
@@ -1177,6 +1205,7 @@ import {
   produceCompleteList, //显示出货信息
   produceCompleteDel, //删除出货信息
   produceCompleteEdit, //编辑出货信息
+  produceFactoryProcessPrice,
 } from "@/api/production";
 import {
   getMaterialsInfo, //物料
@@ -1521,7 +1550,7 @@ export default {
       activeNames: "1",
       t_size1: [],
       jour: false, //日志显示隐藏
-      permission:[]
+      permission: [],
     };
   },
   methods: {
@@ -2677,6 +2706,7 @@ export default {
             factory_id: f_id,
             mode: [{ id: 0, name: "" }],
             id: 0,
+            price: 0,
           });
         } else {
           this.formInline.push({
@@ -2684,6 +2714,7 @@ export default {
             produce_no: data[this.active].produce_no,
             factory_id: f_id,
             mode: [{ id: 0, name: "" }],
+            price: 0,
           });
         }
         this.region = "";
@@ -2701,7 +2732,16 @@ export default {
       }
     },
     // 选择指派方式
-    select_l(index) {
+    async select_l(e, index) {
+      let res = await produceFactoryProcessPrice({
+        style_id: this.$route.query.id,
+      });
+      console.log(res.data);
+      res.data.data.map((v, i) => {
+        if (v.mode_name == e) {
+          this.formInline[index]["price"] = Number(v.price);
+        }
+      });
       this.modes.map((v, i) => {
         if (this.formInline[index].mode[0].name == v.mode_name) {
           this.formInline[index].mode = [{ id: v.id, name: v.mode_name }];

@@ -8,7 +8,11 @@
       </el-breadcrumb>
     </div>
     <!-- 添加工厂 -->
-    <div class="addClassify"  v-if="permission.indexOf('plantManagement')!=-1" @click="addClassify">添加类型</div>
+    <div
+      class="addClassify"
+      v-if="permission.indexOf('plantManagement')!=-1"
+      @click="addClassify"
+    >添加类型</div>
     <el-table
       :data="tableData"
       style="width: 100%;margin: 20px 0;"
@@ -22,10 +26,20 @@
       <el-table-column prop="remarks" label="备注"></el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
-          <el-tooltip content="编辑"  v-if="permission.indexOf('factory_mode_edit')!=-1" placement="top" class="el-icon-edit btn">
+          <el-tooltip
+            content="编辑"
+            v-if="permission.indexOf('factory_mode_edit')!=-1"
+            placement="top"
+            class="el-icon-edit btn"
+          >
             <div @click="handleEdit(scope.$index, scope.row)"></div>
           </el-tooltip>
-          <el-tooltip content="删除"  v-if="permission.indexOf('factory_mode_del')!=-1" placement="top" class="el-icon-delete btn">
+          <el-tooltip
+            content="删除"
+            v-if="permission.indexOf('factory_mode_del')!=-1"
+            placement="top"
+            class="el-icon-delete btn"
+          >
             <div @click="handleDelete(scope.$index, scope.row)"></div>
           </el-tooltip>
         </template>
@@ -178,7 +192,7 @@ export default {
       //   return row.id + row.children;
       // },
       power: "",
-      permission:[],
+      permission: [],
       tableData: [],
       centerDialogVisible: false, //添加工厂
       centerDialogVisible1: false, //编辑工厂
@@ -256,6 +270,9 @@ export default {
       if (row.factory_mode_id != undefined) {
         this.form1["factory_mode_id"] = row.factory_mode_id;
         this.form1["goods_category_id"] = row.id;
+        this.form1["sort"] = row.sort;
+        this.form1["price"] = row.price;
+        this.form1["remarks"] = row.remarks;
         this.centerDialogVisible2 = true;
       }
     },

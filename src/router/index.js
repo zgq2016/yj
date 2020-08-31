@@ -47,6 +47,7 @@ import ListAccounts from "@/views/setting/listAccounts.vue";
 import Logout from "@/views/setting/logout.vue";
 import AuthorityManagement from "@/views/setting/authorityManagement.vue";
 import Announcements from "@/views/setting/announcements.vue";
+import Issue from "@/views/setting/issue.vue";
 import MaterialClassification from "@/views/setting/materialClassification.vue";
 import PlantManagement from "@/views/setting/plantManagement.vue";
 import Pattern from "@/views/researchDevelopment/pattern.vue";
@@ -229,6 +230,11 @@ const routes = [
         path: "/announcements",
         name: "Announcements",
         component: Announcements,
+      },
+      {
+        path: "/issue",
+        name: "Issue",
+        component: Issue,
       },
       {
         path: "/materialClassification",

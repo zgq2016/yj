@@ -413,3 +413,34 @@ export const menuDel = (data) => {
 };
 
 
+
+export const issueList = (data) => {
+  return axios({
+    url: "?g=issue_list ",
+    method: "post",
+    data: data,
+  });
+};
+export const issueAdd = (data) => {
+  return axios({
+    url: "?g=issue_add ",
+    method: "post",
+    data: data,
+  });
+};
+export const issueReply = (data) => {
+  return axios({
+    url: "?g=issue_reply ",
+    method: "post",
+    data: data,
+  });
+};
+export const issueInfo = (data) => {
+  return axios({
+    url: "?g=issue_info ",
+    method: "post",
+    data: data,
+  });
+};
+
+

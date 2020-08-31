@@ -234,8 +234,9 @@
                 <div style="margin-left:5px">设置</div>
               </div>
             </template>
-            <el-menu-item-group>
+            <el-menu-item-group class="group">
               <el-menu-item index="/menus">菜单</el-menu-item>
+              <el-menu-item index="/issue">问题反馈</el-menu-item>
               <el-menu-item
                 index="/goodsCategory"
                 v-if="permission.indexOf('goodsCategory')!=-1"
@@ -268,11 +269,11 @@
                 index="/unitManagement"
                 v-if="permission.indexOf('unitManagement')!=-1"
               >单位管理</el-menu-item>
-              <el-submenu index='9-2'>
-                <template
-                  slot="title"
-                  v-if="permission.indexOf('listAccounts')!=-1||permission.indexOf('authorityManagement')!=-1"
-                >用户管理</template>
+              <el-submenu
+                v-if="permission.indexOf('listAccounts')!=-1||permission.indexOf('authorityManagement')!=-1"
+                index="9-2"
+              >
+                <template slot="title">用户管理</template>
                 <el-menu-item
                   index="/listAccounts"
                   v-if="permission.indexOf('listAccounts')!=-1"
@@ -282,7 +283,10 @@
                   v-if="permission.indexOf('authorityManagement')!=-1"
                 >权限管理</el-menu-item>
               </el-submenu>
-              <el-menu-item index="/announcements"   v-if="permission.indexOf('announcements')!=-1">公司公告</el-menu-item>
+              <el-menu-item
+                index="/announcements"
+                v-if="permission.indexOf('announcements')!=-1"
+              >公司公告</el-menu-item>
               <el-menu-item index="/logout">退出系统</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
@@ -358,6 +362,12 @@ export default {
   /deep/.el-main {
     padding: 0;
   }
+  // /deep/.group{
+  //   ul{
+  //     display: block;
+  //     height: 700px;
+  //   }
+  // }
   @media screen and (max-width: 1300px) {
     body {
       width: 1300px;
