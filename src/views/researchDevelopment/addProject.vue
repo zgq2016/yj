@@ -107,7 +107,7 @@
           <el-form-item label="详细要求">
             <el-input type="textarea" v-model="form.detailed" class="textarea"></el-input>
           </el-form-item>
-          <el-form-item label="指派设计师" v-if="user_level!=2">
+          <el-form-item label="指派设计师" v-if="user_level!=2||permission.indexOf('designatorAssignment')!=-1">
             <el-select v-model="form.stylist" placeholder="工作人员名称" @change="handleUser_id($event)">
               <el-option
                 v-for="item in stylists"
@@ -117,10 +117,10 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item v-if="user_level!=2" label="指派助理">
+          <el-form-item v-if="user_level!=2||permission.indexOf('assignmentAssistance')!=-1" label="指派协助">
             <div style="display:flex">
               <div v-for="(item, index) in arr" :key="index">{{item.name}},</div>
-              <div @click="handleAddAssistant" style="margin-left:20px">添加助理</div>
+              <div @click="handleAddAssistant" style="margin-left:20px">添加协助</div>
             </div>
           </el-form-item>
           <el-form-item>
@@ -264,6 +264,7 @@ export default {
   },
   data() {
     return {
+      permission:[],
       headImg: "",
       //剪切图片上传
       crap: false,
@@ -595,6 +596,7 @@ export default {
     this.getSeason();
     this.getstylist();
     this.user_level = localStorage.getItem("level");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

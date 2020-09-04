@@ -111,7 +111,7 @@
           <el-form-item label="详细要求">
             <el-input type="textarea" v-model="obj.detailed" class="textarea"></el-input>
           </el-form-item>
-          <el-form-item label="指派设计师" prop="user_name" v-if="user_level!==2">
+          <el-form-item label="指派设计师" prop="user_name" v-if="user_level!==2||permission.indexOf('designatorAssignment')!=-1">
             <el-select v-model="obj.user_name" placeholder="工作人员名称" @change="handleUser_id($event)">
               <el-option
                 v-for="item in stylists"
@@ -121,10 +121,10 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="指派助理">
+          <el-form-item v-if="user_level!=2||permission.indexOf('assignmentAssistance')!=-1" label="指派协助">
             <div style="display:flex">
               <div v-for="(item, index) in obj.user_id_data" :key="index">{{item.name}},</div>
-              <div @click="handleAddAssistant" style="margin-left:20px">添加助理</div>
+              <div @click="handleAddAssistant" style="margin-left:20px">添加协助</div>
             </div>
           </el-form-item>
           <el-form-item>

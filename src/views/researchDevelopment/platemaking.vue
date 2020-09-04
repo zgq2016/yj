@@ -396,5 +396,8 @@ export default {
       margin: 0 10px;
     }
   }
+  .btn:hover{
+    cursor: pointer;
+  }
 }
 </style>

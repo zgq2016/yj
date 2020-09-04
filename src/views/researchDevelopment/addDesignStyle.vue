@@ -69,7 +69,7 @@
                   :show-all-levels="false"
                 ></el-cascader>
               </el-form-item>
-              <el-form-item v-if="level != 2" label="指派设计师">
+              <el-form-item v-if="level != 2||permission.indexOf('designatorAssignment1')!=-1" label="指派设计师">
                 <el-select v-model="form.user_id" @change="handleUser_id($event)">
                   <el-option
                     v-for="item in stylists"
@@ -79,10 +79,10 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item v-if="level != 2" label="指派助理">
+              <el-form-item v-if="level != 2||permission.indexOf('assignmentAssistance1')!=-1" label="指派协助">
                 <div style="display:flex">
                   <div v-for="(item, index) in arr" :key="index">{{item.name}},</div>
-                  <div @click="handleAddAssistant" style="margin-left:20px">添加助理</div>
+                  <div @click="handleAddAssistant" style="margin-left:20px">添加协助</div>
                 </div>
               </el-form-item>
             </el-form>

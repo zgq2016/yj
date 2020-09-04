@@ -52,7 +52,7 @@
                     <!-- <div>颜色：{{colors.color}}</div> -->
                     <div>大货单价：{{header.wsale_price}}</div>
                     <div>幅宽：{{header.unit}}</div>
-                    <div>到货时间：{{header.arrival_time}}</div>
+                    <div>到货时间：{{header.arrival_time}}天</div>
                     <div :title="header.remarks" class="rearmk">备注：{{header.remarks}}</div>
                   </div>
                 </div>

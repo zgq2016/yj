@@ -197,7 +197,6 @@ export default {
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
-      
     },
     beforeUpload(file) {
       if (this.permission.indexOf("style_designidea_pic_add") != -1) {

@@ -8,50 +8,17 @@
       <div>季节：{{obj.season}}</div>
       <div>设计师：{{obj.user_name}}</div>
       <div>颜色：{{obj.style_color}}</div>
-      <div class="lining">
+      <!-- <div class="lining">
         <div>面料样板</div>
-      </div>
+      </div>-->
       <div class="liningke">
-        <div class="liningkes">
-          <div>部位</div>
-          <div>尺寸</div>
-        </div>
-        <div style="display:flex">
-          <div class="liningkess"></div>
-          <div class="liningkess"></div>
-        </div>
-        <div style="display:flex">
-          <div class="liningkess"></div>
-          <div class="liningkess"></div>
-        </div>
-        <div style="display:flex">
-          <div class="liningkess"></div>
-          <div class="liningkess"></div>
-        </div>
-        <div style="display:flex">
-          <div class="liningkess"></div>
-          <div class="liningkess"></div>
-        </div>
-        <div style="display:flex">
-          <div class="liningkess"></div>
-          <div class="liningkess"></div>
-        </div>
-        <div style="display:flex">
-          <div class="liningkess"></div>
-          <div class="liningkess"></div>
-        </div>
-        <div style="display:flex">
-          <div class="liningkess"></div>
-          <div class="liningkess"></div>
-        </div>
-        <div style="display:flex">
-          <div class="liningkess"></div>
-          <div class="liningkess"></div>
-        </div>
-        <div style="display:flex">
-          <div class="liningkess"></div>
-          <div class="liningkess"></div>
-        </div>
+        <el-table :data="tableData" size="mini" border style="width: 100%">
+          <el-table-column label="尺寸表" align="center">
+            <el-table-column prop="part" width="96px" align="center" label="部位"></el-table-column>
+            <el-table-column prop="monad" width="96px" align="center" label="单位"></el-table-column>
+            <el-table-column prop="size" width="106px" align="center" label="尺寸/CM"></el-table-column>
+          </el-table-column>
+        </el-table>
       </div>
       <div class="remark">
         <div>备注及工艺说明</div>
@@ -60,8 +27,8 @@
     <div class="right">
       <!-- <img class="img1" :src="designidea_pic_url0" alt />
       <img class="img2" :src="designidea_pic_url1" alt />-->
-      <el-image :src="designidea_pic_url0" fit="fill" class="img1"></el-image>
-      <el-image :src="designidea_pic_url1" fit="fill" class="img2"></el-image>
+      <el-image :src="designidea_pic_url0" fit="cover" class="img1"></el-image>
+      <el-image :src="designidea_pic_url1" fit="cover" class="img2"></el-image>
     </div>
   </div>
 </template>
@@ -81,6 +48,38 @@ export default {
       designidea_pic_data_length: "",
       designidea_pic_url0: "",
       designidea_pic_url1: "",
+      tableData: [
+        { part: "", monad: "洗水前", size: "成品" },
+        { part: "前衣长", monad: "", size: "" },
+        { part: "后中长", monad: "", size: "" },
+        { part: "肩宽", monad: "", size: "" },
+        { part: "单肩", monad: "", size: "" },
+        { part: "胸围", monad: "", size: "" },
+        { part: "腰围", monad: "", size: "" },
+        { part: "臀围", monad: "", size: "" },
+        { part: "摆围", monad: "", size: "" },
+        { part: "袖长", monad: "", size: "" },
+        { part: "袖肥", monad: "", size: "" },
+        { part: "袖口", monad: "", size: "" },
+        { part: "前胸宽", monad: "", size: "" },
+        { part: "后背宽", monad: "", size: "" },
+        { part: "前领围", monad: "", size: "" },
+        { part: "后领围", monad: "", size: "" },
+        { part: "搭位", monad: "", size: "" },
+        { part: "袋", monad: "", size: "" },
+        { part: "裤裙长", monad: "", size: "" },
+        { part: "腰围", monad: "", size: "" },
+        { part: "臀围", monad: "", size: "" },
+        { part: "肶围", monad: "", size: "" },
+        { part: "膝围", monad: "", size: "" },
+        { part: "脚围", monad: "", size: "" },
+        { part: "前浪", monad: "", size: "" },
+        { part: "后浪", monad: "", size: "" },
+        { part: "腰高", monad: "", size: "" },
+        { part: "拉链长", monad: "", size: "" },
+        { part: "前袋", monad: "", size: "" },
+        { part: "后袋", monad: "", size: "" },
+      ],
     };
   },
   methods: {
@@ -113,41 +112,80 @@ export default {
   color: #000;
   margin: 0 10px;
   .left {
-    width: 300px;
+    width: 340px;
+    margin-left: 10px;
+    margin-right: 30px;
     .company {
       font-size: 26px;
     }
     .lining {
-      width: 200px;
-      height: 400px;
+      width: 300px;
+      height: 300px;
       border: 1px solid #000;
-      margin: 10px 0;
+      margin: 15px 0;
 
       div {
-        background-color: #000;
-        color: #fff;
+        // background-color: #000;
+        border-bottom: 1px solid #000;
+        color: #000;
         font-size: 16px;
-        padding: 0 10px;
+        padding: 5px 10px;
+        text-align: center;
       }
     }
-    .liningke {
-      width: 200px;
-      height: 200px;
-      margin-bottom: 10px;
-      .liningkes {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: #000;
-        color: #fff;
-        font-size: 16px;
-        padding: 0 10px;
+    /deep/.el-table::before {
+      border: 1px solid #000;
+    }
+    /deep/.el-table--mini{
+      th{
+        padding: 0px !important;
       }
-      .liningkess {
-        width: 100px;
-        height: 20px;
+      td{
+        padding: 0px !important;
+      }
+    }
+    /deep/.el-table {
+      color: #000;
+      th {
         border: 1px solid #000;
+        padding: 0px !important;
       }
+      td {
+        border: 1px solid #000;
+        padding: 0px !important;
+      }
+    }
+    /deep/.el-table--border::after {
+      border: 1px solid #000;
+    }
+    /deep/.el-table--border {
+      border: 1px solid #000;
+
+      // td {
+      //   border-color: #000;
+      // }
+    }
+    /deep/.is-center {
+      background: #fff;
+    }
+    .liningke {
+      width: 300px;
+      height: 200px;
+      margin: 15px 0;
+      // .liningkes {
+      //   display: flex;
+      //   justify-content: space-between;
+      //   align-items: center;
+      //   background-color: #000;
+      //   color: #fff;
+      //   font-size: 16px;
+      //   padding: 0 10px;
+      // }
+      // .liningkess {
+      //   width: 100px;
+      //   height: 20px;
+      //   border: 1px solid #000;
+      // }
     }
     .remark {
       width: 200px;
@@ -164,14 +202,15 @@ export default {
   }
   .right {
     margin-top: 100px;
+    margin-left: 50px;
     .img1 {
-      width: 400px;
-      // height: 500px;
+      // width: 500px;
+      height: 500px;
       margin-bottom: 5px;
     }
     .img2 {
-      width: 400px;
-      // height: 500px;
+      // width: 500px;
+      height: 500px;
     }
   }
 }

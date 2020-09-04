@@ -11,7 +11,6 @@
       <el-table
         :data="tableData"
         style="width: 100%;margin-top:20px;cursor: pointer;"
-        :header-cell-style="{background:'#eef1f6',color:'#606266'}"
         size="small"
       >
         <el-table-column type="index" label="序号"></el-table-column>
@@ -90,7 +89,6 @@
     </el-dialog>
   </div>
 </template>
-
 <script>
 import { noticeList, noticeAdd, noticeEdit, noticeDel } from "@/api/setting.js";
 export default {

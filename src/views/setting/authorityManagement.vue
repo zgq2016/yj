@@ -25,7 +25,7 @@
               <el-tooltip content="复制" placement="top" v-if="scope.row.id!==1&&permission.indexOf('role_add')!=-1">
                 <div class="el-icon-document-copy btn" @click="handlecopy(scope.$index, scope.row)"></div>
               </el-tooltip>
-              <el-tooltip content="编辑" v-if="permission.indexOf('role_edit')!=-1" placement="top" >
+              <el-tooltip content="编辑" v-if="scope.row.id!==1&&permission.indexOf('role_edit')!=-1" placement="top" >
                 <div class="el-icon-edit btn" @click="handleEdit(scope.$index, scope.row)"></div>
               </el-tooltip>
               <el-tooltip content="删除"  placement="top" v-if="scope.row.id!==1&&permission.indexOf('role_del')!=-1">

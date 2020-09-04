@@ -61,7 +61,6 @@
             :src="fileList1"
             :preview-src-list="[fileList1]"
           ></el-image>
-          <!-- fit="scale-down" -->
         </div>
       </div>
     </div>
@@ -797,7 +796,7 @@ export default {
 
     async handleEdit() {
       this.$refs["form"].validate(async (valid) => {
-        if (!valid || !this.vs1 || !this.vs2) return;
+        if (!valid || this.vs1 ) return;
         // 调用actions的登录方法
 
         console.log(this.form);
