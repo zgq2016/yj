@@ -8,48 +8,50 @@
       </el-breadcrumb>
     </div>
     <!-- 图片 -->
-    <div style="margin:0px 100px;">
-      <div style="margin:10px 0px;">物料图片</div>
-      <div class="upload" @click="handleFormImg">
-        <img v-if="form.picurl" :src="form.picurl" />
-        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-      </div>
+    <div class="wuln">
+      <div style="margin:0px 100px;">
+        <div style="margin:10px 0px;">物料图片</div>
+        <div class="upload" @click="handleFormImg">
+          <img v-if="form.picurl" :src="form.picurl" />
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </div>
 
-      <el-upload
-        class="upload-demo"
-        ref="upload"
-        action="https://shesho.ppp-pay.top/webapi.php?g=test"
-        :auto-upload="true"
-        name="image"
-        :show-file-list="false"
-        :on-success="recognition"
-        :on-error="errorRecognition"
-        :before-upload="beforeRecognition"
-        :file-list="fileList"
-      >
-        <el-button slot="trigger" size="small" type="primary">图片内容识别</el-button>
-      </el-upload>
-      <el-button @click="onTake" icon="el-icon-camera" type="info" class="camera" size="small">拍照</el-button>
-      <div
-        v-loading="loading"
-        element-loading-text="识别内容中"
-        element-loading-spinner="el-icon-loading"
-        element-loading-background="rgba(0, 0, 0, 0.8)"
-        class="image-content"
-      >
-        <ul>
-          <li>*注意：识别内容存在差异，谨慎修改！</li>
-          <li v-for="(item,index) in contents" :key="index">{{item.words}}</li>
-        </ul>
-        <div v-if="fileList1">
-          <el-image
-            style="width: 100%; height: 300px;"
-            fit="scale-down"
-            title="点击放大"
-            :src="fileList1"
-            :preview-src-list="[fileList1]"
-          ></el-image>
-          <!-- fit="scale-down" -->
+        <el-upload
+          class="upload-demo"
+          ref="upload"
+          action="https://shesho.ppp-pay.top/webapi.php?g=test"
+          :auto-upload="true"
+          name="image"
+          :show-file-list="false"
+          :on-success="recognition"
+          :on-error="errorRecognition"
+          :before-upload="beforeRecognition"
+          :file-list="fileList"
+        >
+          <el-button slot="trigger" size="small" type="primary">图片内容识别</el-button>
+        </el-upload>
+        <el-button @click="onTake" icon="el-icon-camera" type="info" class="camera" size="small">拍照</el-button>
+        <div
+          v-loading="loading"
+          element-loading-text="识别内容中"
+          element-loading-spinner="el-icon-loading"
+          element-loading-background="rgba(0, 0, 0, 0.8)"
+          class="image-content"
+        >
+          <ul>
+            <li>*注意：识别内容存在差异，谨慎修改！</li>
+            <li v-for="(item,index) in contents" :key="index">{{item.words}}</li>
+          </ul>
+          <div v-if="fileList1">
+            <el-image
+              style="width: 100%; height: 300px;"
+              fit="scale-down"
+              title="点击放大"
+              :src="fileList1"
+              :preview-src-list="[fileList1]"
+            ></el-image>
+            <!-- fit="scale-down" -->
+          </div>
         </div>
       </div>
     </div>
@@ -227,26 +229,38 @@
         </el-form-item>
       </el-form>
     </el-col>
-    <el-dialog title="提示" :visible.sync="centerDialogVisible" width="40%" center class="dialog">
+    <el-dialog
+      title="上传图片"
+      :visible.sync="centerDialogVisible"
+      center
+      class="dialog"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
       <div style="display:flex;">
         <div class="info-item">
-          <label class="btn btn-orange" for="uploads">选择图片</label>
-          <input
-            type="file"
-            id="uploads"
-            :value="imgFile"
-            accept="image/png, image/jpeg, image/gif, image/jpg"
-            @change="uploadImg($event, 1)"
-          />
+          <!-- <label class="btn btn-orange" for="uploads">选择图片</label> -->
+          <div class="upload">
+            <input
+              type="file"
+              id="uploads"
+              :value="imgFile"
+              accept="image/png, image/jpeg, image/gif, image/jpg"
+              @change="uploadImg($event, 1)"
+            />
+            选择文件
+          </div>
+          <el-button @click="onTake" icon="el-icon-camera" type="info"  size="small">拍照</el-button>
           <div class="line">
             <div class="cropper-content">
               <div class="cropper">
                 <vueCropper
                   ref="cropper"
+                  :info="false"
                   :img="option.img"
                   :outputSize="option.size"
                   :outputType="option.outputType"
-                  :info="true"
                   :full="option.full"
                   :canMove="option.canMove"
                   :canMoveBox="option.canMoveBox"
@@ -259,14 +273,9 @@
                   @imgLoad="imgLoad"
                 ></vueCropper>
               </div>
-              <div>
-                <div
-                  class="show-preview"
-                  :style="{'width': '150px', 'height':'155px',  'overflow': 'hidden', 'margin': '5px'}"
-                >
-                  <div :style="previews.div" class="preview">
-                    <img :src="previews.url" :style="previews.img" />
-                  </div>
+              <div class="show-preview">
+                <div class="preview">
+                  <img :src="previews.url" :style="previews.img" />
                 </div>
               </div>
             </div>
@@ -314,7 +323,7 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="centerDialogVisible = false">取 消</el-button>
+        <el-button @click="cancel">取 消</el-button>
         <el-button type="primary" @click="finish('blob')">确 定</el-button>
       </span>
     </el-dialog>
@@ -364,6 +373,8 @@ export default {
         autoCropWidth: 150,
         autoCropHeight: 150,
         fixedBox: true,
+        centerBox: true,
+        infoTrue: false,
       },
       fileName: "", //本机文件地址
       downImg: "#",
@@ -524,6 +535,12 @@ export default {
     };
   },
   methods: {
+    cancel() {
+      if (this.headImg === "") {
+        this.option.img = "";
+      }
+      this.centerDialogVisible = false;
+    },
     /*调用摄像头拍照开始*/
     onTake() {
       this.visible = true;
@@ -768,6 +785,8 @@ export default {
       // reader.readAsDataURL(file)
       // 转化为blob
       reader.readAsArrayBuffer(file);
+      this.option.autoCropWidth = 150;
+      this.option.autoCropHeight = 150;
     },
     imgLoad(msg) {},
     // *******************识别内容********************
@@ -936,21 +955,23 @@ export default {
 
 <style lang="less" scoped>
 .addRouteCard {
-  .upload {
-    float: left;
-    width: 200px;
-    height: 200px;
-    border-radius: 10px;
-    overflow: hidden;
-    .avatar-uploader-icon {
-      border: 1px solid #ccc;
-      font-size: 28px;
-      color: #8c939d;
-      width: 150px;
-      height: 150px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+  .wuln {
+    .upload {
+      float: left;
+      width: 200px;
+      height: 200px;
+      border-radius: 10px;
+      overflow: hidden;
+      .avatar-uploader-icon {
+        border: 1px solid #ccc;
+        font-size: 28px;
+        color: #8c939d;
+        width: 150px;
+        height: 150px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
     }
   }
   .upload-demo {
@@ -1055,7 +1076,37 @@ export default {
     //   }
     // }
   }
+  @media screen and (max-width: 1430px) {
+    .dialog {
+      width: 1430px;
+    }
+  }
   .dialog {
+    .upload {
+      margin-bottom: 30px;
+      width: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 40px;
+      position: relative;
+      cursor: pointer;
+      color: #888;
+      background: #fafafa;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+      *zoom: 1;
+      #uploads {
+        position: absolute;
+        font-size: 100px;
+        right: 0;
+        top: 0;
+        opacity: 0;
+        filter: alpha(opacity=0);
+        cursor: pointer;
+      }
+    }
     .info {
       width: 720px;
       margin: 0 auto;
@@ -1095,34 +1146,26 @@ export default {
         }
       }
     }
-
     .cropper-content {
       display: flex;
       display: -webkit-flex;
       justify-content: flex-end;
       -webkit-justify-content: flex-end;
       .cropper {
-        width: 260px;
-        height: 260px;
+        width: 350px;
+        height: 350px;
       }
       .show-preview {
-        flex: 1;
-        -webkit-flex: 1;
-        display: flex;
-        display: -webkit-flex;
-        justify-content: center;
-        -webkit-justify-content: center;
-        .preview {
-          overflow: hidden;
-          border-radius: 50%;
-          border: 1px solid #cccccc;
-          background: #cccccc;
-          margin-left: 40px;
-        }
+        width: 150px;
+        height: 150px;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #ccc;
+        margin-left: 30px;
       }
     }
     .cropper-content .show-preview .preview {
-      margin-left: 0;
+      margin-left: 0px;
     }
   }
 }

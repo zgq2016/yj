@@ -27,8 +27,17 @@
     <div class="right">
       <!-- <img class="img1" :src="designidea_pic_url0" alt />
       <img class="img2" :src="designidea_pic_url1" alt />-->
-      <el-image :src="designidea_pic_url0" fit="cover" class="img1"></el-image>
-      <el-image :src="designidea_pic_url1" fit="cover" class="img2"></el-image>
+      <el-image :src="designidea_pic_url0" fit="cover" class="img1">
+        <div slot="error" class="image-slot">
+          <i class="el-icon-picture-outline"></i>
+        </div>
+      </el-image>
+      <br>
+      <el-image :src="designidea_pic_url1" fit="cover" class="img2">
+        <div slot="error" class="image-slot">
+          <i class="el-icon-picture-outline"></i>
+        </div>
+      </el-image>
     </div>
   </div>
 </template>
@@ -136,11 +145,11 @@ export default {
     /deep/.el-table::before {
       border: 1px solid #000;
     }
-    /deep/.el-table--mini{
-      th{
+    /deep/.el-table--mini {
+      th {
         padding: 0px !important;
       }
-      td{
+      td {
         padding: 0px !important;
       }
     }
@@ -202,15 +211,16 @@ export default {
   }
   .right {
     margin-top: 100px;
-    margin-left: 50px;
     .img1 {
-      // width: 500px;
-      height: 500px;
+      max-width: 440px;
+      max-height: 440px;
       margin-bottom: 5px;
     }
     .img2 {
       // width: 500px;
-      height: 500px;
+      // height: 500px;
+      max-width: 440px;
+      max-height: 440px;
     }
   }
 }
