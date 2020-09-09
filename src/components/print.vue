@@ -29,13 +29,13 @@
       <img class="img2" :src="designidea_pic_url1" alt />-->
       <el-image :src="designidea_pic_url0" fit="cover" class="img1">
         <div slot="error" class="image-slot">
-          <i class="el-icon-picture-outline"></i>
+          <!-- <i class="el-icon-picture-outline"></i> -->
         </div>
       </el-image>
       <br>
       <el-image :src="designidea_pic_url1" fit="cover" class="img2">
         <div slot="error" class="image-slot">
-          <i class="el-icon-picture-outline"></i>
+          <!-- <i class="el-icon-picture-outline"></i> -->
         </div>
       </el-image>
     </div>
@@ -210,17 +210,17 @@ export default {
     }
   }
   .right {
-    margin-top: 100px;
+    // margin-top: 100px;
     .img1 {
       max-width: 440px;
-      max-height: 440px;
+      max-height: 600px;
       margin-bottom: 5px;
     }
     .img2 {
       // width: 500px;
       // height: 500px;
       max-width: 440px;
-      max-height: 440px;
+      max-height: 600px;
     }
   }
 }

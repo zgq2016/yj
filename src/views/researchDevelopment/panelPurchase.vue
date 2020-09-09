@@ -442,7 +442,7 @@ export default {
       }
     },
     async getBalanceAccount() {
-      let res = await balanceAccountSelect();
+      let res = await balanceAccountSelect({ type: 1 });
       let { data } = res.data;
       this.options = data;
       console.log(data);

@@ -25,7 +25,7 @@
                   <div>面料成分：</div>
                   <div v-for="(item, index) in upData.material_data" :key="index">
                     <div>
-                      <div>{{item.content}}</div>
+                      <div>{{item.content}}%</div>
                       <div>{{item.material_name}}</div>
                     </div>
                   </div>

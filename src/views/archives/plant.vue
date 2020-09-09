@@ -46,7 +46,7 @@
         <el-table
           :data="tableData"
           stripe
-          :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+          size="mini"
           style=" width:85vw;margin:5px;cursor: pointer;"
         >
           <el-table-column prop="factory_name" align="center" label="工厂名称"></el-table-column>
@@ -55,7 +55,11 @@
           <el-table-column prop="mode_name" align="center" label="指派方式"></el-table-column>
           <el-table-column label="操作" align="center">
             <template v-slot="scope">
-              <div @click="handleEdit1(scope.row)" v-if="permission.indexOf('factory_edit')!=-1" class="check">查看</div>
+              <div
+                @click="handleEdit1(scope.row)"
+                v-if="permission.indexOf('factory_edit')!=-1"
+                class="check"
+              >查看</div>
             </template>
           </el-table-column>
         </el-table>
@@ -258,7 +262,7 @@ export default {
       count: 0,
       TL: "",
       row_mode: {},
-      permission:[]
+      permission: [],
     };
   },
   methods: {

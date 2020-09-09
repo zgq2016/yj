@@ -18,60 +18,61 @@
       </el-breadcrumb>
     </div>
     <div class="main">
-      <div class="basicInfo">基础信息</div>
-      <div style="display: flex;justify-content: space-between;">
-        <div class="content">
-          <el-image
-            class="imgSrc"
-            style="width: 150px; height: 150px;margin-right: 5px;"
-            :src="obj.style_pic_url"
-            fit="cover"
-          ></el-image>
-          <img
-            v-if="obj.style_color_pic_url!==''"
-            class="imgSrc"
-            style="width:150px;height:150px"
-            :src="obj.style_color_pic_url"
-            alt
-          />
-          <div
-            v-if="obj.style_color_pic_url===''"
-            class="imgSrc"
-            style="width:150px;height:150px"
-            :style="`background-color:${obj.color_code};`"
-          ></div>
-          <div class="info">
-            <div style="height:165px">
-              <div class="name">{{obj.stylename}}</div>
-              <div>款号：{{obj.styleno}}</div>
-              <div>品类：{{obj.style_type}}</div>
-              <div>年份：{{obj.year}}</div>
-              <div>季节：{{obj.season}}</div>
-              <div>设计师：{{obj.user_name}}</div>
-              <div>颜色：{{obj.style_color}}</div>
-            </div>
-            <div style="display:flex">
-              <el-tooltip
-                class="edit"
-                style="background-color: #f2f2f2;"
-                v-if="permission.indexOf('style_edit')!=-1||permission.indexOf('style_del')!=-1"
-                content="编辑"
-                placement="top"
-              >
-                <div @click="editTheStyle">
-                  <svg viewBox="0 0 32 32" width="20" height="20">
-                    <path
-                      d="M17.2 9.144l5.656 5.657-13.2 13.199h-5.656v-5.657l13.2-13.2zM19.085 7.259l2.828-2.829c0.241-0.241 0.575-0.39 0.943-0.39s0.701 0.149 0.943 0.39l3.772 3.772c0.241 0.241 0.39 0.575 0.39 0.943s-0.149 0.701-0.39 0.943l-2.829 2.828-5.656-5.656z"
-                      fill="#5e5e5e"
-                    />
-                  </svg>
-                </div>
-              </el-tooltip>
-
-              <div class="jour" v-if="!log" @click="get_view_log">查看日志</div>
-              <div class="jour" v-else @click="get_view_log">隐藏日志</div>
+      <div class="particulars">
+        <div style="display: flex;justify-content: space-between;">
+          <div class="content">
+            <el-image
+              class="imgSrc"
+              style="width: 150px; height: 150px;margin-right: 5px;"
+              :src="obj.style_pic_url"
+              fit="cover"
+            ></el-image>
+            <img
+              v-if="obj.style_color_pic_url!==''"
+              class="imgSrc"
+              style="width:150px;height:150px"
+              :src="obj.style_color_pic_url"
+              alt
+            />
+            <div
+              v-if="obj.style_color_pic_url===''"
+              class="imgSrc"
+              style="width:150px;height:150px"
+              :style="`background-color:${obj.color_code};`"
+            ></div>
+            <div class="info">
+              <div style="height:165px">
+                <div class="name">{{obj.stylename}}</div>
+                <div>款号：{{obj.styleno}}</div>
+                <div>品类：{{obj.style_type}}</div>
+                <div>年份：{{obj.year}}</div>
+                <div>季节：{{obj.season}}</div>
+                <div>设计师：{{obj.user_name}}</div>
+                <div>颜色：{{obj.style_color}}</div>
+              </div>
             </div>
           </div>
+        </div>
+        <div class="editBtn">
+          <el-tooltip
+            class="edit"
+            style="background-color: #f2f2f2;"
+            v-if="permission.indexOf('style_edit')!=-1||permission.indexOf('style_del')!=-1"
+            content="编辑"
+            placement="top"
+          >
+            <div @click="editTheStyle">
+              <svg viewBox="0 0 32 32" width="20" height="20">
+                <path
+                  d="M17.2 9.144l5.656 5.657-13.2 13.199h-5.656v-5.657l13.2-13.2zM19.085 7.259l2.828-2.829c0.241-0.241 0.575-0.39 0.943-0.39s0.701 0.149 0.943 0.39l3.772 3.772c0.241 0.241 0.39 0.575 0.39 0.943s-0.149 0.701-0.39 0.943l-2.829 2.828-5.656-5.656z"
+                  fill="#5e5e5e"
+                />
+              </svg>
+            </div>
+          </el-tooltip>
+
+          <div class="jour" v-if="!log" @click="get_view_log">查看日志</div>
+          <div class="jour" v-else @click="get_view_log">隐藏日志</div>
         </div>
       </div>
 
@@ -101,20 +102,28 @@
         </div>
         <el-header>
           <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane v-if="permission.indexOf('designNote')!=-1" label="设计版单" name="/designNote"></el-tab-pane>
-            <el-tab-pane v-if="permission.indexOf('materialProcess')!=-1" label="物料工艺" name="/materialProcess"></el-tab-pane>
             <el-tab-pane
-              v-if="permission.indexOf('materialPurchasing')!=-1&&this.obj.purchase_status!=0"
+              v-if="permission.indexOf('designNote')!=-1"
+              label="设计版单"
+              name="/designNote"
+            ></el-tab-pane>
+            <el-tab-pane
+              v-if="permission.indexOf('materialProcess')!=-1"
+              label="物料工艺"
+              name="/materialProcess"
+            ></el-tab-pane>
+            <el-tab-pane
+              v-if="permission.indexOf('materialPurchasing')!=-1"
               label="版料采购"
               name="/materialPurchasing"
             ></el-tab-pane>
             <el-tab-pane
-              v-if="permission.indexOf('patternStatus')!=-1&&this.obj.pattern_status!=0"
+              v-if="permission.indexOf('patternStatus')!=-1"
               label="纸样"
               name="/patternStatus"
             ></el-tab-pane>
             <el-tab-pane
-              v-if="permission.indexOf('sampleDress')!=-1&&this.obj.sample_status!=0"
+              v-if="permission.indexOf('sampleDress')!=-1"
               label="样衣"
               name="/sampleDress"
             ></el-tab-pane>
@@ -136,7 +145,7 @@ export default {
   data() {
     return {
       power: "",
-      permission:[],
+      permission: [],
       obj: {},
       activeName: "",
       TL: "",
@@ -191,9 +200,45 @@ export default {
 <style lang="less" scoped>
 .developmentStatus {
   .main {
-    padding: 30px 40px;
-
+    .particulars {
+      display: flex;
+      justify-content: space-between;
+      height: 160px;
+      margin: 20px;
+      .editBtn {
+        display: flex;
+        align-items: flex-end;
+        .edit {
+          width: 30px;
+          height: 30px;
+          background-color: #000;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+          margin-right: 15px;
+        }
+        .jour {
+          margin: 5px 0;
+          width: 80px;
+          height: 25px;
+          line-height: 25px;
+          background: #f2f2f2;
+          text-align: center;
+          border-radius: 8px;
+        }
+        .jour:hover {
+          cursor: pointer;
+          background: #dad1d1;
+        }
+        div {
+          margin: 0 0 5px 0px;
+        }
+      }
+    }
     .orderInformation {
+      width: 1000px;
       .el-steps {
         position: relative;
         margin-bottom: 40px;
@@ -283,32 +328,8 @@ export default {
           font-size: 20px;
           font-weight: 600;
         }
-        .edit {
-          width: 30px;
-          height: 30px;
-          background-color: #000;
-          border-radius: 50%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          cursor: pointer;
-          margin-right: 15px;
-        }
-        .jour {
-          margin: 5px 0;
-          width: 80px;
-          height: 25px;
-          line-height: 25px;
-          background: #f2f2f2;
-          text-align: center;
-          border-radius: 8px;
-        }
-        .jour:hover {
-          cursor: pointer;
-          background: #dad1d1;
-        }
         div {
-          margin: 0 0 5px 0px;
+          padding: 2px;
         }
       }
     }
@@ -321,6 +342,16 @@ export default {
       margin: 30px 400px;
       border-radius: 5px;
     }
+  }
+  /deep/ .el-tabs__nav-wrap::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #e4e7ed;
+    z-index: 1;
   }
 }
 </style>

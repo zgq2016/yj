@@ -1,5 +1,5 @@
 <template>
-  <div class="authorityManagement" v-if="permission.indexOf('color_status_edit')!=-1"> 
+  <div class="authorityManagement" v-if="permission.indexOf('color_status_edit')!=-1">
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -22,13 +22,25 @@
           <el-table-column prop="remarks" :show-overflow-tooltip="true" label="备注" width="160"></el-table-column>
           <el-table-column align="center" label="操作">
             <template slot-scope="scope">
-              <el-tooltip content="复制" placement="top" v-if="scope.row.id!==1&&permission.indexOf('role_add')!=-1">
+              <el-tooltip
+                content="复制"
+                placement="top"
+                v-if="scope.row.id!==1&&permission.indexOf('role_add')!=-1"
+              >
                 <div class="el-icon-document-copy btn" @click="handlecopy(scope.$index, scope.row)"></div>
               </el-tooltip>
-              <el-tooltip content="编辑" v-if="scope.row.id!==1&&permission.indexOf('role_edit')!=-1" placement="top" >
+              <el-tooltip
+                content="编辑"
+                v-if="scope.row.id!==1&&permission.indexOf('role_edit')!=-1"
+                placement="top"
+              >
                 <div class="el-icon-edit btn" @click="handleEdit(scope.$index, scope.row)"></div>
               </el-tooltip>
-              <el-tooltip content="删除"  placement="top" v-if="scope.row.id!==1&&permission.indexOf('role_del')!=-1">
+              <el-tooltip
+                content="删除"
+                placement="top"
+                v-if="scope.row.id!==1&&permission.indexOf('role_del')!=-1"
+              >
                 <div class="el-icon-delete btn" @click="handleDelete(scope.$index, scope.row)"></div>
               </el-tooltip>
             </template>
@@ -41,7 +53,12 @@
             <div class="role_info_tit">角色信息</div>
             <div class="role_info_con">提示: 员工的角色权限修改后需要退出重新登录才会生效。</div>
           </div>
-          <el-button type="primary" size="mini" v-if="permission.indexOf('role_add')!=-1" @click="The_new_role">新增角色</el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            v-if="permission.indexOf('role_add')!=-1"
+            @click="The_new_role"
+          >新增角色</el-button>
         </div>
         <div style="display:flex">
           <div style="margin:10px">名称: {{obj.role_name}}</div>
@@ -88,7 +105,12 @@
             <div class="role_info_tit">角色信息</div>
             <div class="role_info_con">提示: 员工的角色权限修改后需要退出重新登录才会生效。</div>
           </div>
-          <el-button type="primary" size="mini" v-if="permission.indexOf('role_add')!=-1" @click="The_new_role">新增角色</el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            v-if="permission.indexOf('role_add')!=-1"
+            @click="The_new_role"
+          >新增角色</el-button>
         </div>
         <div style="display:flex">
           <div style="margin:10px">名称: {{data.role_name}}</div>
@@ -135,7 +157,12 @@
             <div class="role_info_tit">角色信息</div>
             <div class="role_info_con">提示: 员工的角色权限修改后需要退出重新登录才会生效。</div>
           </div>
-          <el-button type="primary" size="mini" v-if="permission.indexOf('role_edit')!=-1" @click="handleAddRole">保存</el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            v-if="permission.indexOf('role_edit')!=-1"
+            @click="handleAddRole"
+          >保存</el-button>
         </div>
         <div class="role_form">
           <el-form :inline="true" :model="form" ref="form" :rules="rules" class="demo-form-inline">
@@ -195,7 +222,12 @@
             <div class="role_info_tit">角色信息</div>
             <div class="role_info_con">提示: 员工的角色权限修改后需要退出重新登录才会生效。</div>
           </div>
-          <el-button type="primary" size="mini" v-if="permission.indexOf('role_edit')!=-1" @click="handleEditRole">保存修改</el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            v-if="permission.indexOf('role_edit')!=-1"
+            @click="handleEditRole"
+          >保存修改</el-button>
         </div>
         <div class="role_form">
           <el-form :inline="true" :model="edit" ref="edit" :rules="rules1" class="demo-form-inline">
@@ -309,7 +341,7 @@ export default {
       checked: false,
       height: "100px",
       status: 1,
-      permission:[]
+      permission: [],
     };
   },
   methods: {
@@ -678,13 +710,24 @@ export default {
     async default() {
       let res = await getRole({ id: 1 });
       let obj = {};
-      console.log(res);
+      this.status = 1;
+      // console.log(res);
       obj["power"] = res.data.data.permission;
       obj["remarks"] = res.data.data.remarks;
       obj["role_name"] = res.data.data.role_name;
       obj["id"] = res.data.data.id;
+
       this.obj = obj;
-      console.log(this.obj);
+      this.obj.power.map((v) => {
+        v.checked = v.checked ? true : false;
+        v.children.map((v1) => {
+          v1.checked = v1.checked ? true : false;
+          v1.children.map((v2) => {
+            v2.checked = v2.checked ? true : false;
+          });
+        });
+      });
+      // console.log(this.obj);
     },
     async init() {
       let res = await roleList();
@@ -697,7 +740,7 @@ export default {
     this.init();
     this.default();
     // console.log(this.form);
-     this.permission = localStorage.getItem("permission").split(",");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

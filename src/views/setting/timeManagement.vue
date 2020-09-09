@@ -11,10 +11,8 @@
     <div class="addClassify" v-if="permission.indexOf('season_add')!=-1" @click="addClassify">添加季节</div>
     <el-table :data="tableData" style="width: 100%;margin: 20px 0;">
       <el-table-column prop="season_name" label="季节名称" width="200"></el-table-column>
-      <el-table-column
-        align="right"
-        label="操作"
-      >
+      <el-table-column prop="no" label="编号" width="200"></el-table-column>
+      <el-table-column align="right" label="操作">
         <template slot-scope="scope">
           <el-tooltip
             content="编辑"
@@ -53,6 +51,24 @@
         >
           <el-input v-model="form.season_name" style="width:80%;"></el-input>
         </el-form-item>
+
+        <el-form-item
+          :rules="[
+                  { required: true, message: '请输入编号', trigger: 'blur' },
+                  { type: 'number', message: '年龄必须为数字值' },
+                    ]"
+          label="编号"
+          prop="no"
+        >
+          <el-input
+            type="text"
+            placeholder="请输入编号"
+            style="width:80%;"
+            v-model.number="form.no"
+            maxlength="1"
+            show-word-limit
+          ></el-input>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleClose">取 消</el-button>
@@ -76,6 +92,23 @@
           :rules="[ { required: true, message: '请输入季节名称', trigger: 'blur' },]"
         >
           <el-input v-model="form.season_name" style="width:80%;"></el-input>
+        </el-form-item>
+        <el-form-item
+          :rules="[
+                  { required: true, message: '请输入编号', trigger: 'blur' },
+                  { type: 'number', message: '年龄必须为数字值' },
+                    ]"
+          label="编号"
+          prop="no"
+        >
+          <el-input
+            type="text"
+            placeholder="请输入编号"
+            style="width:80%;"
+            v-model.number="form.no"
+            maxlength="1"
+            show-word-limit
+          ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -110,54 +143,71 @@ export default {
       form: {
         season_name: "",
         id: "",
+        no: "",
       },
       pageIndex: 1,
       pageSize: 10,
       total: 0,
-      permission:[]
+      permission: [],
     };
   },
   methods: {
     handleClose() {
-      this.form.season_name = "";
+      // this.form.season_name = "";
+      this.init();
       this.centerDialogVisible = false;
     },
     handleClose1() {
-      this.form.season_name = "";
+      // this.form.season_name = "";
+      this.init();
       this.centerDialogVisible1 = false;
     },
     async handleNewList() {
       this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
-
-        let res = await seasonAdd(this.form);
-        console.log(res);
-        this.form.season_name = "";
-        this.init();
-        this.centerDialogVisible = false;
+        if (this.form.no < 0) {
+          this.$message({
+            showClose: true,
+            message: "请输入大于0的编号",
+            type: "error",
+          });
+        } else {
+          let res = await seasonAdd(this.form);
+          console.log(res);
+          this.form.season_name = "";
+          this.init();
+          this.centerDialogVisible = false;
+        }
       });
     },
     async handleEditList() {
       this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
-
-        let res = await seasonEdit(this.form);
-        console.log(res);
-        this.form.season_name = "";
-        this.form.id = "";
-        this.init();
-        this.centerDialogVisible1 = false;
+        if (this.form.no < 0) {
+          this.$message({
+            showClose: true,
+            message: "请输入大于0的编号",
+            type: "error",
+          });
+        } else {
+          let res = await seasonEdit(this.form);
+          // console.log(res);
+          this.form.season_name = "";
+          this.form.id = "";
+          this.init();
+          this.centerDialogVisible1 = false;
+        }
       });
     },
     addClassify() {
       this.centerDialogVisible = true;
     },
     async handleEdit(index, row) {
-      console.log(row);
+      // console.log(row);
       this.form.season_name = row.season_name;
-      this.form.id = row.id;
+      this.form.no = Number(row.no);
       this.centerDialogVisible1 = true;
     },
     async handleDelete(index, row) {
@@ -203,7 +253,7 @@ export default {
   mounted() {
     this.init();
     // this.power = localStorage.getItem("power");
-     this.permission = localStorage.getItem("permission").split(",");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

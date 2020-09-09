@@ -442,5 +442,12 @@ export const issueInfo = (data) => {
     data: data,
   });
 };
+export const departmentSelect = (data) => {
+  return axios({
+    url: "?g=department_select ",
+    method: "post",
+    data: data,
+  });
+};
 
 

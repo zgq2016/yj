@@ -62,7 +62,7 @@
             <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item>
+        <!-- <el-form-item>
           <el-select
             v-model="formInline.style_type"
             clearable
@@ -77,7 +77,7 @@
               :value="item.style_type"
             ></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-select
             v-model="formInline.customer_id"

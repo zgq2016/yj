@@ -57,20 +57,14 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select
+        <el-cascader
           v-model="formInline.style_type"
-          clearable
           placeholder="类别"
-          style="width:120px"
-          @change="get_style_type($event)"
-        >
-          <el-option
-            v-for="item in categorys"
-            :key="item.id"
-            :label="item.style_type"
-            :value="item.style_type"
-          ></el-option>
-        </el-select>
+          :options="categorys"
+          :props="optionProps1"
+          @change="get_style_type"
+          :show-all-levels="false"
+        ></el-cascader>
       </el-form-item>
       <!-- <el-form-item>
         <el-select v-model="formInline.state" clearable placeholder="状态" style="width:120px">
@@ -94,7 +88,11 @@
                 style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
                 :src="scope.row.style_pic_url"
                 fit="cover"
-              ></el-image>
+              >
+                <div slot="error" class="image-slot">
+                  <!-- <i class="el-icon-picture-outline"></i> -->
+                </div>
+              </el-image>
               <img
                 :src="scope.row.style_color_pic_url"
                 class="img"
@@ -111,7 +109,22 @@
         <el-table-column align="center" property="year" label="年份"></el-table-column>
         <el-table-column align="center" property="season" label="季节"></el-table-column>
         <el-table-column align="center" property="username" label="设计师"></el-table-column>
-        <el-table-column align="center" property="purchase" label="状态"></el-table-column>
+        <el-table-column align="center" label="状态">
+          <template slot-scope="scope">
+            <div
+              style="background:url('https://yj.ppp-pay.top/upload/20200905/20200905182549.png') no-repeat;background-position: 100% 50%;
+              background-size: 49px;"
+              v-if="scope.row.is_urgent"
+            >
+              <em>{{scope.row.purchase}}</em>
+              <!-- <div ></div> -->
+            </div>
+            <div v-else>
+              <em>{{scope.row.purchase}}</em>
+              <!-- <div ></div> -->
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <div class="btn">
@@ -176,6 +189,11 @@ export default {
       seasons: [],
       stylists: [],
       categorys: [],
+      optionProps1: {
+        value: "style_type",
+        label: "style_type",
+        children: "children",
+      },
       wests: [],
       obj: {},
       pageIndex: 1,
@@ -208,6 +226,7 @@ export default {
       this.init();
     },
     get_style_type() {
+      this.formInline.style_type = this.formInline.style_type.pop();
       this.pageIndex = 1;
       this.init();
     },
@@ -354,7 +373,7 @@ export default {
       margin: 0 10px;
     }
   }
-  .btn:hover{
+  .btn:hover {
     cursor: pointer;
   }
 }

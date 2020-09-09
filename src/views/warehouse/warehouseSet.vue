@@ -223,11 +223,12 @@ export default {
       page: 1,
       page_size: 9,
       count: 0,
-      permission:[]
+      permission: [],
     };
   },
   methods: {
     onSubmit() {
+      this.page = 1;
       this.init(this.form);
     },
     handleEdit(index, row) {

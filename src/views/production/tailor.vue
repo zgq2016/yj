@@ -13,12 +13,24 @@
     </div>
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item>
-        <el-select v-model="formInline.year" @change="onSubmit" clearable placeholder="年份" style="width:120px">
+        <el-select
+          v-model="formInline.year"
+          @change="onSubmit"
+          clearable
+          placeholder="年份"
+          style="width:120px"
+        >
           <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="formInline.season" @change="onSubmit" clearable placeholder="季节" style="width:120px">
+        <el-select
+          v-model="formInline.season"
+          @change="onSubmit"
+          clearable
+          placeholder="季节"
+          style="width:120px"
+        >
           <el-option
             v-for="item in seasons"
             :key="item.id"
@@ -39,17 +51,23 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="formInline.style_type" @change="onSubmit" clearable placeholder="类别" style="width:120px">
-          <el-option
-            v-for="item in categorys"
-            :key="item.id"
-            :label="item.style_type"
-            :value="item.style_type"
-          ></el-option>
-        </el-select>
+        <el-cascader
+          v-model="formInline.style_type"
+          placeholder="类别"
+          :options="categorys"
+          :props="optionProps1"
+          @change="onSubmit(101)"
+          :show-all-levels="false"
+        ></el-cascader>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="formInline.cut_status" @change="onSubmit" clearable placeholder="状态" style="width:120px">
+        <el-select
+          v-model="formInline.cut_status"
+          @change="onSubmit"
+          clearable
+          placeholder="状态"
+          style="width:120px"
+        >
           <el-option v-for="item in states" :key="item.id" :label="item.v" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
@@ -70,7 +88,11 @@
               style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
               :src="scope.row.style_pic_url"
               fit="cover"
-            ></el-image>
+            >
+              <div slot="error" class="image-slot">
+                <!-- <i class="el-icon-picture-outline"></i> -->
+              </div>
+            </el-image>
           </template>
         </el-table-column>
         <el-table-column align="center" property="styleno" label="款号"></el-table-column>
@@ -103,8 +125,8 @@
     <div style="display: flex;justify-content: space-between;align-items: center;">
       <!-- 打印  导出-->
       <div class="btn">
-        <el-button v-print="'#printTest'" size="mini" >打印</el-button>
-        <el-button size="mini" >导出</el-button>
+        <el-button v-print="'#printTest'" size="mini">打印</el-button>
+        <el-button size="mini">导出</el-button>
       </div>
       <!-- 分页 -->
       <el-pagination
@@ -151,6 +173,11 @@ export default {
       seasons: [],
       stylists: [],
       categorys: [],
+      optionProps1: {
+        value: "style_type",
+        label: "style_type",
+        children: "children",
+      },
       wests: [],
       year: "", //年
       season: "", //季节
@@ -175,7 +202,7 @@ export default {
       tableData: [],
       count: 0,
       number: 123,
-      permission:[]
+      permission: [],
     };
   },
   methods: {
@@ -192,8 +219,11 @@ export default {
         }&activeNames=${4}&TL=${3}&produce_no=${row.produce_no}`,
       });
     },
-    onSubmit() {
-      this.page=1
+    onSubmit(val) {
+      if (val == 101) {
+        this.formInline.style_type = this.formInline.style_type.pop();
+      }
+      this.page = 1;
       this.init(this.formInline);
     }, // 获取customer_id
     handleCustomer_id(e) {
@@ -201,7 +231,7 @@ export default {
     },
     async handleUser_id(e) {
       this.formInline.user_id = e;
-      this.onSubmit()
+      this.onSubmit();
     },
     async getYear() {
       let res = await getYearList();

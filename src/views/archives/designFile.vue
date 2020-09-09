@@ -39,14 +39,14 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.style_type" @change="onSubmit" clearable placeholder="类别">
-            <el-option
-              v-for="item in categorys"
-              :key="item.id"
-              :label="item.style_type"
-              :value="item.style_type"
-            ></el-option>
-          </el-select>
+          <el-cascader
+          v-model="formInline.style_type"
+          placeholder="类别"
+          :options="categorys"
+          :props="optionProps1"
+          @change="onSubmit(101)"
+          :show-all-levels="false"
+        ></el-cascader>
         </el-form-item>
 
         <el-form-item>
@@ -77,7 +77,11 @@
                 style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
                 :src="scope.row.style_pic_url"
                 fit="cover"
-              ></el-image>
+              >
+                <div slot="error" class="image-slot">
+                  <!-- <i class="el-icon-picture-outline"></i> -->
+                </div>
+              </el-image>
             </template>
           </el-table-column>
           <el-table-column align="center" property="stylename" label="名称"></el-table-column>
@@ -105,7 +109,11 @@
       <!-- 打印  导出-->
       <div class="btn">
         <el-button v-print="'#printTest'" size="mini">打印</el-button>
-        <el-button @click="OrderCreate" v-if="permission.indexOf('produce_lotadd')!=-1" size="mini">生成下单表</el-button>
+        <el-button
+          @click="OrderCreate"
+          v-if="permission.indexOf('produce_lotadd')!=-1"
+          size="mini"
+        >生成下单表</el-button>
         <el-button size="mini">导出</el-button>
       </div>
       <!-- 分页 -->
@@ -151,6 +159,11 @@ export default {
       seasons: [],
       stylists: [],
       categorys: [],
+      optionProps1: {
+        value: "style_type",
+        label: "style_type",
+        children: "children",
+      },
       wests: [],
       page: 1,
       page_size: 9,
@@ -183,7 +196,10 @@ export default {
         });
       }
     },
-    async onSubmit() {
+    async onSubmit(val) {
+      if (val == 101) {
+        this.formInline.style_type = this.formInline.style_type.pop();
+      }
       this.page = 1;
       this.init(this.formInline);
     },
@@ -241,7 +257,7 @@ export default {
     handleSizeChange(val) {
       // console.log(val)
       this.page_size = val;
-      
+
       this.init(this.formInline);
     },
     handleCurrentChange(val) {

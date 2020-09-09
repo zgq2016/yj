@@ -8,7 +8,11 @@
       </el-breadcrumb>
     </div>
     <!-- 添加分类 -->
-    <div class="addClassify" v-if="permission.indexOf('goods_category_add')!=-1" @click="addClassify">添加分类</div>
+    <div
+      class="addClassify"
+      v-if="permission.indexOf('goods_category_add')!=-1"
+      @click="addClassify"
+    >添加分类</div>
     <el-table
       :data="tableData"
       style="width: 100%;margin: 20px 0;"
@@ -17,13 +21,11 @@
       :tree-props="{children: 'goods_category_data' , hasChildren: 'hasChildren'}"
     >
       <el-table-column prop="goods_category_name" label="分类名称"></el-table-column>
+      <el-table-column prop="no" label="编号"></el-table-column>
       <el-table-column prop="describe" label="分类描述"></el-table-column>
       <el-table-column prop="sort" label="排序"></el-table-column>
       <el-table-column prop="unit" label="单位"></el-table-column>
-      <el-table-column
-        label="操作"
-        width="200"
-      >
+      <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-tooltip
             content="编辑"
@@ -73,6 +75,16 @@
         <el-form-item label="商品名称" prop="goods_category_name" v-if="form.goods_category_id!==''">
           <el-input v-model="form.goods_category_name" style="width:80%;"></el-input>
         </el-form-item>
+        <el-form-item label="编号" prop="no">
+          <el-input
+            type="text"
+            placeholder="请输入编号"
+            style="width:80%;"
+            v-model.number="form.no"
+            maxlength="2"
+            show-word-limit
+          ></el-input>
+        </el-form-item>
         <el-form-item label="商品分类" prop="goods_category_name" v-if="form.goods_category_id===''">
           <el-input v-model="form.goods_category_name" style="width:80%;"></el-input>
         </el-form-item>
@@ -111,6 +123,16 @@
       <el-form ref="obj" :model="obj" :rules="rules" label-width="80px" resetFields>
         <el-form-item label="分类名称" prop="goods_category_name">
           <el-input v-model="obj.goods_category_name" style="width:80%;"></el-input>
+        </el-form-item>
+        <el-form-item label="编号" prop="no">
+          <el-input
+            type="text"
+            placeholder="请输入编号"
+            style="width:80%;"
+            v-model.number="obj.no"
+            maxlength="2"
+            show-word-limit
+          ></el-input>
         </el-form-item>
         <el-form-item label="上级分类" v-if="rowLevel==='1'">
           <el-select
@@ -174,17 +196,25 @@ import { getUnitSelect } from "@/api/archives";
 export default {
   data() {
     return {
-      permission:[],
+      permission: [],
       units: [],
       power: "",
       rules: {
         goods_category_name: [
           { required: true, message: "请输入分类名称", trigger: "blur" },
         ],
+        no: [
+          { required: true, message: "请输入编号", trigger: "blur" },
+          { type: "number", message: "年龄必须为数字值" },
+        ],
       },
       rules1: {
         goods_category_name: [
           { required: true, message: "请输入分类名称", trigger: "blur" },
+        ],
+        no: [
+          { required: true, message: "请输入编号", trigger: "blur" },
+          { type: "number", message: "年龄必须为数字值" },
         ],
       },
       tableData: [],
@@ -213,37 +243,47 @@ export default {
       this.$refs["form"].resetFields();
       this.centerDialogVisible = false;
       this.vh1 = false;
+      this.init();
     },
     handleClose1() {
       this.centerDialogVisible1 = false;
       this.vh1 = false;
+      this.init();
     },
     handleEditList() {
       this.$refs["obj"].validate(async (valid) => {
         if (!valid) return;
         delete this.obj.goods_category_data;
         delete this.obj.region;
-        console.log(this.obj);
-        let res = await goodsCategoryEdit(this.obj);
-        console.log(res);
-        this.$refs["obj"].resetFields();
-        this.obj.goods_category_id = 0;
-        this.region = "";
-        this.centerDialogVisible1 = false;
-        this.init();
+        // console.log(this.obj.no);
+        if (this.obj.no < 0) {
+          this.$message({
+            showClose: true,
+            message: "请输入大于0的编号",
+            type: "error",
+          });
+        } else {
+          let res = await goodsCategoryEdit(this.obj);
+          console.log(res);
+          this.$refs["obj"].resetFields();
+          this.obj.goods_category_id = 0;
+          this.region = "";
+          this.centerDialogVisible1 = false;
+          this.init();
+        }
       });
     },
     async handleEdit(index, row) {
       let res = await goodsCategoryInfo({ id: row.goods_category_id });
-      console.log(res);
+      // console.log(res);
       this.region = res.data.data[0].goods_category_name;
-      console.log(row);
+      // console.log(row);
       this.rowLevel = row.level;
       let res1 = await goodsCategoryInfo();
       let { data } = res1.data;
       this.options = data;
       this.obj = row;
-
+      this.obj.no = Number(row.no);
       this.centerDialogVisible1 = true;
     },
     async handleDelete(index, row) {
@@ -289,19 +329,27 @@ export default {
     async handleNewList(form) {
       this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
-        if (this.tableData.length === 0) {
-          let res = await goodsCategoryAdd(this.form);
-          console.log(res);
-          this.$refs["form"].resetFields();
-          this.centerDialogVisible = false;
-          this.init();
-        }
-        if (this.tableData.length > 0) {
-          let res = await goodsCategoryAdd(this.form);
-          console.log(res);
-          this.$refs["form"].resetFields();
-          this.centerDialogVisible = false;
-          this.init();
+        if (this.form.no < 0) {
+          this.$message({
+            showClose: true,
+            message: "请输入大于0的编号",
+            type: "error",
+          });
+        } else {
+          if (this.tableData.length === 0) {
+            let res = await goodsCategoryAdd(this.form);
+            console.log(res);
+            this.$refs["form"].resetFields();
+            this.centerDialogVisible = false;
+            this.init();
+          }
+          if (this.tableData.length > 0) {
+            let res = await goodsCategoryAdd(this.form);
+            console.log(res);
+            this.$refs["form"].resetFields();
+            this.centerDialogVisible = false;
+            this.init();
+          }
         }
       });
     },

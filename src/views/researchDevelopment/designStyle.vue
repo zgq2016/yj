@@ -57,23 +57,21 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select
+          <el-cascader
             v-model="formInline.style_type"
-            clearable
             placeholder="类别"
-            style="width:120px"
-            @change="get_style_type($event)"
-          >
-            <el-option
-              v-for="item in categorys"
-              :key="item.id"
-              :label="item.style_type"
-              :value="item.style_type"
-            ></el-option>
-          </el-select>
+            :options="categorys"
+            :props="optionProps1"
+            @change="get_style_type"
+            :show-all-levels="false"
+          ></el-cascader>
         </el-form-item>
         <el-form-item>
-          <div class="addStyle" v-if="permission.indexOf('project_style_add')!=-1" @click="addStyle">
+          <div
+            class="addStyle"
+            v-if="permission.indexOf('project_style_add')!=-1"
+            @click="addStyle"
+          >
             <div>新增款式</div>
           </div>
         </el-form-item>
@@ -95,7 +93,11 @@
                 style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
                 :src="scope.row.style_pic_url"
                 fit="cover"
-              ></el-image>
+              >
+                <div slot="error" class="image-slot">
+                  <!-- <i class="el-icon-picture-outline"></i> -->
+                </div>
+              </el-image>
               <img
                 :src="scope.row.style_color_pic_url"
                 class="img"
@@ -114,7 +116,7 @@
         <el-table-column property="username" align="center" label="设计师"></el-table-column>
         <el-table-column property="design" align="center" label="状态"></el-table-column>
         <el-table-column label="操作" align="center">
-          <template v-if="permission.indexOf('get_style')!=-1"  slot-scope="scope">
+          <template v-if="permission.indexOf('get_style')!=-1" slot-scope="scope">
             <div class="btn">
               <!-- <div
                 v-if="scope.row.sample_status==='2'||scope.row.sample_status==='4'&&scope.row.user_id==userid"
@@ -183,6 +185,11 @@ export default {
       seasons: [],
       stylists: [],
       categorys: [],
+      optionProps1: {
+        value: "style_type",
+        label: "style_type",
+        children: "children",
+      },
       wests: [],
       obj: {},
       pageIndex: 1,
@@ -196,7 +203,7 @@ export default {
         { name: "制版中", id: 2 },
         { name: "完成上传", id: 3 },
       ],
-      permission:[]
+      permission: [],
     };
   },
   methods: {
@@ -232,6 +239,8 @@ export default {
       this.init();
     },
     get_style_type() {
+      // console.log(this.formInline);
+      this.formInline.style_type = this.formInline.style_type.pop();
       this.pageIndex = 1;
       this.init();
     },
@@ -284,7 +293,7 @@ export default {
       this.tableData = data;
       // console.log(this.tableData);
       this.tableData.map((v, i) => {
-       if (v.design_status == "0") {
+        if (v.design_status == "0") {
           v.design = "等待设计";
         }
         if (v.design_status == "1") {
@@ -383,7 +392,7 @@ export default {
       margin: 0 10px;
     }
   }
-  .btn:hover{
+  .btn:hover {
     cursor: pointer;
   }
   .form {

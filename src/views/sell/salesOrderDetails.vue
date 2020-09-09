@@ -84,7 +84,7 @@
                 fit="cover"
               >
                 <div slot="error" class="image-slot">
-                  <i class="el-icon-picture-outline"></i>
+                  <!-- <i class="el-icon-picture-outline"></i> -->
                 </div>
               </el-image>
             </template>

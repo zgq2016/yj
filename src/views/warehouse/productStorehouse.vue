@@ -84,7 +84,11 @@
                 style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
                 :src="scope.row.image"
                 fit="cover"
-              ></el-image>
+              >
+                <div slot="error" class="image-slot">
+                  <!-- <i class="el-icon-picture-outline"></i> -->
+                </div>
+              </el-image>
             </template>
           </el-table-column>
           <el-table-column align="center" prop="styleno" label="款号"></el-table-column>
@@ -104,7 +108,7 @@
       </div>
     </div>
     <div class="btn">
-      <el-button size="mini" >导出</el-button>
+      <el-button size="mini">导出</el-button>
       <el-button v-print="'#printTest'" size="mini">打印</el-button>
     </div>
     <!-- 分页 -->
@@ -153,7 +157,7 @@ export default {
       colors: [],
       ware: [],
       cate: [],
-      permission:[]
+      permission: [],
     };
   },
   methods: {
@@ -171,8 +175,8 @@ export default {
       } else {
         this.formInline.hide_empty = 0;
       }
-      console.log(this.formInline);
-
+      // console.log(this.formInline);
+      this.pageIndex = 1;
       this.init(this.formInline);
     },
     handleSize(val) {

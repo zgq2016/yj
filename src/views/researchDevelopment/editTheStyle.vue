@@ -125,6 +125,26 @@
         <el-button v-if="permission.indexOf('style_del')!=-1" round @click="handleDel">删除</el-button>
       </div>
     </div>
+    <el-dialog title="拍照上传" :visible.sync="visible" @close="onCancel" width="1065px">
+      <div class="box">
+        <video id="videoCamera" class="canvas" :width="videoWidth" :height="videoHeight" autoplay></video>
+        <canvas
+          id="canvasCamera"
+          class="canvas"
+          :width="videoWidth"
+          :height="videoHeight"
+          style="margin-left:10px;"
+        ></canvas>
+      </div>
+      <div slot="footer">
+        <el-button @click="drawImage" icon="el-icon-camera" size="small">拍照</el-button>
+        <el-button v-if="os" @click="getCompetence" icon="el-icon-video-camera" size="small">打开摄像头</el-button>
+        <!-- <el-button v-else @click="stopNavigator" icon="el-icon-switch-button" size="small">关闭摄像头</el-button> -->
+        <el-button @click="resetCanvas" icon="el-icon-refresh" size="small">重置</el-button>
+        <el-button @click="ctrlShift" icon="el-icon-s-unfold" size="small">另存为</el-button>
+        <el-button @click="onCancel(1,numberr)" icon="el-icon-circle-close" size="small">完成</el-button>
+      </div>
+    </el-dialog>
     <el-dialog
       title="色卡/颜色"
       :visible.sync="centerDialogVisible"
@@ -138,22 +158,39 @@
       <div style="display:flex;">
         <div class="info-item">
           <div style="display:flex;">
-            <div class="upload">
-              <input
-                type="file"
-                id="uploads"
-                :value="imgFile"
-                accept="image/png, image/jpeg, image/gif, image/jpg"
-                @change="uploadImg($event, 1)"
-              />
-              上传色卡图片
-            </div>
-            <button v-if="status===2" class="upload" style="margin-left:30px;padding:0 20px 0 10px">
-              选择颜色
-              <div v-if="status===2">
-                <el-color-picker v-model="color_code" @change="color_picker"></el-color-picker>
+            <div>
+              <div class="upload">
+                <input
+                  type="file"
+                  id="uploads"
+                  :value="imgFile"
+                  accept="image/png, image/jpeg, image/gif, image/jpg"
+                  @change="uploadImg($event, 1)"
+                />
+                上传色卡图片
               </div>
-            </button>
+              <button
+                v-if="status===4||status===2"
+                class="upload"
+                style="margin-left:30px;padding:0 20px 0 10px;float:left;"
+              >
+                选择颜色
+                <div v-if="this.$route.query.oldId===undefined&&status===2">
+                  <el-color-picker v-model="color_code" @change="color_picker"></el-color-picker>
+                </div>
+                <div v-if="this.$route.query.oldId!==undefined&&status===4">
+                  <el-color-picker v-model="color_code"></el-color-picker>
+                </div>
+              </button>
+              <el-button
+                @click="onTake(101)"
+                icon="el-icon-camera"
+                type="info"
+                class="aj"
+                size="small"
+                v-if="status===4||status===2"
+              >拍照</el-button>
+            </div>
           </div>
           <div class="line">
             <div class="cropper-content">
@@ -283,7 +320,7 @@ export default {
   },
   data() {
     return {
-      permission:[],
+      permission: [],
       power: "",
       headImg: "",
       //剪切图片上传
@@ -359,9 +396,203 @@ export default {
         label: "color_name",
         children: "children",
       },
+
+      visible: false, //弹窗
+      // loading: false, //上传按钮加载
+      os: false, //控制摄像头开关
+      thisVideo: null,
+      thisContext: null,
+      thisCancas: null,
+      videoWidth: 500,
+      videoHeight: 400,
+      postOptions: [],
+      CertCtl: "",
+      // 遮罩层
+      // loading: true,
+      // 选中数组
+      ids: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 总条数
+      total: 0,
+      // 项目人员表格数据
+      akworkerList: [],
+      //工种类别数据字典
+      workerTypeOptions: [],
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        imgSrc: undefined,
+      },
+      numberr: 0,
     };
   },
   methods: {
+    ctrlShift() {
+      var alink = document.createElement("a");
+      alink.href = this.imgSrc;
+      alink.download = "pic"; //图片名
+      alink.click();
+      // this.downloadIamge(this.fileList1, 'pic')
+    },
+    /*调用摄像头拍照开始*/
+    onTake(num) {
+      this.numberr = num;
+      this.visible = true;
+      this.getCompetence();
+    },
+    dataURLtoFile(dataurl, filename) {
+      //将base64转换为文件
+      var arr = dataurl.split(","),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, { type: mime });
+    },
+    async onCancel(val, num) {
+      this.visible = false;
+      /* this.resetCanvas();*/
+      this.stopNavigator();
+      if (val == 1 && num == undefined) {
+        this.fileList1 = this.imgSrc;
+        let file = this.dataURLtoFile(this.imgSrc, String(Math.random()));
+        let param = new FormData(); // 创建form对象
+        param.append("image", file); // 通过append向form对象添加数据
+        let config = {
+          headers: { "Content-Type": "multipart/form-data" },
+        };
+        let res = await discern(param, config);
+        this.contents = res.data.data.words_result;
+        if (this.contents) {
+          if (this.contents) {
+            this.contents = this.contents.filter((v) => {
+              return !/^\d{1,3}$/.test(v.words);
+            });
+          }
+        }
+      } else if (val == 1 && num != undefined) {
+        let file = this.dataURLtoFile(this.imgSrc, String(Math.random()));
+        console.log(file);
+        this.fileName = file;
+        this.option.img = this.imgSrc;
+      }
+      // this.imgSrc = "";
+      this.clearCanvas("canvasCamera");
+    },
+    // 调用摄像头权限
+    getCompetence() {
+      //必须在model中render后才可获取到dom节点,直接获取无法获取到model中的dom节点
+      this.$nextTick(() => {
+        const _this = this;
+        this.os = false; //切换成关闭摄像头
+        this.thisCancas = document.getElementById("canvasCamera");
+        this.thisContext = this.thisCancas.getContext("2d");
+        this.thisVideo = document.getElementById("videoCamera");
+        // 旧版本浏览器可能根本不支持mediaDevices，我们首先设置一个空对象
+        if (navigator.mediaDevices === undefined) {
+          navigator.menavigatordiaDevices = {};
+        }
+        // 一些浏览器实现了部分mediaDevices，我们不能只分配一个对象
+        // 使用getUserMedia，因为它会覆盖现有的属性。
+        // 这里，如果缺少getUserMedia属性，就添加它。
+        if (navigator.mediaDevices.getUserMedia === undefined) {
+          navigator.mediaDevices.getUserMedia = function (constraints) {
+            // 首先获取现存的getUserMedia(如果存在)
+            let getUserMedia =
+              navigator.webkitGetUserMedia ||
+              navigator.mozGetUserMedia ||
+              navigator.getUserMedia;
+            // 有些浏览器不支持，会返回错误信息
+            // 保持接口一致
+            if (!getUserMedia) {
+              return Promise.reject(
+                new Error("getUserMedia is not implemented in this browser")
+              );
+            }
+            // 否则，使用Promise将调用包装到旧的navigator.getUserMedia
+            return new Promise(function (resolve, reject) {
+              getUserMedia.call(navigator, constraints, resolve, reject);
+            });
+          };
+        }
+        const constraints = {
+          audio: false,
+          video: {
+            width: _this.videoWidth,
+            height: _this.videoHeight,
+            transform: "scaleX(-1)",
+          },
+        };
+        navigator.mediaDevices
+          .getUserMedia(constraints)
+          .then(function (stream) {
+            // 旧的浏览器可能没有srcObject
+            if ("srcObject" in _this.thisVideo) {
+              _this.thisVideo.srcObject = stream;
+            } else {
+              // 避免在新的浏览器中使用它，因为它正在被弃用。
+              _this.thisVideo.src = window.URL.createObjectURL(stream);
+            }
+            _this.thisVideo.onloadedmetadata = function (e) {
+              _this.thisVideo.play();
+            };
+          })
+          .catch((err) => {
+            this.$notify({
+              title: "警告",
+              message: "没有开启摄像头权限或浏览器版本不兼容.",
+              type: "warning",
+            });
+          });
+      });
+    },
+    //绘制图片
+    drawImage() {
+      // 点击，canvas画图
+      // console.log(this.thisContext);
+      this.thisContext.drawImage(
+        this.thisVideo,
+        0,
+        0,
+        this.videoWidth,
+        this.videoHeight
+      );
+      // 获取图片base64链接
+      this.imgSrc = this.thisCancas.toDataURL("image/png");
+      /*const imgSrc=this.imgSrc;*/
+    },
+
+    //清空画布
+    clearCanvas(id) {
+      let c = document.getElementById(id);
+      let cxt = c.getContext("2d");
+      cxt.clearRect(0, 0, c.width, c.height);
+    },
+    //重置画布
+    resetCanvas() {
+      this.imgSrc = "";
+      this.clearCanvas("canvasCamera");
+    },
+    //关闭摄像头
+    stopNavigator() {
+      if (this.thisVideo && this.thisVideo !== null) {
+        this.thisVideo.srcObject.getTracks()[0].stop();
+        this.os = true; //切换成打开摄像头
+      }
+    },
+
+    // ********
     handleChange(e) {
       this.obj.style_color = e[1];
     },
@@ -682,7 +913,7 @@ export default {
     this.getCategory();
     this.getStyleno();
     // this.power = localStorage.getItem("power");
-    this.permission = localStorage.getItem("permission").split(',');
+    this.permission = localStorage.getItem("permission").split(",");
     console.log(this.power);
   },
 };
@@ -738,7 +969,20 @@ export default {
     border: 1px solid #000;
   }
   .dialog {
+    div {
+      overflow: hidden;
+    }
+    .aj {
+      // display: flex;
+      float: left;
+      margin-left: 30px;
+      height: 40px;
+      background: rgba(243, 242, 242, 0);
+      color: #000;
+      border: 1px solid #cccccc;
+    }
     .upload {
+      float: left;
       margin-bottom: 30px;
       width: 140px;
       display: flex;

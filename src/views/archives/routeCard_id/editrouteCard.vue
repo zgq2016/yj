@@ -58,14 +58,15 @@
     <el-dialog title="拍照上传" :visible.sync="visible" @close="onCancel" width="1065px">
       <div class="box">
         <video id="videoCamera" class="canvas" :width="videoWidth" :height="videoHeight" autoplay></video>
-        <canvas id="canvasCamera" class="canvas" :width="videoWidth" :height="videoHeight"></canvas>
+        <canvas id="canvasCamera" class="canvas" style="margin-left:10px;" :width="videoWidth" :height="videoHeight"></canvas>
       </div>
       <div slot="footer">
         <el-button @click="drawImage" icon="el-icon-camera" size="small">拍照</el-button>
         <el-button v-if="os" @click="getCompetence" icon="el-icon-video-camera" size="small">打开摄像头</el-button>
-        <el-button v-else @click="stopNavigator" icon="el-icon-switch-button" size="small">关闭摄像头</el-button>
+        <!-- <el-button v-else @click="stopNavigator" icon="el-icon-switch-button" size="small">关闭摄像头</el-button> -->
         <el-button @click="resetCanvas" icon="el-icon-refresh" size="small">重置</el-button>
-        <el-button @click="onCancel(1)" icon="el-icon-circle-close" size="small">完成</el-button>
+        <el-button @click="ctrlShift" icon="el-icon-s-unfold" size="small">另存为</el-button>
+        <el-button @click="onCancel(1,numberr)" icon="el-icon-circle-close" size="small">完成</el-button>
       </div>
     </el-dialog>
     <!-- form -->
@@ -240,15 +241,24 @@
       <div style="display:flex;">
         <div class="info-item">
           <!-- <label class="btn btn-orange" for="uploads">选择图片</label> -->
-          <div class="upload">
-            <input
-              type="file"
-              id="uploads"
-              :value="imgFile"
-              accept="image/png, image/jpeg, image/gif, image/jpg"
-              @change="uploadImg($event, 1)"
-            />
-            选择文件
+          <div>
+            <div class="upload">
+              <input
+                type="file"
+                id="uploads"
+                :value="imgFile"
+                accept="image/png, image/jpeg, image/gif, image/jpg"
+                @change="uploadImg($event, 1)"
+              />
+              选择图片
+            </div>
+            <el-button
+              @click="onTake(101)"
+              icon="el-icon-camera"
+              type="info"
+              class="aj"
+              size="small"
+            >拍照</el-button>
           </div>
           <div class="line">
             <div class="cropper-content">
@@ -508,9 +518,17 @@ export default {
         pageSize: 10,
         imgSrc: undefined,
       },
+      numberr:0
     };
   },
   methods: {
+    ctrlShift() {
+      var alink = document.createElement("a");
+      alink.href = this.imgSrc;
+      alink.download = "pic"; //图片名
+      alink.click();
+      // this.downloadIamge(this.fileList1, 'pic')
+    },
     cancel() {
       if (this.headImg === "") {
         this.option.img = "";
@@ -534,11 +552,11 @@ export default {
       }
       return new File([u8arr], filename, { type: mime });
     },
-    async onCancel(val) {
+    async onCancel(val, num) {
       this.visible = false;
       /* this.resetCanvas();*/
       this.stopNavigator();
-      if (val == 1) {
+      if (val == undefined && num == undefined) {
         this.fileList1 = this.imgSrc;
         let file = this.dataURLtoFile(this.imgSrc, String(Math.random()));
         let param = new FormData(); // 创建form对象
@@ -555,7 +573,14 @@ export default {
             });
           }
         }
+      } else if(val == 1 && num != undefined){
+        let file = this.dataURLtoFile(this.imgSrc, String(Math.random()));
+        console.log(file);
+        this.fileName = file;
+        this.option.img = this.imgSrc;
       }
+      // this.imgSrc = "";
+      this.clearCanvas("canvasCamera");
     },
     // 调用摄像头权限
     getCompetence() {
@@ -1082,7 +1107,20 @@ export default {
     // }
   }
   .dialog {
+    div {
+      overflow: hidden;
+    }
+    .aj {
+      // display: flex;
+      float: left;
+      margin-left: 30px;
+      height: 40px;
+      background: rgba(243, 242, 242, 0);
+      color: #000;
+      border: 1px solid #cccccc;
+    }
     .upload {
+      float:left;
       margin-bottom: 30px;
       width: 100px;
       display: flex;

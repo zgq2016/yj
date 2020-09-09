@@ -482,7 +482,8 @@ export default {
       } else {
         this.form.hide_empty = 0;
       }
-      console.log(this.form);
+      this.pageIndex = 1
+      // console.log(this.form);
       this.init(this.form);
     },
     handleAvatarSuccess(res, file) {

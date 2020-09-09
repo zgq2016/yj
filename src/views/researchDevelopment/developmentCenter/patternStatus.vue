@@ -3,7 +3,16 @@
     <div class="pattern">
       <!-- 纸样文件 -->
       <div class="patternFile" v-if="permission.indexOf('style_paperpattern_list')!=-1">
-        <div class="patternFileName">纸样文件</div>
+        <div style="display:flex">
+          <div class="patternFileName">纸样文件</div>
+          <div
+            class="push_plate_making"
+            style="background-color: #f2f2f2;"
+            @click="get_push_plate"
+            v-if="this.obj.sample_status==0"
+          >推送制版</div>
+          <div class="push_plate_making" style="background-color: #f2f2f2;" v-else>已推送制版</div>
+        </div>
         <div class="upload">
           <el-upload
             class="upload-demo"
@@ -16,7 +25,11 @@
             :file-list="fileList"
             :on-exceed="handleExceed"
           >
-            <el-button size="small" type="primary" v-if="permission.indexOf('style_paperpattern_add')!=-1">点击上传</el-button>
+            <el-button
+              size="small"
+              type="primary"
+              v-if="permission.indexOf('style_paperpattern_add')!=-1"
+            >点击上传</el-button>
           </el-upload>
         </div>
       </div>
@@ -124,11 +137,33 @@
               <div style="margin-right:5px">{{item.name}}</div>
               <div>提交于: {{item.del_time}}</div>
             </div>
-            <div class="restore" @click="Resume(item)" v-if="permission.indexOf('style_paperpattern_resume')!=-1">还原</div>
+            <div
+              class="restore"
+              @click="Resume(item)"
+              v-if="permission.indexOf('style_paperpattern_resume')!=-1"
+            >还原</div>
           </div>
         </div>
       </div>
     </div>
+    <el-dialog
+      title="推送制版"
+      :visible.sync="centerDialogVisible1"
+      width="20%"
+      center
+      class="dialog1"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
+      <el-select v-model="form.user_id" @change="handleUser_id($event)">
+        <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
+      </el-select>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="AssistantCancel">取 消</el-button>
+        <el-button type="primary" @click="AssistantFinish">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -141,6 +176,8 @@ import {
   styleMaterialsUseEdit,
   stylePaperpatternDelList,
   stylePaperpatternResume,
+  getStylistList,
+  pushSample,
 } from "@/api/researchDevelopment";
 export default {
   data() {
@@ -159,10 +196,36 @@ export default {
       DelList: [],
 
       antistopActive: false,
-      permission:[]
+      permission: [],
+      stylists: [],
+      form: {
+        user_id: "",
+      },
+      centerDialogVisible1: false,
     };
   },
   methods: {
+    handleUser_id(e) {
+      this.form.user_id = e;
+    },
+    AssistantCancel() {
+      this.centerDialogVisible1 = false;
+    },
+    async AssistantFinish() {
+      let res = await pushSample({
+        style_id: this.$route.query.id,
+        user_id: this.form.user_id,
+      });
+      console.log(res);
+      if (res.data.error_code == 0) {
+        this.$message.success(res.data.msg);
+        this.init();
+      }
+      this.centerDialogVisible1 = false;
+    },
+    async get_push_plate() {
+      this.centerDialogVisible1 = true;
+    },
     async handleRemove(file, fileList) {
       let id = file.id;
       let res = await stylePaperpatternDel({ id });
@@ -278,11 +341,20 @@ export default {
         return;
       }
     },
+    async getstylist() {
+      let res = await getStylistList({department_id:2});
+      let { data } = res.data;
+      data.map((v) => {
+        v["checked"] = false;
+      });
+      this.stylists = data;
+    },
   },
   mounted() {
     this.init();
     this.antistopActive = true;
     // this.power = localStorage.getItem("power");
+    this.getstylist();
     this.permission = localStorage.getItem("permission").split(",");
   },
 };
@@ -298,6 +370,18 @@ export default {
         width: 300px;
         padding: 10px;
         font-size: 16px;
+      }
+      .push_plate_making {
+        width: 130px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        margin: 15px;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 100px;
       }
       .upload {
         width: 400px;

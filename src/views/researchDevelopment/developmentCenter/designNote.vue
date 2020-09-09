@@ -36,6 +36,24 @@
         </div>
       </div>
       <div class="right">
+        <div
+          class="push_plate_making"
+          style="background-color: #f2f2f2;"
+          @click="get_push_plate"
+          v-if="this.obj.pattern_status==0"
+        >推送打版</div>
+        <div class="push_plate_making" style="background-color: #f2f2f2;" v-else>已推送打版</div>
+
+        <el-tooltip
+          content="加急"
+          placement="top"
+          class="edit"
+          style="background-color: #f2f2f2;font-size:20px;"
+        >
+          <div v-if="obj.is_urgent" style="color: red;" class="el-icon-warning-outline"></div>
+          <div v-else @click="styleUrgents" class="el-icon-warning-outline"></div>
+        </el-tooltip>
+
         <el-tooltip
           content="提交审批"
           placement="top"
@@ -126,6 +144,40 @@
         <Print :data="obj" />
       </div>
     </div>
+    <el-dialog
+      title="推送打版"
+      :visible.sync="centerDialogVisible1"
+      width="20%"
+      center
+      class="dialog1"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
+      <el-select v-model="form.user_id" @change="handleUser_id($event)">
+        <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
+      </el-select>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="AssistantCancel">取 消</el-button>
+        <el-button type="primary" @click="AssistantFinish">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      title="加急提示"
+      :visible.sync="centerDialogVisible2"
+      width="20%"
+      center
+      class="dialog1"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
+      <div style="text-align: center;">确定是否加急！</div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="centerDialogVisible2=false">取消</el-button>
+        <el-button type="primary" @click="AssistantFinish1">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -138,8 +190,12 @@ import {
   designApply,
   cancelDesignApply,
   styleDesignEdit,
+  pushPattern,
+  getStylistList,
+  styleUrgent,
 } from "@/api/researchDevelopment";
 import Print from "@/components/print.vue";
+
 export default {
   components: { Print },
   data() {
@@ -151,9 +207,36 @@ export default {
       dialogVisible: false,
       img_list: [], //图片数据
       permission: [],
+      stylists: [],
+      form: {
+        user_id: "",
+      },
+      centerDialogVisible1: false,
+      centerDialogVisible2: false,
     };
   },
   methods: {
+    handleUser_id(e) {
+      this.form.user_id = e;
+    },
+    AssistantCancel() {
+      this.centerDialogVisible1 = false;
+    },
+    async AssistantFinish() {
+      let res = await pushPattern({
+        style_id: this.$route.query.id,
+        user_id: this.form.user_id,
+      });
+      console.log(res);
+      if (res.data.error_code == 0) {
+        this.$message.success(res.data.msg);
+        this.init();
+      }
+      this.centerDialogVisible1 = false;
+    },
+    async get_push_plate() {
+      this.centerDialogVisible1 = true;
+    },
     async design_apply() {
       let res = await designApply({ style_id: this.$route.query.id - 0 });
       console.log(res);
@@ -218,6 +301,27 @@ export default {
         return { url: v.designidea_pic_url, id: v.id };
       });
     },
+    async getstylist() {
+      let res = await getStylistList({department_id:2});
+      let { data } = res.data;
+      data.map((v) => {
+        v["checked"] = false;
+      });
+      this.stylists = data;
+    },
+    async styleUrgents() {
+      this.centerDialogVisible2 = true;
+    },
+    async AssistantFinish1() {
+      this.centerDialogVisible2 = false;
+      let { id } = this.$route.query;
+      let res = await styleUrgent({
+        style_id: id,
+      });
+      if (!res.data.error_code) {
+        this.obj.is_urgent = 1;
+      }
+    },
   },
   mounted() {
     // console.log(this.$route.query);
@@ -226,6 +330,7 @@ export default {
       this.designRemark = this.$route.query.designRemark - 0;
     }
     this.init();
+    this.getstylist();
     // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
@@ -235,6 +340,8 @@ export default {
 <style lang="less" scoped>
 .designNoteMain {
   display: flex;
+  margin-bottom: 20px;
+
   .left {
     width: 1000px;
   }
@@ -251,6 +358,18 @@ export default {
       align-items: center;
       cursor: pointer;
       margin: 15px;
+    }
+    .push_plate_making {
+      width: 130px;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      margin: 15px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 100px;
     }
   }
   .print {

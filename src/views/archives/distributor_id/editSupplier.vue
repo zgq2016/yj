@@ -69,14 +69,21 @@
     <el-dialog title="拍照上传" :visible.sync="visible" @close="onCancel" width="1065px">
       <div class="box">
         <video id="videoCamera" class="canvas" :width="videoWidth" :height="videoHeight" autoplay></video>
-        <canvas id="canvasCamera" class="canvas" :width="videoWidth" :height="videoHeight"></canvas>
+        <canvas
+          id="canvasCamera"
+          class="canvas"
+          :width="videoWidth"
+          style="margin-left:10px;"
+          :height="videoHeight"
+        ></canvas>
       </div>
       <div slot="footer">
         <el-button @click="drawImage" icon="el-icon-camera" size="small">拍照</el-button>
         <el-button v-if="os" @click="getCompetence" icon="el-icon-video-camera" size="small">打开摄像头</el-button>
-        <el-button v-else @click="stopNavigator" icon="el-icon-switch-button" size="small">关闭摄像头</el-button>
+        <!-- <el-button v-else @click="stopNavigator" icon="el-icon-switch-button" size="small">关闭摄像头</el-button> -->
         <el-button @click="resetCanvas" icon="el-icon-refresh" size="small">重置</el-button>
-        <el-button @click="onCancel(1)" icon="el-icon-circle-close" size="small">完成</el-button>
+        <el-button @click="ctrlShift" icon="el-icon-s-unfold" size="small">另存为</el-button>
+        <el-button @click="onCancel(1,numberr)" icon="el-icon-circle-close" size="small">完成</el-button>
       </div>
     </el-dialog>
 
@@ -221,15 +228,24 @@
     >
       <div style="display:flex;">
         <div class="info-item">
-          <div class="upload">
-            <input
-              type="file"
-              id="uploads"
-              :value="imgFile"
-              accept="image/png, image/jpeg, image/gif, image/jpg"
-              @change="uploadImg($event, 1)"
-            />
-            选择文件
+          <div>
+            <div class="upload">
+              <input
+                type="file"
+                id="uploads"
+                :value="imgFile"
+                accept="image/png, image/jpeg, image/gif, image/jpg"
+                @change="uploadImg($event, 1)"
+              />
+              选择图片
+            </div>
+            <el-button
+              @click="onTake(101)"
+              icon="el-icon-camera"
+              type="info"
+              class="aj"
+              size="small"
+            >拍照</el-button>
           </div>
           <div class="line">
             <div class="cropper-content">
@@ -317,7 +333,7 @@ import {
   supplierDel,
   getMaterialsClass,
   getMaterialsClassInfo,
-  discern
+  discern,
 } from "@/api/archives";
 
 import { VueCropper } from "vue-cropper";
@@ -403,8 +419,7 @@ export default {
       vs1: false,
       vs2: false,
 
-
-       visible: false, //弹窗
+      visible: false, //弹窗
       // loading: false, //上传按钮加载
       os: false, //控制摄像头开关
       thisVideo: null,
@@ -438,9 +453,17 @@ export default {
         pageSize: 10,
         imgSrc: undefined,
       },
+      numberr: 0,
     };
   },
   methods: {
+    ctrlShift() {
+      var alink = document.createElement("a");
+      alink.href = this.imgSrc;
+      alink.download = "pic"; //图片名
+      alink.click();
+      // this.downloadIamge(this.fileList1, 'pic')
+    },
     /*调用摄像头拍照开始*/
     onTake() {
       this.visible = true;
@@ -458,11 +481,11 @@ export default {
       }
       return new File([u8arr], filename, { type: mime });
     },
-    async onCancel(val) {
+    async onCancel(val, num) {
       this.visible = false;
       /* this.resetCanvas();*/
       this.stopNavigator();
-      if (val == 1) {
+      if (val == 1 && num == undefined) {
         this.fileList1 = this.imgSrc;
         let file = this.dataURLtoFile(this.imgSrc, String(Math.random()));
         let param = new FormData(); // 创建form对象
@@ -479,7 +502,14 @@ export default {
             });
           }
         }
+      } else if(val == undefined && num != undefined) {
+        let file = this.dataURLtoFile(this.imgSrc, String(Math.random()));
+        console.log(file);
+        this.fileName = file;
+        this.option.img = this.imgSrc;
       }
+      // this.imgSrc = "";
+      this.clearCanvas("canvasCamera");
     },
     // 调用摄像头权限
     getCompetence() {
@@ -802,7 +832,7 @@ export default {
     async handleEdit() {
       let data = this.$route.query;
       this.$refs["obj"].validate(async (valid) => {
-        if (!valid || this.vs1) return;
+        if (!valid || this.vs2) return;
         // 调用actions的登录方法
 
         let res = await supplierEdit(this.obj);
@@ -1039,7 +1069,20 @@ export default {
     resize: none !important;
   }
   .dialog {
+    div {
+      overflow: hidden;
+    }
+    .aj {
+      // display: flex;
+      float: left;
+      margin-left: 30px;
+      height: 40px;
+      background: rgba(243, 242, 242, 0);
+      color: #000;
+      border: 1px solid #cccccc;
+    }
     .upload {
+      float: left;
       margin-bottom: 30px;
       width: 100px;
       display: flex;

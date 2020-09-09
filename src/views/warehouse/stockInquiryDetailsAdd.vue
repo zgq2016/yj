@@ -143,7 +143,7 @@
                 fit="cover"
               >
                 <div slot="error" class="image-slot">
-                  <i class="el-icon-picture-outline"></i>
+                  <!-- <i class="el-icon-picture-outline"></i> -->
                 </div>
               </el-image>
             </template>
@@ -1057,7 +1057,7 @@ export default {
     },
     // 结算账户
     async balance() {
-      let res3 = await balanceAccountSelect();
+      let res3 = await balanceAccountSelect({ type: 1 });
       this.settlement = res3.data.data;
       // console.log(res3);
     },

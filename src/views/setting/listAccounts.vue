@@ -17,6 +17,8 @@
       border
     >
       <el-table-column prop="name" label="用户名"></el-table-column>
+      <el-table-column prop="no" label="编号"></el-table-column>
+      <el-table-column prop="department" label="部门"></el-table-column>
       <el-table-column prop="role_name" label="权限角色"></el-table-column>
       <el-table-column prop="username" label="账号"></el-table-column>
       <el-table-column prop="Access" label="权限等级"></el-table-column>
@@ -32,21 +34,51 @@
       </el-table-column>
       <el-table-column align="center" width="100" label="操作">
         <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark" content="编辑" v-if="permission.indexOf('user_info_edit')!=-1" placement="top-start">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="编辑"
+            v-if="permission.indexOf('user_info_edit')!=-1"
+            placement="top-start"
+          >
             <div class="el-icon-s-tools btn" @click="handleEdit(scope.$index, scope.row)"></div>
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="设置权限" v-if="permission.indexOf('user_edit')!=-1" placement="top-start">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="设置权限"
+            v-if="permission.indexOf('user_edit')!=-1"
+            placement="top-start"
+          >
             <div class="el-icon-edit btn" @click="handleEditUser(scope.$index, scope.row)"></div>
           </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
     <!-- 编辑分类 -->
-    <el-dialog title="修改密码" :visible.sync="centerDialogVisible1" width="30%" center>
+    <el-dialog
+      title="修改密码"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :visible.sync="centerDialogVisible1"
+      width="30%"
+      center
+    >
       <el-form ref="form" :rules="rules" :model="form" label-width="100px" resetFields>
         <el-form-item label="用户名:">
           <el-input v-model="form.name" placeholder="请输入用户名" style="width:80%"></el-input>
           <!-- <span>{{form.name}}</span> -->
+        </el-form-item>
+        <el-form-item label="编号" prop="no">
+          <el-input
+            type="text"
+            placeholder="请输入编号"
+            style="width:80%;"
+            v-model.number="form.no"
+            maxlength="2"
+            show-word-limit
+          ></el-input>
         </el-form-item>
         <el-form-item label="账号:">
           <!-- <span>{{form.username}}</span> -->
@@ -71,7 +103,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="centerDialogVisible1 = false">取 消</el-button>
+        <el-button @click="handlecloses">取 消</el-button>
         <el-button type="primary" @click="handleEditList">确 定</el-button>
       </span>
     </el-dialog>
@@ -98,6 +130,11 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="部门：">
+          <el-select v-model="form1.department_id" placeholder="请选择部门">
+            <el-option v-for="item in branch" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleEditUserListClose('form1')">取 消</el-button>
@@ -105,10 +142,33 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="添加账户" :visible.sync="centerDialogVisible3" width="30%" center>
+    <el-dialog
+      title="添加账户"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :visible.sync="centerDialogVisible3"
+      width="30%"
+      center
+    >
       <el-form ref="form2" :model="form2" :rules="rules2" label-width="100px">
         <el-form-item label="用户名：" prop="name">
           <el-input v-model="form2.name" style="width:80%" placeholder="请输入用户名"></el-input>
+        </el-form-item>
+        <el-form-item label="编号" prop="no">
+          <el-input
+            type="text"
+            placeholder="请输入编号"
+            style="width:80%;"
+            v-model.number="form2.no"
+            maxlength="2"
+            show-word-limit
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="部门：" prop="department">
+          <el-select v-model="form2.department_id" placeholder="请选择部门">
+            <el-option v-for="item in branch" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="手机号：" prop="username">
           <el-input v-model="form2.username" style="width:80%" placeholder="请输入手机号"></el-input>
@@ -168,11 +228,12 @@ import {
   userEdit,
   register,
   userStatusEdit,
+  departmentSelect,
 } from "@/api/setting.js";
 export default {
   data() {
     return {
-      permission:[],
+      permission: [],
       tableData: [],
       centerDialogVisible: false, //添加分类
       centerDialogVisible1: false, //编辑分类
@@ -203,6 +264,10 @@ export default {
         passworded: [
           { required: true, message: "请输入修改后密码", trigger: "blur" },
         ],
+        no: [
+          { required: true, message: "请输入编号", trigger: "blur" },
+          { type: "number", message: "年龄必须为数字值" },
+        ],
       },
       rules2: {
         name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
@@ -213,8 +278,15 @@ export default {
         level: [
           { required: true, message: "请选择权限等级", trigger: "change" },
         ],
+        department_id: [
+          { required: true, message: "请选择部门", trigger: "change" },
+        ],
         role: [
           { required: true, message: "请选择用户角色", trigger: "change" },
+        ],
+        no: [
+          { required: true, message: "请输入编号", trigger: "blur" },
+          { type: "number", message: "年龄必须为数字值" },
         ],
       },
       vb: false,
@@ -237,9 +309,14 @@ export default {
       ],
       rules1: {},
       level: 0,
+      branch: [],
     };
   },
   methods: {
+    async department() {
+      let res = await departmentSelect();
+      this.branch = res.data.data;
+    },
     async get_switch_active(index, row) {
       let res = await userStatusEdit({ user_id: row.id, status: row.status });
       if (res.data.error_code) {
@@ -256,26 +333,40 @@ export default {
       this.$refs[form].resetFields();
       this.centerDialogVisible3 = false;
     },
+    handlecloses() {
+      this.$refs["form"].resetFields();
+      this.form = {};
+      this.init()
+      this.centerDialogVisible1 = false;
+    },
     async handleaddAccounts(form) {
       this.$refs["form2"].validate(async (valid) => {
         if (!valid) return;
-        let res = await register(this.form2);
-        console.log(res);
-        if (res.data.error_code === 1) {
+        if (this.form2.no < 0) {
           this.$message({
             showClose: true,
-            message: res.data.msg,
+            message: "请输入大于0的编号",
             type: "error",
           });
         } else {
-          this.$message({
-            showClose: true,
-            message: res.data.msg,
-            type: "success",
-          });
-          this.centerDialogVisible3 = false;
-          this.$refs[form].resetFields();
-          this.init();
+          let res = await register(this.form2);
+          console.log(res);
+          if (res.data.error_code === 1) {
+            this.$message({
+              showClose: true,
+              message: res.data.msg,
+              type: "error",
+            });
+          } else {
+            this.$message({
+              showClose: true,
+              message: res.data.msg,
+              type: "success",
+            });
+            this.centerDialogVisible3 = false;
+            this.$refs[form].resetFields();
+            this.init();
+          }
         }
       });
     },
@@ -338,6 +429,7 @@ export default {
         this.form1.name = row.name;
         this.form1.id = row.id;
         this.form1.role_id = row.role;
+        this.form1.department_id = row.department_id;
         this.centerDialogVisible2 = true;
       }
 
@@ -360,25 +452,39 @@ export default {
     async handleEditList() {
       // this.$refs["form"].validate(async (valid) => {
       //   if (!valid) return;
-      let res = await userPassEdit({
-        id: this.form.id,
-        username: this.form.username,
-        name: this.form.name,
-        oldpass: this.form.pwd,
-        newpass: this.form.passworded,
-      });
-      if (res.data.error_code == 0) {
+      let srt = "";
+      // this.branch.map((v,i)=>{
+      //   if(this.form.department==v.name)
+      // })
+      if (this.form.no < 0) {
         this.$message({
           showClose: true,
-          message: res.data.msg,
-          type: "success",
-        });
-      } else {
-        this.$message({
-          showClose: true,
-          message: res.data.msg,
+          message: "请输入大于0的编号",
           type: "error",
         });
+      } else {
+        let res = await userPassEdit({
+          id: this.form.id,
+          username: this.form.username,
+          name: this.form.name,
+          oldpass: this.form.pwd,
+          newpass: this.form.passworded,
+          no: this.form.no,
+        });
+
+        if (res.data.error_code == 0) {
+          this.$message({
+            showClose: true,
+            message: res.data.msg,
+            type: "success",
+          });
+        } else {
+          this.$message({
+            showClose: true,
+            message: res.data.msg,
+            type: "error",
+          });
+        }
       }
 
       console.log(res);
@@ -393,6 +499,7 @@ export default {
         this.form.pwd = "";
         this.form.passworded = "";
         this.form = row;
+        this.form.no = Number(row.no);
         this.centerDialogVisible1 = true;
       }
     },
@@ -430,9 +537,9 @@ export default {
     this.init();
     let res = await getRoleSelect();
     this.userRoleList = res.data.data;
-
+    this.department();
     this.level = localStorage.getItem("level");
-     this.permission = localStorage.getItem("permission").split(",");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

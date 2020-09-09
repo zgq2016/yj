@@ -101,8 +101,9 @@
           size="mini"
           round
           @click="purchaseOrder"
-          v-if="permission.indexOf('style_purchase_add')!=-1&&this.obj.materials_status!=2&&this.obj.design_status==5"
+          v-if="permission.indexOf('style_purchase_add')!=-1"
         >生成采购单</el-button>
+        <!-- &&this.obj.materials_status!=2&&this.obj.design_status==5 -->
         <el-button
           size="mini"
           round

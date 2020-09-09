@@ -26,7 +26,7 @@
             <el-tooltip
               content="编辑"
               placement="top"
-              v-if="permission.indexOf('balance_account_edit')!=-1"
+              v-if="permission.indexOf('balance_account_edit')!=-1&&scope.row.is_origin!=1"
               class="el-icon-edit btn"
             >
               <div @click="handleEdit(scope.$index, scope.row)"></div>
@@ -34,7 +34,7 @@
             <el-tooltip
               content="删除"
               placement="top"
-              v-if="permission.indexOf('balance_account_del')!=-1"
+              v-if="permission.indexOf('balance_account_del')!=-1&&scope.row.is_origin!=1"
               class="el-icon-delete btn"
             >
               <div @click="handleDelete(scope.$index, scope.row)"></div>
@@ -102,6 +102,7 @@
         <el-button @click="handleEditClose('obj')">取 消</el-button>
       </span>
     </el-dialog>
+    
     <el-dialog
       title="账目类型信息"
       :visible.sync="dialogVisible"

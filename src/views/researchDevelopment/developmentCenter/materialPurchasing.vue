@@ -72,16 +72,16 @@
                 <template v-slot:description>
                   <div class="dt">
                     <!-- <span>{{item_g.logname}}</span> -->
+                    <span v-if="index_g==0">{{"预计回料时间"}}</span>
                     <span v-if="item_g.state == '2'">{{"延迟回料时间"}}</span>
                     <span v-if="item_g.state == '1'">{{"部分回料时间"}}</span>
                     <span v-if="item_g.state == '3'">{{"回料总量"}}</span>
-                    <span>{{item_g.returntime}}</span>
+                    <span v-if="item_g.state == '3'">{{item1.quantity+'m'}}</span>
+                    <span v-else>{{item_g.returntime}}</span>
                     <!-- ****************************************************************** -->
-                    <!-- <span v-if="index_g==0">{{"预计回料时间"}}</span>
-                  <span v-if="item_g.state == '2'">{{"延迟回料时间"}}</span>
+                    <!-- <span v-if="item_g.state == '2'">{{"延迟回料时间"}}</span>
                   <span v-if="item_g.state == '1'">{{"部分回料时间"}}</span>
                   <span v-if="item_g.state == '3'">{{"回料总量"}}</span>
-                  <span v-if="item_g.state == '3'">{{item1.amountPurchased+'m'}}</span>
                   <span v-else-if="item_g.state == '0'">{{item1.finishTime}}</span>
                     <span v-else>{{item_g.returntime}}</span>-->
                   </div>
@@ -95,12 +95,20 @@
                 @click="goPanelPurchase(item1)"
                 v-if="item1.style_purchase_log_data.length===0&&permission.indexOf('purchase_edit')!=-1"
               >{{"采购录入"}}</el-button>
+
               <el-button
                 size="mini"
                 round
                 @click="updateStatus(item1)"
                 v-if="item1.style_purchase_log_data.length>0&&item1.style_purchase_log_data[item1.style_purchase_log_data.length-1].state!=='3'&&permission.indexOf('style_purchase_log_add')!=-1"
               >{{"更新状态"}}</el-button>
+              <el-button
+                size="mini"
+                style="margin-left:10px"
+                @click.stop="seeDetails1(item1)"
+                v-if="item1.style_purchase_log_data.length>0 &&item1.style_purchase_log_data[item1.style_purchase_log_data.length-1].state=='3'"
+                round
+              >查看详情</el-button>
               <!-- &&item1.style_purchase_log_data[item1.style_purchase_log_data.length-1].logname!=='全部回料' -->
             </div>
           </div>
@@ -335,6 +343,12 @@ export default {
     };
   },
   methods: {
+    // 采购查看
+    async seeDetails1(item) {
+      this.$router.push({
+        path: `/materialTable?materials_id=${item.materials_id}`,
+      });
+    },
     // 全部回料
     async allMaterial() {
       this.innerVisibled1 = false;
@@ -497,9 +511,9 @@ export default {
             this.tabItem.style_color_name ||
             this.obj.style_color_data[0].style_color_name,
         });
-        console.log(res1);
         let { data } = res1.data;
         this.style_materials = data;
+        // console.log(data);
       }
     },
   },

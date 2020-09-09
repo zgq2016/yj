@@ -9,95 +9,102 @@
       </el-breadcrumb>
     </div>
     <!-- 详情 -->
-    <div class="detail">
-      <div class="left_img">
-        <div v-if="obj.picurl!==''">
-          <el-image
-            v-if="obj.picurl!==''"
-            style="width: 150px; height: 150px;border-radius: 15px;margin-right: 20px;"
-            :src="obj.picurl"
-            fit="cover"
-          ></el-image>
-        </div>
+    <div class="particulars">
+      <div class="detail">
+        <div class="left_img">
+          <div v-if="obj.picurl!==''">
+            <el-image
+              v-if="obj.picurl!==''"
+              style="width: 150px; height: 150px;border-radius: 15px;margin-right: 20px;"
+              :src="obj.picurl"
+              fit="cover"
+            ></el-image>
+          </div>
 
-        <div v-if="obj.picurl===''">
-          <img v-if="obj.projecttype==='0'" src="../../assets/意向.jpg" alt />
-          <img v-if="obj.projecttype==='1'" src="../../assets/阶段.jpg" alt />
-          <img v-if="obj.projecttype==='2'" src="../../assets/系列.jpg" alt />
+          <div v-if="obj.picurl===''">
+            <img v-if="obj.projecttype==='0'" src="../../assets/意向.jpg" alt />
+            <img v-if="obj.projecttype==='1'" src="../../assets/阶段.jpg" alt />
+            <img v-if="obj.projecttype==='2'" src="../../assets/系列.jpg" alt />
+          </div>
         </div>
-      </div>
-      <div class="right_content">
-        <div style="height:160px">
-          <div class="name">{{obj.projectname}}</div>
-          <div class="client">客户：{{obj.customer_companyname}}</div>
-          <div class="year">年份：{{obj.year}}</div>
-          <div class="season">季节：{{obj.season}}</div>
-          <div class="claim">要求：{{obj.detailed}}</div>
-        </div>
-        <div style="display:flex">
-          <el-tooltip
-            class="edit"
-            style="margin-right: 12px;background-color: #f2f2f2;"
-            v-if="permission.indexOf('project_edit')!=-1 || permission.indexOf('project_del')!=-1"
-            content="编辑"
-            placement="top"
-          >
-            <div @click="editOutline">
-              <svg viewBox="0 0 32 32" width="20" height="20">
-                <path
-                  d="M17.2 9.144l5.656 5.657-13.2 13.199h-5.656v-5.657l13.2-13.2zM19.085 7.259l2.828-2.829c0.241-0.241 0.575-0.39 0.943-0.39s0.701 0.149 0.943 0.39l3.772 3.772c0.241 0.241 0.39 0.575 0.39 0.943s-0.149 0.701-0.39 0.943l-2.829 2.828-5.656-5.656z"
-                  fill="#5e5e5e"
-                />
-              </svg>
-            </div>
-          </el-tooltip>
-          <el-tooltip
-            class="edit"
-            style="margin-right: 12px;background-color: #f2f2f2;"
-            v-if="switchover_active===false"
-            content="切换"
-            placement="top"
-          >
-            <div @click="switchover">
-              <svg viewBox="0 0 32 32" width="20" height="20">
-                <path
-                  d="M4 11h5V5H4v6zm0 7h5v-6H4v6zm6 0h5v-6h-5v6zm6 0h5v-6h-5v6zm-6-7h5V5h-5v6zm6-6v6h5V5h-5z"
-                  fill="#5e5e5e"
-                />
-              </svg>
-            </div>
-          </el-tooltip>
-          <el-tooltip
-            class="edit"
-            style="margin-right: 12px;background-color: #f2f2f2;"
-            v-if="switchover_active===true"
-            content="切换"
-            placement="top"
-          >
-            <div @click="switchover">
-              <svg viewBox="0 0 32 32" width="20" height="20">
-                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" fill="#5e5e5e" />
-              </svg>
-            </div>
-          </el-tooltip>
-          <div class="add">
-            <span
-              style="background-color: #f2f2f2;color: #5e5e5e;"
-              class="addStyle"
-              @click="addTheStyle"
-              v-if="permission.indexOf('get_project_style_list')!=-1"
-            >添加款式</span>
-            <span class="addStyle" @click="newTheStyle" v-if="permission.indexOf('project_style_add')!=-1">新增款式</span>
+        <div class="right_content">
+          <div style="height:160px">
+            <div class="name">{{obj.projectname}}</div>
+            <div class="client">客户：{{obj.customer_companyname}}</div>
+            <div class="year">年份：{{obj.year}}</div>
+            <div class="season">季节：{{obj.season}}</div>
+            <div class="claim">要求：{{obj.detailed}}</div>
           </div>
         </div>
       </div>
+      <div class="editBtn">
+        <el-tooltip
+          class="edit"
+          style="margin-right: 12px;background-color: #f2f2f2;"
+          v-if="permission.indexOf('project_edit')!=-1 || permission.indexOf('project_del')!=-1"
+          content="编辑"
+          placement="top"
+        >
+          <div @click="editOutline">
+            <svg viewBox="0 0 32 32" width="20" height="20">
+              <path
+                d="M17.2 9.144l5.656 5.657-13.2 13.199h-5.656v-5.657l13.2-13.2zM19.085 7.259l2.828-2.829c0.241-0.241 0.575-0.39 0.943-0.39s0.701 0.149 0.943 0.39l3.772 3.772c0.241 0.241 0.39 0.575 0.39 0.943s-0.149 0.701-0.39 0.943l-2.829 2.828-5.656-5.656z"
+                fill="#5e5e5e"
+              />
+            </svg>
+          </div>
+        </el-tooltip>
+        <el-tooltip
+          class="edit"
+          style="margin-right: 12px;background-color: #f2f2f2;"
+          v-if="switchover_active===false"
+          content="切换"
+          placement="top"
+        >
+          <div @click="switchover">
+            <svg viewBox="0 0 32 32" width="20" height="20">
+              <path
+                d="M4 11h5V5H4v6zm0 7h5v-6H4v6zm6 0h5v-6h-5v6zm6 0h5v-6h-5v6zm-6-7h5V5h-5v6zm6-6v6h5V5h-5z"
+                fill="#5e5e5e"
+              />
+            </svg>
+          </div>
+        </el-tooltip>
+        <el-tooltip
+          class="edit"
+          style="margin-right: 12px;background-color: #f2f2f2;"
+          v-if="switchover_active===true"
+          content="切换"
+          placement="top"
+        >
+          <div @click="switchover">
+            <svg viewBox="0 0 32 32" width="20" height="20">
+              <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" fill="#5e5e5e" />
+            </svg>
+          </div>
+        </el-tooltip>
+        <div class="add">
+          <span
+            style="background-color: #f2f2f2;color: #5e5e5e;"
+            class="addStyle"
+            @click="addTheStyle"
+            v-if="permission.indexOf('get_project_style_list')!=-1"
+          >添加款式</span>
+          <span
+            class="addStyle"
+            @click="newTheStyle"
+            v-if="permission.indexOf('project_style_add')!=-1"
+          >新增款式</span>
+        </div>
+      </div>
     </div>
+
     <!-- add -->
 
     <!-- table -->
     <div class="table" v-if="permission.indexOf('get_project')!=-1">
       <div v-if="switchover_active===false">
-        <el-table :data="tableData" size='mini'>
+        <el-table :data="tableData" size="mini">
           <el-table-column align="center" type="index"></el-table-column>
           <el-table-column align="center" label="图片">
             <template slot-scope="scope" property="style_pic_url">
@@ -106,7 +113,11 @@
                   style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
                   :src="scope.row.style_pic_url"
                   fit="cover"
-                ></el-image>
+                >
+                  <div slot="error" class="image-slot">
+                    <!-- <i class="el-icon-picture-outline"></i> -->
+                  </div>
+                </el-image>
                 <img
                   :src="scope.row.style_color_pic_url"
                   class="img"
@@ -233,7 +244,7 @@ export default {
       pageSize: 9,
       total: 0,
       styleList: [],
-      permission:[],
+      permission: [],
       power: "",
       switchover_active: false,
     };
@@ -362,48 +373,56 @@ export default {
       }
     }
   }
-  .detail {
-    padding: 0 0 15px 0;
+  .particulars {
     display: flex;
-    img {
-      width: 200px;
-      height: 200px;
-      border-radius: 15px;
-      margin-right: 20px;
-    }
-    .right_content {
-      flex: 1;
-      .claim {
-        // width: 1200px;
-        text-align: justify;
-        text-justify: newspaper;
-        word-break: break-all;
-      }
-
-      .name {
-        font-size: 20px;
-        font-weight: 600;
-      }
-      div {
-        font-size: 14px;
-        margin: 0 0 10px 0;
-      }
-    }
-    .edit {
-      width: 30px;
-      height: 30px;
-      background-color: #000;
-      border-radius: 50%;
+    justify-content: space-between;
+    height: 160px;
+    padding: 0 0 15px 0;
+    .detail {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      margin-right: 15px;
-      font-size: 10px;
-      // padding: 10px;
+      img {
+        width: 150px;
+        height: 150px;
+        border-radius: 15px;
+        margin-right: 20px;
+      }
+      .right_content {
+        flex: 1;
+        .claim {
+          // width: 1200px;
+          text-align: justify;
+          text-justify: newspaper;
+          word-break: break-all;
+        }
+
+        .name {
+          font-size: 20px;
+          font-weight: 600;
+        }
+        div {
+          font-size: 14px;
+          margin: 0 0 10px 0;
+        }
+      }
+    }
+    .editBtn {
+      display: flex;
+      align-items: flex-end;
+      .edit {
+        width: 30px;
+        height: 30px;
+        background-color: #000;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        margin-right: 15px;
+        font-size: 10px;
+        // padding: 10px;
+      }
     }
   }
-
   .check {
     cursor: pointer;
   }
@@ -469,6 +488,9 @@ export default {
       margin: 1px 5px;
     }
   }
+  .btn:hover{
+    cursor: pointer;
+  }
   .btn {
     display: flex;
     align-items: center;
@@ -476,9 +498,6 @@ export default {
     div {
       margin: 0 10px;
     }
-  }
-  .btn:hover{
-    cursor: pointer;
   }
 }
 </style>

@@ -51,20 +51,14 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select
+        <el-cascader
           v-model="formInline.style_type"
-          @change="onSubmit"
-          clearable
           placeholder="类别"
-          style="width:120px"
-        >
-          <el-option
-            v-for="item in categorys"
-            :key="item.id"
-            :label="item.style_type"
-            :value="item.style_type"
-          ></el-option>
-        </el-select>
+          :options="categorys"
+          :props="optionProps1"
+          @change="onSubmit(101)"
+          :show-all-levels="false"
+        ></el-cascader>
       </el-form-item>
       <el-form-item>
         <el-select
@@ -94,7 +88,11 @@
               style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
               :src="scope.row.style_pic_url"
               fit="cover"
-            ></el-image>
+            >
+              <div slot="error" class="image-slot">
+                <!-- <i class="el-icon-picture-outline"></i> -->
+              </div>
+            </el-image>
           </template>
         </el-table-column>
         <el-table-column align="center" property="styleno" label="款号"></el-table-column>
@@ -175,6 +173,11 @@ export default {
       seasons: [],
       stylists: [],
       categorys: [],
+      optionProps1: {
+        value: "style_type",
+        label: "style_type",
+        children: "children",
+      },
       wests: [],
       year: "", //年
       season: "", //季节
@@ -220,7 +223,10 @@ export default {
         }&activeNames=${3}&TL=${2}&produce_no=${row.produce_no}`,
       });
     },
-    onSubmit() {
+    onSubmit(val) {
+      if (val == 101) {
+        this.formInline.style_type = this.formInline.style_type.pop();
+      }
       this.page = 1;
       this.init(this.formInline);
     }, // 获取customer_id

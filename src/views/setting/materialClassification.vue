@@ -104,7 +104,7 @@
       </span>
     </el-dialog>
     <!-- 分页 -->
-    <el-pagination
+    <!-- <el-pagination
       class="pagination"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -113,7 +113,7 @@
       :page-size="pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
-    ></el-pagination>
+    ></el-pagination> -->
   </div>
 </template>
 <script>

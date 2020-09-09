@@ -276,7 +276,8 @@ export default {
       this.init();
     },
     onSubmit() {
-      this.init();
+      this.page = 1;
+      this.init(this.formInline);
     },
     handleUser_id(e) {
       this.formInline.user_id = e;

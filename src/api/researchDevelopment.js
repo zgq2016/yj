@@ -26,6 +26,7 @@ export const getSeasonList = (data) => {
 export const getStylistList = (data) => {
   return axios({
     url: "?g=get_user_select",
+    method: "post",
     data: data,
   });
 };
@@ -535,6 +536,27 @@ export const styleSampleEdit = (data) => {
 export const styleDesignEdit = (data) => {
   return axios({
     url: "?g=style_design_edit",
+    method: "post",
+    data: data,
+  });
+};
+export const styleUrgent = (data) => {
+  return axios({
+    url: "?g=style_urgent",
+    method: "post",
+    data: data,
+  });
+};
+export const pushPattern = (data) => {
+  return axios({
+    url: "?g=push_pattern",
+    method: "post",
+    data: data,
+  });
+};
+export const pushSample = (data) => {
+  return axios({
+    url: "?g=push_sample",
     method: "post",
     data: data,
   });
