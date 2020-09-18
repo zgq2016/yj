@@ -1,27 +1,29 @@
 <template>
-  <div class="accounter"  v-if="permission.indexOf('accounter')!=-1">
+  <div class="accounter" v-if="permission.indexOf('accounter')!=-1">
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>财务</el-breadcrumb-item>
         <el-breadcrumb-item>结算帐户</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div @click="dialogVisible = true" v-if="permission.indexOf('balance_account_add')!=-1" class="addStyle">新增帐户</div>
+    <div
+      @click="dialogVisible = true"
+      v-if="permission.indexOf('balance_account_add')!=-1"
+      class="addStyle"
+    >新增帐户</div>
 
     <div class="table" style="width: 100%;margin:10px 0">
       <el-table size="mini" :data="data" border style="width: 100%">
         <el-table-column fixed prop="account_name" label="账户名称"></el-table-column>
         <el-table-column prop="account" label="账号"></el-table-column>
         <el-table-column prop="name" label="开户人"></el-table-column>
+        <el-table-column prop="user_name" label="使用人"></el-table-column>
         <el-table-column prop="account_type" label="帐户类型"></el-table-column>
         <el-table-column prop="balance" label="当前余额"></el-table-column>
         <el-table-column prop="remarks" label="备注"></el-table-column>
         <el-table-column prop="sort" label="排序"></el-table-column>
         <el-table-column prop="statusName" label="状态"></el-table-column>
-        <el-table-column
-          label="操作"
-          width="100"
-        >
+        <el-table-column label="操作" width="100">
           <template slot-scope="scope">
             <el-tooltip
               content="编辑"
@@ -74,6 +76,11 @@
         <el-form-item label="开户人" prop="name">
           <el-input v-model="obj.name" style="width:80%"></el-input>
         </el-form-item>
+        <el-form-item label="使用人">
+          <el-select v-model="obj.user_id" style="width:80%">
+            <el-option v-for="item in userlist" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="obj.status" style="width:80%">
             <el-radio :label="'1'">启用</el-radio>
@@ -102,7 +109,7 @@
         <el-button @click="handleEditClose('obj')">取 消</el-button>
       </span>
     </el-dialog>
-    
+
     <el-dialog
       title="账目类型信息"
       :visible.sync="dialogVisible"
@@ -122,6 +129,11 @@
         </el-form-item>
         <el-form-item label="开户人" prop="name">
           <el-input v-model="form.name" style="width:80%"></el-input>
+        </el-form-item>
+        <el-form-item label="使用人">
+          <el-select v-model="form.user_id" style="width:80%">
+            <el-option v-for="item in userlist" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status" style="width:80%">
@@ -163,6 +175,7 @@ import {
   balanceAccountDel,
   balanceAccountList,
 } from "@/api/finance";
+import { getStylistList } from "@/api/researchDevelopment";
 export default {
   data() {
     return {
@@ -178,18 +191,29 @@ export default {
         account_name: "",
         account: "",
         name: "",
+        user_id: "",
         account_type: "",
         remarks: "",
         sort: "",
         status: 1,
       },
-      obj: {},
+      obj: {
+        account_name: "",
+        account: "",
+        name: "",
+        user_id: "",
+        account_type: "",
+        remarks: "",
+        sort: "",
+        status: 1,
+      },
       rules: {
         account_name: [
           { required: true, message: "账户名称", trigger: "blur" },
         ],
       },
-      permission:[]
+      userlist: [],
+      permission: [],
     };
   },
   methods: {
@@ -203,7 +227,7 @@ export default {
       this.dialogVisible = false;
     },
     async handleEditForm(form) {
-      console.log(this.obj);
+      // console.log(this.obj);
       delete this.obj.balance;
       this.obj.sort = Number(this.obj.sort);
       let res = await balanceAccountEdit(this.obj);
@@ -215,12 +239,14 @@ export default {
     handleEditClose(form) {
       this.$refs[form].resetFields();
       this.dialogVisible1 = false;
+      this.init();
     },
     async handleEdit(index, row) {
-      let res = await balanceAccountInfo({
-        id: row.id,
-      });
-      this.obj = res.data.data;
+      // let res = await balanceAccountInfo({
+      //   id: row.id,
+      // });
+      this.obj = row;
+      this.obj.user_id = Number(row.user_id);
       console.log(this.obj);
       this.dialogVisible1 = true;
     },
@@ -247,6 +273,15 @@ export default {
     },
     handleClose(form) {
       this.$refs[form].resetFields();
+      this.form = {
+        account_name: "",
+        account: "",
+        name: "",
+        account_type: "",
+        remarks: "",
+        sort: "",
+        status: 1,
+      };
       this.dialogVisible = false;
     },
     handleInput() {
@@ -272,6 +307,10 @@ export default {
       this.pageIndex = val;
       this.init();
     },
+    async user() {
+      let res = await getStylistList();
+      this.userlist = res.data.data;
+    },
     async init() {
       let res = await balanceAccountList({
         page: this.pageIndex,
@@ -294,6 +333,7 @@ export default {
   mounted() {
     this.get_balance();
     this.init();
+    this.user();
     // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },

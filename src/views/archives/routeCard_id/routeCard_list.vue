@@ -56,18 +56,23 @@
           @click="routeCardDeital(item)"
         >
           <div class="list_img">
-            <img :src="item.picurl" alt />
+            <!-- <img :src="item.materials_color_data[0].picurl" alt /> -->
+            <el-image :src="item.materials_color_data[0].picurl" fit="cover">
+              <div slot="error" class="image-slot">
+                <!-- <i class="el-icon-picture-outline"></i> -->
+              </div>
+            </el-image>
           </div>
           <div class="list_content">
-            <div style="font-weight: 600;font-size: 14px;">
+            <div style="font-weight: 600;font-size: 14px;">{{item.materialsname}}</div>
+            <div>内部编号:{{item.materialsno}}</div>
+            <div v-if="item.supplier_data.length>0">{{item.supplier_data[0].supplier_companyname}}</div>
+            <div>
               {{item.materials_mainclass_name}}
               <em
                 v-if="item.materials_class_name"
               >({{item.materials_class_name}})</em>
             </div>
-            <div>{{item.materialsname}}</div>
-            <div>内部编号:{{item.materialsno}}</div>
-            <div v-if="item.supplier_data.length>0">{{item.supplier_data[0].supplier_materialsname}}</div>
           </div>
         </div>
       </div>
@@ -110,7 +115,7 @@ export default {
         label: "classname",
         children: "class_data",
       },
-      permission:[]
+      permission: [],
     };
   },
   methods: {
@@ -228,7 +233,7 @@ export default {
         display: flex;
         cursor: pointer;
         .list_img {
-          img {
+          .el-image {
             width: 100px;
             height: 100px;
           }

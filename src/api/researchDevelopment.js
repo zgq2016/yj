@@ -561,3 +561,10 @@ export const pushSample = (data) => {
     data: data,
   });
 };
+export const getStyleDesign = (data) => {
+  return axios({
+    url: "?g=get_style_design",
+    method: "post",
+    data: data,
+  });
+};

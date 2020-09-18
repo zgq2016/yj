@@ -10,8 +10,8 @@
     <div class="main">
       <div style="display:flex;justify-content: space-between;">
         <div class="up">
-          <div class="up_img">
-            <img :src="upData.picurl" alt @click="handlePreview" />
+          <div class="up_img" v-if="upData.color_data">
+            <img :src="upData.color_data[0].picurl" alt @click="handlePreview" />
           </div>
           <div class="up_content">
             <div class="up_content_name">{{upData.materialsname}}</div>
@@ -30,10 +30,13 @@
                     </div>
                   </div>
                 </div>
+                
               </div>
               <div>
                 <div>大货量单价：&yen;{{upData.wsale_price}}</div>
-                <div>幅宽：{{upData.unit}}</div>
+                <!-- <div>幅宽：{{upData.unit}}</div> -->
+                <div>幅宽：{{upData.breadth}}cm</div>
+                <div>克重：{{upData.grammage}}g</div>
                 <div>是否有货：{{upData.instock}}</div>
                 <div>到货时间：{{upData.arrival_time}}天</div>
                 <div class="bz">备注：{{upData.remarks}}</div>

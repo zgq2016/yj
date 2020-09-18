@@ -36,4 +36,7 @@ export default {
 .el-select-dropdown {
   width: 200px !important;
 }
+// .el-cascader__dropdown{
+//   top: 190px !important;
+// }
 </style>

@@ -5,9 +5,9 @@
       <div style="display:flex" v-if="permission.indexOf('get_style_materials_list')!=-1">
         <div class="color_num" v-for="(item, index) in obj.style_color_data" :key="index">
           <div
-            style="display: flex;justify-content: center;align-items: center;"
             @click="handleColorNum(item,index)"
             :class="active===index?'active':''"
+            class="backg"
           >
             <div class="color">{{item.style_color_name}}</div>
             <div
@@ -17,82 +17,101 @@
             ></div>
           </div>
         </div>
-        <div class="addColor" @click="addKindColor" v-if="permission.indexOf('project_style_color_add')!=-1">增加款式颜色</div>
+        <div
+          class="addColor el-icon-plus"
+          @click="addKindColor"
+          v-if="permission.indexOf('project_style_color_add')!=-1"
+        ></div>
         <!--  -->
+        <el-select
+          class="cardBtn"
+          v-if="permission.indexOf('project_style_materials_add')!=-1"
+          v-model="value"
+          placeholder="增加物料工艺卡"
+          @change="handleMaterialsCard"
+        >
+          <el-option
+            v-for="item in cardList"
+            :key="item.value"
+            :label="item.materialsCard"
+            :value="item.materialsCard"
+          ></el-option>
+        </el-select>
       </div>
       <!-- 数据 -->
-      <div v-if="style_color_data_length!==0&&permission.indexOf('get_style_materials_list')!=-1">
-        <div class="cardList" v-for="(item, index) in cardList" :key="index">
-          <div style="display: flex;justify-content: space-between;align-items: flex-end;">
-            <div>
-              <div v-for="(item1, index1) in card" :key="index1">
-                <div v-for="(item2, index2) in item1.style_materials_data" :key="index2">
-                  <div class="card" v-if="item.materials===item1.mainclass" style="margin:10px 0">
-                    <div class="cardStyle">
-                      <div class="cardStyle_left">
-                        <div class="cardStyle_left_img">
-                          <img :src="item2.picurl" alt />
-                        </div>
-                        <div class="cardStyle_left_content">
-                          <div class="cardStyle_left_content_name">
-                            <div>{{item2.materials_mainclass_name}} ({{item2.materials_class_name}})</div>
-                            <div
-                              v-if="permission.indexOf('project_style_materials_del')!=-1"
-                              class="el-icon-close"
-                              style="cursor: pointer;"
-                              @click.stop="handleStyleMaterialsDel(item2)"
-                            ></div>
-                          </div>
-                          <div>{{item2.materials_data[0].materialsname}}</div>
-                          <div>内部编号:{{item2.materials_data[0].materialsno}}</div>
-                          <div
-                            v-if="item2.style_materials_supplier_data.length>0"
-                          >{{item2.style_materials_supplier_data[0].companyname}}</div>
-                        </div>
+      <div
+        style="position: relative;"
+        v-if="style_color_data_length!==0&&permission.indexOf('get_style_materials_list')!=-1"
+      >
+        <div class="cardList">
+          <div v-for="(item1, index1) in card" :key="index1">
+            <div v-if="item1.style_materials_data.length!=0">
+              <div
+                class="cards"
+                v-for="(item2, index2) in item1.style_materials_data"
+                :key="index2"
+                style="margin-right:20px"
+              >
+                <span class="bos">{{item1.mainclass.slice(0,1)}}</span>
+                <!-- v-if="item.materials===item1.mainclass" -->
+                <div class="card" style="margin:10px 0">
+                  <div class="cardStyle">
+                    <div class="cardStyle_left">
+                      <div class="cardStyle_left_img">
+                        <img :src="item2.picurl" alt />
                       </div>
-                      <div class="cardStyle_right" @mouseleave="visible2 = false">
-                        <div style="cursor: pointer;" @click="handlePopoverId2(item2)">
-                          <el-popover
-                            placement="right"
-                            v-model="visible2"
-                            v-if="item2.id===popoverId2"
-                          >
-                            <div class="colourNumberList">
-                              <div
-                                class="colourNumber"
-                                @click.stop="handleColourNumber2(item2,item3)"
-                                v-for="(item3, index3) in item2.materials_color_data"
-                                :key="index3"
-                              >
-                                <img :src="item3.picurl" alt />
-                                <div>
-                                  <div>{{item3.color}}</div>
-                                  <div class="cardStyle_right_no">{{item3.color_no}}</div>
-                                </div>
+                      <div class="cardStyle_left_content">
+                        <div class="cardStyle_left_content_name">
+                          <div>{{item2.materials_data[0].materialsname}}</div>
+
+                          <div
+                            v-if="permission.indexOf('project_style_materials_del')!=-1"
+                            class="el-icon-close"
+                            style="cursor: pointer;"
+                            @click.stop="handleStyleMaterialsDel(item2)"
+                          ></div>
+                        </div>
+                        <div>内部编号:{{item2.materials_data[0].materialsno}}</div>
+                        <div
+                          v-if="item2.style_materials_supplier_data.length>0"
+                        >{{item2.style_materials_supplier_data[0].companyname}}</div>
+                        <div>{{item2.materials_mainclass_name}} ({{item2.materials_class_name}})</div>
+                      </div>
+                    </div>
+                    <div class="cardStyle_right" @mouseleave="visible2 = false">
+                      <div style="cursor: pointer;" @click="handlePopoverId2(item2)">
+                        <el-popover
+                          placement="right"
+                          v-model="visible2"
+                          v-if="item2.id===popoverId2"
+                        >
+                          <div class="colourNumberList">
+                            <div
+                              class="colourNumber"
+                              @click.stop="handleColourNumber2(item2,item3)"
+                              v-for="(item3, index3) in item2.materials_color_data"
+                              :key="index3"
+                            >
+                              <img :src="item3.picurl" alt />
+                              <div>
+                                <div>{{item3.color}}</div>
+                                <div class="cardStyle_right_no">{{item3.color_no}}</div>
                               </div>
                             </div>
-                          </el-popover>
-                          <div>{{item2.color||item2.materials_color_data[0].color}}</div>
-                          <div
-                            class="cardStyle_right_no"
-                          >{{item2.color_no||item2.materials_color_data[0].color_no}}</div>
-                        </div>
-                        <el-checkbox v-model="item2.isCheckList1" @change="isCheckListBox1(item2)"></el-checkbox>
+                          </div>
+                        </el-popover>
+                        <div>{{item2.color||item2.materials_color_data[0].color}}</div>
+                        <div
+                          class="cardStyle_right_no"
+                        >{{item2.color_no||item2.materials_color_data[0].color_no}}</div>
                       </div>
+                      <el-checkbox v-model="item2.isCheckList1" @change="isCheckListBox1(item2)"></el-checkbox>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <el-button
-              class="cardBtn"
-              size="mini"
-              round
-              @click="handleMaterialsCard(item)"
-              v-if="permission.indexOf('project_style_materials_add')!=-1"
-            >添加{{item.materialsCard}}</el-button>
           </div>
-          <el-divider content-position="right">{{item.materials}}</el-divider>
         </div>
       </div>
       <div class="del_purchase_note" v-if="card.length>0">
@@ -104,12 +123,7 @@
           v-if="permission.indexOf('style_purchase_add')!=-1"
         >生成采购单</el-button>
         <!-- &&this.obj.materials_status!=2&&this.obj.design_status==5 -->
-        <el-button
-          size="mini"
-          round
-          disabled
-          v-if="this.obj.materials_status==2"
-        >采购单审核中</el-button>
+        <el-button size="mini" round disabled v-if="this.obj.materials_status==2">采购单审核中</el-button>
       </div>
       <!-- 删除历史 -->
       <div class="del_history">
@@ -123,10 +137,10 @@
                 <img :src="item1.picurl" alt />
               </div>
               <div class="cardStyle_left_content">
-                <div class="cardStyle_left_content_name">{{item1.mainclass}}</div>
                 <div>{{item1.color}}</div>
                 <div>内部编号:{{item1.materialsno}}</div>
                 <div v-if="item1.companyname">{{item.companyname}}</div>
+                <div class>{{item1.mainclass}}</div>
               </div>
             </div>
             <div class="cardStyle_right">
@@ -175,18 +189,18 @@
                         </div>
                         <div class="cardStyle_left_content">
                           <div class="cardStyle_left_content_name">
-                            <div>{{item2.materials_mainclass_name}} ({{item2.materials_class_name}})</div>
                             <!-- <div
                               class="el-icon-close"
                               style="cursor: pointer;"
                               @click.stop="handleStyleMaterialsDel(item2)"
                             ></div>-->
+                            <div>{{item2.materials_data[0].materialsname}}</div>
                           </div>
-                          <div>{{item2.materials_data[0].materialsname}}</div>
                           <div>内部编号:{{item2.materials_data[0].materialsno}}</div>
                           <div
                             v-if="item2.style_materials_supplier_data.length>0"
                           >{{item2.style_materials_supplier_data[0].companyname}}</div>
+                          <div>{{item2.materials_mainclass_name}} ({{item2.materials_class_name}})</div>
                         </div>
                       </div>
                       <div class="cardStyle_right" @mouseleave="visible1 = false">
@@ -260,17 +274,17 @@
                 <img :src="item.picurl" alt />
               </div>
               <div class="cardStyle_left_content">
-                <div style="font-weight: 600;font-size: 14px;">
+                <div style="font-weight: 600;font-size: 14px;">{{item.materialsname}}</div>
+                <div>内部编号:{{item.materialsno}}</div>
+                <div
+                  v-if="item.supplier_data.length>0"
+                >{{item.supplier_data[0].supplier_companyname}}</div>
+                <div>
                   {{item.materials_mainclass_name}}
                   <em
                     v-if="item.materials_class_name"
                   >({{item.materials_class_name}})</em>
                 </div>
-                <div>{{item.materialsname}}</div>
-                <div>内部编号:{{item.materialsno}}</div>
-                <div
-                  v-if="item.supplier_data.length>0"
-                >{{item.supplier_data[0].supplier_companyname}}</div>
               </div>
             </div>
             <div class="cardStyle_right" @mouseleave="visible = false">
@@ -514,6 +528,7 @@ export default {
       this.materials_color_id = item1.id;
       item["color"] = item1.color;
       item["color_no"] = item1.color_no;
+      item.picurl = item1.picurl;
       this.visible = false;
     },
     handleColourNumber1(item2, item3) {
@@ -560,11 +575,15 @@ export default {
       });
       let { data, count } = res.data;
       this.MaterialsList = data;
+      this.MaterialsList.map((v, i) => {
+        v.picurl = v.materials_color_data[0].picurl;
+      });
       this.total = count;
     },
     async handleMaterialsCard(item) {
       this.searchInput = "";
-      this.materials = item.materials;
+      this.value = "";
+      this.materials = item;
       this.centerDialogVisible1 = true;
       let res = await getMaterialsList({
         keyword: "",
@@ -573,6 +592,10 @@ export default {
       });
       let { data, count } = res.data;
       this.MaterialsList = data;
+      this.MaterialsList.map((v, i) => {
+        v.picurl = v.materials_color_data[0].picurl;
+      });
+
       this.total = count;
     },
     async styleColorDel(item) {
@@ -835,7 +858,7 @@ export default {
 .materialProcess {
   .main {
     .color_num {
-      margin: 0 30px;
+      margin-left: 20px;
       font-size: 14px;
       cursor: pointer;
       .color {
@@ -844,16 +867,74 @@ export default {
     }
     .addColor {
       cursor: pointer;
+      font-size: 18px;
+      // line-height: 30px;
+      margin-left: 20px;
+      background: #cccccc !important;
+      border-radius: 50%;
+      padding: 5px;
+      color: #ffffff;
+    }
+    /deep/.el-input {
+      width: 130px !important;
+      height: 40px;
+      line-height: 40px;
+      margin-bottom: 5px;
+    }
+    /deep/.el-input__inner {
+      width: 100%;
+      height: 30px;
+      background-color: #000;
+      border-radius: 15px;
+      border: none;
+
+      font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
+        \\5b8b\4f53, sans-serif;
+      color: #ffffff;
+    }
+    /deep/input::-webkit-input-placeholder {
+      text-align: center;
+    }
+    /deep/input::-moz-input-placeholder {
+      text-align: center;
+    }
+    /deep/input::-ms-input-placeholder {
+      text-align: center;
+    }
+    .cardBtn {
+      margin-left: auto;
+      height: 30px;
+      width: 130px;
     }
     .cardList {
       margin: 30px 0;
+      overflow: hidden;
+      .cards {
+        height: 110px;
+        position: relative;
+        float: left;
+        .bos {
+          position: absolute;
+          bottom: 3px;
+          left: 3px;
+          border-radius: 50%;
+          background: rgba(15, 15, 15, 0.8);
+          display: block;
+          text-align: center;
+          color: #fff;
+          width: 25px;
+          height: 25px;
+          padding: 4px 5px;
+          font-size: 10px;
+        }
+      }
       .card {
         .cardStyle {
           width: 320px;
           height: 100px;
           display: flex;
           .cardStyle_left {
-            width: 270px;
+            width: 300px;
             display: flex;
             background-color: #f2f2f2;
             border-radius: 10px;
@@ -924,7 +1005,7 @@ export default {
         display: flex;
         margin: 10px 0;
         .cardStyle_left {
-          width: 270px;
+          width: 300px;
           display: flex;
           background-color: #f2f2f2;
           border-radius: 10px;
@@ -963,13 +1044,14 @@ export default {
   .dialog {
     .cardList {
       margin: 30px 0;
+
       .card {
         .cardStyle {
           width: 320px;
           height: 100px;
           display: flex;
           .cardStyle_left {
-            width: 270px;
+            width: 300px;
             display: flex;
             background-color: #f2f2f2;
             border-radius: 10px;
@@ -1035,7 +1117,7 @@ export default {
           height: 100px;
           display: flex;
           .cardStyle_left {
-            width: 270px;
+            width: 300px;
             display: flex;
             background-color: #f2f2f2;
             border-radius: 10px;
@@ -1085,7 +1167,38 @@ export default {
     }
   }
   .active {
-    border: 1px solid #000;
+    background: #000 !important;
+    color: #ffffff !important;
+    .el-icon-close {
+      color: #ffffff !important;
+    }
+  }
+  .backg {
+    position: relative;
+    text-align: center;
+    background: #f2f2f2;
+    border-radius: 15px;
+    height: 30px;
+    line-height: 30px;
+    color: #000;
+    width: 130px;
+    .color {
+      width: 120px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      margin: 0 !important;
+    }
+    .el-icon-close {
+      position: absolute;
+      right: 10px;
+      top: 0;
+      height: 30px;
+      line-height: 30px;
+      font-size: 14px;
+      text-align: center;
+      color: #000;
+    }
   }
   .cardStyle_right_no {
     width: 36px;

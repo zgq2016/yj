@@ -103,7 +103,7 @@
         <el-header>
           <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane
-              v-if="permission.indexOf('designNote')!=-1"
+              v-if="permission.indexOf('get_style_design')!=-1"
               label="设计版单"
               name="/designNote"
             ></el-tab-pane>
@@ -219,19 +219,20 @@ export default {
           cursor: pointer;
           margin-right: 15px;
         }
-        .jour {
-          margin: 5px 0;
-          width: 80px;
-          height: 25px;
-          line-height: 25px;
-          background: #f2f2f2;
-          text-align: center;
-          border-radius: 8px;
-        }
-        .jour:hover {
-          cursor: pointer;
-          background: #dad1d1;
-        }
+         .jour {
+            margin: 5px 0;
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            background: #f2f2f2;
+            text-align: center;
+            border-radius: 8px;
+          }
+          .jour:hover {
+            cursor: pointer;
+            background: #000000;
+            color: #fff;
+          }
         div {
           margin: 0 0 5px 0px;
         }

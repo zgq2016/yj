@@ -7,145 +7,65 @@
         <el-breadcrumb-item>新增供应商</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div class="header_nav">
-      <ul>
-        <li
-          v-for="(item,index) in nav"
-          :key="index"
-          :class="active===index?'active':''"
-          @click="actives(index)"
-        >{{item}}</li>
-      </ul>
-    </div>
-    <div class="content" v-show="active==0">
-      <div class="upload">
-        <!-- 商标/名片 -->
-        <div class="upload_card">
-          <div class="uploads" @click="handle_cardpicurl">
-            <img v-if="form.cardpicurl" :src="form.cardpicurl" alt />
-            <i v-else class="avatar-uploader-icon">
-              <div
-                class="el-upload__tip"
-                style="font-size:14px;font-weight:500;color:rgb(158 152 152);"
-                slot="tip"
-              >公司LOGO</div>
-            </i>
-          </div>
-          <div class="recognition" @click="choice">
-            <img v-if="form.orcurl" :src="form.orcurl" alt />
-            <div v-else>
-              <span class="el-icon-camera-solid"></span>
-              <em>识别内容</em>
-            </div>
-          </div>
+    <!-- 图片 -->
+    <div class="upload">
+      <!-- 商标/名片 -->
+      <div class="upload_card">
+        <div class="upload_name">商标/名片</div>
+        <div class="uploads" @click="handle_cardpicurl">
+          <img v-if="form.cardpicurl" :src="form.cardpicurl" alt />
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </div>
       </div>
-      <div class="matter">
-        <div class="padd">
-          <el-input v-model="form.companyname" class="maxsize" placeholder="公司简称"></el-input>
-          <el-input v-model="form.address" class="maxsize" placeholder="地址"></el-input>
-          <el-select
-            v-model="form.materials_class_id"
-            placeholder="分类"
-            @change="handleClassDatasId($event)"
-            class="maxsize"
-          >
-            <el-option
-              v-for="item in classData"
-              :key="item.id"
-              :label="item.classname"
-              :value="item.id"
-            ></el-option>
-          </el-select>
-        </div>
-        <div class="padd1">
-          <div class="colored" v-for="(item,index) in form.contact" :key="index">
-            <el-input
-              v-model="item.phone"
-              @blur="itphone(item.phone,index)"
-              class="maxsize it"
-              placeholder="电话号码"
-            ></el-input>
-            <span
-              v-if="length==index+1"
-              class="el-icon-plus"
-              style="font-size:14px;cursor: pointer;"
-              @click="handleAddUsers"
-            ></span>
-            <span
-              v-else
-              class="el-icon-minus"
-              style="font-size:14px;cursor: pointer;"
-              @click="handleDeleteUser(index)"
-            ></span>
-          </div>
-        </div>
-        <div class="right_float">
-          <el-button class="next1" @click="active=1">下一步</el-button>
+      <!-- 门面照 -->
+      <div class="upload_panels">
+        <div class="upload_name">门面照</div>
+        <div class="uploads" @click="handle_compicurl">
+          <img v-if="form.compicurl" :src="form.compicurl" alt />
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </div>
       </div>
-      <el-divider></el-divider>
-      <div class="texts">
-        <div
-          v-loading="loading"
-          element-loading-text="识别内容中"
-          element-loading-spinner="el-icon-loading"
-          element-loading-background="rgba(0, 0, 0, 0.8)"
-          class="image-content"
-        >
-          <ul>
-            <li>*注意：识别内容存在差异，谨慎修改！</li>
-            <li v-for="(item,index) in contents" :key="index">{{item.words}}</li>
-          </ul>
-          <div v-if="fileList1">
-            <el-image
-              style="width: 100%; height: 300px;"
-              fit="scale-down"
-              title="点击放大"
-              :src="fileList1"
-              :preview-src-list="[fileList1]"
-            ></el-image>
-          </div>
+      <!-- action="https://yj.ppp-pay.top/webapi.php?g=test" -->
+      <el-upload
+        class="upload-demo"
+        ref="upload"
+        action="https://shesho.ppp-pay.top/webapi.php?g=test"
+        :auto-upload="true"
+        name="image"
+        :show-file-list="false"
+        :on-success="recognition"
+        :on-error="errorRecognition"
+        :before-upload="beforeRecognition"
+        :file-list="fileList"
+      >
+        <el-button slot="trigger" size="small" type="info">图片内容识别</el-button>
+      </el-upload>
+      <el-button @click="onTake" icon="el-icon-camera" type="info" class="camera" size="small">拍照</el-button>
+
+      <div
+        v-loading="loading"
+        element-loading-text="识别内容中"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(0, 0, 0, 0.8)"
+        class="image-content"
+      >
+        <ul>
+          <li>*注意：识别内容存在差异，谨慎修改！</li>
+          <li v-for="(item,index) in contents" :key="index">{{item.words}}</li>
+        </ul>
+        <div v-if="fileList1">
+          <el-image
+            style="width: 100%; height: 300px;"
+            fit="scale-down"
+            title="点击放大"
+            :src="fileList1"
+            :preview-src-list="[fileList1]"
+          ></el-image>
         </div>
       </div>
     </div>
-    <div class="content" v-show="active==1">
-      <div class="maxc">
-        <el-input v-model="form.alias_name" class="maxsize" placeholder="公司全称"></el-input>
-        <div class="box" v-for="(item,index) in form.bank" :key="index">
-          <br />
-          <el-select v-model="item.bank" placeholder="银行" class="maxsize">
-            <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.name"></el-option>
-          </el-select>
-          <el-input v-model="item.name" class="maxsize" placeholder="账户名称"></el-input>
-          <el-input v-model="item.bankid" class="maxsize" placeholder="账号"></el-input>
-          <span
-            v-if="length1==index+1"
-            class="el-icon-plus"
-            style="font-size:16px;cursor: pointer;background: #f2f2f2;border-radius:50%;padding:5px;"
-            @click="handleAddAccount"
-          ></span>
-          <span
-            v-else
-            class="el-icon-minus"
-            style="font-size:16px;cursor: pointer;background: #f2f2f2;border-radius:50%;padding:5px;"
-            @click="handleDeleteAccount(index)"
-          ></span>
-        </div>
-        <el-input type="textarea" v-model="form.remarks" placeholder="备注"></el-input>
-        <el-button @click="active=0" round class="edt">上一步</el-button>
-        <el-button @click="handleEdit" round class="edt">确定</el-button>
-      </div>
-    </div>
-    <el-dialog
-      title="拍照上传"
-      :visible.sync="visible"
-      :show-close="false"
-      :close-on-click-modal="false"
-      :close-on-press-escape="false"
-      @close="onCancel"
-      width="1065px"
-    >
+
+    <el-dialog title="拍照上传" :visible.sync="visible" @close="onCancel" width="1065px">
       <div class="box">
         <video id="videoCamera" class="canvas" :width="videoWidth" :height="videoHeight" autoplay></video>
         <canvas
@@ -165,6 +85,121 @@
         <el-button @click="onCancel(1,numberr)" icon="el-icon-circle-close" size="small">完成</el-button>
       </div>
     </el-dialog>
+    <!-- form -->
+    <div class="form">
+      <el-form :model="form" ref="form" :rules="rules" label-width="100px">
+        <el-form-item label="公司简称" prop="companyname">
+          <el-input v-model="form.companyname" style="width:200px" placeholder="请填写公司简称"></el-input>
+        </el-form-item>
+        <el-form-item label="公司全称">
+          <el-input v-model="form.alias_name" style="width:200px" placeholder="请填写公司全称"></el-input>
+        </el-form-item>
+        <div style="display:flex;">
+          <el-form-item label="分类" prop="mainclass">
+            <el-select
+              v-model="form.materials_class_id"
+              placeholder="请选择"
+              @change="handleClassDatasId($event)"
+              style="width:200px;"
+            >
+              <el-option
+                v-for="item in classData"
+                :key="item.id"
+                :label="item.classname"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <!-- <el-form-item prop="materials_class_name">
+            <el-select
+              v-model="form.materials_class_name"
+              placeholder="请选择"
+              @change="handleClassDatasIds($event)"
+              style="width:200px"
+            >
+              <el-option
+                v-for="item in class_datas.class_data"
+                :key="item.id"
+                :label="item.classname"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item> -->
+          <span class="rot" @click="rot">新增分类</span>
+        </div>
+        <div v-for="(item,index) in form.contact" :key="item.key" class="member_user_item">
+          <el-form-item
+            :label="`联系人`"
+            :prop="'contact.'+index+'.contacts'"
+            :rules="contactRules.contact_contacts"
+          >
+            <el-input v-model="item.contacts" style="width:200px" placeholder="请填写联系人"></el-input>
+          </el-form-item>
+          <!-- :rules="contactRules.contact_phone" -->
+          <el-form-item :prop="'contact.'+index+'.phone'">
+            <el-input
+              v-model="item.phone"
+              style="width:200px"
+              class="it"
+              @blur="itphone(item.phone,index)"
+              placeholder="请填写联系电话"
+            ></el-input>
+          </el-form-item>
+          <span v-if="index>0" class="deleteUser" @click="handleDeleteUser(index)">-</span>
+        </div>
+        <el-form-item>
+          <span style="cursor: pointer;" @click="handleAddUsers">增加联系人</span>
+        </el-form-item>
+        <el-form-item label="地址" prop="address">
+          <el-input v-model="form.address" style="width:500px" placeholder="详细地址"></el-input>
+        </el-form-item>
+        <div v-for="(item,index) in form.bank" :key="item.key" class="member_account_item">
+          <el-form-item :label="`账号信息`">
+            <el-select v-model="item.bank" placeholder="银行名称" style="width:200px">
+              <el-option
+                v-for="item in options"
+                :key="item.id"
+                :label="item.name"
+                :value="item.name"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item :prop="'bank.'+index+'.name'">
+            <el-input v-model="item.name" style="width:200px" placeholder="收款人姓名"></el-input>
+          </el-form-item>
+          <el-form-item :prop="'bank.'+index+'.bankid'">
+            <el-input
+              v-model="item.bankid"
+              style="width:200px"
+              class="ib"
+              @blur="ibBankid(item.bankid,index)"
+              placeholder="银行卡卡号"
+            ></el-input>
+          </el-form-item>
+          <span v-if="index>0" class="deleteAccount" @click="handleDeleteAccount(index)">-</span>
+        </div>
+        <el-form-item label>
+          <span style="cursor: pointer;" @click="handleAddAccount">增加账号信息</span>
+        </el-form-item>
+
+        <el-form-item label="是否开发票" prop="isbill">
+          <el-radio-group v-model="form.isbill">
+            <el-radio :label="'0'">不开</el-radio>
+            <el-radio :label="'1'">开</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="税点" prop="tax" v-if="form.isbill=='1'">
+          <el-input style="width:200px" v-model="form.tax" @input="handleInput"></el-input>%
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input type="textarea" v-model="form.remarks" placeholder="请输入内容" clearable></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="handleEdit" style="padding:10px 50px;border-radius: 10px;">保存</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+
     <el-dialog
       title="上传图片"
       :visible.sync="centerDialogVisible"
@@ -225,7 +260,7 @@
             </div>
           </div>
           <input
-            style="width:30px;font-size:20px;margin:0 10px;float:left;"
+            style="width:30px;font-size:20px;margin:0 10px;"
             type="button"
             class="oper"
             value="+"
@@ -233,7 +268,7 @@
             @click="changeScale(1)"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;float:left;"
+            style="width:30px;font-size:20px;margin:0 10px;"
             type="button"
             class="oper"
             value="-"
@@ -241,7 +276,7 @@
             @click="changeScale(-1)"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;float:left;"
+            style="width:30px;font-size:20px;margin:0 10px;"
             type="button"
             class="oper"
             value="↺"
@@ -249,7 +284,7 @@
             @click="rotateLeft"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;float:left;"
+            style="width:30px;font-size:20px;margin:0 10px;"
             type="button"
             class="oper"
             value="↻"
@@ -257,7 +292,7 @@
             @click="rotateRight"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;float:left;"
+            style="width:30px;font-size:20px;margin:0 10px;"
             type="button"
             class="oper"
             value="↓"
@@ -270,22 +305,6 @@
         <el-button @click="cancel">取 消</el-button>
         <el-button type="primary" @click="finish('blob')">确 定</el-button>
       </span>
-    </el-dialog>
-    <el-dialog title="请选择一个识别方式" :visible.sync="dialogVisible" center width="30%">
-      <el-upload
-        class="upload-demo"
-        ref="upload"
-        action="https://yj.ppp-pay.top/uploadpic.php"
-        :auto-upload="true"
-        :show-file-list="false"
-        :on-success="recognition"
-        :on-error="errorRecognition"
-        :before-upload="beforeRecognition"
-        :file-list="fileList"
-      >
-        <el-button slot="trigger" size="small" type="info">图片内容识别</el-button>
-      </el-upload>
-      <el-button @click="onTake" icon="el-icon-camera" type="info" class="camera" size="small">拍照</el-button>
     </el-dialog>
   </div>
 </template>
@@ -311,9 +330,6 @@ export default {
   },
   data() {
     return {
-      length1: 1,
-      length: 1,
-      dialogVisible: false,
       numberr: 0,
       visible: false, //弹窗
       // loading: false, //上传按钮加载
@@ -445,18 +461,9 @@ export default {
       // },
       vs1: false,
       vs2: false,
-      nav: ["基础信息", "选填内容"],
-      active: 0,
     };
   },
   methods: {
-    choice() {
-      this.dialogVisible = true;
-    },
-    // 切换内容
-    actives(index) {
-      this.active = index;
-    },
     ctrlShift() {
       var alink = document.createElement("a");
       alink.href = this.imgSrc;
@@ -483,18 +490,17 @@ export default {
     },
     async onCancel(val, num) {
       this.visible = false;
-      this.dialogVisible = false;
-      // console.log(this.fileList1);
       /* this.resetCanvas();*/
       this.stopNavigator();
       if (val == undefined && num == undefined) {
         this.fileList1 = this.imgSrc;
         let file = this.dataURLtoFile(this.imgSrc, String(Math.random()));
         let param = new FormData(); // 创建form对象
-        param.append("file", file); // 通过append向form对象添加数据
-        let res1 = await Api(param);
-        let res = await discern({ url: res1.data.data.pic_file_url });
-        this.form.orcurl = res1.data.data.pic_file_url;
+        param.append("image", file); // 通过append向form对象添加数据
+        let config = {
+          headers: { "Content-Type": "multipart/form-data" },
+        };
+        let res = await discern(param, config);
         this.contents = res.data.data.words_result;
         if (this.contents) {
           if (this.contents) {
@@ -505,7 +511,6 @@ export default {
         }
         this.form.contact = this.matchPhone(this.contents);
         this.form.address = this.address(this.contents);
-        this.length = this.form.contact.length;
       } else if (val == 1 && num != undefined) {
         let file = this.dataURLtoFile(this.imgSrc, String(Math.random()));
         console.log(file);
@@ -645,7 +650,6 @@ export default {
       let div = document.createElement("div");
       div.className = "error";
       div.style.color = "#F56C6C";
-      div.style.fontSize = "12px";
       div.innerHTML = "请输入正确的号码";
       console.log(nodes.children);
       if (nodes.children.length < 2) {
@@ -655,7 +659,7 @@ export default {
         /^1[3456789]\d{9}$/.test(val) ||
         /^(0[0-9]{2,3}-)?[2-9][0-9]{6,7}$/.test(val)
       ) {
-        input.style.border = "0px solid #DCDFE6";
+        input.style.border = "1px solid #DCDFE6";
         nodes.removeChild(nodes.children[1]);
         this.vs2 = false;
       } else {
@@ -688,11 +692,9 @@ export default {
     // *******************识别内容********************
     beforeRecognition() {
       this.loading = true;
-      this.dialogVisible = false;
     },
     errorRecognition() {
       this.loading = false;
-      this.dialogVisible = false;
     },
     matchPhone(words) {
       let result = [];
@@ -721,7 +723,9 @@ export default {
     address(words) {
       let result = "";
       words.map((v, i) => {
-        let res = v.words.match(/(地址:?)?([\u4e00-\u9fa5]+[省市区城楼].+)/);
+        let res = v.words.match(
+          /(地址:?)?([\u4e00-\u9fa5]+[省市区城楼].+)/
+        );
         if (res != null && res.length > 0) {
           result = res[res.length - 1];
         }
@@ -729,15 +733,13 @@ export default {
       return result;
     },
     async recognition(response, file, fileList) {
+      console.log(file, fileList);
       this.loading = false;
-      this.dialogVisible = false;
-      this.length = this.form.contact.length;
-      let res = await discern({ url: response.data.pic_file_url });
-      // this.fileList1 = URL.createObjectURL(file.raw);
-      // this.imgs.push(URL.createObjectURL(file.raw));
-      this.contents = res.data.data.words_result;
-      this.form.orcurl = response.data.pic_file_url;
-      console.log();
+      this.fileList1 = URL.createObjectURL(file.raw);
+      this.imgs.push(URL.createObjectURL(file.raw));
+      this.contents = response.data.words_result;
+      // if (this.contents) {
+      // if(this.contents)
       this.contents = this.contents.filter((v) => {
         return !/^\d{1,3}$/.test(v.words);
       });
@@ -861,20 +863,11 @@ export default {
     },
 
     async handleEdit() {
-      if (
-        this.form.cardpicurl == "" ||
-        this.form.companyname == "" ||
-        this.form.address == "" ||
-        this.form.materials_class_id == "" ||
-        this.vs2
-      ) {
-        this.active = 0;
-        this.$message({
-          showClose: true,
-          message: "请填充完整的数据",
-          type: "error",
-        });
-      } else {
+      this.$refs["form"].validate(async (valid) => {
+        if (!valid || this.vs2) return;
+        // 调用actions的登录方法
+
+        console.log(this.form);
         let res = await supplierAdd(this.form);
         console.log(res);
         if (res.data.error_code) {
@@ -886,21 +879,22 @@ export default {
         } else {
           this.$router.go(-1);
         }
-      }
+        // }
+      });
     },
 
     // 新增联系人
     handleAddUsers() {
       this.form.contact.push({
+        contacts: "",
         phone: "",
+        id: "",
         // key: Date.now()
       });
-      this.length = this.form.contact.length;
     },
     // 删除联系人
     handleDeleteUser(index) {
       this.form.contact.splice(index, 1);
-      this.length = this.form.contact.length;
     },
     // 新增账号
     handleAddAccount() {
@@ -911,12 +905,10 @@ export default {
         id: "",
         // key: Date.now()
       });
-      this.length1 = this.form.bank.length;
     },
     // 删除账号
     handleDeleteAccount(index) {
       this.form.bank.splice(index, 1);
-      this.length1 = this.form.bank.length;
     },
     async getBankName() {
       let res = await getBankNameSelect();
@@ -963,113 +955,54 @@ export default {
 <style lang="less" scoped>
 .addSupplier {
   // position: relative;
-  /deep/.el-icon-search {
-    color: #cccccc !important;
-    height: 30px !important;
-    line-height: 30px;
-  }
-
-  /deep/.el-input {
-    width: 200px !important;
-    height: 40px;
-    margin-bottom: 5px;
-  }
-  /deep/.el-textarea__inner {
-    background-color: #f2f2f2;
-    border-radius: 15px;
-    border: none;
-    color: #5e5e5e;
-    font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
-      \\5b8b\4f53, sans-serif;
-    padding: 10px;
-  }
-  /deep/.el-input__inner {
-    width: 100%;
-    height: 30px;
-    background-color: #f2f2f2;
-    border-radius: 15px;
-    border: none;
-    color: #5e5e5e;
-    font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
-      \\5b8b\4f53, sans-serif;
-  }
-  .search_button {
-    margin-left: 10px;
-    background-color: #000;
-  }
-  /deep/ .el-icon-search {
-    color: #fff;
-  }
-  /deep/.el-button {
-    border: none;
-  }
-  //
-  /deep/input::-webkit-input-placeholder {
-    text-align: center;
-  }
-  /deep/input::-moz-input-placeholder {
-    text-align: center;
-  }
-  /deep/input::-ms-input-placeholder {
-    text-align: center;
-  }
-  // 导航
-  .active {
-    background: #000 !important;
-    color: #ffffff;
-  }
-  .header_nav {
-    margin-bottom: 50px;
-    ul {
-      overflow: hidden;
-      li {
-        float: left;
-        display: block;
-        height: 25px;
-        margin-right: 20px;
-        background: #f2f2f2;
-        border-radius: 15px;
-        width: 100px;
-        line-height: 25px;
-        text-align: center;
-        cursor: pointer;
-      }
-    }
-  }
-  @media screen and (max-width: 1200px) {
-    .content {
-      width: 1201px;
-    }
-  }
-  .content {
-    overflow: hidden;
+  .upload {
     position: relative;
-    .el-divider {
-      float: left;
-    }
-    .edt {
-      width: 130px;
-      height: 35px;
-      background: #000;
-      margin-top: 20px;
-      color: #ffffff;
-    }
-    .maxc {
-      .box {
-        .maxsize {
-          margin-right: 10px;
+    display: flex;
+    .upload_card {
+      display: flex;
+      width: 350px;
+      height: 200px;
+      .upload_name {
+        margin: 0 30px;
+      }
+      .uploads {
+        width: 150px;
+        height: 150px;
+        border-radius: 10px;
+        overflow: hidden;
+        .avatar-uploader-icon {
+          border: 1px solid #ccc;
+          font-size: 28px;
+          color: #8c939d;
+          width: 150px;
+          height: 150px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
       }
     }
+    .upload-demo {
+      height: 30px;
+      // margin-left: 10px;
+    }
+    .camera {
+      position: relative;
+      height: 40px;
+      right: 90px;
+      top: 80px;
+    }
     .image-content {
+      position: absolute;
+      left: 920px;
       width: 500px;
       height: auto;
+      border: 1px solid #cccccc;
+      z-index: 33;
       ul {
         padding: 10px;
         li {
           margin-bottom: 5px;
-          padding-bottom: 5px;
-          border-bottom: 1px solid #000000;
         }
         li:first-of-type {
           font-weight: 600;
@@ -1081,122 +1014,6 @@ export default {
           width: auto;
           height: auto;
           max-height: auto;
-        }
-      }
-    }
-  }
-  .right_float {
-    width: 226px;
-    overflow: hidden;
-    position: fixed;
-    right: 20px;
-    top: 300px;
-    .next1 {
-      float: right;
-      width: 139px;
-      background: #000;
-      margin: 0;
-      height: 30px;
-      border-radius: 15px;
-      line-height: 2px;
-      color: #eee;
-    }
-  }
-  .texts {
-    float: left;
-  }
-  .matter {
-    display: flex;
-    height: 160px;
-    float: left;
-    .padd {
-      width: 200px;
-    }
-    .padd1 {
-      width: 488px;
-      height: 160px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      flex-wrap: wrap;
-      .colored {
-        position: relative;
-        margin-left: 20px;
-        width: 222px;
-        background: #f2f2f2;
-        border-radius: 15px;
-        height: 30px;
-        margin-bottom: 15px;
-        .colored {
-          cursor: pointer;
-        }
-        .el-icon-plus {
-          position: absolute;
-          top: 7px;
-          right: 7px;
-        }
-        .el-icon-minus {
-          position: absolute;
-          top: 7px;
-          right: 7px;
-        }
-      }
-    }
-  }
-  .upload {
-    position: relative;
-    float: left;
-    display: flex;
-    .upload_card {
-      display: flex;
-      width: 280px;
-      height: 120px;
-      .upload_name {
-        margin: 0 30px;
-      }
-
-      .recognition {
-        float: left;
-        position: relative;
-        overflow: hidden;
-        width: 120px;
-        height: 120px;
-        background: #f2f2f2;
-        border-radius: 25px;
-        margin-left: 20px;
-        cursor: pointer;
-        span {
-          display: block;
-          font-size: 40px;
-          text-align: center;
-          line-height: 120px;
-        }
-        em {
-          position: absolute;
-          left: 50%;
-          top: 48%;
-          font-size: 14px;
-          font-weight: 600;
-          margin-left: -28px;
-          margin-top: 20px;
-        }
-      }
-      .uploads {
-        float: left;
-        width: 120px;
-        height: 120px;
-        border-radius: 25px;
-        background: #f2f2f2;
-        border: none;
-        overflow: hidden;
-        .avatar-uploader-icon {
-          font-size: 28px;
-          color: #8c939d;
-          width: 120px;
-          height: 120px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
         }
       }
     }
@@ -1226,24 +1043,54 @@ export default {
       }
     }
   }
-  .upload-demo {
-    display: inline-block;
-    height: 40px;
-    text-align: center;
-    margin-right: 40px;
-    .el-button {
+  .form {
+    .rot {
       height: 40px;
-      border-radius: 10px;
+      line-height: 40px;
+      display: block;
+      margin-left: 20px;
     }
-  }
-  /deep/.el-dialog__body {
-    text-align: center;
-  }
-  .camera {
-    display: inline-block;
-    height: 40px;
-    text-align: center;
-    border-radius: 10px;
+    .rot:hover {
+      cursor: pointer;
+      color: coral;
+    }
+    .member_user_item {
+      border-bottom: 1px #eee dashed;
+      position: relative;
+      display: flex;
+
+      .deleteUser {
+        display: block;
+        background: #ddd;
+        width: 16px;
+        height: 16px;
+        font-size: 14px;
+        text-align: center;
+        line-height: 16px;
+        color: #fff;
+        cursor: pointer;
+        border-radius: 50px;
+        margin: 10px 20px;
+      }
+    }
+    .member_account_item {
+      display: flex;
+      border-bottom: 1px #eee dashed;
+      position: relative;
+      .deleteAccount {
+        display: block;
+        background: #ddd;
+        width: 16px;
+        height: 16px;
+        font-size: 14px;
+        text-align: center;
+        line-height: 16px;
+        color: #fff;
+        cursor: pointer;
+        border-radius: 50px;
+        margin: 10px 20px;
+      }
+    }
   }
   /deep/textarea {
     width: 500px;
@@ -1263,7 +1110,6 @@ export default {
       color: #000;
       border: 1px solid #cccccc;
     }
-
     .upload {
       float: left;
       margin-bottom: 30px;

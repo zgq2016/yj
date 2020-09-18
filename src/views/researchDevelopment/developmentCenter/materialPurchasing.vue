@@ -4,15 +4,14 @@
       <div
         v-for="(item, index) in obj.style_color_data"
         :key="index"
-        style="display: flex;align-items: center;"
+        style="display: flex;align-items: center;margin:20px 0;"
       >
-        <el-divider direction="vertical"></el-divider>
         <div
           style="margin:0 10px;cursor: pointer;"
           @click="handleColorNum(item,index)"
           :class="active===index?'active':''"
+          class="backg"
         >{{item.style_color_name}}</div>
-        <el-divider direction="vertical"></el-divider>
       </div>
     </div>
     <div v-if="permission.indexOf('get_style_purchase')!=-1">
@@ -26,7 +25,8 @@
                 </div>
                 <div class="cardStyle_left_content">
                   <div class="cardStyle_left_content_name">
-                    <div>{{item1.materials_mainclass_name}} ({{item1.materials_class_name}})</div>
+                    <div>{{item1.materials_data[0].materialsname}}</div>
+
                     <div
                       class="el-icon-close"
                       style="cursor: pointer;"
@@ -34,11 +34,11 @@
                       @click.stop="handleStyleMaterialsDel(item1)"
                     ></div>
                   </div>
-                  <div>{{item1.materials_data[0].materialsname}}</div>
                   <div>内部编号:{{item1.materials_data[0].materialsno}}</div>
                   <div
                     v-if="item1.style_materials_supplier_data.length>0"
                   >{{item1.style_materials_supplier_data[0].companyname}}</div>
+                  <div>{{item1.materials_mainclass_name}} ({{item1.materials_class_name}})</div>
                 </div>
               </div>
               <div class="cardStyle_right">
@@ -602,8 +602,28 @@ export default {
     }
   }
   .active {
-    border-bottom: 1px solid aqua;
-    color: aqua;
+    background: #000 !important;
+    color: #ffffff !important;
+    .el-icon-close {
+      color: #ffffff !important;
+    }
+  }
+  .backg {
+    position: relative;
+    text-align: center;
+    background: #f2f2f2;
+    border-radius: 15px;
+    height: 30px;
+    line-height: 30px;
+    color: #000;
+    width: 130px;
+    .color {
+      width: 120px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      margin: 0 !important;
+    }
   }
 
   .orderInformation {

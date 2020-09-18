@@ -1,5 +1,5 @@
 <template>
-  <div class="designNote" v-if="permission.indexOf('designNote')!=-1">
+  <div class="designNote" v-if="permission.indexOf('get_style_design')!=-1">
     <div v-if="designRemark===0">
       <el-input type="textarea" v-model="obj.designidea" class="textarea"></el-input>
       <div class="drawing">图纸</div>
@@ -193,6 +193,7 @@ import {
   pushPattern,
   getStylistList,
   styleUrgent,
+  getStyleDesign
 } from "@/api/researchDevelopment";
 import Print from "@/components/print.vue";
 
@@ -295,9 +296,9 @@ export default {
     },
     async init() {
       let { id } = this.$route.query;
-      let res = await getStyle({ id });
+      let res = await getStyleDesign({ id });
       this.obj = res.data.data;
-      this.img_list = res.data.data.designidea_pic_data.map((v) => {
+      this.img_list = res.data.data.designidea_pic.map((v) => {
         return { url: v.designidea_pic_url, id: v.id };
       });
     },
@@ -322,6 +323,10 @@ export default {
         this.obj.is_urgent = 1;
       }
     },
+    // async getStyleDesign(){
+    //   let res = await getStyleDesign({id:this.$route.query.id})
+    //   console.log(res);
+    // }
   },
   mounted() {
     // console.log(this.$route.query);
@@ -331,6 +336,7 @@ export default {
     }
     this.init();
     this.getstylist();
+    // this.getStyleDesign()
     // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },

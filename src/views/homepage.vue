@@ -984,6 +984,7 @@ export default {
       }
     }
     .content_2 {
+      width: 100%;
       height: 375px;
       overflow: hidden;
       .tet {
@@ -1034,6 +1035,7 @@ export default {
       }
     }
     .content_3 {
+      width: 100%;
       height: 375px;
       overflow: hidden;
       .tet {
@@ -1056,6 +1058,7 @@ export default {
         span {
           float: right;
           cursor: pointer;
+          margin: 20px 0;
         }
       }
       ul {

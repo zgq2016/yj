@@ -38,7 +38,7 @@
         </div>
         <div class="main_left">
           <div class="main_left_img">
-            <img :src="obj.compicurl" alt @click="handlePreview1" />
+            <img :src="obj.orcurl" alt @click="handlePreview1" />
           </div>
           <div class="main_left_deital">
             <div>是否开发票：{{obj.isbill}}</div>

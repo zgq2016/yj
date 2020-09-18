@@ -126,7 +126,7 @@ export default {
       this.form["page_size"] = this.pageSize;
       this.form["companyname"] = this.form.companyname;
       let res = await getSupplierList(this.form);
-      console.log(res);
+      // console.log(res);
       let { data, count } = res.data;
       this.total = count;
       this.SupplierList = data;

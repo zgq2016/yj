@@ -57,10 +57,10 @@
       <div class="placeAnOrderBatchInfo">
         <div class v-for="(item,index) in ob" :key="index">
           <div
-            class="placeAnOrderBatch sty"
             style="display: flex;justify-content: center;align-items: center;"
             @click.stop="switchingStyle(item,index)"
             :class="active===index?'active':''"
+            class="backg"
           >
             <div class="color">下单批次：{{index+1}}</div>
             <div
@@ -348,7 +348,8 @@
                 :key="index_color"
                 :class="active1===index_color?'active':''"
                 @click="purchaseChanged(item_color,index_color)"
-                style="margin:0 10px;width:60px;padding:5px;text-align:center;cursor: pointer;"
+                style="cursor: pointer;"
+                class="backg"
               >{{item_color}}</span>
             </div>
             <div class="material_purchase">
@@ -362,7 +363,7 @@
                         </div>
                         <div class="cardStyle_left_content">
                           <div class="cardStyle_left_content_name">
-                            <div>{{item1.mainclass}}</div>
+                            <div>{{item1.materialsname}}</div>
                             <div
                               v-if="permission.indexOf('produce_order_procure_del')!=-1"
                               class="el-icon-close"
@@ -371,7 +372,8 @@
                           </div>
                           <div>{{item1.color}}</div>
                           <div>内部编号:{{item1.materialsno}}</div>
-                          <div>{{item1.companyname}}</div>
+                          <!-- <div>{{item1.companyname}}</div> -->
+                          <div>{{item1.mainclass}}</div>
                         </div>
                       </div>
                       <div class="cardStyle_right">
@@ -1110,16 +1112,14 @@
                           <img :src="item2.materials_color_data[0].picurl" alt />
                         </div>
                         <div class="cardStyle_left_content">
-                          <div class="cardStyle_left_content_name">
-                            <div>{{item2.mainclass}}</div>
-                          </div>
+                          <div style="font-weight:600;">{{item2.materials_data[0].materialsname}}</div>
+                          <div class="cardStyle_left_content_name"></div>
                           <div>{{item2.color}}</div>
-                          <div
-                            v-if="item2.materials_data.lengyh>0"
-                          >内部编号:{{item2.materials_data[0].materialsno}}</div>
-                          <div
+                          <div>内部编号:{{item2.materials_data[0].materialsno}}</div>
+                          <!-- <div
                             v-if="item2.style_materials_supplier_data.length>0"
-                          >{{item2.style_materials_supplier_data[0].companyname}}</div>
+                          >{{item2.style_materials_supplier_data[0].companyname}}</div>-->
+                          <div>{{item2.materials_mainclass_name}}({{item2.materials_class_name}})</div>
                         </div>
                       </div>
                       <div class="cardStyle_right" @mouseleave="visible1 = false">
@@ -3815,16 +3815,17 @@ export default {
           }
           .jour {
             margin: 5px 0;
-            width: 80px;
-            height: 25px;
-            line-height: 25px;
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
             background: #f2f2f2;
             text-align: center;
             border-radius: 8px;
           }
           .jour:hover {
             cursor: pointer;
-            background: #dad1d1;
+            background: #000000;
+            color: #fff;
           }
         }
       }
@@ -4179,7 +4180,30 @@ export default {
     // }
   }
   .active {
-    border: 1px solid #add;
+    background: #000 !important;
+    color: #ffffff !important;
+    .el-icon-close {
+      color: #ffffff !important;
+      font-size: 14px;
+      padding: 5px;
+    }
+  }
+  .backg {
+    position: relative;
+    text-align: center;
+    background: #f2f2f2;
+    border-radius: 15px;
+    height: 30px;
+    line-height: 30px;
+    color: #000;
+    width: 130px;
+    .color {
+      width: 120px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      margin: 0 !important;
+    }
   }
   // 数据表格
   .table_header {

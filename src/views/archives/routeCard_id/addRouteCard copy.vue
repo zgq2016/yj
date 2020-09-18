@@ -8,193 +8,40 @@
       </el-breadcrumb>
     </div>
     <!-- 图片 -->
-
-    <div class="nav">
-      <ul>
-        <li
-          v-for="(item,index) in nav"
-          :key="index"
-          :class="active===index?'active':''"
-          @click="actives(index)"
-        >{{item}}</li>
-      </ul>
-    </div>
-    <div class="main">
-      <div class="contents1" v-show="active==0">
-        <div class="headr_list">
-          <div class="cont">
-            <div class="update" @click="handleImg()">
-              <img v-if="form1.picurl" :src="form1.picurl" />
-              <i v-else class="avatar-uploader-icon">
-                <div
-                  class="el-upload__tip"
-                  style="font-size:14px;font-weight:500;color:rgb(158 152 152);"
-                  slot="tip"
-                >上传色卡</div>
-              </i>
-            </div>
-            <el-cascader
-              v-model="form1.color"
-              :options="colors"
-              :props="optionProps"
-              :show-all-levels="false"
-              @change="changese"
-              placeholder="颜色"
-            ></el-cascader>
-            <br />
-            <el-input v-model="form1.color_no" placeholder="色号" style="width:200px;"></el-input>
-            <el-button type="info" @click="form1.color_no='无编号'" circle>无</el-button>
-            <el-button class="determine" @click.stop="determine">确定</el-button>
-          </div>
-
-          <div class="abc">
-            <el-button class="next" @click="variation(1)">下一步</el-button>
-          </div>
+    <div class="wuln">
+      <div style="margin:0px 100px;">
+        <div style="margin:10px 0px;">物料图片</div>
+        <div class="upload" @click="handleFormImg">
+          <img v-if="form.picurl" :src="form.picurl" />
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </div>
-        <el-divider></el-divider>
-        <div class="colorCard" v-if="form.color_data.length>0">
+
+        <el-upload
+          class="upload-demo"
+          ref="upload"
+          action="https://shesho.ppp-pay.top/webapi.php?g=test"
+          :auto-upload="true"
+          name="image"
+          :show-file-list="false"
+          :on-success="recognition"
+          :on-error="errorRecognition"
+          :before-upload="beforeRecognition"
+          :file-list="fileList"
+        >
+          <el-button slot="trigger" size="small" type="primary">图片内容识别</el-button>
+        </el-upload>
+        <el-button @click="onTake" icon="el-icon-camera" type="info" class="camera" size="small">拍照</el-button>
+        <div
+          v-loading="loading"
+          element-loading-text="识别内容中"
+          element-loading-spinner="el-icon-loading"
+          element-loading-background="rgba(0, 0, 0, 0.8)"
+          class="image-content"
+        >
           <ul>
-            <li
-              v-for="(item,index) in form.color_data"
-              @click.stop="recompose(item,index)"
-              :key="index"
-            >
-              <div class="imgs">
-                <el-image style="width: 100px; height: 100px" :src="item.picurl" fit="cover"></el-image>
-              </div>
-              <div class="substance">
-                <h6>{{item.color}}</h6>
-                <h6>{{item.color_no}}</h6>
-              </div>
-              <span @click.stop="dels(index)" class="del el-icon-close"></span>
-            </li>
+            <li>*注意：识别内容存在差异，谨慎修改！</li>
+            <li v-for="(item,index) in contents" :key="index">{{item.words}}</li>
           </ul>
-        </div>
-      </div>
-      <div class="contents1 contents2" v-show="active==1">
-        <div class="input_s">
-          <div class="box">
-            <el-input
-              v-model="form1.companyname"
-              class="maxsize left_float"
-              suffix-icon="el-icon-search"
-              placeholder="供应商"
-              @input="impedance"
-            ></el-input>
-            <el-cascader
-              v-model="form.materials_class_id"
-              :options="classData"
-              :props="bosded"
-              @change="handleChange"
-              clearable
-              placeholder="分类"
-              class="left_float"
-            ></el-cascader>
-            <el-input v-model="form.wsale_price" class="left_float" placeholder="大货单价"></el-input>
-            <el-input v-model="form.materialsname" class="maxsize left_float" placeholder="物料名称"></el-input>
-            <el-select class="left_float" v-model="form.unit" placeholder="计量单位">
-              <el-option
-                v-for="item in units"
-                :key="item.id"
-                :label="item.unit_name"
-                :value="item.unit_name"
-              ></el-option>
-            </el-select>
-          </div>
-          <div class="right_float">
-            <el-button class="step" @click="variation(0)">上一步</el-button>
-            <el-button class="next1" @click="variation(2)">下一步</el-button>
-          </div>
-        </div>
-        <el-divider></el-divider>
-        <div class="dataList">
-          <div
-            @click="listDeital(item)"
-            class="list"
-            v-for="(item, index) in SupplierList"
-            :key="index"
-          >
-            <div class="list_img">
-              <img :src="item.cardpicurl" alt />
-            </div>
-            <div class="list_content">
-              <div class="list_content_left">
-                <div class="list_content_left_name">{{item.companyname}}</div>
-                <div>
-                  {{item.mainclass}}
-                  <em
-                    v-if="item.materials_class_name"
-                  >({{item.materials_class_name}})</em>
-                </div>
-                <div
-                  v-if="item.supplier_contact_data.length>0"
-                >{{item.supplier_contact_data[0].contacts}}:{{item.supplier_contact_data[0].phone}}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <el-pagination
-          class="pagination"
-          style="float:right;"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="pageIndex"
-          :page-sizes="[24, 48, 72, 96]"
-          :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total1"
-        ></el-pagination>
-      </div>
-
-      <div class="contents1 contents2" v-show="active==2">
-        <div class="input_s sencond">
-          <div class="bax">
-            <div class="recognition" @click="choice">
-              <span class="el-icon-camera-solid"></span>
-              <em>识别内容</em>
-            </div>
-            <div class="recognition_right">
-              <el-input v-model="form.materialsno" class="stylp" placeholder="编号/品名"></el-input>
-              <br />
-              <el-input v-model="form.breadth" class="stylp" placeholder="幅宽"></el-input>
-              <br />
-              <el-input v-model="form.grammage" class="stylp" placeholder="克重"></el-input>
-            </div>
-            <div class="makeup">
-              <div class="boxs" v-for="(item,index) in form.material_data" :key="index">
-                <el-select v-model="item.material_name" placeholder="成分">
-                  <el-option
-                    v-for="item1 in materials"
-                    :key="item1.id"
-                    :label="item1.name"
-                    :value="item1.material_name"
-                  ></el-option>
-                </el-select>
-                <el-input v-model="item.content" placeholder="%"></el-input>
-                <span v-if="length==index+1" class="el-icon-plus" @click="handleIngredient"></span>
-                <span v-else class="el-icon-minus" @click="handleDeleteUser(index)"></span>
-              </div>
-            </div>
-          </div>
-          <div class="right_float">
-            <el-button class="step" @click="variation(1)">上一步</el-button>
-            <el-button class="next1" @click="variation(3)">下一步</el-button>
-          </div>
-        </div>
-        <el-divider></el-divider>
-        <div class="texts">
-          <div
-            v-loading="loading"
-            element-loading-text="识别内容中"
-            element-loading-spinner="el-icon-loading"
-            element-loading-background="rgba(0, 0, 0, 0.8)"
-            class="image-content"
-          >
-            <ul>
-              <li>*注意：识别内容存在差异，谨慎修改！</li>
-              <li v-for="(item,index) in contents" :key="index">{{item.words}}</li>
-            </ul>
-          </div>
           <div v-if="fileList1">
             <el-image
               style="width: 100%; height: 300px;"
@@ -207,27 +54,202 @@
           </div>
         </div>
       </div>
-      <div class="contents1" v-show="active==3">
-        <div class="optional">
-          <span>选填</span>
-
-          <div class="inputed">
-            <el-input v-model="form.arrival_time" placeholder="到货时间/天"></el-input>
-            <div class="radio">
-              <el-radio-group v-model="form.instock">
-                <el-radio :label="'0'">有货</el-radio>
-                <el-radio :label="'1'">无货</el-radio>
-              </el-radio-group>
-            </div>
-            <el-input type="textarea" v-model="form.remarks" placeholder="备注"></el-input>
-          </div>
-          <div class="ensure">
-            <el-button class="step" @click="variation(2)">上一步</el-button>
-            <el-button class="next1" @click="handleEdit">确定</el-button>
-          </div>
-        </div>
-      </div>
     </div>
+    <el-dialog
+      title="拍照上传"
+      :visible.sync="visible"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      @close="onCancel"
+      width="1065px"
+    >
+      <div class="box">
+        <video id="videoCamera" class="canvas" :width="videoWidth" :height="videoHeight" autoplay></video>
+        <canvas
+          id="canvasCamera"
+          class="canvas"
+          :width="videoWidth"
+          :height="videoHeight"
+          style="margin-left:10px;"
+        ></canvas>
+      </div>
+      <div slot="footer">
+        <el-button @click="drawImage" icon="el-icon-camera" size="small">拍照</el-button>
+        <el-button v-if="os" @click="getCompetence" icon="el-icon-video-camera" size="small">打开摄像头</el-button>
+        <!-- <el-button v-else @click="stopNavigator" icon="el-icon-switch-button" size="small">关闭摄像头</el-button> -->
+        <el-button @click="resetCanvas" icon="el-icon-refresh" size="small">重置</el-button>
+        <el-button @click="ctrlShift" icon="el-icon-s-unfold" size="small">另存为</el-button>
+        <el-button @click="onCancel(1,numberr)" icon="el-icon-circle-close" size="small">完成</el-button>
+      </div>
+    </el-dialog>
+    <!-- form -->
+    <el-col class="form" style="margin-top:20px">
+      <el-form :model="form" ref="form" :rules="rules" label-width="100px">
+        <div style="display:flex;">
+          <el-form-item label="供应商">
+            <el-autocomplete
+              class="inline-input"
+              v-model="supplier_companyname"
+              :fetch-suggestions="querySearch"
+              placeholder="供应商"
+              @select="handleSelect"
+              style="width:200px;margin-right:10px"
+            ></el-autocomplete>
+          </el-form-item>
+          <el-form-item class="texa">
+            <router-link :to="`/addSupplier`" target="_blank">新增供应商</router-link>
+          </el-form-item>
+        </div>
+        <el-form-item label="编号" prop="materialsno">
+          <el-input v-model="form.materialsno" style="width:200px;" placeholder="编号"></el-input>
+        </el-form-item>
+        <el-form-item label="幅宽" prop="breadth">
+          <el-input v-model="form.breadth" style="width:200px;" placeholder="cm"></el-input>
+        </el-form-item>
+        <el-form-item label="克重" prop="grammage">
+          <el-input v-model="form.grammage" style="width:200px;" placeholder="g"></el-input>
+        </el-form-item>
+        <el-form-item label="面料名称" prop="materialsname">
+          <el-input v-model="form.materialsname" style="width:200px;" placeholder="面料名称"></el-input>
+        </el-form-item>
+        <div style="display:flex;">
+          <el-form-item label="分类" prop="materials_mainclass_name">
+            <el-select
+              v-model="form.materials_mainclass_name"
+              placeholder="请选择"
+              @change="handleClassDatasId($event)"
+              style="width:200px"
+            >
+              <el-option
+                v-for="item in classData"
+                :key="item.id"
+                :label="item.classname"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <div @click.capture="get_class_data">
+            <el-form-item class="texa" prop="materials_class_name">
+              <el-select
+                v-model="form.materials_class_name"
+                placeholder="请选择"
+                @change="handleClassDatasIds($event)"
+                style="width:200px"
+              >
+                <el-option
+                  v-for="item in class_datas.class_data"
+                  :key="item.id"
+                  :label="item.classname"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+          <span class="rot" @click="rot">新增分类</span>
+        </div>
+        <div v-for="(item,index) in form.material_data" :key="item.key" class="member_user_item">
+          <el-form-item
+            :label="`面料成分`"
+            :prop="'material_data.'+index+'.material_name'"
+            :rules="material_dataRules.material_data_material_name"
+          >
+            <el-select v-model="item.material_name" placeholder="请选择" style="width:200px">
+              <el-option
+                v-for="item in materials"
+                :key="item.id"
+                :label="item.name"
+                :value="item.material_name"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item
+            class="texa"
+            :prop="'material_data.'+index+'.content'"
+            :rules="material_dataRules.material_data_content"
+          >
+            <el-input v-model="item.content" style="width:200px" placeholder="%"></el-input>
+          </el-form-item>
+          <span v-if="index>0" class="deleteUser" @click="handleDeleteUser(index)">-</span>
+        </div>
+        <el-form-item>
+          <span style="cursor: pointer;" @click="handleIngredient">添加面料成分</span>
+        </el-form-item>
+        <el-form-item label="计量单位" prop="unit">
+          <span>
+            <el-select v-model="form.unit" placeholder="请选择">
+              <el-option
+                v-for="item in units"
+                :key="item.id"
+                :label="item.unit_name"
+                :value="item.unit_name"
+              ></el-option>
+            </el-select>
+          </span>
+        </el-form-item>
+        <el-form-item label="大货量单价" prop="wsale_price">
+          <el-input v-model="form.wsale_price" style="width:200px;" placeholder="大货量单价"></el-input>
+        </el-form-item>
+        <div v-for="(item,index) in form.color_data" :key="item.key" class="color_user_item">
+          <el-form-item
+            :label="`颜色`"
+            :prop="'color_data.'+index+'.color'"
+            :rules="color_dataRules.color_data_color"
+          >
+            <el-cascader
+              v-model="item.color"
+              :options="colors"
+              :props="optionProps"
+              :show-all-levels="false"
+            ></el-cascader>
+            <!-- @change="handleChange" -->
+
+            <!-- <el-select v-model="item.color" placeholder="请选择" style="width:200px">
+              <el-option
+                v-for="item in colors"
+                :key="item.id"
+                :label="item.color_name"
+                :value="item.color_name"
+              ></el-option>
+            </el-select>-->
+          </el-form-item>
+          <el-form-item
+            class="texa"
+            :prop="'color_data.'+index+'.color_no'"
+            :rules="color_dataRules.color_data_color_no"
+          >
+            <el-input v-model="item.color_no" style="width:200px;"></el-input>
+          </el-form-item>
+          <el-form-item class="texa">
+            <div class="upload" @click="handleImg(item)">
+              <img v-if="item.picurl" :src="item.picurl" />
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </div>
+          </el-form-item>
+
+          <span v-if="index>0" class="deleteUser" @click="handleDeleteColor(index)">-</span>
+        </div>
+        <el-form-item>
+          <span style="cursor: pointer;" @click="handleColor">添加颜色</span>
+        </el-form-item>
+        <el-form-item label="是否有货" prop="instock">
+          <el-radio-group v-model="form.instock">
+            <el-radio :label="'0'">是</el-radio>
+            <el-radio :label="'1'">否</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="到货时间" prop="arrival_time">
+          <!-- <el-date-picker v-model="form.arrival_time" type="date" placeholder="选择日期"></el-date-picker> -->
+          <el-input v-model="form.arrival_time" placeholder="到货时间" style="width:200px"></el-input>天
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input type="textarea" v-model="form.remarks" placeholder="备注"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="handleEdit" style="padding:10px 50px;border-radius: 10px;">保存</el-button>
+        </el-form-item>
+      </el-form>
+    </el-col>
     <el-dialog
       title="上传图片"
       :visible.sync="centerDialogVisible"
@@ -288,7 +310,7 @@
             </div>
           </div>
           <input
-            style="width:30px;font-size:20px;margin:0 10px;float:left;"
+            style="width:30px;font-size:20px;margin:0 10px;"
             type="button"
             class="oper"
             value="+"
@@ -296,7 +318,7 @@
             @click="changeScale(1)"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;float:left;"
+            style="width:30px;font-size:20px;margin:0 10px;"
             type="button"
             class="oper"
             value="-"
@@ -304,7 +326,7 @@
             @click="changeScale(-1)"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;float:left;"
+            style="width:30px;font-size:20px;margin:0 10px;"
             type="button"
             class="oper"
             value="↺"
@@ -312,7 +334,7 @@
             @click="rotateLeft"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;float:left;"
+            style="width:30px;font-size:20px;margin:0 10px;"
             type="button"
             class="oper"
             value="↻"
@@ -320,7 +342,7 @@
             @click="rotateRight"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;float:left;"
+            style="width:30px;font-size:20px;margin:0 10px;"
             type="button"
             class="oper"
             value="↓"
@@ -333,51 +355,6 @@
         <el-button @click="cancel">取 消</el-button>
         <el-button type="primary" @click="finish('blob')">确 定</el-button>
       </span>
-    </el-dialog>
-    <el-dialog
-      title="拍照上传"
-      :visible.sync="visible"
-      :show-close="false"
-      :close-on-click-modal="false"
-      :close-on-press-escape="false"
-      @close="onCancel"
-      width="1065px"
-    >
-      <div class="box">
-        <video id="videoCamera" class="canvas" :width="videoWidth" :height="videoHeight" autoplay></video>
-        <canvas
-          id="canvasCamera"
-          class="canvas"
-          :width="videoWidth"
-          :height="videoHeight"
-          style="margin-left:10px;"
-        ></canvas>
-      </div>
-      <div slot="footer">
-        <el-button @click="drawImage" icon="el-icon-camera" size="small">拍照</el-button>
-        <el-button v-if="os" @click="getCompetence" icon="el-icon-video-camera" size="small">打开摄像头</el-button>
-        <!-- <el-button v-else @click="stopNavigator" icon="el-icon-switch-button" size="small">关闭摄像头</el-button> -->
-        <el-button @click="resetCanvas" icon="el-icon-refresh" size="small">重置</el-button>
-        <el-button @click="ctrlShift" icon="el-icon-s-unfold" size="small">另存为</el-button>
-        <el-button @click="onCancel(1,numberr)" icon="el-icon-circle-close" size="small">完成</el-button>
-      </div>
-    </el-dialog>
-    <el-dialog title="请选择一个识别方式" :visible.sync="dialogVisible" center width="30%">
-      <el-upload
-        class="upload-demo"
-        ref="upload"
-        action="https://shesho.ppp-pay.top/webapi.php?g=test"
-        :auto-upload="true"
-        name="image"
-        :show-file-list="false"
-        :on-success="recognition"
-        :on-error="errorRecognition"
-        :before-upload="beforeRecognition"
-        :file-list="fileList"
-      >
-        <el-button slot="trigger" size="small" type="info">图片内容识别</el-button>
-      </el-upload>
-      <el-button @click="onTake" icon="el-icon-camera" type="info" class="camera" size="small">拍照</el-button>
     </el-dialog>
   </div>
 </template>
@@ -396,7 +373,6 @@ import {
   materialsEdit,
   getMaterialSelect,
   discern,
-  getSupplierList,
 } from "@/api/archives";
 import { VueCropper } from "vue-cropper";
 import { Api } from "@/js/api.js"; //接口url配置文件
@@ -406,10 +382,6 @@ export default {
   },
   data() {
     return {
-      dialogVisible: false,
-      SupplierList: [],
-      active: 0,
-      nav: ["色号", "基础信息", "物料信息", "选填内容"],
       //剪切图片上传
       optionProps: {
         value: "color_name",
@@ -418,7 +390,6 @@ export default {
       },
       crap: false,
       previews: {},
-      form1: { picurl: "", color_no: "", color: "", companyname: "" },
       option: {
         img: "",
         outputSize: 1, //剪切后的图片质量（0.1-1）
@@ -444,11 +415,17 @@ export default {
       name: "",
       form: {
         arrival_time: "",
-        breadth: "",
-        grammage: "",
-        color_data: [],
+        breadth:'',
+        grammage:'',
+        color_data: [
+          {
+            color: "",
+            color_no: "",
+            picurl: "",
+            id: "",
+          },
+        ],
         instock: "0",
-        companyname: "",
         material_data: [
           {
             content: "",
@@ -472,6 +449,7 @@ export default {
       class_data_name: "",
       radio: "",
       color: "", //选中颜色
+      classData: [],
       class_datas: [],
       units: [],
       colors: [],
@@ -552,12 +530,7 @@ export default {
       contents: [],
       imgs: [],
       permission: [],
-      classData: [],
-      bosded: {
-        value: "id",
-        label: "classname",
-        children: "class_data",
-      },
+
       visible: false, //弹窗
       // loading: false, //上传按钮加载
       os: false, //控制摄像头开关
@@ -577,7 +550,6 @@ export default {
       // 非多个禁用
       multiple: true,
       // 总条数
-      total1: 0,
       total: 0,
       // 项目人员表格数据
       akworkerList: [],
@@ -595,27 +567,9 @@ export default {
       },
       numberr: 0,
       s_company: [],
-      index: 0,
-      vs1: false,
-      pageSize: 24,
-      pageIndex: 1,
-      length: 1,
     };
   },
   methods: {
-    variation(index) {
-      this.active = index;
-    },
-    choice() {
-      this.dialogVisible = true;
-    },
-    handleChange(e) {
-      this.form["materials_class_id"] = e[1];
-    },
-    // 切换内容
-    actives(index) {
-      this.active = index;
-    },
     cancel() {
       if (this.headImg === "") {
         this.option.img = "";
@@ -650,7 +604,6 @@ export default {
     },
     async onCancel(val, num) {
       this.visible = false;
-      this.dialogVisible = false;
       /* this.resetCanvas();*/
       this.stopNavigator();
       if (val == undefined && num == undefined) {
@@ -691,7 +644,6 @@ export default {
             }
           }
         });
-        this.length = this.form.material_data.length;
       } else if (val == 1 && num != undefined) {
         let file = this.dataURLtoFile(this.imgSrc, String(Math.random()));
         console.log(file);
@@ -828,13 +780,14 @@ export default {
           formData.append("file", data, this.fileName);
           Api(formData).then((response) => {
             if (this.status === 1) {
+              console.log(1);
               for (let i = 0; i < this.colorValue.length; i++) {
-                this.form1.picurl = response.data.data.pic_file_url;
+                this.item.picurl = response.data.data.pic_file_url;
               }
               this.imgFile = "";
             }
             if (this.status === 2) {
-              this.form1.picurl = response.data.data.pic_file_url;
+              this.form.picurl = response.data.data.pic_file_url;
               this.imgFile = "";
             }
             this.$message({
@@ -913,11 +866,9 @@ export default {
     // *******************识别内容********************
     beforeRecognition() {
       this.loading = true;
-      this.dialogVisible = false;
     },
     errorRecognition() {
       this.loading = false;
-      this.dialogVisible = false;
     },
     // ****
     pregMaterial(words, material) {
@@ -950,8 +901,6 @@ export default {
     },
     async recognition(response, file, fileList) {
       this.loading = false;
-      this.dialogVisible = false;
-      this.length = this.form.material_data.length;
       this.fileList1 = URL.createObjectURL(file.raw);
       this.imgs.push(URL.createObjectURL(file.raw));
       this.contents = response.data.words_result;
@@ -982,16 +931,16 @@ export default {
         }
         if (v.words.slice(0, 2) == "幅宽") {
           if (v.words.indexOf(":") != -1) {
-            this.form.breadth = v.words.slice(3, -2);
+            this.form.breadth = v.words.slice(3,-2);
           } else {
-            this.form.breadth = v.words.slice(2, -2);
+            this.form.breadth = v.words.slice(2,-2);
           }
         }
         if (v.words.slice(0, 2) == "克重") {
           if (v.words.indexOf(":") != -1) {
-            this.form.grammage = v.words.slice(3, -1);
+            this.form.grammage = v.words.slice(3,-1);
           } else {
-            this.form.grammage = v.words.slice(2, -1);
+            this.form.grammage = v.words.slice(2,-1);
           }
         }
       });
@@ -1018,7 +967,6 @@ export default {
         material_name: "",
         id: "",
       });
-      this.length = this.form.material_data.length;
     },
     handleColor() {
       this.form.color_data.push({
@@ -1030,7 +978,6 @@ export default {
     },
     handleDeleteUser(index) {
       this.form.material_data.splice(index, 1);
-      this.length = this.form.material_data.length;
     },
     handleDeleteColor(index) {
       this.form.color_data.splice(index, 1);
@@ -1065,7 +1012,7 @@ export default {
       this.form.materials_class_id = e;
     },
     handleAvatarSuccessPanels(res, file) {
-      this.form1.picurl = res.data.pic_file_url;
+      this.form.picurl = res.data.pic_file_url;
     },
     beforeAvatarUpload(file) {
       return this.$elUploadBeforeUpload(file);
@@ -1113,163 +1060,28 @@ export default {
         });
     },
     async handleEdit() {
-      if (this.form.color_data.length == 0) {
-        this.active = 0;
-        this.$message({
-          showClose: true,
-          message: "请将数据填充完整！",
-          type: "error",
-        });
-      } else if (
-        this.form.materials_class_id == "" ||
-        this.form.wsale_price == "" ||
-        this.form.materialsname == "" ||
-        this.form.unit == ""
-      ) {
-        this.active = 1;
-        this.$message({
-          showClose: true,
-          message: "请将数据填充完整！",
-          type: "error",
-        });
-      } else if (this.form.materials_supplier_id == "") {
-        this.active = 1;
-        this.$message({
-          showClose: true,
-          message: "请点击选择下面的供应商",
-          type: "error",
-        });
-      } else if (
-        this.form.materialsno == "" ||
-        this.form.breadth == "" ||
-        this.form.grammage == "" ||
-        this.form.material_data[0].material_name == ""
-      ) {
-        this.active = 2;
-        this.$message({
-          showClose: true,
-          message: "请将数据填充完整！",
-          type: "error",
-        });
+      if (this.supplier_companyname === "") {
+        this.$message.error("请选择供应商 or 请添加供应商");
       } else {
-        delete this.form["supplier_id"];
-        delete this.form["supplier_companyname"];
-        delete this.form["materials_supplier_data"];
-        this.form.color_data.map((v, i) => {
-          if (v.color instanceof Array) v.color = v.color.pop();
+        this.$refs["form"].validate(async (valid) => {
+          if (!valid) return;
+
+          delete this.form["supplier_id"];
+          delete this.form["supplier_companyname"];
+          delete this.form["materials_supplier_data"];
+          this.form.color_data.map((v, i) => {
+            if (v.color instanceof Array) v.color = v.color.pop();
+          });
+          let res = await materialsAdd(this.form);
+          this.$router.go(-1);
         });
-        let res = await materialsAdd(this.form);
-        this.$router.go(-1);
       }
     },
     async getMaterialList() {
       let res = await getMaterialSelect();
+      console.log(res);
       let { data } = res.data;
       this.materials = data;
-    },
-    recompose(item, index) {
-      this.index = index;
-      let obj = JSON.parse(JSON.stringify(item));
-      this.form1 = obj;
-      this.vs1 = true;
-    },
-    dels(index) {
-      this.$confirm("此操作将永久删除该色卡, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
-          this.form.color_data.splice(index, 1);
-
-          this.$message({
-            type: "success",
-            message: "删除成功!",
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除",
-          });
-        });
-    },
-    determine() {
-      if (!this.vs1) {
-        if (
-          this.form1.picurl == "" ||
-          this.form1.picurl == undefined ||
-          this.form1.color == "" ||
-          this.form1.color == undefined ||
-          this.form1.color_no == "" ||
-          this.form1.color_no == undefined
-        ) {
-          this.$message({
-            showClose: true,
-            message: "请将数据填充完整！",
-            type: "error",
-          });
-        } else {
-          let obj = JSON.parse(JSON.stringify(this.form1));
-          this.form.color_data.push(obj);
-          this.form1 = {
-            picurl: "",
-            color_no: "",
-            color: "",
-            companyname: this.form1.companyname,
-          };
-        }
-      } else {
-        this.vs1 = false;
-        if (
-          this.form1.picurl == "" ||
-          this.form1.picurl == undefined ||
-          this.form1.color == "" ||
-          this.form1.color == undefined ||
-          this.form1.color_no == "" ||
-          this.form1.color_no == undefined
-        ) {
-          this.$message({
-            showClose: true,
-            message: "请将数据填充完整！",
-            type: "error",
-          });
-        } else {
-          let obj = JSON.parse(JSON.stringify(this.form1));
-          this.form.color_data.splice(this.index, 1, obj);
-          this.form1 = {
-            picurl: "",
-            color_no: "",
-            color: "",
-            companyname: this.form1.companyname,
-          };
-        }
-      }
-    },
-    changese(e) {
-      this.form1.color = e[1];
-    },
-    async impedance() {
-      let res = await getSupplierList({
-        companyname: this.form1.companyname,
-        page: this.pageIndex,
-        page_size: this.pageSize,
-      });
-      let { data, count } = res.data;
-      this.total1 = count;
-      this.SupplierList = data;
-    },
-    handleSizeChange(val) {
-      this.pageSize = val;
-      this.impedance();
-    },
-    handleCurrentChange(val) {
-      this.pageIndex = val;
-      this.impedance();
-    },
-    listDeital(item) {
-      this.form.materials_supplier_id = item.id;
-      this.form1.companyname = item.companyname;
     },
   },
   async mounted() {
@@ -1280,7 +1092,6 @@ export default {
     let res = await getSupplierSelect({
       keyword: "",
     });
-    this.impedance();
     let { data } = res.data;
     this.s_company = data;
     this.permission = localStorage.getItem("permission").split(",");
@@ -1290,408 +1101,6 @@ export default {
 
 <style lang="less" scoped>
 .addRouteCard {
-  .main {
-    overflow: hidden;
-  }
-  /deep/.el-icon-search {
-    color: #cccccc !important;
-    height: 30px !important;
-    line-height: 30px;
-  }
-
-  /deep/.el-input {
-    width: 130px !important;
-    height: 40px;
-    margin-bottom: 5px;
-  }
-  /deep/.el-textarea__inner {
-    background-color: #f2f2f2;
-    border-radius: 15px;
-    border: none;
-    color: #5e5e5e;
-    font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
-      \\5b8b\4f53, sans-serif;
-    padding: 10px;
-  }
-  /deep/.el-input__inner {
-    width: 100%;
-    height: 30px;
-    background-color: #f2f2f2;
-    border-radius: 15px;
-    border: none;
-    color: #5e5e5e;
-    font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
-      \\5b8b\4f53, sans-serif;
-  }
-  .search_button {
-    margin-left: 10px;
-    background-color: #000;
-  }
-  /deep/ .el-icon-search {
-    color: #fff;
-  }
-  /deep/.el-button {
-    border: none;
-  }
-  //
-  /deep/input::-webkit-input-placeholder {
-    text-align: center;
-  }
-  /deep/input::-moz-input-placeholder {
-    text-align: center;
-  }
-  /deep/input::-ms-input-placeholder {
-    text-align: center;
-  }
-  // 导航
-  .nav {
-    margin-bottom: 50px;
-    ul {
-      overflow: hidden;
-      li {
-        float: left;
-        display: block;
-        height: 25px;
-        margin-right: 20px;
-        background: #f2f2f2;
-        border-radius: 15px;
-        width: 100px;
-        line-height: 25px;
-        text-align: center;
-        cursor: pointer;
-      }
-    }
-  }
-  /deep/.is-circle {
-    padding: 8px;
-    margin-left: 5px;
-  }
-  // 点击样式
-  .active {
-    color: #ffffff;
-    background: #000000 !important;
-  }
-  // 色号
-  .contents1 {
-    overflow: hidden;
-    .texts {
-      margin-top: 40px;
-    }
-    .optional {
-      span {
-        margin-bottom: 20px;
-        display: block;
-        width: 80px;
-        height: 30px;
-        padding-top: 5px;
-        background-color: #f2f2f2;
-        border-radius: 15px;
-        border: none;
-        color: #5e5e5e;
-        font: 12px Microsoft YaHei, Heiti SC, tahoma, arial, Hiragino Sans GB,
-          \\5b8b\4f53, sans-serif;
-        text-align: center;
-      }
-      .ensure {
-        margin-top: 20px;
-        .step {
-          width: 86px;
-          background: #000;
-          margin: 0;
-          height: 30px;
-          border-radius: 15px;
-          line-height: 2px;
-          color: #eee;
-          margin-right: 20px;
-        }
-        .next1 {
-          width: 139px;
-          background: #000;
-          margin: 0;
-          height: 30px;
-          border-radius: 15px;
-          line-height: 2px;
-          color: #eee;
-        }
-      }
-      .radio {
-        width: 200px;
-        height: 30px;
-        background-color: #f2f2f2;
-        border-radius: 15px;
-        border: none;
-        margin-bottom: 20px;
-        .el-radio-group {
-          width: 100%;
-          text-align: center;
-          line-height: 30px;
-          .el-radio {
-            padding-top: 10px;
-          }
-        }
-      }
-      .inputed {
-        margin-top: 20px;
-      }
-    }
-    .el-divider {
-      float: left;
-    }
-    .headr_list {
-      overflow: hidden;
-    }
-    .update {
-      overflow: hidden;
-      float: left;
-      background: #e0dcdc;
-      border-radius: 10px;
-      width: 150px;
-      height: 150px;
-      margin-right: 25px;
-    }
-    .cont {
-      width: 400px;
-      height: 150px;
-      .determine {
-        width: 130px;
-        background: #000;
-        margin-left: 0;
-        margin-top: 30px;
-        line-height: 2px;
-        height: 30px;
-        border-radius: 15px;
-        color: #eee;
-      }
-    }
-    .abc {
-      float: right;
-      position: relative;
-      .next {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: 150px;
-        background: #000;
-        margin: 0;
-        height: 30px;
-        border-radius: 15px;
-        line-height: 2px;
-        color: #eee;
-      }
-    }
-
-    .input_s {
-      position: relative;
-      .left_float {
-        margin-right: 20px;
-      }
-      .box {
-        width: 600px;
-      }
-      .maxsize {
-        width: 225px !important;
-        height: 40px;
-        margin-bottom: 5px;
-      }
-
-      .next {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: 150px;
-        background: #000;
-        margin: 0;
-        height: 30px;
-        border-radius: 15px;
-        line-height: 2px;
-        color: #eee;
-      }
-    }
-    .colorCard {
-      ul {
-        li {
-          float: left;
-          display: block;
-          width: 340px;
-          height: 90px;
-          overflow: hidden;
-          margin-right: 40px;
-          margin-bottom: 40px;
-          position: relative;
-          cursor: pointer;
-          .del {
-            position: absolute;
-            top: 5px;
-            right: 10px;
-          }
-          .del:hover {
-            border: 1px solid #000;
-          }
-          .imgs {
-            height: 90px;
-            width: 90px;
-            border-radius: 10px 0 0 10px;
-            float: left;
-            overflow: hidden;
-          }
-          .substance {
-            float: left;
-            width: 250px;
-            height: 90px;
-            background: #f2f2f2;
-            padding: 20px 0 0 20px;
-            border-radius: 0 10px 10px 0;
-            h6 {
-              font-weight: 500;
-            }
-          }
-        }
-      }
-    }
-  }
-  .contents2 {
-    .dataList {
-      width: 100%;
-      display: flex;
-      flex-wrap: wrap;
-      .list {
-        width: 260px;
-        height: 60px;
-        margin: 0 10px 10px 0;
-        border-radius: 10px;
-        overflow: hidden;
-        background-color: #f2f2f2;
-        display: flex;
-        cursor: pointer;
-        float: left;
-        .list_img {
-          img {
-            width: 60px;
-            height: 60px;
-          }
-        }
-        .list_content {
-          flex: 1;
-          display: flex;
-          justify-content: space-between;
-          padding: 5px 20px;
-          .list_content_left {
-            .list_content_left_name {
-              font-weight: 600;
-              color: #000;
-              div {
-                padding: 5px 0;
-              }
-            }
-          }
-        }
-      }
-    }
-    .input_s {
-      height: 100px;
-    }
-    .sencond {
-      height: 150px;
-      .bax {
-        overflow: hidden;
-        height: 150px;
-      }
-      .recognition_right {
-        float: left;
-        margin-left: 25px;
-        height: 150px;
-      }
-      .makeup {
-        float: left;
-        max-width: 860px;
-        height: 150px;
-        display: flex;
-        flex-direction: column;
-        flex-wrap: wrap;
-        .boxs {
-          width: 280px;
-          height: 30px;
-          overflow: hidden;
-          margin-bottom: 15px;
-          margin-left: 20px;
-          background-color: #f2f2f2;
-          border-radius: 15px;
-          border: none;
-          .el-select {
-            float: left;
-          }
-          .el-input {
-            float: left;
-          }
-          .el-icon-plus {
-            float: left;
-            line-height: 30px;
-            text-align: center;
-          }
-          .el-icon-minus {
-            float: left;
-            line-height: 30px;
-            text-align: center;
-          }
-        }
-      }
-      .recognition {
-        float: left;
-        position: relative;
-        width: 120px;
-        height: 120px;
-        background: #f2f2f2;
-        border-radius: 25px;
-        cursor: pointer;
-        span {
-          display: block;
-          font-size: 40px;
-          text-align: center;
-          line-height: 120px;
-        }
-        em {
-          position: absolute;
-          left: 50%;
-          top: 48%;
-          font-size: 14px;
-          font-weight: 600;
-          margin-left: -28px;
-          margin-top: 20px;
-        }
-      }
-    }
-    .right_float {
-      width: 226px;
-      overflow: hidden;
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      .next1 {
-        float: right;
-        width: 139px;
-        background: #000;
-        margin: 0;
-        height: 30px;
-        border-radius: 0 15px 15px 0;
-        line-height: 2px;
-        color: #eee;
-      }
-      .step {
-        float: left;
-        width: 86px;
-        background: #000;
-        margin: 0;
-        height: 30px;
-        border-radius: 15px 0 0 15px;
-        line-height: 2px;
-        color: #eee;
-      }
-    }
-  }
-
-  // 基础信息
-  // 物料信息
-  // 选填内容
   .wuln {
     .upload {
       float: left;
@@ -1712,20 +1121,15 @@ export default {
     }
   }
   .upload-demo {
-    display: inline-block;
-    height: 40px;
-    text-align: center;
-    margin-right: 40px;
-    .el-button {
-      height: 40px;
-      border-radius: 10px;
-    }
+    float: left;
+    height: 30px;
+    margin-left: 100px;
   }
   .camera {
-    display: inline-block;
+    position: relative;
     height: 40px;
-    text-align: center;
-    border-radius: 10px;
+    right: 90px;
+    top: 80px;
   }
   .texa {
     /deep/.el-form-item__content {
@@ -1733,17 +1137,16 @@ export default {
     }
   }
   .image-content {
-    max-width: 500px;
+    position: absolute;
+    left: 920px;
+    width: 500px;
     height: auto;
+    border: 1px solid #cccccc;
+    z-index: 33;
     ul {
       padding: 10px;
-      display: block;
       li {
-        display: block;
         margin-bottom: 5px;
-        font-size: 14px;
-        padding-bottom: 5px;
-        border-bottom: 1px solid #000000;
       }
       li:first-of-type {
         font-weight: 600;
@@ -1923,9 +1326,6 @@ export default {
     .cropper-content .show-preview .preview {
       margin-left: 0px;
     }
-  }
-  /deep/.el-dialog__body {
-    text-align: center !important;
   }
 }
 </style>

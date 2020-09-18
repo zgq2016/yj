@@ -94,6 +94,7 @@
                 </div>
               </el-image>
               <img
+                v-if="scope.row.style_color_pic_url"
                 :src="scope.row.style_color_pic_url"
                 class="img"
                 style="width: 50px; height: 50px;border-radius: 5px;"
