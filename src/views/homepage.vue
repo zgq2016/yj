@@ -92,7 +92,7 @@
         </div>
         <div class="tet">
           <ul v-if="works_2.length>0">
-            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_2" :key="index">
+            <li @click.stop="rout2(item.id,1)" v-for="(item,index) in works_2" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
                 :src="item.style_pic_url? item.style_pic_url:img"
@@ -119,7 +119,7 @@
         </div>
         <div class="tet">
           <ul v-if="works_3.length>0">
-            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_3" :key="index">
+            <li @click.stop="rout2(item.id,2)" v-for="(item,index) in works_3" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
                 :src="item.style_pic_url? item.style_pic_url:img"
@@ -145,7 +145,7 @@
         </div>
         <div class="tet">
           <ul v-if="works_3_1.length>0">
-            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_3_1" :key="index">
+            <li @click.stop="rout2(item.id,3)" v-for="(item,index) in works_3_1" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
                 :src="item.style_pic_url? item.style_pic_url:img"
@@ -171,7 +171,7 @@
         </div>
         <div class="tet">
           <ul v-if="works_3_2.length>0">
-            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_3_2" :key="index">
+            <li @click.stop="rout2(item.id,4)" v-for="(item,index) in works_3_2" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
                 :src="item.style_pic_url? item.style_pic_url:img"
@@ -197,7 +197,7 @@
         </div>
         <div class="tet">
           <ul v-if="works_4.length>0">
-            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_4" :key="index">
+            <li @click.stop="rout2(item.id,5)" v-for="(item,index) in works_4" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
                 :src="item.style_pic_url? item.style_pic_url:img"
@@ -223,7 +223,7 @@
         </div>
         <div class="tet">
           <ul v-if="works_5.length>0">
-            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_5" :key="index">
+            <li @click.stop="rout2(item.id,6)" v-for="(item,index) in works_5" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
                 :src="item.style_pic_url? item.style_pic_url:img"
@@ -249,7 +249,7 @@
         </div>
         <div class="tet">
           <ul v-if="works_6.length>0">
-            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_6" :key="index">
+            <li @click.stop="rout2(item.id,7)" v-for="(item,index) in works_6" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
                 :src="item.style_pic_url? item.style_pic_url:img"
@@ -275,7 +275,7 @@
         </div>
         <div class="tet">
           <ul v-if="works_7.length>0">
-            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_7" :key="index">
+            <li @click.stop="rout2(item.id,8)" v-for="(item,index) in works_7" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
                 :src="item.style_pic_url? item.style_pic_url:img"
@@ -301,7 +301,7 @@
         </div>
         <div class="tet">
           <ul v-if="works_8.length>0">
-            <li @click.stop="rout2(item.id)" v-for="(item,index) in works_8" :key="index">
+            <li @click.stop="rout2(item.id,9)" v-for="(item,index) in works_8" :key="index">
               <el-image
                 style="width: 150px; height: 230px;border-radius: 10px;"
                 :src="item.style_pic_url? item.style_pic_url:img"
@@ -730,9 +730,27 @@ export default {
       document.body.style = null;
       this.$router.push({ path: `/designCheck?id=${id}` });
     },
-    rout2(id) {
+    rout2(id, index) {
       document.body.style = null;
-      this.$router.push({ path: `/developmentStatus?id=${id}` });
+      if (index == 1) {
+        this.$router.push({ path: `/designNote?id=${id}` });
+      } else if (index == 2) {
+        this.$router.push({ path: `/materialPurchasing?id=${id}` });
+      } else if (index == 3) {
+        this.$router.push({ path: `/patternStatus?id=${id}` });
+      } else if (index == 4) {
+        this.$router.push({ path: `/sampleDress?id=${id}` });
+      } else if (index == 5) {
+        this.$router.push({ path: `/productionStyle?id=${id}&activeNames=1` });
+      } else if (index == 6) {
+        this.$router.push({ path: `/productionStyle?id=${id}&activeNames=2` });
+      } else if (index == 7) {
+        this.$router.push({ path: `/productionStyle?id=${id}&activeNames=3` });
+      } else if (index == 8) {
+        this.$router.push({ path: `/productionStyle?id=${id}&activeNames=4` });
+      } else if (index == 9) {
+        this.$router.push({ path: `/productionStyle?id=${id}&activeNames=5` });
+      }
     },
     //根据某年某月计算出具体日期
     getDaysInMonth(year, month) {

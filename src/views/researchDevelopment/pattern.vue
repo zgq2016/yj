@@ -131,7 +131,7 @@
               <div
                 v-if="(scope.row.pattern_status==='2'||scope.row.pattern_status==='4')&&scope.row.user_id==userid&&permission.indexOf('pattern_agree')!=-1"
                 @click="pattern_apply(scope.$index, scope.row)"
-              >提交审核{{scope.row.user_id}},{{userid}}</div>
+              >提交审核</div>
               <div
                 v-if="scope.row.pattern_status==='3'&&scope.row.user_id==userid&&permission.indexOf('pattern_agree')!=-1"
                 @click="cancel_pattern_apply(scope.$index, scope.row)"

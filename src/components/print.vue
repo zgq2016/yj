@@ -14,15 +14,15 @@
       <div class="liningke">
         <el-table :data="tableData" size="mini" border style="width: 100%">
           <el-table-column label="尺寸表" align="center">
-            <el-table-column prop="part" width="96px" align="center" label="部位"></el-table-column>
-            <el-table-column prop="monad" width="96px" align="center" label="单位"></el-table-column>
+            <el-table-column prop="name" width="96px" align="center" label="部位"></el-table-column>
+            <el-table-column prop="unit" width="96px" align="center" label="单位"></el-table-column>
             <el-table-column prop="size" width="106px" align="center" label="尺寸/CM"></el-table-column>
           </el-table-column>
         </el-table>
       </div>
-      <div class="remark">
+      <!-- <div class="remark">
         <div>备注及工艺说明</div>
-      </div>
+      </div> -->
     </div>
     <div class="right">
       <!-- <img class="img1" :src="designidea_pic_url0" alt />
@@ -32,7 +32,7 @@
           <!-- <i class="el-icon-picture-outline"></i> -->
         </div>
       </el-image>
-      <br>
+      <br />
       <el-image :src="designidea_pic_url1" fit="cover" class="img2">
         <div slot="error" class="image-slot">
           <!-- <i class="el-icon-picture-outline"></i> -->
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { getStyle } from "@/api/researchDevelopment";
+import { getStyle, getStylePosition } from "@/api/researchDevelopment";
 export default {
   props: {
     data: {
@@ -57,45 +57,17 @@ export default {
       designidea_pic_data_length: "",
       designidea_pic_url0: "",
       designidea_pic_url1: "",
-      tableData: [
-        { part: "", monad: "洗水前", size: "成品" },
-        { part: "前衣长", monad: "", size: "" },
-        { part: "后中长", monad: "", size: "" },
-        { part: "肩宽", monad: "", size: "" },
-        { part: "单肩", monad: "", size: "" },
-        { part: "胸围", monad: "", size: "" },
-        { part: "腰围", monad: "", size: "" },
-        { part: "臀围", monad: "", size: "" },
-        { part: "摆围", monad: "", size: "" },
-        { part: "袖长", monad: "", size: "" },
-        { part: "袖肥", monad: "", size: "" },
-        { part: "袖口", monad: "", size: "" },
-        { part: "前胸宽", monad: "", size: "" },
-        { part: "后背宽", monad: "", size: "" },
-        { part: "前领围", monad: "", size: "" },
-        { part: "后领围", monad: "", size: "" },
-        { part: "搭位", monad: "", size: "" },
-        { part: "袋", monad: "", size: "" },
-        { part: "裤裙长", monad: "", size: "" },
-        { part: "腰围", monad: "", size: "" },
-        { part: "臀围", monad: "", size: "" },
-        { part: "肶围", monad: "", size: "" },
-        { part: "膝围", monad: "", size: "" },
-        { part: "脚围", monad: "", size: "" },
-        { part: "前浪", monad: "", size: "" },
-        { part: "后浪", monad: "", size: "" },
-        { part: "腰高", monad: "", size: "" },
-        { part: "拉链长", monad: "", size: "" },
-        { part: "前袋", monad: "", size: "" },
-        { part: "后袋", monad: "", size: "" },
-      ],
+      tableData: [{ name: "", unit: "洗水前", size: "成品" }],
     };
   },
   methods: {
     async init() {
       let { id } = this.$route.query;
       let res = await getStyle({ id });
-      console.log(res);
+      let res1 = await getStylePosition({ id });
+      // console.log(res1);
+      // this.tableData = res1.data.data;
+      this.tableData.push(...res1.data.data);
       this.obj = res.data.data;
       if (res.data.data.designidea_pic_data.length > 0) {
         this.designidea_pic_url0 =

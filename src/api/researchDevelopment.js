@@ -568,3 +568,52 @@ export const getStyleDesign = (data) => {
     data: data,
   });
 };
+export const getStylePosition = (data) => {
+  return axios({
+    url: "?g=get_style_position",
+    method: "post",
+    data: data,
+  });
+};
+export const stylePositionEdit = (data) => {
+  return axios({
+    url: "?g=style_position_edit",
+    method: "post",
+    data: data,
+  });
+};
+export const getStyleMeasurement = (data) => {
+  return axios({
+    url: "?g=get_style_measurement",
+    method: "post",
+    data: data,
+  });
+};
+export const styleMeasurementAdd = (data) => {
+  return axios({
+    url: "?g=style_measurement_add",
+    method: "post",
+    data: data,
+  });
+};
+export const styleMeasurementDel = (data) => {
+  return axios({
+    url: "?g=style_measurement_del",
+    method: "post",
+    data: data,
+  });
+};
+export const styleMeasurementResume = (data) => {
+  return axios({
+    url: "?g=style_measurement_resume",
+    method: "post",
+    data: data,
+  });
+};
+export const download = (data) => {
+  return axios({
+    url: "?g=download",
+    method: "post",
+    data: data,
+  });
+};

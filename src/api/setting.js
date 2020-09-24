@@ -450,4 +450,33 @@ export const departmentSelect = (data) => {
   });
 };
 
+export const positionAdd = (data) => {
+  return axios({
+    url: "?g=position_add ",
+    method: "post",
+    data: data,
+  });
+};
+export const positionEdit = (data) => {
+  return axios({
+    url: "?g=position_edit ",
+    method: "post",
+    data: data,
+  });
+};
+export const positionDel = (data) => {
+  return axios({
+    url: "?g=position_del ",
+    method: "post",
+    data: data,
+  });
+};
+export const positionList = (data) => {
+  return axios({
+    url: "?g=position_list ",
+    method: "post",
+    data: data,
+  });
+};
+
 

@@ -40,7 +40,7 @@
           class="push_plate_making"
           style="background-color: #f2f2f2;"
           @click="get_push_plate"
-          v-if="this.obj.pattern_status==0"
+          v-if="obj.pattern_status=='0'"
         >推送打版</div>
         <div class="push_plate_making" style="background-color: #f2f2f2;" v-else>已推送打版</div>
 
@@ -57,7 +57,7 @@
         <el-tooltip
           content="提交审批"
           placement="top"
-          v-if="obj.design_status==='1'||obj.design_status==='3'"
+          v-if="design_status==1||design_status==3"
           class="edit"
           style="background-color: #f2f2f2;"
         >
@@ -73,7 +73,7 @@
         <el-tooltip
           content="设计审核中"
           placement="top"
-          v-if="obj.design_status==='2'"
+          v-if="design_status==2"
           class="edit"
           style="background-color: #ffaf39;"
         >
@@ -89,7 +89,7 @@
         <el-tooltip
           content="设计通过"
           placement="top"
-          v-if="obj.design_status==='5'"
+          v-if="design_status==5"
           class="edit"
           style="background-color: #01c46d;"
         >
@@ -105,7 +105,7 @@
         <el-tooltip
           content="设计不通过"
           placement="top"
-          v-if="obj.design_status==='4'"
+          v-if="design_status==4"
           class="edit"
           style="background-color: #fb3647;"
         >
@@ -193,7 +193,7 @@ import {
   pushPattern,
   getStylistList,
   styleUrgent,
-  getStyleDesign
+  getStyleDesign,
 } from "@/api/researchDevelopment";
 import Print from "@/components/print.vue";
 
@@ -202,7 +202,8 @@ export default {
   data() {
     return {
       power: "",
-      obj: {},
+      obj: { pattern_status: 0, designidea: "" },
+      design_status: "",
       designRemark: 1,
       dialogImageUrl: "",
       dialogVisible: false,
@@ -264,6 +265,7 @@ export default {
       } else {
         this.init();
         this.designRemark = 1;
+        this.getStyle();
       }
     }, //成功
     async handleSuccess(response, file, fileList) {
@@ -297,13 +299,17 @@ export default {
     async init() {
       let { id } = this.$route.query;
       let res = await getStyleDesign({ id });
-      this.obj = res.data.data;
+      let { data } = res.data;
+      this.obj.designidea = data.designidea;
+      this.obj.id = data.id;
+      this.obj.designidea_pic = data.designidea_pic;
+
       this.img_list = res.data.data.designidea_pic.map((v) => {
         return { url: v.designidea_pic_url, id: v.id };
       });
     },
     async getstylist() {
-      let res = await getStylistList({department_id:2});
+      let res = await getStylistList({ department_id: 2 });
       let { data } = res.data;
       data.map((v) => {
         v["checked"] = false;
@@ -323,10 +329,15 @@ export default {
         this.obj.is_urgent = 1;
       }
     },
-    // async getStyleDesign(){
-    //   let res = await getStyleDesign({id:this.$route.query.id})
-    //   console.log(res);
-    // }
+
+    async getStyle() {
+      let res = await getStyle({ id: this.$route.query.id });
+      // console.log(res);
+      this.obj.pattern_status = res.data.data.pattern_status;
+      this.obj.is_urgent = res.data.data.is_urgent;
+      this.design_status = res.data.data.design_status;
+      console.log(this.design_status);
+    },
   },
   mounted() {
     // console.log(this.$route.query);
@@ -336,7 +347,7 @@ export default {
     }
     this.init();
     this.getstylist();
-    // this.getStyleDesign()
+    this.getStyle();
     // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },

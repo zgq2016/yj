@@ -258,6 +258,10 @@
                 v-if="permission.indexOf('measurementManagement')!=-1"
               >尺码管理</el-menu-item>
               <el-menu-item
+                index="/measurement"
+                v-if="permission.indexOf('measurement')!=-1"
+              >尺寸表管理</el-menu-item>
+              <el-menu-item
                 index="/materialManagement"
                 v-if="permission.indexOf('materialManagement')!=-1"
               >成份管理</el-menu-item>

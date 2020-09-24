@@ -9,13 +9,12 @@
     <div class="main">
       <!-- 物料卡信息 供应商信息 -->
       <div class="info">
-        <!-- header -->
         <div style="display: flex;">
           <div class="cardInfo">
             <div class="cardInfoTitle">物料卡信息</div>
             <div class="cardInfoContent">
-              <div class="cardInfoContentImg">
-                <img :src="header.picurl" alt />
+              <div v-if="header.color_data" class="cardInfoContentImg">
+                <img :src="header.color_data[0].picurl" alt />
               </div>
               <div class="cardInfoContentText">
                 <div class="cardInfoContentTextName">{{header.materialsname}}</div>

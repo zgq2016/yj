@@ -603,9 +603,9 @@ export default {
     async The_new_role() {
       this.status = 2;
       // this.getPowerList();
-      let res = await getRole({ id: 0 });
-      this.form["power"] = res.data.data;
-      console.log(this.form);
+      // let res = await getRole({ id: 0 });
+      // this.form["power"] = res.data.data;
+      // console.log(res);
     },
     async handlecopy(index, row) {
       let res = await getRole({ id: row.id });
@@ -727,11 +727,22 @@ export default {
           });
         });
       });
+      this.form = JSON.parse(JSON.stringify(this.obj));
+      this.form.remarks = ''
+      this.form.role_name = ''
+      this.form.power.map((v, i) => {
+        v["checked"] = false;
+        v.children.map((v1, i1) => {
+          v1["checked"] = false;
+          v1.children.map((v2, i2) => {
+            v2["checked"] = false;
+          });
+        });
+      });
       // console.log(this.obj);
     },
     async init() {
       let res = await roleList();
-      console.log(res);
       let { data } = res.data;
       this.role_list = data;
     },

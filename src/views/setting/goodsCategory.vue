@@ -25,6 +25,7 @@
       <el-table-column prop="describe" label="分类描述"></el-table-column>
       <el-table-column prop="sort" label="排序"></el-table-column>
       <el-table-column prop="unit" label="单位"></el-table-column>
+      <el-table-column prop="positionName" label="部位"></el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-tooltip
@@ -72,6 +73,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="商品分类" prop="goods_category_name" v-if="form.goods_category_id===''">
+          <el-input v-model="form.goods_category_name" style="width:80%;"></el-input>
+        </el-form-item>
         <el-form-item label="商品名称" prop="goods_category_name" v-if="form.goods_category_id!==''">
           <el-input v-model="form.goods_category_name" style="width:80%;"></el-input>
         </el-form-item>
@@ -85,9 +89,7 @@
             show-word-limit
           ></el-input>
         </el-form-item>
-        <el-form-item label="商品分类" prop="goods_category_name" v-if="form.goods_category_id===''">
-          <el-input v-model="form.goods_category_name" style="width:80%;"></el-input>
-        </el-form-item>
+
         <el-form-item v-if="form.goods_category_id != ''" label="计量单位" prop="unit">
           <el-select v-model="form.unit" clearable placeholder="请选择" style="width:80%;">
             <el-option
@@ -96,6 +98,27 @@
               :label="item.unit_name"
               :value="item.unit_name"
             ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-else label="部位" prop="unit">
+          <el-select
+            v-model="form.position"
+            multiple
+            collapse-tags
+            clearable
+            placeholder="请选择"
+            style="width:80%;"
+          >
+            <el-option v-for="item in positions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-pagination
+              class="pagination"
+              @size-change="handleSizeChange1"
+              @current-change="handleCurrentChange1"
+              :current-page="pageIndex1"
+              :page-size="pageSize1"
+              layout="prev, pager, next"
+              :total="total1"
+            ></el-pagination>
           </el-select>
         </el-form-item>
         <el-form-item label="分类描述" prop="describe">
@@ -159,6 +182,27 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item v-else label="部位" prop="unit">
+          <el-select
+            v-model="obj.position"
+            multiple
+            collapse-tags
+            clearable
+            placeholder="请选择"
+            style="width:80%;"
+          >
+            <el-option v-for="item in positions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-pagination
+              class="pagination"
+              @size-change="handleSizeChange1"
+              @current-change="handleCurrentChange1"
+              :current-page="pageIndex1"
+              :page-size="pageSize1"
+              layout="prev, pager, next"
+              :total="total1"
+            ></el-pagination>
+          </el-select>
+        </el-form-item>
         <el-form-item label="分类描述">
           <el-input type="textarea" v-model="obj.describe"></el-input>
         </el-form-item>
@@ -191,6 +235,7 @@ import {
   goodsCategoryAdd,
   goodsCategoryDel,
   goodsCategoryEdit,
+  positionList,
 } from "@/api/setting.js";
 import { getUnitSelect } from "@/api/archives";
 export default {
@@ -233,14 +278,20 @@ export default {
       pageIndex: 1,
       pageSize: 10,
       total: 0,
+      pageIndex1: 1,
+      pageSize1: 10,
+      total1: 0,
       goods_category_id: "",
       rowLevel: "",
       vh1: false,
+      positions: [],
+      positionName: "",
     };
   },
   methods: {
     handleClose(form) {
       this.$refs["form"].resetFields();
+      this.form.position = [];
       this.centerDialogVisible = false;
       this.vh1 = false;
       this.init();
@@ -274,16 +325,16 @@ export default {
       });
     },
     async handleEdit(index, row) {
-      let res = await goodsCategoryInfo({ id: row.goods_category_id });
-      // console.log(res);
-      this.region = res.data.data[0].goods_category_name;
-      // console.log(row);
+      console.log(row);
+      this.region = row.goods_category_id;
       this.rowLevel = row.level;
-      let res1 = await goodsCategoryInfo();
-      let { data } = res1.data;
-      this.options = data;
       this.obj = row;
       this.obj.no = Number(row.no);
+      let arr = [];
+      row.position.map((v, i) => {
+        arr.push((v.id));
+      });
+      this.obj.position = arr;
       this.centerDialogVisible1 = true;
     },
     async handleDelete(index, row) {
@@ -313,18 +364,8 @@ export default {
       this.vh1 = true;
     },
     async addClassify() {
-      if (this.tableData.length === 0) {
-        this.region = "";
-        this.centerDialogVisible = true;
-      }
-      if (this.tableData.length > 0) {
-        this.region = "";
-        let res = await goodsCategoryInfo();
-        console.log(res);
-        let { data } = res.data;
-        this.options = data;
-        this.centerDialogVisible = true;
-      }
+      this.region = "";
+      this.centerDialogVisible = true;
     },
     async handleNewList(form) {
       this.$refs["form"].validate(async (valid) => {
@@ -341,11 +382,13 @@ export default {
             console.log(res);
             this.$refs["form"].resetFields();
             this.centerDialogVisible = false;
+            this.form.position = [];
             this.init();
           }
           if (this.tableData.length > 0) {
             let res = await goodsCategoryAdd(this.form);
             console.log(res);
+            this.form.position = [];
             this.$refs["form"].resetFields();
             this.centerDialogVisible = false;
             this.init();
@@ -362,6 +405,13 @@ export default {
       let { data, count } = res.data;
       this.tableData = data;
       this.total = count;
+      this.tableData.map((v1, i1) => {
+        let a = [];
+        v1.position.map((v, i) => {
+          a.push(v.name);
+        });
+        v1.positionName = a.join(",");
+      });
     },
     handleSizeChange(val) {
       this.pageSize = val;
@@ -371,15 +421,39 @@ export default {
       this.pageIndex = val;
       this.init();
     },
+    handleSizeChange1(val) {
+      this.pageSize1 = val;
+      this.positionList();
+    },
+    handleCurrentChange1(val) {
+      this.pageIndex1 = val;
+      this.positionList();
+    },
     async getUnit() {
       let res = await getUnitSelect();
       let { data } = res.data;
       this.units = data;
     },
+    async positionList() {
+      let res = await positionList({
+        page: this.pageIndex1,
+        page_size: this.pageSize1,
+      });
+      let { data, count } = res.data;
+      this.positions = data;
+      this.total1 = count;
+    },
+    async news() {
+      let res = await goodsCategoryInfo();
+      let { data } = res.data;
+      this.options = data;
+    },
   },
   mounted() {
     this.init();
     this.getUnit();
+    this.positionList();
+    this.news();
     // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
