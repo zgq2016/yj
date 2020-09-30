@@ -1,5 +1,5 @@
 <template>
-  <div class="material" v-if="permission.indexOf('material')!=-1">
+  <div class="material" v-if="permission.indexOf('material') != -1">
     <!-- 面包屑 -->
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -8,28 +8,35 @@
       </el-breadcrumb>
     </div>
     <div class="main">
-      <div style="margin-bottom:10px">
+      <div style="margin-bottom: 10px">
         <el-input
           size="small"
-          style="width:170px;margin-right:10px;"
+          style="width: 170px; margin-right: 10px"
           v-model="form.materialsname"
           placeholder="请输入商品名称"
         ></el-input>
         <el-input
-          style="width:115px"
+          style="width: 115px"
           size="small"
           type="number"
           v-model="form.min"
           placeholder="请输入数量"
-        ></el-input>&nbsp;至
+        ></el-input
+        >&nbsp;至
         <el-input
-          style="width:115px"
+          style="width: 115px"
           size="small"
           type="number"
           v-model="form.max"
           placeholder="请输入数量"
         ></el-input>
-        <el-button icon="el-icon-search" size="mini" circle class="search_button" @click="onSubmit"></el-button>
+        <el-button
+          icon="el-icon-search"
+          size="mini"
+          circle
+          class="search_button"
+          @click="onSubmit"
+        ></el-button>
       </div>
       <el-form :inline="true" :model="form">
         <el-form-item>
@@ -39,7 +46,7 @@
             placeholder="请选择仓库"
             @change="onSubmit"
             clearable
-            style="width:110px"
+            style="width: 110px"
           >
             <el-option
               v-for="item in ware"
@@ -62,7 +69,7 @@
             v-model="form.materials_class_name"
             @change="handleClassDatasId($event)"
             placeholder="请选择物料分类"
-            style="width:140px;margin-right:10px;"
+            style="width: 140px; margin-right: 10px"
             clearable
           >
             <el-option
@@ -76,7 +83,7 @@
             v-model="form.materials_class"
             @change="handleClassDatasId1($event)"
             placeholder="请选择物料小分类"
-            style="width:140px"
+            style="width: 140px"
             size="small"
           >
             <el-option
@@ -89,43 +96,52 @@
         </el-form-item>
 
         <el-form-item>
-          <el-checkbox @change="onSubmit" v-model="form.checked">过滤无库存</el-checkbox>
+          <el-checkbox @change="onSubmit" v-model="form.checked"
+            >过滤无库存</el-checkbox
+          >
         </el-form-item>
         <el-form-item>
           <!-- <el-button type="primary">导出</el-button> -->
           <!-- <el-button v-print="'#printTest'" type="primary">打印</el-button> -->
         </el-form-item>
         <el-form-item>
-          <div style="display: flex;justify-content: space-between;align-items: center;">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
             <div class="addStyle">展示统计数据</div>
-            <div class="addStyle" @click="handleCard" >采购</div>
+            <div class="addStyle" @click="handleCard">采购</div>
             <!-- v-if="permission.indexOf('C3000200')!=-1" -->
           </div>
         </el-form-item>
-       
       </el-form>
 
       <div class="table">
         <div class="box">
           <div
             class="child"
-            v-for="(item,index) in materials"
+            v-for="(item, index) in materials"
             :key="index"
             @click.stop="toMaterial(item)"
           >
             <div class="left">
               <img :src="item.picurl" alt />
               <div class="left_n">
-                <span>{{item.classname}}({{item.materials_class_name}})</span>
+                <span class="hide" :title="item.classname+'('+item.materials_class_name+')'"
+                  >{{ item.classname }}({{ item.materials_class_name }})</span
+                >
                 <!-- <span>{{item.materialsname}}</span> -->
-                <span>{{item.color}}</span>
-                <span>内部编号:{{item.materialsno}}</span>
-                <span>{{item.companyname}}</span>
+                <span>{{ item.color }}</span>
+                <span>内部编号:{{ item.materialsno }}</span>
+                <span>{{ item.companyname }}</span>
               </div>
             </div>
             <div class="right">
               <h5>库存量</h5>
-              <em>{{item.quantity}}</em>
+              <em>{{ item.quantity }}</em>
             </div>
           </div>
         </div>
@@ -139,18 +155,19 @@
         center
         class="dialog1"
       >
-        <div style="display:flex;align-items: center;">
+        <div style="display: flex; align-items: center">
           <el-input
             v-model="searchInput"
             @input="handleSearchInput"
             placeholder="查找"
-            style="width:300px"
+            style="width: 300px"
           ></el-input>
           <router-link
             :to="`/addRouteCard?`"
-            style="margin-left:30px"
-            v-if="permission.indexOf('materials_add')!=-1"
-          >新增主料卡</router-link>
+            style="margin-left: 30px"
+            v-if="permission.indexOf('materials_add') != -1"
+            >新增主料卡</router-link
+          >
         </div>
         <div class="searchCard">
           <div class="card" v-for="(item, index) in MaterialsList" :key="index">
@@ -160,36 +177,44 @@
                   <img :src="item.picurl" alt />
                 </div>
                 <div class="cardStyle_left_content">
-                  <div style="font-weight: 600;font-size: 14px;">
-                    {{item.materials_mainclass_name}}
-                    <em
-                      v-if="item.materials_class_name"
-                    >({{item.materials_class_name}})</em>
+                  <div style="font-weight: 600; font-size: 14px">
+                    {{ item.materials_mainclass_name }}
+                    <em v-if="item.materials_class_name"
+                      >({{ item.materials_class_name }})</em
+                    >
                   </div>
-                  <div>{{item.materialsname}}</div>
-                  <div>内部编号:{{item.materialsno}}</div>
-                  <div
-                    v-if="item.supplier_data.length>0"
-                  >{{item.supplier_data[0].supplier_companyname}}</div>
+                  <div>{{ item.materialsname }}</div>
+                  <div>内部编号:{{ item.materialsno }}</div>
+                  <div v-if="item.supplier_data.length > 0">
+                    {{ item.supplier_data[0].supplier_companyname }}
+                  </div>
                 </div>
               </div>
               <div class="cardStyle_right" @mouseleave="visible = false">
-                <div style="cursor: pointer;" @click="handlePopoverId(item)">
-                  <el-popover width="100" v-model="visible" v-if="popoverId===item.id">
+                <div style="cursor: pointer" @click="handlePopoverId(item)">
+                  <el-popover
+                    width="100"
+                    v-model="visible"
+                    v-if="popoverId === item.id"
+                  >
                     <div class="colourNumberList">
                       <div
                         class="colourNumber"
-                        @click.stop="handleColourNumber(item,item1)"
+                        @click.stop="handleColourNumber(item, item1)"
                         v-for="(item1, index1) in item.materials_color_data"
                         :key="index1"
                       >
                         <img :src="item1.picurl" alt />
-                        <div>{{item1.color}} {{item1.color_no}}</div>
+                        <div>{{ item1.color }} {{ item1.color_no }}</div>
                       </div>
                     </div>
                   </el-popover>
-                  <div>{{item.color||item.materials_color_data[0].color}}</div>
-                  <div>{{item.color_no||item.materials_color_data[0].color_no}}</div>
+                  <div>
+                    {{ item.color || item.materials_color_data[0].color }}
+                  </div>
+                  <div>
+                    {{ item.color_no || item.materials_color_data[0].color_no }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -214,28 +239,37 @@
         center
         class="dialog2"
       >
-        <div class="userProfile" style="margin:20px 0px;text-align:center">
-          <span style="padding:10px 15px">
-            事件号：
-            自动生成
-          </span>
-          <span>
-            经办人：
-            自动生成
-          </span>
+        <div class="userProfile" style="margin: 20px 0px; text-align: center">
+          <span style="padding: 10px 15px"> 事件号： 自动生成 </span>
+          <span> 经办人： 自动生成 </span>
         </div>
         <el-form ref="form1" :model="form1" :rules="rules" label-width="110px">
           <el-form-item prop="amountPurchased" label="采购量:">
-            <el-input style="width:60%;" @input="sum" v-model.number="form1.amountPurchased"></el-input>
+            <el-input
+              style="width: 60%"
+              @input="sum"
+              v-model.number="form1.amountPurchased"
+            ></el-input>
           </el-form-item>
           <el-form-item prop="purchasePrice" label="采购单价:">
-            <el-input style="width:60%;" @input="sum" v-model.number="form1.purchasePrice"></el-input>
+            <el-input
+              style="width: 60%"
+              @input="sum"
+              v-model.number="form1.purchasePrice"
+            ></el-input>
           </el-form-item>
           <el-form-item prop="money" label="金额:">
-            <el-input style="width:60%;" v-model.number="form1.money"></el-input>
+            <el-input
+              style="width: 60%"
+              v-model.number="form1.money"
+            ></el-input>
           </el-form-item>
           <el-form-item prop="payManneItem" label="结算账户:">
-            <el-select v-model="form1.balance_account_id" style="width:60%;" placeholder="请选择支付方式">
+            <el-select
+              v-model="form1.balance_account_id"
+              style="width: 60%"
+              placeholder="请选择支付方式"
+            >
               <el-option
                 v-for="item in options"
                 :key="item.id"
@@ -245,7 +279,11 @@
             </el-select>
           </el-form-item>
           <el-form-item prop="storehouse_id" label="仓库:">
-            <el-select v-model="form1.storehouse_id" style="width:60%;" placeholder="请选择仓库类型">
+            <el-select
+              v-model="form1.storehouse_id"
+              style="width: 60%"
+              placeholder="请选择仓库类型"
+            >
               <el-option
                 v-for="item in ware"
                 :key="item.id"
@@ -262,7 +300,11 @@
             </el-select>
           </el-form-item>
           <el-form-item label="预计回料时间" prop="finishTime">
-            <el-date-picker v-model="form1.finishTime" type="date" placeholder="选择日期"></el-date-picker>
+            <el-date-picker
+              v-model="form1.finishTime"
+              type="date"
+              placeholder="选择日期"
+            ></el-date-picker>
           </el-form-item>
           <el-form-item label="上传凭证:">
             <el-upload
@@ -275,14 +317,18 @@
               <img
                 v-if="form1.uploadDocuments"
                 :src="form1.uploadDocuments"
-                style="width:150px;height:150px;"
+                style="width: 150px; height: 150px"
                 class="avatar"
               />
               <i v-else class="el-icon-upload avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item>
           <el-form-item label="备注:">
-            <el-input type="textarea" placeholder="请输入内容" v-model="form.remark"></el-input>
+            <el-input
+              type="textarea"
+              placeholder="请输入内容"
+              v-model="form.remark"
+            ></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="conserve">保存</el-button>
@@ -295,7 +341,7 @@
     <!-- 分页 -->
     <el-pagination
       class="pagination"
-      style="float:right"
+      style="float: right"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="pageIndex"
@@ -399,7 +445,7 @@ export default {
       class_datas: [],
       classDatasId: "",
       ware: [],
-      permission:[]
+      permission: [],
     };
   },
   methods: {
@@ -484,7 +530,7 @@ export default {
       } else {
         this.form.hide_empty = 0;
       }
-      this.pageIndex = 1
+      this.pageIndex = 1;
       // console.log(this.form);
       this.init(this.form);
     },
@@ -708,6 +754,7 @@ export default {
             }
             .left_n {
               float: left;
+
               span {
                 display: block;
                 padding: 3px;
@@ -716,6 +763,13 @@ export default {
                 font-size: 14px;
                 font-weight: 900;
                 color: #000;
+              }
+              .hide {
+                width: 170px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                -o-text-overflow: ellipsis;
               }
             }
           }
