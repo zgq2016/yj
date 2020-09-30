@@ -4,9 +4,13 @@
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>研发</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/itemDesign' }">设计项目</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: `/designCheck?id=${obj.id}` }">项目详细</el-breadcrumb-item>
-        <el-breadcrumb-item>编辑{{obj.projecttype}}订单</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/itemDesign' }"
+          >设计项目</el-breadcrumb-item
+        >
+        <el-breadcrumb-item :to="{ path: `/designCheck?id=${obj.id}` }"
+          >项目详细</el-breadcrumb-item
+        >
+        <el-breadcrumb-item>编辑{{ obj.projecttype }}订单</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="main">
@@ -37,7 +41,11 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="客户" prop="customer_companyname" v-if="obj.projecttype==='意向'">
+          <el-form-item
+            label="客户"
+            prop="customer_companyname"
+            v-if="obj.projecttype === '意向'"
+          >
             <el-select
               v-model="obj.customer_companyname"
               placeholder="客户名称"
@@ -51,12 +59,25 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="年份" prop="year" v-if="obj.projecttype==='意向'">
+          <el-form-item
+            label="年份"
+            prop="year"
+            v-if="obj.projecttype === '意向'"
+          >
             <el-select v-model="obj.year" placeholder="年份">
-              <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
+              <el-option
+                v-for="item in years"
+                :key="item.id"
+                :label="item.year"
+                :value="item.year"
+              ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="季节" prop="season" v-if="obj.projecttype==='意向'">
+          <el-form-item
+            label="季节"
+            prop="season"
+            v-if="obj.projecttype === '意向'"
+          >
             <el-select v-model="obj.season" placeholder="季节">
               <el-option
                 v-for="item in seasons"
@@ -66,12 +87,25 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="年份" prop="year" v-if="obj.projecttype==='阶段'">
+          <el-form-item
+            label="年份"
+            prop="year"
+            v-if="obj.projecttype === '阶段'"
+          >
             <el-select v-model="obj.year" placeholder="年份">
-              <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
+              <el-option
+                v-for="item in years"
+                :key="item.id"
+                :label="item.year"
+                :value="item.year"
+              ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="季节" prop="season" v-if="obj.projecttype==='阶段'">
+          <el-form-item
+            label="季节"
+            prop="season"
+            v-if="obj.projecttype === '阶段'"
+          >
             <el-select v-model="obj.season" placeholder="季节">
               <el-option
                 v-for="item in seasons"
@@ -81,18 +115,39 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="元素" prop="element" v-if="obj.projecttype==='企划'">
+          <el-form-item
+            label="元素"
+            prop="element"
+            v-if="obj.projecttype === '企划'"
+          >
             <el-input v-model="obj.element" placeholder="元素描述"></el-input>
           </el-form-item>
-          <el-form-item label="色系" prop="color" v-if="obj.projecttype==='企划'">
+          <el-form-item
+            label="色系"
+            prop="color"
+            v-if="obj.projecttype === '企划'"
+          >
             <el-input v-model="obj.color" placeholder="色系"></el-input>
           </el-form-item>
-          <el-form-item label="年份" prop="year" v-if="obj.projecttype==='企划'">
+          <el-form-item
+            label="年份"
+            prop="year"
+            v-if="obj.projecttype === '企划'"
+          >
             <el-select v-model="obj.year" placeholder="年份">
-              <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
+              <el-option
+                v-for="item in years"
+                :key="item.id"
+                :label="item.year"
+                :value="item.year"
+              ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="季节" prop="season" v-if="obj.projecttype==='企划'">
+          <el-form-item
+            label="季节"
+            prop="season"
+            v-if="obj.projecttype === '企划'"
+          >
             <el-select v-model="obj.season">
               <el-option
                 v-for="item in seasons"
@@ -103,20 +158,39 @@
             </el-select>
           </el-form-item>
           <el-form-item label="完成时间" prop="finishtime">
-            <el-date-picker v-model="obj.finishtime" type="date" placeholder="选择日期"></el-date-picker>
+            <el-date-picker
+              v-model="obj.finishtime"
+              type="date"
+              placeholder="选择日期"
+            ></el-date-picker>
           </el-form-item>
           <el-form-item label="要求数量" prop="quantity">
-            <el-input v-model="obj.quantity" @input="handleInput" placeholder="要求数量"></el-input>
+            <el-input
+              v-model="obj.quantity"
+              @input="handleInput"
+              placeholder="要求数量"
+            ></el-input>
           </el-form-item>
           <el-form-item label="详细要求">
-            <el-input type="textarea" v-model="obj.detailed" class="textarea"></el-input>
+            <el-input
+              type="textarea"
+              v-model="obj.detailed"
+              class="textarea"
+            ></el-input>
           </el-form-item>
           <el-form-item
             label="指派设计师"
             prop="user_name"
-            v-if="user_level!==2||permission.indexOf('designatorAssignment')!=-1"
+            v-if="
+              user_level !== 2 ||
+              permission.indexOf('designatorAssignment') != -1
+            "
           >
-            <el-select v-model="obj.user_name" placeholder="工作人员名称" @change="handleUser_id($event)">
+            <el-select
+              v-model="obj.user_name"
+              placeholder="工作人员名称"
+              @change="handleUser_id($event)"
+            >
               <el-option
                 v-for="item in stylists"
                 :key="item.id"
@@ -126,47 +200,86 @@
             </el-select>
           </el-form-item>
           <el-form-item
-            v-if="user_level!=2||permission.indexOf('assignmentAssistance')!=-1"
+            v-if="
+              user_level != 2 ||
+              permission.indexOf('assignmentAssistance') != -1
+            "
             label="指派协助"
           >
-            <div style="display:flex">
-              <div v-for="(item, index) in obj.user_id_data" :key="index">{{item.name}},</div>
-              <div @click="handleAddAssistant" style="margin-left:20px">添加协助</div>
+            <div style="display: flex">
+              <div v-for="(item, index) in obj.user_id_data" :key="index">
+                {{ item.name }},
+              </div>
+              <div @click="handleAddAssistant" style="margin-left: 20px">
+                添加协助
+              </div>
             </div>
           </el-form-item>
           <el-form-item>
             <el-button
-              v-if="permission.indexOf('project_edit')!=-1"
+              v-if="permission.indexOf('project_edit') != -1"
               @click="handleKeep"
-              style="padding:10px 50px;border-radius: 15px;"
-            >保存</el-button>
+              style="padding: 10px 50px; border-radius: 15px"
+              >保存</el-button
+            >
             <el-button
-              v-if="permission.indexOf('project_del')!=-1"
+              v-if="permission.indexOf('project_del') != -1"
               @click="handleDel"
-              style="padding:10px 50px;border-radius: 15px;"
-            >删除</el-button>
+              style="padding: 10px 50px; border-radius: 15px"
+              >删除</el-button
+            >
           </el-form-item>
         </el-form>
       </div>
     </div>
-    <el-dialog title="拍照上传" :visible.sync="visible" @close="onCancel" width="1065px">
+    <el-dialog
+      title="拍照上传"
+      :visible.sync="visible"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      width="1065px"
+    >
       <div class="box">
-        <video id="videoCamera" class="canvas" :width="videoWidth" :height="videoHeight" autoplay></video>
+        <video
+          id="videoCamera"
+          class="canvas"
+          :width="videoWidth"
+          :height="videoHeight"
+          autoplay
+        ></video>
         <canvas
           id="canvasCamera"
           class="canvas"
           :width="videoWidth"
           :height="videoHeight"
-          style="margin-left:10px;"
+          style="margin-left: 10px"
         ></canvas>
       </div>
       <div slot="footer">
-        <el-button @click="drawImage" icon="el-icon-camera" size="small">拍照</el-button>
-        <el-button v-if="os" @click="getCompetence" icon="el-icon-video-camera" size="small">打开摄像头</el-button>
+        <el-button @click="drawImage" icon="el-icon-camera" size="small"
+          >拍照</el-button
+        >
+        <el-button
+          v-if="os"
+          @click="getCompetence"
+          icon="el-icon-video-camera"
+          size="small"
+          >打开摄像头</el-button
+        >
         <!-- <el-button v-else @click="stopNavigator" icon="el-icon-switch-button" size="small">关闭摄像头</el-button> -->
-        <el-button @click="resetCanvas" icon="el-icon-refresh" size="small">重置</el-button>
-        <el-button @click="ctrlShift" icon="el-icon-s-unfold" size="small">另存为</el-button>
-        <el-button @click="onCancel(1,numberr)" icon="el-icon-circle-close" size="small">完成</el-button>
+        <el-button @click="resetCanvas" icon="el-icon-refresh" size="small"
+          >重置</el-button
+        >
+        <el-button @click="ctrlShift" icon="el-icon-s-unfold" size="small"
+          >另存为</el-button
+        >
+        <el-button
+          @click="onCancel(numberr)"
+          icon="el-icon-circle-close"
+          size="small"
+          >完成</el-button
+        >
       </div>
     </el-dialog>
     <el-dialog
@@ -178,7 +291,7 @@
       center
       class="dialog"
     >
-      <div style="display:flex;">
+      <div style="display: flex">
         <div class="info-item">
           <div>
             <div class="upload">
@@ -197,7 +310,8 @@
               type="info"
               class="aj"
               size="small"
-            >拍照</el-button>
+              >拍照</el-button
+            >
           </div>
 
           <!-- <input type="button" class="btn btn-blue" value="上传头像" @click="finish('blob')" /> -->
@@ -230,7 +344,7 @@
             </div>
           </div>
           <input
-            style="width:30px;font-size:20px;margin:0 10px;"
+            style="width: 30px; font-size: 20px; margin: 0 10px"
             type="button"
             class="oper"
             value="+"
@@ -238,7 +352,7 @@
             @click="changeScale(1)"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;"
+            style="width: 30px; font-size: 20px; margin: 0 10px"
             type="button"
             class="oper"
             value="-"
@@ -246,7 +360,7 @@
             @click="changeScale(-1)"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;"
+            style="width: 30px; font-size: 20px; margin: 0 10px"
             type="button"
             class="oper"
             value="↺"
@@ -254,7 +368,7 @@
             @click="rotateLeft"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;"
+            style="width: 30px; font-size: 20px; margin: 0 10px"
             type="button"
             class="oper"
             value="↻"
@@ -262,7 +376,7 @@
             @click="rotateRight"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;"
+            style="width: 30px; font-size: 20px; margin: 0 10px"
             type="button"
             class="oper"
             value="↓"
@@ -289,7 +403,11 @@
       :close-on-press-escape="false"
     >
       <div v-for="(item, index) in stylists" :key="index">
-        <el-checkbox v-model="item.checked" @change="isCheckList(item,index)">{{item.name}}</el-checkbox>
+        <el-checkbox
+          v-model="item.checked"
+          @change="isCheckList(item, index)"
+          >{{ item.name }}</el-checkbox
+        >
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="AssistantCancel">取 消</el-button>
@@ -450,7 +568,9 @@ export default {
     },
     /*调用摄像头拍照开始*/
     onTake(num) {
-      this.numberr = num;
+      if (num != undefined) {
+        this.numberr = num;
+      }
       this.visible = true;
       this.getCompetence();
     },
@@ -466,11 +586,11 @@ export default {
       }
       return new File([u8arr], filename, { type: mime });
     },
-    async onCancel(val, num) {
+    async onCancel(num) {
       this.visible = false;
       /* this.resetCanvas();*/
       this.stopNavigator();
-      if (val == 1 && num == undefined) {
+      if (num != 101) {
         this.fileList1 = this.imgSrc;
         let file = this.dataURLtoFile(this.imgSrc, String(Math.random()));
         let param = new FormData(); // 创建form对象
@@ -487,10 +607,9 @@ export default {
             });
           }
         }
-      } else if (val == 1 && num != undefined) {
+      } else {
         let file = this.dataURLtoFile(this.imgSrc, String(Math.random()));
-        console.log(file);
-        this.fileName = file;
+        this.fileName = String(Math.random()) + ".png";
         this.option.img = this.imgSrc;
       }
       // this.imgSrc = "";
@@ -566,7 +685,6 @@ export default {
     //绘制图片
     drawImage() {
       // 点击，canvas画图
-      // console.log(this.thisContext);
       this.thisContext.drawImage(
         this.thisVideo,
         0,
@@ -787,7 +905,6 @@ export default {
         if (this.obj.projecttype == "意向") this.obj.projecttype = "0";
         if (this.obj.projecttype == "阶段") this.obj.projecttype = "1";
         if (this.obj.projecttype == "企划") this.obj.projecttype = "2";
-        console.log(this.obj);
         this.obj.user_id_data.map((v) => {
           v["user_id"] = v.id;
           delete v.checked;
@@ -800,7 +917,6 @@ export default {
         });
 
         let res = await projectEdit(this.obj);
-        console.log(res);
         if (res.data.error_code) {
           this.$message({
             showClose: true,
@@ -815,7 +931,6 @@ export default {
     },
     handleChange(e) {
       this.obj.projecttype = e;
-      console.log(this.obj.projecttype);
     },
     handleUser_id(e) {
       this.obj.user_id = e;

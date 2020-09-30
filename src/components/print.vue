@@ -2,21 +2,38 @@
   <div class="print" id="printTest">
     <div class="left">
       <div class="company">SHESHO 设计版单</div>
-      <div>款号：{{obj.styleno}}</div>
-      <div>品类：{{obj.style_type}}</div>
-      <div>年份：{{obj.year}}</div>
-      <div>季节：{{obj.season}}</div>
-      <div>设计师：{{obj.user_name}}</div>
-      <div>颜色：{{obj.style_color}}</div>
+      <div>款号：{{ obj.styleno }}</div>
+      <div>品类：{{ obj.style_type }}</div>
+      <div>年份：{{ obj.year }}</div>
+      <div>季节：{{ obj.season }}</div>
+      <div>设计师：{{ obj.user_name }}</div>
+      <div>颜色：{{ obj.style_color }}</div>
       <!-- <div class="lining">
         <div>面料样板</div>
       </div>-->
+      <div v-if="qrcode" class="code">
+        <el-image
+          :src="qrcode"
+          style="width: 150px; height: 150px;margin:10px 75px;"
+          fit="cover"
+        ></el-image>
+      </div>
       <div class="liningke">
         <el-table :data="tableData" size="mini" border style="width: 100%">
           <el-table-column label="尺寸表" align="center">
-            <el-table-column prop="name" width="96px" align="center" label="部位"></el-table-column>
-            <el-table-column prop="unit" width="96px" align="center" label="单位"></el-table-column>
-            <el-table-column prop="size" width="106px" align="center" label="尺寸/CM"></el-table-column>
+            <el-table-column
+              prop="name"
+              width="148px"
+              align="center"
+              label="部位"
+            ></el-table-column>
+            <!-- <el-table-column prop="unit" width="96px" align="center" label="单位"></el-table-column> -->
+            <el-table-column
+              prop="size"
+              width="148px"
+              align="center"
+              label="尺寸/CM"
+            ></el-table-column>
           </el-table-column>
         </el-table>
       </div>
@@ -43,7 +60,11 @@
 </template>
 
 <script>
-import { getStyle, getStylePosition } from "@/api/researchDevelopment";
+import {
+  getStyle,
+  getStylePosition,
+  getQrcode,
+} from "@/api/researchDevelopment";
 export default {
   props: {
     data: {
@@ -58,6 +79,7 @@ export default {
       designidea_pic_url0: "",
       designidea_pic_url1: "",
       tableData: [{ name: "", unit: "洗水前", size: "成品" }],
+      qrcode: "",
     };
   },
   methods: {
@@ -76,6 +98,11 @@ export default {
       if (res.data.data.designidea_pic_data.length > 1) {
         this.designidea_pic_url1 =
           res.data.data.designidea_pic_data[1].designidea_pic_url;
+      }
+      let res2 = await getQrcode({ style_id: id });
+      console.log(res2);
+      if (!res2.data.error_code) {
+        this.qrcode = res2.data.data.qrcode;
       }
     },
   },
@@ -149,24 +176,12 @@ export default {
     /deep/.is-center {
       background: #fff;
     }
+    .code {
+      width: 300px;
+    }
     .liningke {
       width: 300px;
-      height: 200px;
       margin: 15px 0;
-      // .liningkes {
-      //   display: flex;
-      //   justify-content: space-between;
-      //   align-items: center;
-      //   background-color: #000;
-      //   color: #fff;
-      //   font-size: 16px;
-      //   padding: 0 10px;
-      // }
-      // .liningkess {
-      //   width: 100px;
-      //   height: 20px;
-      //   border: 1px solid #000;
-      // }
     }
     .remark {
       width: 200px;

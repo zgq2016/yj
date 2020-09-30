@@ -9,7 +9,7 @@
     <div class="main">
       <!-- 物料卡信息 供应商信息 -->
       <div class="info">
-        <div style="display: flex;">
+        <div style="display: flex">
           <div class="cardInfo">
             <div class="cardInfoTitle">物料卡信息</div>
             <div class="cardInfoContent">
@@ -17,36 +17,53 @@
                 <img :src="header.color_data[0].picurl" alt />
               </div>
               <div class="cardInfoContentText">
-                <div class="cardInfoContentTextName">{{header.materialsname}}</div>
-                <div style="display: flex;">
-                  <div style="margin-right:100px">
-                    <div>内部编号：{{header.materialsno}}</div>
-                    <div>编号：{{header.materialsno}}</div>
-                    <div>面料分类：{{header.materials_mainclass_name}}{{`(${header.materials_class_name})`}}</div>
+                <div class="cardInfoContentTextName">
+                  {{ header.materialsname }}
+                </div>
+                <div style="display: flex">
+                  <div style="margin-right: 100px">
+                    <div>内部编号：{{ header.materialsno }}</div>
+                    <div>编号：{{ header.materialsno }}</div>
+                    <div>
+                      面料分类：{{ header.materials_mainclass_name
+                      }}{{ `(${header.materials_class_name})` }}
+                    </div>
                     <div>
                       料 属 性 ：
                       <span
-                        style="margin-right:10px;text-align:center;width:50px;display:inline-block;"
-                        v-for="(item,index) in header.material_data"
+                        style="
+                          margin-right: 10px;
+                          text-align: center;
+                          width: 50px;
+                          display: inline-block;
+                        "
+                        v-for="(item, index) in header.material_data"
                         :key="index"
-                      >{{item.material_name}}</span>
+                        >{{ item.material_name }}</span
+                      >
                     </div>
-                    <div style="display: flex;">
+                    <div style="display: flex">
                       <div>
                         面料成分：
                         <span
-                          style="margin-right:10px;text-align:center;width:50px;display:inline-block;"
-                          v-for="(item,index) in header.material_data"
+                          style="
+                            margin-right: 10px;
+                            text-align: center;
+                            width: 50px;
+                            display: inline-block;
+                          "
+                          v-for="(item, index) in header.material_data"
                           :key="index"
-                        >{{item.content}}%</span>
+                          >{{ item.content }}%</span
+                        >
                       </div>
                     </div>
                   </div>
-                  <div style="width:150px;">
-                    <div>色号：{{colors.color_no}}</div>
-                    <div>颜色：{{colors.color}}</div>
-                    <div>大货单价：{{header.wsale_price}}</div>
-                    <div>幅宽：{{header.unit}}</div>
+                  <div style="width: 150px">
+                    <div>色号：{{ colors.color_no }}</div>
+                    <div>颜色：{{ colors.color }}</div>
+                    <div>大货单价：{{ header.wsale_price }}</div>
+                    <div>幅宽：{{ header.unit }}</div>
                   </div>
                 </div>
               </div>
@@ -60,10 +77,17 @@
                 <img :src="supplier.cardpicurl" alt />
               </div>
               <div class="supplierInfoContentText">
-                <div class="supplierInfoContentTextName">{{supplier.companyname}}</div>
-                <div v-for="(item,index) in supplier.contact_data" :key="index">{{item.phone}}</div>
+                <div class="supplierInfoContentTextName">
+                  {{ supplier.companyname }}
+                </div>
+                <div
+                  v-for="(item, index) in supplier.contact_data"
+                  :key="index"
+                >
+                  {{ item.phone }}
+                </div>
                 <div>账号信息：</div>
-                <div style="width:155px">{{supplier.address}}</div>
+                <div style="width: 155px">{{ supplier.address }}</div>
                 <div></div>
               </div>
             </div>
@@ -73,51 +97,52 @@
         <div class="purchaseInfo">
           <div class="purchaseInfoTitle">采购信息</div>
           <div class="userProfile">
-            <span style="padding:10px 30px">
-              事件号：
-              自动生成
-            </span>
-            <span>
-              经办人：
-              自动生成
-            </span>
+            <span style="padding: 10px 30px"> 事件号： 自动生成 </span>
+            <span> 经办人： 自动生成 </span>
           </div>
           <div class="form">
-            <el-form :model="form" ref="form" :rules="rules" label-width="120px">
+            <el-form
+              :model="form"
+              ref="form"
+              :rules="rules"
+              label-width="120px"
+            >
               <el-form-item label="用量" prop="dosage">
                 <el-col :span="6">
                   <el-input
-                    v-model.number="form.dosage"
+                    v-model="form.dosage"
                     placeholder="请输入用量(以米为单位)"
-                    style="width:200px"
+                    style="width: 200px"
                   ></el-input>
                 </el-col>
                 <el-col :span="6">
-                  <el-button size="small" round @click="readyforTheCall">备货调用</el-button>
+                  <el-button size="small" round @click="readyforTheCall"
+                    >备货调用</el-button
+                  >
                 </el-col>
               </el-form-item>
               <el-form-item label="采购量" prop="amountPurchased">
                 <el-input
-                  v-model.number="form.amountPurchased"
+                  v-model="form.amountPurchased"
                   @input="changed()"
                   placeholder="请输入采购量(以米为单位)"
-                  style="width:200px"
+                  style="width: 200px"
                 ></el-input>
               </el-form-item>
               <el-form-item label="采购单价" prop="purchasePrice">
                 <el-input
-                  v-model.number="form.purchasePrice"
+                  v-model="form.purchasePrice"
                   @input="changed()"
                   placeholder="请输入采购单价"
-                  style="width:200px"
+                  style="width: 200px"
                 ></el-input>
               </el-form-item>
               <el-form-item label="金额" prop="money">
                 <el-input
-                  v-model.number="form.money"
+                  v-model="form.money"
                   @input="changed1()"
                   placeholder="请输入金额"
-                  style="width:200px"
+                  style="width: 200px"
                 ></el-input>
               </el-form-item>
               <el-form-item label="付款" prop="payment">
@@ -126,19 +151,34 @@
                   <el-radio :label="1">全额付款</el-radio>
                 </el-radio-group>
               </el-form-item>
-              <el-form-item v-if="form.payment==0" label="订金" prop="deposit">
-                <el-input v-model.number="form.deposit" placeholder="请输入订金" style="width:200px"></el-input>
-              </el-form-item>
-              <el-form-item v-if="form.payment==1" label="全额付款" prop="fullPayout">
+              <el-form-item
+                v-if="form.payment == 0"
+                label="订金"
+                prop="deposit"
+              >
                 <el-input
-                  v-model.number="form.fullPayout"
+                  v-model="form.deposit"
+                  placeholder="请输入订金"
+                  style="width: 200px"
+                ></el-input>
+              </el-form-item>
+              <el-form-item
+                v-if="form.payment == 1"
+                label="全额付款"
+                prop="fullPayout"
+              >
+                <el-input
+                  v-model="form.fullPayout"
                   disabled
                   placeholder="请输入金额"
-                  style="width:200px"
+                  style="width: 200px"
                 ></el-input>
               </el-form-item>
               <el-form-item label="结算账户" prop="balance_account_id">
-                <el-select v-model="form.balance_account_id" placeholder="请选择">
+                <el-select
+                  v-model="form.balance_account_id"
+                  placeholder="请选择"
+                >
                   <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -148,10 +188,17 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="预计回料时间" prop="finishTime">
-                <el-date-picker v-model="form.finishTime" type="date" placeholder="选择日期"></el-date-picker>
+                <el-date-picker
+                  v-model="form.finishTime"
+                  type="date"
+                  placeholder="选择日期"
+                ></el-date-picker>
               </el-form-item>
               <el-form-item prop="storehouse_id" label="仓库:">
-                <el-select v-model="form.storehouse_id" placeholder="请选择仓库类型">
+                <el-select
+                  v-model="form.storehouse_id"
+                  placeholder="请选择仓库类型"
+                >
                   <el-option
                     v-for="item in ware"
                     :key="item.id"
@@ -170,7 +217,7 @@
               <el-form-item label="上传凭证">
                 <el-upload
                   class="avatar-uploader"
-                  action="https://yj.ppp-pay.top/uploadpic.php"
+                  :action="url + '/uploadpic.php'"
                   :show-file-list="false"
                   :on-success="handleAvatarSuccess"
                   :before-upload="beforeAvatarUpload"
@@ -180,7 +227,12 @@
                 </el-upload>
               </el-form-item>
               <el-form-item label="备注">
-                <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="form.remark"></el-input>
+                <el-input
+                  type="textarea"
+                  :rows="2"
+                  placeholder="请输入内容"
+                  v-model="form.remark"
+                ></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button round @click="onSubmit">保存</el-button>
@@ -190,11 +242,19 @@
         </div>
       </div>
     </div>
-    <el-dialog title="增加款式颜色" :visible.sync="centerDialogVisible" width="30%" center class="dialog">
+    <el-dialog
+      title="增加款式颜色"
+      :visible.sync="centerDialogVisible"
+      width="30%"
+      center
+      class="dialog"
+    >
       aa
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="centerDialogVisible = false"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
   </div>
@@ -203,6 +263,7 @@
 <script>
 import moment from "moment";
 import { storehouseList } from "@/api/warehouse.js";
+import { url } from "@/api/configuration";
 import {
   getMaterialsInfo, //物料
   getSupplierInfo, //供应商
@@ -219,6 +280,7 @@ import { balanceAccountSelect } from "@/api/finance";
 export default {
   data() {
     return {
+      url: url,
       ware: [],
       pageIndex2: 1,
       pageSize2: 10,
@@ -245,20 +307,69 @@ export default {
       // 表单规则
       rules: {
         dosage: [
-          { required: true, message: "请输入用量" },
-          { type: "number", message: "用量必须为数字值" },
+          // { required: true, message: "请输入用量",trigger: "blur" },
+          {
+            required: true,
+            validator: (rule, value, callback) => {
+              if (value === "") {
+                callback(new Error("请输入用量"));
+              } else if (!/^[0-9]+\.?[0-9]{0,2}$/.test(value)) {
+                console.log(value);
+                callback(new Error("请输入正确的数值(最多保留小数点后两位)"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur",
+          },
         ],
         amountPurchased: [
-          { required: true, message: "请输入采购量", trigger: "blur" },
-          { type: "number", message: "采购量必须为数字值" },
+          {
+            required: true,
+            validator: (rule, value, callback) => {
+              if (value === "") {
+                callback(new Error("请输入采购量"));
+              } else if (!/^[0-9]+\.?[0-9]{0,2}$/.test(value)) {
+                console.log(value);
+                callback(new Error("请输入正确的数值(最多保留小数点后两位)"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur",
+          },
         ],
         purchasePrice: [
-          { required: true, message: "请输入采购单价", trigger: "blur" },
-          { type: "number", message: "采购单价必须为数字值" },
+          {
+            required: true,
+            validator: (rule, value, callback) => {
+              if (value === "") {
+                callback(new Error("请输入采购单价"));
+              } else if (!/^[0-9]+\.?[0-9]{0,2}$/.test(value)) {
+                console.log(value);
+                callback(new Error("请输入正确的数值(最多保留小数点后两位)"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur",
+          },
         ],
         money: [
-          { required: true, message: "请输入金额", trigger: "blur" },
-          { type: "number", message: "金额必须为数字值" },
+          {
+            required: true,
+            validator: (rule, value, callback) => {
+              if (value === "") {
+                callback(new Error("请输入金额"));
+              } else if (!/^[0-9]+\.?[0-9]{0,2}$/.test(value)) {
+                console.log(value);
+                callback(new Error("请输入正确的数值(最多保留小数点后两位)"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur",
+          },
         ],
         balance_account_id: [
           { required: true, message: "请选择支付方式", trigger: "blur" },
@@ -275,12 +386,23 @@ export default {
           },
         ],
         deposit: [
-          { required: true, message: "请输入定金", trigger: "blur" },
-          { type: "number", message: "定金必须为数字值" },
+          {
+            required: true,
+            validator: (rule, value, callback) => {
+              if (value === "") {
+                callback(new Error("请输入定金"));
+              } else if (!/^[0-9]+\.?[0-9]{0,2}$/.test(value)) {
+                console.log(value);
+                callback(new Error("请输入正确的数值(最多保留小数点后两位)"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur",
+          },
         ],
         fullPayout: [
           { required: true, message: "请输入全部金额", trigger: "blur" },
-          { type: "number", message: "金额必须为数字值" },
         ],
         storehouse_id: [
           { required: true, message: "请选择仓库类型", trigger: "change" },
@@ -293,12 +415,12 @@ export default {
       this.centerDialogVisible = true;
     },
     async changed() {
-      this.form.money = this.form.amountPurchased * this.form.purchasePrice;
+      this.form.money = (this.form.amountPurchased * this.form.purchasePrice).toFixed(2);
       // this.form.money = String(this.form.money);
       this.form.fullPayout = this.form.money;
     },
     async changed1() {
-      this.form.purchasePrice = this.form.money / this.form.amountPurchased;
+      this.form.purchasePrice = (this.form.money / this.form.amountPurchased).toFixed(2);
       // this.form.purchasePrice = String(this.form.purchasePrice);
     },
     handleSize(val) {
@@ -392,6 +514,7 @@ export default {
     },
     handleAvatarSuccess(res, file) {
       this.form.picurl = res.data.pic_file_url;
+
       // console.log(this.picurl);
     },
     beforeAvatarUpload(file) {

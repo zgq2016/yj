@@ -131,6 +131,7 @@
           <el-table-column property="styleno" align="center" label="款号"></el-table-column>
           <el-table-column property="style_color" align="center" label="颜色"></el-table-column>
           <el-table-column property="style_type" align="center" label="品类"></el-table-column>
+          <el-table-column property="ctime" align="center" width='95' label="开始时间"></el-table-column>
           <el-table-column property="design" align="center" label="状态"></el-table-column>
           <el-table-column label="操作" align="center">
             <!-- 插槽：匿名插槽，具名插槽，数据插槽 -->

@@ -1,12 +1,12 @@
 import axios from "axios";
 import router from "../router/index";
+import {url} from "@/api/configuration"
 // axios.defaults.withCredentials = true; //让ajax携带cookie
 import { Loading, Message } from "element-ui";
 import _ from "lodash";
 
 var myaxios = axios.create({
-  baseURL: "https://shesho.ppp-pay.top/webapi.php",
-  // baseURL: "https://yj.ppp-pay.top/webapi.php",
+  baseURL: `${url}/webapi.php`,
   timeout: 50000, //超时时长
 });
 //loading对象

@@ -1,7 +1,7 @@
 <template>
   <div
     class="supplierReconciliationAndPayment"
-    v-if="permission.indexOf('supplierReconciliationAndPayment')!=-1"
+    v-if="permission.indexOf('supplierReconciliationAndPayment') != -1"
   >
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -9,9 +9,20 @@
         <el-breadcrumb-item>供应商对账及付款</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div style="margin-bottom:10px">
-      <el-input placeholder="单据编号" v-model="formInline.account_no" clearable style="width:200px"></el-input>
-      <el-button icon="el-icon-search" size="mini" circle class="search_button" @click="onSubmit"></el-button>
+    <div style="margin-bottom: 10px">
+      <el-input
+        placeholder="单据编号"
+        v-model="formInline.account_no"
+        clearable
+        style="width: 200px"
+      ></el-input>
+      <el-button
+        icon="el-icon-search"
+        size="mini"
+        circle
+        class="search_button"
+        @click="onSubmit"
+      ></el-button>
     </div>
     <div class="form">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
@@ -75,29 +86,56 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="user_id" clearable placeholder="操作者" @change="get_user_id($event)">
-            <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item"></el-option>
+          <el-select
+            v-model="user_id"
+            clearable
+            placeholder="操作者"
+            @change="get_user_id($event)"
+          >
+            <el-option
+              v-for="item in stylists"
+              :key="item.id"
+              :label="item.name"
+              :value="item"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <div style="display: flex;justify-content: space-between;align-items: center;">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
             <div
               class="addStyle"
-              v-if="permission.indexOf('supplier_account_add')!=-1"
+              v-if="permission.indexOf('supplier_account_add') != -1"
               @click="handlePayment"
-            >付款</div>
+            >
+              付款
+            </div>
             <div
               class="addStyle"
-              v-if="permission.indexOf('supplier_account_add')!=-1"
+              v-if="permission.indexOf('supplier_account_add') != -1"
               @click="beginninGbalanceAdjustment"
-              style="background-color: #e3e3e3;color: #fff;"
-            >期初调整</div>
+              style="background-color: #e3e3e3; color: #fff"
+            >
+              期初调整
+            </div>
             <div
               class="addStyle"
-              style="background-color: #e3e3e3;color: #fff;"
+              style="background-color: #e3e3e3; color: #fff"
               v-print="'#printTest'"
-            >打印</div>
-            <div class="addStyle" style="background-color: #e3e3e3;color: #fff;">导出</div>
+            >
+              打印
+            </div>
+            <div
+              class="addStyle"
+              style="background-color: #e3e3e3; color: #fff"
+            >
+              导出
+            </div>
           </div>
         </el-form-item>
       </el-form>
@@ -105,39 +143,82 @@
     <el-divider></el-divider>
     <div id="printTest">
       <div class="header">
-        <h2 style="text-align:center;height:40px;">供应商对账单</h2>
+        <h2 style="text-align: center; height: 40px">供应商对账单</h2>
         <div class="cont">
-          <span>供应商：{{supplier_id}}</span>
-          <span>日期：{{formInline.ctime_start}} 至 {{formInline.ctime_end}}</span>
+          <span>供应商：{{ supplier_id }}</span>
+          <span
+            >日期：{{ formInline.ctime_start }} 至
+            {{ formInline.ctime_end }}</span
+          >
         </div>
         <div class="tb">
           <div class="dv">当前查询统计数据：</div>
           <div class="dv">
             应付金额
-            <span style="color:orange;">{{total_cope_money}}</span>
+            <span style="color: orange">{{ total_cope_money }}</span>
           </div>
           <div class="dv">
             实付金额
-            <span style="color:orange;">{{total_pay_money}}</span>
+            <span style="color: orange">{{ total_pay_money }}</span>
           </div>
           <div class="dv">
             应付余额
-            <span style="color:orange;">{{total_opay_money}}</span>
+            <span style="color: orange">{{ total_opay_money }}</span>
           </div>
         </div>
       </div>
-      <div class="table" >
+      <div class="table">
         <el-table :data="tableData" border size="mini">
-          <el-table-column :show-overflow-tooltip="true" prop="ctime" label="业务时间"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="account_no" label="单据编号"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="user_name" label="操作人"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="account_name" label="结算账户"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="account_type_name" label="账目类型"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="cope_money" label="应付金额"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="pay_money" label="实付金额"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="opay_money" label="本单应付余额"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="total_money" label="累计应付款余额"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="remarks" label="备注"></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            prop="ctime"
+            label="业务时间"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            prop="account_no"
+            label="单据编号"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            prop="user_name"
+            label="操作人"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            prop="account_name"
+            label="结算账户"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            prop="account_type_name"
+            label="账目类型"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            prop="cope_money"
+            label="应付金额"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            prop="pay_money"
+            label="实付金额"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            prop="opay_money"
+            label="本单应付余额"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            prop="total_money"
+            label="累计应付款余额"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            prop="remarks"
+            label="备注"
+          ></el-table-column>
           <el-table-column prop="data" label="操作"></el-table-column>
         </el-table>
       </div>
@@ -164,7 +245,13 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <el-form :model="form" :rules="rules" ref="form" label-width="140px" class="demo-form">
+      <el-form
+        :model="form"
+        :rules="rules"
+        ref="form"
+        label-width="140px"
+        class="demo-form"
+      >
         <el-form-item label="供应商" prop="supplier_companyname">
           <el-autocomplete
             class="inline-input"
@@ -172,7 +259,7 @@
             :fetch-suggestions="querySearch"
             placeholder="供应商"
             @select="handleSelect"
-            style="width:70%;"
+            style="width: 70%"
           ></el-autocomplete>
         </el-form-item>
         <!-- <el-form-item label="操作人" prop="user_id">
@@ -181,7 +268,7 @@
           </el-select>
         </el-form-item>-->
         <el-form-item label="结算账户" prop="balance_account_id">
-          <el-select v-model="form.balance_account_id" style="width:70%;">
+          <el-select v-model="form.balance_account_id" style="width: 70%">
             <el-option
               v-for="item in BalanceAccount"
               :key="item.id"
@@ -191,7 +278,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="账目类型" prop="account_type_id">
-          <el-select v-model="form.account_type_id" style="width:70%;">
+          <el-select v-model="form.account_type_id" style="width: 70%">
             <el-option
               v-for="item in BalanceAccountType"
               :key="item.id"
@@ -201,15 +288,24 @@
           </el-select>
         </el-form-item>
         <el-form-item label="实付金额" prop="pay_money">
-          <el-input v-model="form.pay_money" placeholder="请输入内容" style="width:70%;"></el-input>
+          <el-input
+            v-model="form.pay_money"
+            placeholder="请输入内容"
+            style="width: 70%"
+          ></el-input>
         </el-form-item>
         <el-form-item label="备注" prop="remarks">
-          <el-input type="textarea" v-model="form.remarks" placeholder="请输入内容" style="width:70%;"></el-input>
+          <el-input
+            type="textarea"
+            v-model="form.remarks"
+            placeholder="请输入内容"
+            style="width: 70%"
+          ></el-input>
         </el-form-item>
         <el-form-item label="附图" prop="picurl">
           <el-upload
             class="avatar-uploader"
-            action="https://yj.ppp-pay.top/uploadpic.php"
+            :action="url + '/uploadpic.php'"
             :show-file-list="false"
             :on-success="handleSuccess1"
             :before-upload="beforeUpload"
@@ -221,7 +317,9 @@
       </el-form>
 
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleAddForm('form')">提 交</el-button>
+        <el-button type="primary" @click="handleAddForm('form')"
+          >提 交</el-button
+        >
         <el-button @click="handleClose('form')">取 消</el-button>
       </span>
     </el-dialog>
@@ -235,7 +333,13 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <el-form :model="form1" :rules="rules1" ref="form1" label-width="140px" class="demo-form">
+      <el-form
+        :model="form1"
+        :rules="rules1"
+        ref="form1"
+        label-width="140px"
+        class="demo-form"
+      >
         <el-form-item label="供应商" prop="supplier_companyname">
           <el-autocomplete
             class="inline-input"
@@ -243,7 +347,7 @@
             :fetch-suggestions="querySearch1"
             placeholder="供应商"
             @select="handleSelect1"
-            style="width:70%;"
+            style="width: 70%"
           ></el-autocomplete>
         </el-form-item>
         <!-- <el-form-item label="操作人" prop="user_id">
@@ -252,23 +356,34 @@
           </el-select>
         </el-form-item>-->
         <el-form-item label="实付金额" prop="pay_money">
-          <el-input v-model="form1.pay_money" placeholder="请输入内容" style="width:70%;"></el-input>
+          <el-input
+            v-model="form1.pay_money"
+            placeholder="请输入内容"
+            style="width: 70%"
+          ></el-input>
         </el-form-item>
         <el-form-item label="业务时间" prop="service_time">
           <el-date-picker
             v-model="form1.service_time"
             type="date"
             placeholder="选择日期"
-            style="width:70%;"
+            style="width: 70%"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="备注" prop="remarks">
-          <el-input type="textarea" v-model="form1.remarks" placeholder="请输入内容" style="width:70%;"></el-input>
+          <el-input
+            type="textarea"
+            v-model="form1.remarks"
+            placeholder="请输入内容"
+            style="width: 70%"
+          ></el-input>
         </el-form-item>
       </el-form>
 
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleAddForm1('form1')">提 交</el-button>
+        <el-button type="primary" @click="handleAddForm1('form1')"
+          >提 交</el-button
+        >
         <el-button @click="handleClose1('form1')">取 消</el-button>
       </span>
     </el-dialog>
@@ -286,10 +401,12 @@ import {
   accountTypeSelect,
 } from "@/api/finance";
 import { getSupplierSelect } from "@/api/archives";
+import { url } from "@/api/configuration";
 export default {
   data() {
     return {
-      permission:[],
+      url: url,
+      permission: [],
       power: "",
       total_cope_money: "",
       total_pay_money: "",

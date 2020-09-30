@@ -1,10 +1,14 @@
 <template>
-  <div class="designNote" v-if="permission.indexOf('get_style_design')!=-1">
-    <div v-if="designRemark===0">
-      <el-input type="textarea" v-model="obj.designidea" class="textarea"></el-input>
+  <div class="designNote" v-if="permission.indexOf('get_style_design') != -1">
+    <div v-if="designRemark === 0">
+      <el-input
+        type="textarea"
+        v-model="obj.designidea"
+        class="textarea"
+      ></el-input>
       <div class="drawing">图纸</div>
       <el-upload
-        action="https://yj.ppp-pay.top/uploadpic.php"
+        :action="url + '/uploadpic.php'"
         list-type="picture-card"
         :on-preview="handlePictureCardPreview"
         :on-remove="handleRemove"
@@ -20,46 +24,72 @@
       </el-dialog>
       <el-button size="mini" round @click="handleKeep">保存</el-button>
     </div>
-    <div class="designNoteMain" v-if="designRemark===1">
+    <div class="designNoteMain" v-if="designRemark === 1">
       <div class="left">
-        <div style="margin:30px 0">
-          <div style="font-size:16px;margin: 0px 20px 30px 0;">备注</div>
+        <div style="margin: 30px 0">
+          <div style="font-size: 16px; margin: 0px 20px 30px 0">备注</div>
           <div
-            style="font-size:14px;width:80%;margin: 10px 60px; word-wrap: break-word;  word-break: break-all; overflow: hidden;"
-          >{{obj.designidea}}</div>
+            style="
+              font-size: 14px;
+              width: 80%;
+              margin: 10px 60px;
+              word-wrap: break-word;
+              word-break: break-all;
+              overflow: hidden;
+            "
+          >
+            {{ obj.designidea }}
+          </div>
         </div>
         <div>
-          <div style="font-size:16px;margin: 10px 0;">图纸</div>
+          <div style="font-size: 16px; margin: 10px 0">图纸</div>
           <div>
-            <img :src="item.url" v-for="(item, index) in img_list" :key="index" alt />
+            <img
+              :src="item.url"
+              v-for="(item, index) in img_list"
+              :key="index"
+              alt
+            />
           </div>
         </div>
       </div>
       <div class="right">
         <div
           class="push_plate_making"
-          style="background-color: #f2f2f2;"
+          style="background-color: #f2f2f2"
           @click="get_push_plate"
-          v-if="obj.pattern_status=='0'"
-        >推送打版</div>
-        <div class="push_plate_making" style="background-color: #f2f2f2;" v-else>已推送打版</div>
+          v-if="obj.pattern_status == '0'"
+        >
+          推送打版
+        </div>
+        <div class="push_plate_making" style="background-color: #f2f2f2" v-else>
+          已推送打版
+        </div>
 
         <el-tooltip
           content="加急"
           placement="top"
           class="edit"
-          style="background-color: #f2f2f2;font-size:20px;"
+          style="background-color: #f2f2f2; font-size: 20px"
         >
-          <div v-if="obj.is_urgent" style="color: red;" class="el-icon-warning-outline"></div>
-          <div v-else @click="styleUrgents" class="el-icon-warning-outline"></div>
+          <div
+            v-if="obj.is_urgent"
+            style="color: red"
+            class="el-icon-warning-outline"
+          ></div>
+          <div
+            v-else
+            @click="styleUrgents"
+            class="el-icon-warning-outline"
+          ></div>
         </el-tooltip>
 
         <el-tooltip
           content="提交审批"
           placement="top"
-          v-if="design_status==1||design_status==3"
+          v-if="design_status == 1 || design_status == 3"
           class="edit"
-          style="background-color: #f2f2f2;"
+          style="background-color: #f2f2f2"
         >
           <div @click="design_apply">
             <svg viewBox="0 0 32 32" width="20" height="20">
@@ -73,9 +103,9 @@
         <el-tooltip
           content="设计审核中"
           placement="top"
-          v-if="design_status==2"
+          v-if="design_status == 2"
           class="edit"
-          style="background-color: #ffaf39;"
+          style="background-color: #ffaf39"
         >
           <div @click="cancel_design_apply">
             <svg viewBox="0 0 32 32" width="20" height="20">
@@ -89,9 +119,9 @@
         <el-tooltip
           content="设计通过"
           placement="top"
-          v-if="design_status==5"
+          v-if="design_status == 5"
           class="edit"
-          style="background-color: #01c46d;"
+          style="background-color: #01c46d"
         >
           <div>
             <svg viewBox="0 0 32 32" width="20" height="20">
@@ -105,9 +135,9 @@
         <el-tooltip
           content="设计不通过"
           placement="top"
-          v-if="design_status==4"
+          v-if="design_status == 4"
           class="edit"
-          style="background-color: #fb3647;"
+          style="background-color: #fb3647"
         >
           <div @click="design_apply">
             <svg viewBox="0 0 32 32" width="20" height="20">
@@ -120,7 +150,11 @@
         </el-tooltip>
 
         <el-tooltip content="打印" placement="top">
-          <div class="edit" style="background-color: #f2f2f2;" v-print="'#printTest'">
+          <div
+            class="edit"
+            style="background-color: #f2f2f2"
+            v-print="'#printTest'"
+          >
             <svg viewBox="64 64 896 896" width="20" height="20">
               <path
                 d="M732 120c0-4.4-3.6-8-8-8H300c-4.4 0-8 3.6-8 8v148h440V120zm120 212H172c-44.2 0-80 35.8-80 80v328c0 17.7 14.3 32 32 32h168v132c0 4.4 3.6 8 8 8h424c4.4 0 8-3.6 8-8V772h168c17.7 0 32-14.3 32-32V412c0-44.2-35.8-80-80-80zM664 844H360V568h304v276zm164-360c0 4.4-3.6 8-8 8h-40c-4.4 0-8-3.6-8-8v-40c0-4.4 3.6-8 8-8h40c4.4 0 8 3.6 8 8v40z"
@@ -130,7 +164,11 @@
           </div>
         </el-tooltip>
         <el-tooltip content="编辑" placement="top">
-          <div class="edit" style="background-color: #f2f2f2;" @click="handleKeepEdit">
+          <div
+            class="edit"
+            style="background-color: #f2f2f2"
+            @click="handleKeepEdit"
+          >
             <svg viewBox="0 0 32 32" width="20" height="20">
               <path
                 d="M17.2 9.144l5.656 5.657-13.2 13.199h-5.656v-5.657l13.2-13.2zM19.085 7.259l2.828-2.829c0.241-0.241 0.575-0.39 0.943-0.39s0.701 0.149 0.943 0.39l3.772 3.772c0.241 0.241 0.39 0.575 0.39 0.943s-0.149 0.701-0.39 0.943l-2.829 2.828-5.656-5.656z"
@@ -155,7 +193,12 @@
       :close-on-press-escape="false"
     >
       <el-select v-model="form.user_id" @change="handleUser_id($event)">
-        <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
+        <el-option
+          v-for="item in stylists"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
+        ></el-option>
       </el-select>
       <span slot="footer" class="dialog-footer">
         <el-button @click="AssistantCancel">取 消</el-button>
@@ -172,9 +215,9 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <div style="text-align: center;">确定是否加急！</div>
+      <div style="text-align: center">确定是否加急！</div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="centerDialogVisible2=false">取消</el-button>
+        <el-button @click="centerDialogVisible2 = false">取消</el-button>
         <el-button type="primary" @click="AssistantFinish1">确 定</el-button>
       </span>
     </el-dialog>
@@ -182,6 +225,7 @@
 </template>
 
 <script>
+import { url } from "@/api/configuration";
 import {
   getStyle,
   styleEdit,
@@ -201,6 +245,7 @@ export default {
   components: { Print },
   data() {
     return {
+      url: url,
       power: "",
       obj: { pattern_status: 0, designidea: "" },
       design_status: "",
@@ -227,12 +272,14 @@ export default {
     async AssistantFinish() {
       let res = await pushPattern({
         style_id: this.$route.query.id,
-        user_id: this.form.user_id,
+        user_id: this.form.user_id || -1,
       });
-      console.log(res);
       if (res.data.error_code == 0) {
         this.$message.success(res.data.msg);
         this.init();
+        this.obj.pattern_status = 1;
+      } else {
+        this.$message.error(res.data.msg);
       }
       this.centerDialogVisible1 = false;
     },
@@ -309,7 +356,7 @@ export default {
       });
     },
     async getstylist() {
-      let res = await getStylistList({ department_id: 2 });
+      let res = await getStylistList({ role_id: 3 });
       let { data } = res.data;
       data.map((v) => {
         v["checked"] = false;

@@ -202,7 +202,7 @@
         <el-form-item label="附图" prop="picurl">
           <el-upload
             class="avatar-uploader"
-            action="https://yj.ppp-pay.top/uploadpic.php"
+            :action="url + '/uploadpic.php'"
             :show-file-list="false"
             :on-success="handleSuccess1"
             :before-upload="beforeUpload"
@@ -270,6 +270,7 @@
 <script>
 import moment from "moment";
 import { getWestList, getStylistList } from "@/api/researchDevelopment";
+import { url } from "@/api/configuration";
 import {
   // supplierAccountList,
   balanceAccountSelect,
@@ -283,6 +284,7 @@ import { getSupplierSelect } from "@/api/archives";
 export default {
   data() {
     return {
+       url: url,
       total_cope_money: "",
       total_pay_money: "",
       total_opay_money: "",

@@ -1,5 +1,5 @@
 <template>
-  <div class="platemaking" v-if="permission.indexOf('platemaking')!=-1">
+  <div class="platemaking" v-if="permission.indexOf('platemaking') != -1">
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -7,25 +7,40 @@
         <el-breadcrumb-item>制版</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <div style="margin-bottom:10px">
-      <el-input v-model="formInline.styleno" placeholder="款号" style="width:200px"></el-input>
-      <el-button icon="el-icon-search" size="mini" circle class="search_button" @click="onSubmit"></el-button>
+    <div style="margin-bottom: 10px">
+      <el-input
+        v-model="formInline.styleno"
+        placeholder="款号"
+        style="width: 200px"
+      ></el-input>
+      <el-button
+        icon="el-icon-search"
+        size="mini"
+        circle
+        class="search_button"
+        @click="onSubmit"
+      ></el-button>
     </div>
     <el-form
       :inline="true"
       :model="formInline"
       class="demo-form-inline"
-      style="position: relative;"
+      style="position: relative"
     >
       <el-form-item>
         <el-select
           v-model="formInline.year"
           clearable
           placeholder="年份"
-          style="width:120px"
+          style="width: 120px"
           @change="get_year($event)"
         >
-          <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
+          <el-option
+            v-for="item in years"
+            :key="item.id"
+            :label="item.year"
+            :value="item.year"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -33,7 +48,7 @@
           v-model="formInline.season"
           clearable
           placeholder="季节"
-          style="width:120px"
+          style="width: 120px"
           @change="get_season($event)"
         >
           <el-option
@@ -50,9 +65,14 @@
           placeholder="设计师"
           @change="handleUser_id($event)"
           clearable
-          style="width:120px"
+          style="width: 120px"
         >
-          <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          <el-option
+            v-for="item in stylists"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -79,12 +99,22 @@
         highlight-current-row
         style="width: 100%"
       >
-        <el-table-column label="序号" type="index" align="center" width="50"></el-table-column>
+        <el-table-column
+          label="序号"
+          type="index"
+          align="center"
+          width="50"
+        ></el-table-column>
         <el-table-column label="图片" align="center" width="140">
           <template slot-scope="scope" property="style_pic_url">
-            <div style="display: flex;">
+            <div style="display: flex">
               <el-image
-                style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
+                style="
+                  width: 50px;
+                  height: 50px;
+                  border-radius: 5px;
+                  margin-right: 5px;
+                "
                 :src="scope.row.style_pic_url"
                 fit="cover"
               >
@@ -95,32 +125,68 @@
               <img
                 :src="scope.row.style_color_pic_url"
                 class="img"
-                style="width: 50px; height: 50px;border-radius: 5px;"
+                style="width: 50px; height: 50px; border-radius: 5px"
                 alt
               />
             </div>
           </template>
         </el-table-column>
-        <el-table-column property="stylename" align="center" label="名称"></el-table-column>
-        <el-table-column property="styleno" align="center" label="款号"></el-table-column>
-        <el-table-column width="90" property="style_color" label="颜色"></el-table-column>
-        <el-table-column property="style_type" align="center" label="品类"></el-table-column>
-        <el-table-column property="year" align="center" label="年份"></el-table-column>
-        <el-table-column property="season" align="center" label="季节"></el-table-column>
-        <el-table-column property="username" align="center" label="设计师"></el-table-column>
-        <el-table-column property="sample_user_name" align="center" label="制版师"></el-table-column>
+        <el-table-column
+          property="stylename"
+          align="center"
+          label="名称"
+        ></el-table-column>
+        <el-table-column
+          property="styleno"
+          align="center"
+          label="款号"
+        ></el-table-column>
+        <el-table-column
+          width="90"
+          property="style_color"
+          label="颜色"
+        ></el-table-column>
+        <el-table-column
+          property="style_type"
+          align="center"
+          label="品类"
+        ></el-table-column>
+        <el-table-column
+          property="year"
+          align="center"
+          label="年份"
+        ></el-table-column>
+        <el-table-column
+          property="season"
+          align="center"
+          label="季节"
+        ></el-table-column>
+        <el-table-column
+          property="username"
+          align="center"
+          label="设计师"
+        ></el-table-column>
+        <el-table-column
+          property="sample_user_name"
+          align="center"
+          label="制版师"
+        ></el-table-column>
         <el-table-column align="center" label="状态">
           <template slot-scope="scope">
             <div
-              style="background:url('https://yj.ppp-pay.top/upload/20200905/20200905182549.png') no-repeat;background-position: 100% 50%;
-              background-size: 49px;"
+              style="
+                background: url('https://yj.ppp-pay.top/upload/20200905/20200905182549.png') ;
+                background-repeat:no-repeat;
+                background-position: 100% 50%;
+                background-size: 49px;
+              "
               v-if="scope.row.is_urgent"
             >
-              <em>{{scope.row.sample}}</em>
+              <em>{{ scope.row.sample }}</em>
               <!-- <div ></div> -->
             </div>
             <div v-else>
-              <em>{{scope.row.sample}}</em>
+              <em>{{ scope.row.sample }}</em>
               <!-- <div ></div> -->
             </div>
           </template>
@@ -129,31 +195,64 @@
           <template slot-scope="scope">
             <div class="btn">
               <div
-                v-if="scope.row.sample_status==='2'||scope.row.sample_status==='4'&&scope.row.user_id==userid&&permission.indexOf('sample_agree')!=-1"
+                v-if="
+                  scope.row.sample_status === '2' ||
+                  (scope.row.sample_status === '4' &&
+                    scope.row.sample_user_id == userid &&
+                    permission.indexOf('sample_apply') != -1)
+                "
                 @click="sample_apply(scope.$index, scope.row)"
-              >提交审核</div>
+              >
+                提交审核
+              </div>
               <!-- 2 4 -->
               <div
-                v-if="scope.row.sample_status==='3'&&scope.row.user_id==userid&&permission.indexOf('sample_agree')!=-1"
+                v-if="
+                  scope.row.sample_status === '3' &&
+                  scope.row.sample_user_id == userid &&
+                  permission.indexOf('sample_apply') != -1
+                "
                 @click="cancel_sample_apply(scope.$index, scope.row)"
-              >撤回审核</div>
+              >
+                撤回审核
+              </div>
               <div
-                @click="sample_agree(scope.$index, scope.row,1)"
-                v-if="scope.row.sample_status==='3'&&permission.indexOf('sample_agree')!=-1"
-              >通过</div>
+                @click="sample_agree(scope.$index, scope.row, 1)"
+                v-if="
+                  scope.row.sample_status === '3' &&
+                  permission.indexOf('sample_agree') != -1
+                "
+              >
+                通过
+              </div>
               <div
-                @click="sample_agree(scope.$index, scope.row,0)"
-                v-if="scope.row.sample_status==='3'&&permission.indexOf('sample_agree')!=-1"
-              >不通过</div>
+                @click="sample_agree(scope.$index, scope.row, 0)"
+                v-if="
+                  scope.row.sample_status === '3' &&
+                  permission.indexOf('sample_agree') != -1
+                "
+              >
+                不通过
+              </div>
               <div
-                v-if="scope.row.sample_user_id==0&&permission.indexOf('style_sample_edit')!=-1"
+                v-if="
+                  scope.row.sample_user_id == 0 &&
+                  permission.indexOf('style_sample_edit') != -1
+                "
                 @click="get_style_sample(scope.$index, scope.row)"
-              >领取</div>
+              >
+                领取
+              </div>
               <!-- 3 -->
               <div
                 @click="handleEdit(scope.$index, scope.row)"
-                v-if="scope.row.sample_user_id!=0&&permission.indexOf('get_style_sample')!=-1"
-              >查看</div>
+                v-if="
+                  scope.row.sample_user_id != 0 &&
+                  permission.indexOf('get_style_sample') != -1
+                "
+              >
+                查看
+              </div>
             </div>
           </template>
         </el-table-column>

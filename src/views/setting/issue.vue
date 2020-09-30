@@ -73,7 +73,7 @@
           <!-- <script id="editor" type="text/plain"></script> -->
           <!-- 图片上传组件辅助-->
           <el-upload
-            action="https://yj.ppp-pay.top/uploadpic.php"
+            :action="url + '/uploadpic.php'"
             class="avatar-uploader"
             :show-file-list="false"
             :on-success="uploadSuccess"
@@ -134,11 +134,12 @@
 
 <script>
 import { quillEditor } from "vue-quill-editor"; //调用编辑器
-
+import { url } from "@/api/configuration";
 import { issueList, issueAdd, issueReply, issueInfo } from "@/api/setting.js";
 export default {
   data() {
     return {
+      url: url,
       permission: [],
       tableData: [],
       ruleForm: {},

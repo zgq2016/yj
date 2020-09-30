@@ -3,23 +3,29 @@
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>档案库</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/routeCard_list' }">物料工艺卡</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: `/routeCardDeital?id=${form.id}` }">物料工艺卡详细</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/routeCard_list' }"
+          >物料工艺卡</el-breadcrumb-item
+        >
+        <el-breadcrumb-item :to="{ path: `/routeCardDeital?id=${form.id}` }"
+          >物料工艺卡详细</el-breadcrumb-item
+        >
         <el-breadcrumb-item>编辑物料工艺卡</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="nav">
       <ul>
         <li
-          v-for="(item,index) in nav"
+          v-for="(item, index) in nav"
           :key="index"
-          :class="active===index?'active':''"
+          :class="active === index ? 'active' : ''"
           @click="actives(index)"
-        >{{item}}</li>
+        >
+          {{ item }}
+        </li>
       </ul>
     </div>
     <div class="main">
-      <div class="contents1" v-show="active==0">
+      <div class="contents1" v-show="active == 0">
         <div class="headr_list">
           <div class="cont">
             <div class="update" @click="handleImg()">
@@ -27,9 +33,15 @@
               <i v-else class="avatar-uploader-icon">
                 <div
                   class="el-upload__tip"
-                  style="font-size:14px;font-weight:500;color:rgb(158 152 152);"
+                  style="
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: rgb(158 152 152);
+                  "
                   slot="tip"
-                >上传色卡</div>
+                >
+                  上传色卡
+                </div>
               </i>
             </div>
             <el-cascader
@@ -41,9 +53,17 @@
               placeholder="颜色"
             ></el-cascader>
             <br />
-            <el-input v-model="form1.color_no" placeholder="色号" style="width:200px;"></el-input>
-            <el-button type="info" @click="form1.color_no='无编号'" circle>无</el-button>
-            <el-button class="determine" @click.stop="determine">确定</el-button>
+            <el-input
+              v-model="form1.color_no"
+              placeholder="色号"
+              style="width: 200px"
+            ></el-input>
+            <el-button type="info" @click="form1.color_no = '无编号'" circle
+              >无</el-button
+            >
+            <el-button class="determine" @click.stop="determine"
+              >确定</el-button
+            >
           </div>
 
           <div class="abc">
@@ -51,26 +71,30 @@
           </div>
         </div>
         <el-divider></el-divider>
-        <div class="colorCard" v-if="form.color_data.length>0">
+        <div class="colorCard" v-if="form.color_data.length > 0">
           <ul>
             <li
-              v-for="(item,index) in form.color_data"
-              @click.stop="recompose(item,index)"
+              v-for="(item, index) in form.color_data"
+              @click.stop="recompose(item, index)"
               :key="index"
             >
               <div class="imgs">
-                <el-image style="width: 100px; height: 100px" :src="item.picurl" fit="cover"></el-image>
+                <el-image
+                  style="width: 100px; height: 100px"
+                  :src="item.picurl"
+                  fit="cover"
+                ></el-image>
               </div>
               <div class="substance">
-                <h6>{{item.color}}</h6>
-                <h6>{{item.color_no}}</h6>
+                <h6>{{ item.color }}</h6>
+                <h6>{{ item.color_no }}</h6>
               </div>
               <span @click.stop="dels(index)" class="del el-icon-close"></span>
             </li>
           </ul>
         </div>
       </div>
-      <div class="contents1 contents2" v-show="active==1">
+      <div class="contents1 contents2" v-show="active == 1">
         <div class="input_s">
           <div class="box">
             <el-input
@@ -89,9 +113,21 @@
               placeholder="分类"
               class="left_float"
             ></el-cascader>
-            <el-input v-model="form.wsale_price" class="left_float" placeholder="大货单价"></el-input>
-            <el-input v-model="form.materialsname" class="maxsize left_float" placeholder="物料名称"></el-input>
-            <el-select class="left_float" v-model="form.unit" placeholder="计量单位">
+            <el-input
+              v-model="form.wsale_price"
+              class="left_float"
+              placeholder="大货单价"
+            ></el-input>
+            <el-input
+              v-model="form.materialsname"
+              class="maxsize left_float"
+              placeholder="物料名称"
+            ></el-input>
+            <el-select
+              class="left_float"
+              v-model="form.unit"
+              placeholder="计量单位"
+            >
               <el-option
                 v-for="item in units"
                 :key="item.id"
@@ -118,23 +154,25 @@
             </div>
             <div class="list_content">
               <div class="list_content_left">
-                <div class="list_content_left_name">{{item.companyname}}</div>
+                <div class="list_content_left_name">{{ item.companyname }}</div>
                 <div>
-                  {{item.mainclass}}
-                  <em
-                    v-if="item.materials_class_name"
-                  >({{item.materials_class_name}})</em>
+                  {{ item.mainclass }}
+                  <em v-if="item.materials_class_name"
+                    >({{ item.materials_class_name }})</em
+                  >
                 </div>
-                <div
-                  v-if="item.supplier_contact_data.length>0"
-                >{{item.supplier_contact_data[0].contacts}}:{{item.supplier_contact_data[0].phone}}</div>
+                <div v-if="item.supplier_contact_data.length > 0">
+                  {{ item.supplier_contact_data[0].contacts }}:{{
+                    item.supplier_contact_data[0].phone
+                  }}
+                </div>
               </div>
             </div>
           </div>
         </div>
         <el-pagination
           class="pagination"
-          style="float:right;"
+          style="float: right"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="pageIndex"
@@ -145,7 +183,7 @@
         ></el-pagination>
       </div>
 
-      <div class="contents1 contents2" v-show="active==2">
+      <div class="contents1 contents2" v-show="active == 2">
         <div class="input_s sencond">
           <div class="bax">
             <div class="recognition" @click="choice">
@@ -153,14 +191,30 @@
               <em>识别内容</em>
             </div>
             <div class="recognition_right">
-              <el-input v-model="form.materialsno" class="stylp" placeholder="编号/品名"></el-input>
+              <el-input
+                v-model="form.materialsno"
+                class="stylp"
+                placeholder="编号/品名"
+              ></el-input>
               <br />
-              <el-input v-model="form.breadth" class="stylp" placeholder="幅宽"></el-input>
+              <el-input
+                v-model="form.breadth"
+                class="stylp"
+                placeholder="幅宽"
+              ></el-input>
               <br />
-              <el-input v-model="form.grammage" class="stylp" placeholder="克重"></el-input>
+              <el-input
+                v-model="form.grammage"
+                class="stylp"
+                placeholder="克重"
+              ></el-input>
             </div>
             <div class="makeup">
-              <div class="boxs" v-for="(item,index) in form.material_data" :key="index">
+              <div
+                class="boxs"
+                v-for="(item, index) in form.material_data"
+                :key="index"
+              >
                 <el-select v-model="item.material_name" placeholder="成分">
                   <el-option
                     v-for="item1 in materials"
@@ -170,8 +224,16 @@
                   ></el-option>
                 </el-select>
                 <el-input v-model="item.content" placeholder="%"></el-input>
-                <span v-if="length==index+1" class="el-icon-plus" @click="handleIngredient"></span>
-                <span v-else class="el-icon-minus" @click="handleDeleteUser(index)"></span>
+                <span
+                  v-if="length == index + 1"
+                  class="el-icon-plus"
+                  @click="handleIngredient"
+                ></span>
+                <span
+                  v-else
+                  class="el-icon-minus"
+                  @click="handleDeleteUser(index)"
+                ></span>
               </div>
             </div>
           </div>
@@ -191,12 +253,14 @@
           >
             <ul>
               <li>*注意：识别内容存在差异，谨慎修改！</li>
-              <li v-for="(item,index) in contents" :key="index">{{item.words}}</li>
+              <li v-for="(item, index) in contents" :key="index">
+                {{ item.words }}
+              </li>
             </ul>
           </div>
           <div v-if="fileList1">
             <el-image
-              style="width: 100%; height: 300px;"
+              style="width: 100%; height: 300px"
               fit="scale-down"
               title="点击放大"
               :src="fileList1"
@@ -206,19 +270,26 @@
           </div>
         </div>
       </div>
-      <div class="contents1" v-show="active==3">
+      <div class="contents1" v-show="active == 3">
         <div class="optional">
           <span>选填</span>
 
           <div class="inputed">
-            <el-input v-model="form.arrival_time" placeholder="到货时间/天"></el-input>
+            <el-input
+              v-model="form.arrival_time"
+              placeholder="到货时间/天"
+            ></el-input>
             <div class="radio">
               <el-radio-group v-model="form.instock">
                 <el-radio :label="'0'">有货</el-radio>
                 <el-radio :label="'1'">无货</el-radio>
               </el-radio-group>
             </div>
-            <el-input type="textarea" v-model="form.remarks" placeholder="备注"></el-input>
+            <el-input
+              type="textarea"
+              v-model="form.remarks"
+              placeholder="备注"
+            ></el-input>
           </div>
           <div class="ensure">
             <el-button class="step" @click="variation(2)">上一步</el-button>
@@ -237,7 +308,7 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <div style="display:flex;">
+      <div style="display: flex">
         <div class="info-item">
           <!-- <label class="btn btn-orange" for="uploads">选择图片</label> -->
           <div>
@@ -257,7 +328,8 @@
               type="info"
               class="aj"
               size="small"
-            >拍照</el-button>
+              >拍照</el-button
+            >
           </div>
           <div class="line">
             <div class="cropper-content">
@@ -289,7 +361,7 @@
           </div>
           <div>
             <input
-              style="width:30px;font-size:20px;margin:0 10px;float:left;"
+              style="width: 30px; font-size: 20px; margin: 0 10px; float: left"
               type="button"
               class="oper"
               value="+"
@@ -297,7 +369,7 @@
               @click="changeScale(1)"
             />
             <input
-              style="width:30px;font-size:20px;margin:0 10px;float:left;"
+              style="width: 30px; font-size: 20px; margin: 0 10px; float: left"
               type="button"
               class="oper"
               value="-"
@@ -305,7 +377,7 @@
               @click="changeScale(-1)"
             />
             <input
-              style="width:30px;font-size:20px;margin:0 10px;float:left;"
+              style="width: 30px; font-size: 20px; margin: 0 10px; float: left"
               type="button"
               class="oper"
               value="↺"
@@ -313,7 +385,7 @@
               @click="rotateLeft"
             />
             <input
-              style="width:30px;font-size:20px;margin:0 10px;float:left;"
+              style="width: 30px; font-size: 20px; margin: 0 10px; float: left"
               type="button"
               class="oper"
               value="↻"
@@ -321,7 +393,7 @@
               @click="rotateRight"
             />
             <input
-              style="width:30px;font-size:20px;margin:0 10px;float:left;"
+              style="width: 30px; font-size: 20px; margin: 0 10px; float: left"
               type="button"
               class="oper"
               value="↓"
@@ -346,29 +418,57 @@
       width="1065px"
     >
       <div class="box">
-        <video id="videoCamera" class="canvas" :width="videoWidth" :height="videoHeight" autoplay></video>
+        <video
+          id="videoCamera"
+          class="canvas"
+          :width="videoWidth"
+          :height="videoHeight"
+          autoplay
+        ></video>
         <canvas
           id="canvasCamera"
           class="canvas"
-          style="margin-left:10px;"
+          style="margin-left: 10px"
           :width="videoWidth"
           :height="videoHeight"
         ></canvas>
       </div>
       <div slot="footer">
-        <el-button @click="drawImage" icon="el-icon-camera" size="small">拍照</el-button>
-        <el-button v-if="os" @click="getCompetence" icon="el-icon-video-camera" size="small">打开摄像头</el-button>
+        <el-button @click="drawImage" icon="el-icon-camera" size="small"
+          >拍照</el-button
+        >
+        <el-button
+          v-if="os"
+          @click="getCompetence"
+          icon="el-icon-video-camera"
+          size="small"
+          >打开摄像头</el-button
+        >
         <!-- <el-button v-else @click="stopNavigator" icon="el-icon-switch-button" size="small">关闭摄像头</el-button> -->
-        <el-button @click="resetCanvas" icon="el-icon-refresh" size="small">重置</el-button>
-        <el-button @click="ctrlShift" icon="el-icon-s-unfold" size="small">另存为</el-button>
-        <el-button @click="onCancel(1,numberr)" icon="el-icon-circle-close" size="small">完成</el-button>
+        <el-button @click="resetCanvas" icon="el-icon-refresh" size="small"
+          >重置</el-button
+        >
+        <el-button @click="ctrlShift" icon="el-icon-s-unfold" size="small"
+          >另存为</el-button
+        >
+        <el-button
+          @click="onCancel(numberr)"
+          icon="el-icon-circle-close"
+          size="small"
+          >完成</el-button
+        >
       </div>
     </el-dialog>
-    <el-dialog title="请选择一个识别方式" :visible.sync="dialogVisible" center width="30%">
+    <el-dialog
+      title="请选择一个识别方式"
+      :visible.sync="dialogVisible"
+      center
+      width="30%"
+    >
       <el-upload
         class="upload-demo"
         ref="upload"
-        action="https://shesho.ppp-pay.top/webapi.php?g=test"
+        :action="url + '/webapi.php?g=test'"
         :auto-upload="true"
         name="image"
         :show-file-list="false"
@@ -377,9 +477,18 @@
         :before-upload="beforeRecognition"
         :file-list="fileList"
       >
-        <el-button slot="trigger" size="small" type="info">图片内容识别</el-button>
+        <el-button slot="trigger" size="small" type="info"
+          >图片内容识别</el-button
+        >
       </el-upload>
-      <el-button @click="onTake" icon="el-icon-camera" type="info" class="camera" size="small">拍照</el-button>
+      <el-button
+        @click="onTake"
+        icon="el-icon-camera"
+        type="info"
+        class="camera"
+        size="small"
+        >拍照</el-button
+      >
     </el-dialog>
   </div>
 </template>
@@ -401,12 +510,14 @@ import {
 } from "@/api/archives";
 import { VueCropper } from "vue-cropper";
 import { Api } from "@/js/api.js"; //接口url配置文件
+import { url } from "@/api/configuration";
 export default {
   components: {
     VueCropper,
   },
   data() {
     return {
+      url: url,
       form1: { picurl: "", color_no: "", color: "", companyname: "" },
       dialogVisible: false,
       SupplierList: [],
@@ -623,7 +734,10 @@ export default {
       this.centerDialogVisible = false;
     },
     /*调用摄像头拍照开始*/
-    onTake() {
+    onTake(num) {
+      if (num != undefined) {
+        this.numberr = num;
+      }
       this.visible = true;
       this.getCompetence();
     },
@@ -639,12 +753,12 @@ export default {
       }
       return new File([u8arr], filename, { type: mime });
     },
-    async onCancel(val, num) {
+    async onCancel(num) {
       this.visible = false;
       this.dialogVisible = false;
       /* this.resetCanvas();*/
       this.stopNavigator();
-      if (val == undefined && num == undefined) {
+      if (num != 101) {
         this.fileList1 = this.imgSrc;
         let file = this.dataURLtoFile(this.imgSrc, String(Math.random()));
         let param = new FormData(); // 创建form对象
@@ -684,9 +798,9 @@ export default {
             }
           }
         });
-      } else if (val == 1 && num != undefined) {
+      } else {
         let file = this.dataURLtoFile(this.imgSrc, String(Math.random()));
-        this.fileName = file;
+        this.fileName = String(Math.random()) + ".png";
         this.option.img = this.imgSrc;
       }
       // this.imgSrc = "";

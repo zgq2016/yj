@@ -3,21 +3,25 @@
     <div class="aa">
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>档案库</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/distributor_list' }">供应商</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/distributor_list' }"
+          >供应商</el-breadcrumb-item
+        >
         <el-breadcrumb-item>新增供应商</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="header_nav">
       <ul>
         <li
-          v-for="(item,index) in nav"
+          v-for="(item, index) in nav"
           :key="index"
-          :class="active===index?'active':''"
+          :class="active === index ? 'active' : ''"
           @click="actives(index)"
-        >{{item}}</li>
+        >
+          {{ item }}
+        </li>
       </ul>
     </div>
-    <div class="content" v-show="active==0">
+    <div class="content" v-show="active == 0">
       <div class="upload">
         <!-- 商标/名片 -->
         <div class="upload_card">
@@ -26,9 +30,15 @@
             <i v-else class="avatar-uploader-icon">
               <div
                 class="el-upload__tip"
-                style="font-size:14px;font-weight:500;color:rgb(158 152 152);"
+                style="
+                  font-size: 14px;
+                  font-weight: 500;
+                  color: rgb(158 152 152);
+                "
                 slot="tip"
-              >公司LOGO</div>
+              >
+                公司LOGO
+              </div>
             </i>
           </div>
           <div class="recognition" @click="choice">
@@ -42,8 +52,16 @@
       </div>
       <div class="matter">
         <div class="padd">
-          <el-input v-model="form.companyname" class="maxsize" placeholder="公司简称"></el-input>
-          <el-input v-model="form.address" class="maxsize" placeholder="地址"></el-input>
+          <el-input
+            v-model="form.companyname"
+            class="maxsize"
+            placeholder="公司简称"
+          ></el-input>
+          <el-input
+            v-model="form.address"
+            class="maxsize"
+            placeholder="地址"
+          ></el-input>
           <el-select
             v-model="form.materials_class_id"
             placeholder="分类"
@@ -59,29 +77,33 @@
           </el-select>
         </div>
         <div class="padd1">
-          <div class="colored" v-for="(item,index) in form.contact" :key="index">
+          <div
+            class="colored"
+            v-for="(item, index) in form.contact"
+            :key="index"
+          >
             <el-input
               v-model="item.phone"
-              @blur="itphone(item.phone,index)"
+              @blur="itphone(item.phone, index)"
               class="maxsize it"
               placeholder="电话号码"
             ></el-input>
             <span
-              v-if="length==index+1"
+              v-if="length == index + 1"
               class="el-icon-plus"
-              style="font-size:14px;cursor: pointer;"
+              style="font-size: 14px; cursor: pointer"
               @click="handleAddUsers"
             ></span>
             <span
               v-else
               class="el-icon-minus"
-              style="font-size:14px;cursor: pointer;"
+              style="font-size: 14px; cursor: pointer"
               @click="handleDeleteUser(index)"
             ></span>
           </div>
         </div>
         <div class="right_float">
-          <el-button class="next1" @click="active=1">下一步</el-button>
+          <el-button class="next1" @click="active = 1">下一步</el-button>
         </div>
       </div>
       <el-divider></el-divider>
@@ -95,11 +117,13 @@
         >
           <ul>
             <li>*注意：识别内容存在差异，谨慎修改！</li>
-            <li v-for="(item,index) in contents" :key="index">{{item.words}}</li>
+            <li v-for="(item, index) in contents" :key="index">
+              {{ item.words }}
+            </li>
           </ul>
           <div v-if="fileList1">
             <el-image
-              style="width: 100%; height: 300px;"
+              style="width: 100%; height: 300px"
               fit="scale-down"
               title="点击放大"
               :src="fileList1"
@@ -109,31 +133,64 @@
         </div>
       </div>
     </div>
-    <div class="content" v-show="active==1">
+    <div class="content" v-show="active == 1">
       <div class="maxc">
-        <el-input v-model="form.alias_name" class="maxsize" placeholder="公司全称"></el-input>
-        <div class="box" v-for="(item,index) in form.bank" :key="index">
+        <el-input
+          v-model="form.alias_name"
+          class="maxsize"
+          placeholder="公司全称"
+        ></el-input>
+        <div class="box" v-for="(item, index) in form.bank" :key="index">
           <br />
           <el-select v-model="item.bank" placeholder="银行" class="maxsize">
-            <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.name"></el-option>
+            <el-option
+              v-for="item in options"
+              :key="item.id"
+              :label="item.name"
+              :value="item.name"
+            ></el-option>
           </el-select>
-          <el-input v-model="item.name" class="maxsize" placeholder="账户名称"></el-input>
-          <el-input v-model="item.bankid" class="maxsize" placeholder="账号"></el-input>
+          <el-input
+            v-model="item.name"
+            class="maxsize"
+            placeholder="账户名称"
+          ></el-input>
+          <el-input
+            v-model="item.bankid"
+            class="maxsize"
+            placeholder="账号"
+          ></el-input>
           <span
-            v-if="length1==index+1"
+            v-if="length1 == index + 1"
             class="el-icon-plus"
-            style="font-size:16px;cursor: pointer;background: #f2f2f2;border-radius:50%;padding:5px;"
+            style="
+              font-size: 16px;
+              cursor: pointer;
+              background: #f2f2f2;
+              border-radius: 50%;
+              padding: 5px;
+            "
             @click="handleAddAccount"
           ></span>
           <span
             v-else
             class="el-icon-minus"
-            style="font-size:16px;cursor: pointer;background: #f2f2f2;border-radius:50%;padding:5px;"
+            style="
+              font-size: 16px;
+              cursor: pointer;
+              background: #f2f2f2;
+              border-radius: 50%;
+              padding: 5px;
+            "
             @click="handleDeleteAccount(index)"
           ></span>
         </div>
-        <el-input type="textarea" v-model="form.remarks" placeholder="备注"></el-input>
-        <el-button @click="active=0" round class="edt">上一步</el-button>
+        <el-input
+          type="textarea"
+          v-model="form.remarks"
+          placeholder="备注"
+        ></el-input>
+        <el-button @click="active = 0" round class="edt">上一步</el-button>
         <el-button @click="handleEdit" round class="edt">确定</el-button>
       </div>
     </div>
@@ -143,26 +200,48 @@
       :show-close="false"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
-      @close="onCancel"
       width="1065px"
     >
       <div class="box">
-        <video id="videoCamera" class="canvas" :width="videoWidth" :height="videoHeight" autoplay></video>
+        <video
+          id="videoCamera"
+          class="canvas"
+          :width="videoWidth"
+          :height="videoHeight"
+          autoplay
+        ></video>
         <canvas
           id="canvasCamera"
           class="canvas"
-          style="margin-left:10px;"
+          style="margin-left: 10px"
           :width="videoWidth"
           :height="videoHeight"
         ></canvas>
       </div>
       <div slot="footer">
-        <el-button @click="drawImage" icon="el-icon-camera" size="small">拍照</el-button>
-        <el-button v-if="os" @click="getCompetence" icon="el-icon-video-camera" size="small">打开摄像头</el-button>
+        <el-button @click="drawImage" icon="el-icon-camera" size="small"
+          >拍照</el-button
+        >
+        <el-button
+          v-if="os"
+          @click="getCompetence"
+          icon="el-icon-video-camera"
+          size="small"
+          >打开摄像头</el-button
+        >
         <!-- <el-button v-else @click="stopNavigator" icon="el-icon-switch-button" size="small">关闭摄像头</el-button> -->
-        <el-button @click="resetCanvas" icon="el-icon-refresh" size="small">重置</el-button>
-        <el-button @click="ctrlShift" icon="el-icon-s-unfold" size="small">另存为</el-button>
-        <el-button @click="onCancel(1,numberr)" icon="el-icon-circle-close" size="small">完成</el-button>
+        <el-button @click="resetCanvas" icon="el-icon-refresh" size="small"
+          >重置</el-button
+        >
+        <el-button @click="ctrlShift" icon="el-icon-s-unfold" size="small"
+          >另存为</el-button
+        >
+        <el-button
+          @click="onCancel(numberr)"
+          icon="el-icon-circle-close"
+          size="small"
+          >完成</el-button
+        >
       </div>
     </el-dialog>
     <el-dialog
@@ -175,7 +254,7 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <div style="display:flex;">
+      <div style="display: flex">
         <div class="info-item">
           <div>
             <div class="upload">
@@ -194,7 +273,8 @@
               type="info"
               class="aj"
               size="small"
-            >拍照</el-button>
+              >拍照</el-button
+            >
           </div>
           <div class="line">
             <div class="cropper-content">
@@ -225,7 +305,7 @@
             </div>
           </div>
           <input
-            style="width:30px;font-size:20px;margin:0 10px;float:left;"
+            style="width: 30px; font-size: 20px; margin: 0 10px; float: left"
             type="button"
             class="oper"
             value="+"
@@ -233,7 +313,7 @@
             @click="changeScale(1)"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;float:left;"
+            style="width: 30px; font-size: 20px; margin: 0 10px; float: left"
             type="button"
             class="oper"
             value="-"
@@ -241,7 +321,7 @@
             @click="changeScale(-1)"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;float:left;"
+            style="width: 30px; font-size: 20px; margin: 0 10px; float: left"
             type="button"
             class="oper"
             value="↺"
@@ -249,7 +329,7 @@
             @click="rotateLeft"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;float:left;"
+            style="width: 30px; font-size: 20px; margin: 0 10px; float: left"
             type="button"
             class="oper"
             value="↻"
@@ -257,7 +337,7 @@
             @click="rotateRight"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;float:left;"
+            style="width: 30px; font-size: 20px; margin: 0 10px; float: left"
             type="button"
             class="oper"
             value="↓"
@@ -271,11 +351,16 @@
         <el-button type="primary" @click="finish('blob')">确 定</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="请选择一个识别方式" :visible.sync="dialogVisible" center width="30%">
+    <el-dialog
+      title="请选择一个识别方式"
+      :visible.sync="dialogVisible"
+      center
+      width="30%"
+    >
       <el-upload
         class="upload-demo"
         ref="upload"
-        action="https://yj.ppp-pay.top/uploadpic.php"
+        :action="url + '/uploadpic.php'"
         :auto-upload="true"
         :show-file-list="false"
         :on-success="recognition"
@@ -283,9 +368,18 @@
         :before-upload="beforeRecognition"
         :file-list="fileList"
       >
-        <el-button slot="trigger" size="small" type="info">图片内容识别</el-button>
+        <el-button slot="trigger" size="small" type="info"
+          >图片内容识别</el-button
+        >
       </el-upload>
-      <el-button @click="onTake" icon="el-icon-camera" type="info" class="camera" size="small">拍照</el-button>
+      <el-button
+        @click="onTake"
+        icon="el-icon-camera"
+        type="info"
+        class="camera"
+        size="small"
+        >拍照</el-button
+      >
     </el-dialog>
   </div>
 </template>
@@ -301,7 +395,7 @@ import {
   discern,
   basicAccurate,
 } from "@/api/archives";
-
+import { url } from "@/api/configuration";
 import { VueCropper } from "vue-cropper";
 import { Api } from "@/js/api.js"; //接口url配置文件
 import { max } from "moment";
@@ -311,6 +405,7 @@ export default {
   },
   data() {
     return {
+      url: url,
       length1: 1,
       length: 1,
       dialogVisible: false,
@@ -465,7 +560,10 @@ export default {
       // this.downloadIamge(this.fileList1, 'pic')
     },
     /*调用摄像头拍照开始*/
-    onTake() {
+    onTake(v) {
+      if (v != undefined) {
+        this.numberr = v;
+      }
       this.visible = true;
       this.getCompetence();
     },
@@ -481,13 +579,13 @@ export default {
       }
       return new File([u8arr], filename, { type: mime });
     },
-    async onCancel(val, num) {
+    async onCancel(num) {
       this.visible = false;
       this.dialogVisible = false;
       // console.log(this.fileList1);
       /* this.resetCanvas();*/
       this.stopNavigator();
-      if (val == undefined && num == undefined) {
+      if (num != 101) {
         this.fileList1 = this.imgSrc;
         let file = this.dataURLtoFile(this.imgSrc, String(Math.random()));
         let param = new FormData(); // 创建form对象
@@ -506,10 +604,9 @@ export default {
         this.form.contact = this.matchPhone(this.contents);
         this.form.address = this.address(this.contents);
         this.length = this.form.contact.length;
-      } else if (val == 1 && num != undefined) {
+      } else {
         let file = this.dataURLtoFile(this.imgSrc, String(Math.random()));
-        console.log(file);
-        this.fileName = file;
+        this.fileName = String(Math.random()) + ".png";
         this.option.img = this.imgSrc;
       }
       // this.imgSrc = "";

@@ -205,7 +205,7 @@
         <el-form-item label="附图" prop="picurl">
           <el-upload
             class="avatar-uploader"
-            action="https://yj.ppp-pay.top/uploadpic.php"
+            :action="url + '/uploadpic.php'"
             :show-file-list="false"
             :on-success="handleSuccess1"
             :before-upload="beforeUpload"
@@ -284,10 +284,12 @@ import {
 } from "@/api/finance";
 import { getFactorySelect } from "@/api/production";
 // import { getSupplierSelect } from "@/api/archives";
+import { url } from "@/api/configuration";
 import { bookStockOrderList } from "@/api/warehouse";
 export default {
   data() {
     return {
+      url: url,
       permission:[],
       power: "",
       total_cope_money: "",

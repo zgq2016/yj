@@ -29,7 +29,7 @@
       <el-upload
         class="upload-demo"
         ref="upload"
-        action="https://shesho.ppp-pay.top/webapi.php?g=test"
+        :action="url + '/webapi.php?g=test'"
         :auto-upload="true"
         name="image"
         :show-file-list="false"
@@ -338,13 +338,14 @@ import {
 
 import { VueCropper } from "vue-cropper";
 import { Api } from "@/js/api.js"; //接口url配置文件
-
+import { url } from "@/api/configuration";
 export default {
   components: {
     VueCropper,
   },
   data() {
     return {
+      url: url,
       power: "",
       headImg: "",
       //剪切图片上传

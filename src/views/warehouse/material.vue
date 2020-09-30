@@ -267,7 +267,7 @@
           <el-form-item label="上传凭证:">
             <el-upload
               class="avatar-uploader"
-              action="https://yj.ppp-pay.top/uploadpic.php"
+              :action="url + '/uploadpic.php'"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload"
@@ -312,6 +312,7 @@ import {
   getMaterialsList,
   projectStyleMaterialsAdd,
 } from "@/api/researchDevelopment";
+import { url } from "@/api/configuration";
 import {
   storehouseList,
   materialStoreList,
@@ -322,6 +323,7 @@ import { getMaterialsClass, getMaterialsClassInfo } from "@/api/archives.js";
 export default {
   data() {
     return {
+      url: url,
       power: "",
       materials: 0,
       materials: [],

@@ -114,6 +114,7 @@
         <el-table-column property="year" align="center" label="年份"></el-table-column>
         <el-table-column property="season" align="center" label="季节"></el-table-column>
         <el-table-column property="username" align="center" label="设计师"></el-table-column>
+        <el-table-column property="ctime" align="center" width='95' label="开始时间"></el-table-column>
         <el-table-column property="design" align="center" label="状态"></el-table-column>
         <el-table-column label="操作" align="center">
           <template v-if="permission.indexOf('get_style')!=-1" slot-scope="scope">

@@ -105,13 +105,13 @@
               width="90"
               label="采购批次"
             ></el-table-column>
-            <el-table-column align="center" width="100px" prop="create_time" label="采购时间"></el-table-column>
+            <el-table-column align="center" width="95px" prop="create_time" label="采购时间"></el-table-column>
             <el-table-column align="center" prop="color_no" label="色卡"></el-table-column>
             <el-table-column align="center" prop="amountPurchased" label="采购量"></el-table-column>
             <el-table-column align="center" prop="price" label="单价"></el-table-column>
             <el-table-column align="center" prop="deposit" label="订金"></el-table-column>
             <el-table-column align="center" prop="stock_quantity" label="回货量"></el-table-column>
-            <el-table-column align="center" width="100px" prop="create_time" label="预计回料时间"></el-table-column>
+            <el-table-column align="center" width="95px" prop="create_time" label="预计回料时间"></el-table-column>
             <!-- <el-table-column align="center" prop="scheduledReceipt" label="入库量"></el-table-column> -->
             <!-- <el-table-column align="center" prop="stock_quantity" label="库存量"></el-table-column> -->
             <el-table-column align="center" prop="amount" label="结算金额"></el-table-column>

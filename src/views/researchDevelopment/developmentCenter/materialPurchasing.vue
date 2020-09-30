@@ -148,7 +148,7 @@
           </el-form-item>-->
           <el-upload
             class="avatar-uploader1"
-            action="https://yj.ppp-pay.top/uploadpic.php"
+            :action="url + '/uploadpic.php'"
             :show-file-list="false"
             :on-success="handleAvatarSuccess1"
             :before-upload="beforeAvatarUpload"
@@ -202,7 +202,7 @@
           </el-form-item>
           <el-upload
             class="avatar-uploader"
-            action="https://yj.ppp-pay.top/uploadpic.php"
+            :action="url + '/uploadpic.php'"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
@@ -249,11 +249,12 @@ import {
   stylePurchaseLogAdd,
 } from "@/api/researchDevelopment";
 import { storehouseList } from "@/api/warehouse";
-
+import { url } from "@/api/configuration";
 import moment from "moment";
 export default {
   data() {
     return {
+      url: url,
       pageIndex1: 1,
       pageSize1: 10,
       total1: 0,

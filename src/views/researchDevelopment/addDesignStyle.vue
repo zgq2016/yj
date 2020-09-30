@@ -1,10 +1,15 @@
 <template>
-  <div class="editTheStyle" v-if="permission.indexOf('project_style_add')!=-1">
+  <div
+    class="editTheStyle"
+    v-if="permission.indexOf('project_style_add') != -1"
+  >
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>研发部</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/designStyle' }">设计款式</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/designStyle' }"
+          >设计款式</el-breadcrumb-item
+        >
         <el-breadcrumb-item>新增设计款式</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -13,7 +18,7 @@
         <div class="upload" @click="handle_form_style_pic_url">
           <el-image
             v-if="form.style_pic_url"
-            style="width: 150px; height: 150px;margin-right: 5px;"
+            style="width: 150px; height: 150px; margin-right: 5px"
             :src="form.style_pic_url"
             fit="cover"
           ></el-image>
@@ -21,15 +26,23 @@
         </div>
         <div class="styleNumberContent">
           <div class="form">
-            <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+            <el-form
+              ref="form"
+              :model="form"
+              :rules="rules"
+              label-width="100px"
+            >
               <el-form-item>
-                <div style="width:200px;display:flex">
+                <div style="width: 200px; display: flex">
                   <div>款号:</div>
-                  <div>{{form.styleno}}</div>
+                  <div>{{ form.styleno }}</div>
                 </div>
               </el-form-item>
               <el-form-item label="名称" prop="stylename">
-                <el-input v-model="form.stylename" style="width:200px"></el-input>
+                <el-input
+                  v-model="form.stylename"
+                  style="width: 200px"
+                ></el-input>
               </el-form-item>
               <el-form-item label="品类" prop="style_type">
                 <el-cascader
@@ -70,10 +83,16 @@
                 ></el-cascader>
               </el-form-item>
               <el-form-item
-                v-if="level != 2||permission.indexOf('designatorAssignment1')!=-1"
+                v-if="
+                  level != 2 ||
+                  permission.indexOf('designatorAssignment1') != -1
+                "
                 label="指派设计师"
               >
-                <el-select v-model="form.user_id" @change="handleUser_id($event)">
+                <el-select
+                  v-model="form.user_id"
+                  @change="handleUser_id($event)"
+                >
                   <el-option
                     v-for="item in stylists"
                     :key="item.id"
@@ -83,12 +102,19 @@
                 </el-select>
               </el-form-item>
               <el-form-item
-                v-if="level != 2||permission.indexOf('assignmentAssistance1')!=-1"
+                v-if="
+                  level != 2 ||
+                  permission.indexOf('assignmentAssistance1') != -1
+                "
                 label="指派协助"
               >
-                <div style="display:flex">
-                  <div v-for="(item, index) in arr" :key="index">{{item.name}},</div>
-                  <div @click="handleAddAssistant" style="margin-left:20px">添加协助</div>
+                <div style="display: flex">
+                  <div v-for="(item, index) in arr" :key="index">
+                    {{ item.name }},
+                  </div>
+                  <div @click="handleAddAssistant" style="margin-left: 20px">
+                    添加协助
+                  </div>
                 </div>
               </el-form-item>
             </el-form>
@@ -102,37 +128,77 @@
             class="uploads"
             :style="`background-color:${form.color_code};`"
           ></div>
-          <img v-if="form.style_color_pic_url" :src="form.style_color_pic_url" alt />
+          <img
+            v-if="form.style_color_pic_url"
+            :src="form.style_color_pic_url"
+            alt
+          />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </div>
       </div>
-      <div style="display:flex">
-        <el-button round style="margin:30px  100px 30px 250px;float:left" @click="handleEdit">保存</el-button>
+      <div style="display: flex">
         <el-button
           round
-          style="margin:30px  100px 30px 250px;float:left"
+          style="margin: 30px 100px 30px 250px; float: left"
+          @click="handleEdit"
+          >保存</el-button
+        >
+        <el-button
+          round
+          style="margin: 30px 100px 30px 250px; float: left"
           @click="handleClickEdit"
-        >保存并编辑设计版单</el-button>
+          >保存并编辑设计版单</el-button
+        >
       </div>
     </div>
-    <el-dialog title="拍照上传" :visible.sync="visible" @close="onCancel" width="1065px">
+    <el-dialog
+      title="拍照上传"
+      :visible.sync="visible"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      width="1065px"
+    >
       <div class="box">
-        <video id="videoCamera" class="canvas" :width="videoWidth" :height="videoHeight" autoplay></video>
+        <video
+          id="videoCamera"
+          class="canvas"
+          :width="videoWidth"
+          :height="videoHeight"
+          autoplay
+        ></video>
         <canvas
           id="canvasCamera"
           class="canvas"
           :width="videoWidth"
           :height="videoHeight"
-          style="margin-left:10px;"
+          style="margin-left: 10px"
         ></canvas>
       </div>
       <div slot="footer">
-        <el-button @click="drawImage" icon="el-icon-camera" size="small">拍照</el-button>
-        <el-button v-if="os" @click="getCompetence" icon="el-icon-video-camera" size="small">打开摄像头</el-button>
+        <el-button @click="drawImage" icon="el-icon-camera" size="small"
+          >拍照</el-button
+        >
+        <el-button
+          v-if="os"
+          @click="getCompetence"
+          icon="el-icon-video-camera"
+          size="small"
+          >打开摄像头</el-button
+        >
         <!-- <el-button v-else @click="stopNavigator" icon="el-icon-switch-button" size="small">关闭摄像头</el-button> -->
-        <el-button @click="resetCanvas" icon="el-icon-refresh" size="small">重置</el-button>
-        <el-button @click="ctrlShift" icon="el-icon-s-unfold" size="small">另存为</el-button>
-        <el-button @click="onCancel(1,numberr)" icon="el-icon-circle-close" size="small">完成</el-button>
+        <el-button @click="resetCanvas" icon="el-icon-refresh" size="small"
+          >重置</el-button
+        >
+        <el-button @click="ctrlShift" icon="el-icon-s-unfold" size="small"
+          >另存为</el-button
+        >
+        <el-button
+          @click="onCancel(numberr)"
+          icon="el-icon-circle-close"
+          size="small"
+          >完成</el-button
+        >
       </div>
     </el-dialog>
     <el-dialog
@@ -145,9 +211,9 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <div style="display:flex;">
+      <div style="display: flex">
         <div class="info-item">
-          <div style="display:flex;">
+          <div style="display: flex">
             <div>
               <div class="upload">
                 <input
@@ -160,15 +226,22 @@
                 上传色卡图片
               </div>
               <button
-                v-if="status===4||status===2"
+                v-if="status === 4 || status === 2"
                 class="upload"
-                style="margin-left:30px;padding:0 20px 0 10px;float:left;"
+                style="margin-left: 30px; padding: 0 20px 0 10px; float: left"
               >
                 选择颜色
-                <div v-if="this.$route.query.oldId===undefined&&status===2">
-                  <el-color-picker v-model="color_code" @change="color_picker"></el-color-picker>
+                <div
+                  v-if="this.$route.query.oldId === undefined && status === 2"
+                >
+                  <el-color-picker
+                    v-model="color_code"
+                    @change="color_picker"
+                  ></el-color-picker>
                 </div>
-                <div v-if="this.$route.query.oldId!==undefined&&status===4">
+                <div
+                  v-if="this.$route.query.oldId !== undefined && status === 4"
+                >
                   <el-color-picker v-model="color_code"></el-color-picker>
                 </div>
               </button>
@@ -178,8 +251,9 @@
                 type="info"
                 class="aj"
                 size="small"
-                v-if="status===4||status===2"
-              >拍照</el-button>
+                v-if="status === 4 || status === 2"
+                >拍照</el-button
+              >
             </div>
           </div>
           <div class="line">
@@ -203,24 +277,32 @@
                   @imgLoad="imgLoad"
                 ></vueCropper>
               </div>
-              <div class="show-preview" v-if="status===4||status===2">
+              <div class="show-preview" v-if="status === 4 || status === 2">
                 <div class="preview">
                   <div
                     v-if="color_code"
                     :style="`background-color:${color_code};width:150px;height:150px`"
                   ></div>
-                  <img v-if="previews.url" :src="previews.url" :style="previews.img" />
+                  <img
+                    v-if="previews.url"
+                    :src="previews.url"
+                    :style="previews.img"
+                  />
                 </div>
               </div>
-              <div class="show-preview1" v-if="status===1||status===3">
+              <div class="show-preview1" v-if="status === 1 || status === 3">
                 <div class="preview">
-                  <img v-if="previews.url" :src="previews.url" :style="previews.img" />
+                  <img
+                    v-if="previews.url"
+                    :src="previews.url"
+                    :style="previews.img"
+                  />
                 </div>
               </div>
             </div>
           </div>
           <input
-            style="width:30px;font-size:20px;margin:0 10px;"
+            style="width: 30px; font-size: 20px; margin: 0 10px"
             type="button"
             class="oper"
             value="+"
@@ -228,7 +310,7 @@
             @click="changeScale(1)"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;"
+            style="width: 30px; font-size: 20px; margin: 0 10px"
             type="button"
             class="oper"
             value="-"
@@ -236,7 +318,7 @@
             @click="changeScale(-1)"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;"
+            style="width: 30px; font-size: 20px; margin: 0 10px"
             type="button"
             class="oper"
             value="↺"
@@ -244,7 +326,7 @@
             @click="rotateLeft"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;"
+            style="width: 30px; font-size: 20px; margin: 0 10px"
             type="button"
             class="oper"
             value="↻"
@@ -252,7 +334,7 @@
             @click="rotateRight"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;"
+            style="width: 30px; font-size: 20px; margin: 0 10px"
             type="button"
             class="oper"
             value="↓"
@@ -277,7 +359,11 @@
       :close-on-press-escape="false"
     >
       <div v-for="(item, index) in stylists" :key="index">
-        <el-checkbox v-model="item.checked" @change="isCheckList(item,index)">{{item.name}}</el-checkbox>
+        <el-checkbox
+          v-model="item.checked"
+          @change="isCheckList(item, index)"
+          >{{ item.name }}</el-checkbox
+        >
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="AssistantCancel">取 消</el-button>
@@ -434,7 +520,9 @@ export default {
     },
     /*调用摄像头拍照开始*/
     onTake(num) {
-      this.numberr = num;
+      if (num != undefined) {
+        this.numberr = num;
+      }
       this.visible = true;
       this.getCompetence();
     },
@@ -450,11 +538,11 @@ export default {
       }
       return new File([u8arr], filename, { type: mime });
     },
-    async onCancel(val, num) {
+    async onCancel(num) {
       this.visible = false;
       /* this.resetCanvas();*/
       this.stopNavigator();
-      if (val == 1 && num == undefined) {
+      if (num != 101) {
         this.fileList1 = this.imgSrc;
         let file = this.dataURLtoFile(this.imgSrc, String(Math.random()));
         let param = new FormData(); // 创建form对象
@@ -471,10 +559,9 @@ export default {
             });
           }
         }
-      } else if (val == 1 && num != undefined) {
+      } else {
         let file = this.dataURLtoFile(this.imgSrc, String(Math.random()));
-        console.log(file);
-        this.fileName = file;
+        this.fileName = String(Math.random()) + ".png";
         this.option.img = this.imgSrc;
       }
       // this.imgSrc = "";
@@ -550,7 +637,6 @@ export default {
     //绘制图片
     drawImage() {
       // 点击，canvas画图
-      // console.log(this.thisContext);
       this.thisContext.drawImage(
         this.thisVideo,
         0,
@@ -792,7 +878,6 @@ export default {
         form["user_id_data"] = this.arr;
         form["color_code"] = this.form.color_code;
         let res = await projectStyleAdd(form);
-        console.log(res);
         if (res.data.error_code) {
           this.$message({
             showClose: true,
@@ -807,7 +892,6 @@ export default {
       });
     },
     async handleEdit() {
-      console.log(this.arr);
       this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
@@ -835,7 +919,6 @@ export default {
         form["user_id_data"] = this.arr;
         form["color_code"] = this.form.color_code;
         let res = await projectStyleAdd(form);
-        console.log(res);
         if (res.data.error_code) {
           this.$message({
             showClose: true,
@@ -872,7 +955,7 @@ export default {
       this.seasons = data;
     },
     async getstylist() {
-      let res = await getStylistList({department_id:1});
+      let res = await getStylistList({ role_id: 2 });
       // console.log(res);
       let { data } = res.data;
       this.stylists = data;

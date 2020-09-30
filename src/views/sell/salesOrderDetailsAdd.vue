@@ -285,7 +285,7 @@
             <el-form-item label="附图:">
               <el-upload
                 class="upload-demo"
-                action="https://yj.ppp-pay.top/uploadpic.php"
+                :action="url + '/uploadpic.php'"
                 :on-preview="handlePreview"
                 :on-remove="handleRemove"
                 :file-list="fileList"
@@ -394,9 +394,11 @@ import {
 } from "@/api/sell";
 import { getWestList } from "@/api/researchDevelopment";
 import { factoryList } from "@/api/archives";
+import { url } from "@/api/configuration";
 export default {
   data() {
     return {
+      url: url,
       weretable: [],
       total_price: 0,
       ruleForm: {},

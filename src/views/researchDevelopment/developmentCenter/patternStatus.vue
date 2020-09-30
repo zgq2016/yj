@@ -2,44 +2,71 @@
   <div class="patternStatus">
     <div class="pattern">
       <!-- 纸样文件 -->
-      <div class="patternFile" v-if="permission.indexOf('style_paperpattern_list')!=-1">
-        <div style="display:flex">
+      <div
+        class="patternFile"
+        v-if="permission.indexOf('style_paperpattern_list') != -1"
+      >
+        <div style="display: flex">
           <div class="patternFileName">纸样文件</div>
           <div
             class="push_plate_making"
-            style="background-color: #f2f2f2;"
+            style="background-color: #f2f2f2"
             @click="get_push_plate"
-            v-if="this.obj.sample_status==0"
-          >推送制版</div>
-          <div class="push_plate_making" style="background-color: #f2f2f2;" v-else>已推送制版</div>
+            v-if="obj.sample_status == 0"
+          >
+            推送制版
+          </div>
+          <div
+            class="push_plate_making"
+            style="background-color: #f2f2f2"
+            v-else
+          >
+            已推送制版
+          </div>
         </div>
         <div class="upload">
           <el-upload
             class="avatar-uploader"
-            action="https://yj.ppp-pay.top/uploadpic.php"
+            :action="url + '/uploadpic.php'"
             :on-remove="handleRemove"
             :before-remove="beforeRemove"
             :on-success="handleSuccess"
             multiple
-            v-if="fileList.length==0"
+            v-if="fileList.length == 0"
             :on-exceed="handleExceed"
           >
             <!-- <el-button size="small" type="primary">点击上传</el-button> -->
-            <div class="imag" v-if="permission.indexOf('style_paperpattern_add')!=-1">
-              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2M</div>
+            <div
+              class="imag"
+              v-if="permission.indexOf('style_paperpattern_add') != -1"
+            >
+              <div slot="tip" class="el-upload__tip">
+                只能上传jpg/png文件，且不超过2M
+              </div>
               <el-button size="small">点击上传</el-button>
             </div>
           </el-upload>
           <div class="texts" v-else>
-            <span
-              class="contet"
-              v-if="fileList[0]"
-            >{{fileList.urlName}} {{fileList[0].name}} 提交于 {{fileList[0].create_time}}</span>
+            <span class="contet" v-if="fileList[0]"
+              >{{ fileList.urlName }} {{ fileList[0].name }} 提交于
+              {{ fileList[0].create_time }}</span
+            >
             <span class="btn" @click="handleRemove">删除</span>
             <!--  -->
           </div>
-          <el-button size="small" v-if="fileList.length>0" class="round" round>
-            <a :href="'https://yj.ppp-pay.top/webapi.php/?g=download&url='+fileList[0].picurl">下载</a>
+          <el-button
+            size="small"
+            v-if="fileList.length > 0"
+            class="round"
+            round
+          >
+            <a
+              :href="
+                'https://yj.ppp-pay.top/webapi.php/?g=download&url=' +
+                fileList[0].picurl
+              "
+              >下载</a
+            >
           </el-button>
         </div>
       </div>
@@ -50,24 +77,37 @@
           <el-upload
             class="avatar-uploader"
             v-if="codeFilePic.length == 0"
-            action="https://yj.ppp-pay.top/uploadpic.php"
+            :action="url + '/uploadpic.php'"
             :on-success="handlecodeFileSuccess"
             :before-upload="beforeAvatarUpload"
           >
             <div class="imag">
-              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2M</div>
+              <div slot="tip" class="el-upload__tip">
+                只能上传jpg/png文件，且不超过2M
+              </div>
               <el-button size="small">点击上传</el-button>
             </div>
           </el-upload>
           <div class="texts" v-else>
-            <span
-              class="contet"
-              v-if="codeFilePic[0]"
-            >{{codeFilePic.urlName}} {{codeFilePic[0].name}} 提交于 {{codeFilePic[0].create_time}}</span>
+            <span class="contet" v-if="codeFilePic[0]"
+              >{{ codeFilePic.urlName }} {{ codeFilePic[0].name }} 提交于
+              {{ codeFilePic[0].create_time }}</span
+            >
             <span class="btn" @click="MeasurementDel">删除</span>
           </div>
-          <el-button v-if="codeFilePic.length>0" size="small" class="round" round>
-            <a :href="'https://yj.ppp-pay.top/webapi.php/?g=download&url='+codeFilePic[0].picurl">下载</a>
+          <el-button
+            v-if="codeFilePic.length > 0"
+            size="small"
+            class="round"
+            round
+          >
+            <a
+              :href="
+                'https://yj.ppp-pay.top/webapi.php/?g=download&url=' +
+                codeFilePic[0].picurl
+              "
+              >下载</a
+            >
           </el-button>
         </div>
       </div>
@@ -76,11 +116,18 @@
         <div class="tables">
           <div class="boxed">
             <span class="childed">
-              <span class="hed" v-for="(item,index) in tableData" :key="index">{{item.name}}</span>
+              <span
+                class="hed"
+                v-for="(item, index) in tableData"
+                :key="index"
+                >{{ item.name }}</span
+              >
             </span>
             <span class="list">
               <span class="over1">
-                <span class="hed1" v-for="(item1,a) in units" :key="a">{{item1.name}}</span>
+                <span class="hed1" v-for="(item1, a) in units" :key="a">{{
+                  item1.name
+                }}</span>
               </span>
               <!-- <span class="over1">
                 <span class="hed1" v-for="(item3,c) in units" :key="c">
@@ -89,9 +136,14 @@
                 </span>
               </span>-->
               <span class="over1">
-                <span class="hed1" v-for="(item2,b) in units" :key="b">
-                  <el-input v-if="vs" v-model="item2.size" size="mini" placeholder="请输入内容"></el-input>
-                  <p v-else>{{item2.size}}</p>
+                <span class="hed1" v-for="(item2, b) in units" :key="b">
+                  <el-input
+                    v-if="vs"
+                    v-model="item2.size"
+                    size="mini"
+                    placeholder="请输入内容"
+                  ></el-input>
+                  <p v-else>{{ item2.size }}</p>
                 </span>
               </span>
             </span>
@@ -107,7 +159,10 @@
         </div>
       </div>
       <!-- 物料用量 -->
-      <div class="materialUsage" v-if="permission.indexOf('style_materials_use_list')!=-1">
+      <div
+        class="materialUsage"
+        v-if="permission.indexOf('style_materials_use_list') != -1"
+      >
         <div class="materialUsageName">物料用量</div>
         <div class="cardList">
           <div class="card" v-for="(item, index) in MaterialsList" :key="index">
@@ -122,45 +177,61 @@
                 </div>
                 <div class="cardStyle_left_content">
                   <div class="cardStyle_left_content_name">
-                    <div>({{item1.mainclass}})</div>
+                    <div>({{ item1.mainclass }})</div>
                     <!-- <div class="el-icon-close"></div> -->
                   </div>
-                  <div>{{item1.materialsname}}</div>
-                  <div>内部编号:{{item1.materialsno}}</div>
-                  <div v-if="item1.supplier_data.length>0">{{item1.supplier_data[0].companyname}}</div>
+                  <div>{{ item1.materialsname }}</div>
+                  <div>内部编号:{{ item1.materialsno }}</div>
+                  <div v-if="item1.supplier_data.length > 0">
+                    {{ item1.supplier_data[0].companyname }}
+                  </div>
                 </div>
               </div>
               <div class="cardStyle_right">
                 <div>
                   <div class="antistop">
-                    <label for style="margin:10px">大货用量</label>
+                    <label for style="margin: 10px">大货用量</label>
                     <el-input
-                      @input="handleInputMaxusage(item,index)"
+                      @input="handleInputMaxusage(item, index)"
                       v-model="item.maxusage"
                       placeholder="请输入内容"
-                      style="width:100px"
+                      style="width: 100px"
                       :disabled="antistopActive"
                       v-if="!antistopActive"
                     ></el-input>
                     <span
-                      style="width:100px;height:30px; text-align: center;display:block;line-height: 30px;"
+                      style="
+                        width: 100px;
+                        height: 30px;
+                        text-align: center;
+                        display: block;
+                        line-height: 30px;
+                      "
                       v-else
-                    >{{item.maxusage}}</span>
+                      >{{ item.maxusage }}</span
+                    >
                   </div>
                   <div class="antistop">
-                    <label for style="margin:10px">损耗</label>
+                    <label for style="margin: 10px">损耗</label>
                     <el-input
-                      @input="handleInputLoss(item,index)"
+                      @input="handleInputLoss(item, index)"
                       v-model="item.loss"
                       placeholder="请输入内容"
-                      style="width:100px"
+                      style="width: 100px"
                       :disabled="antistopActive"
                       v-if="!antistopActive"
                     ></el-input>
                     <span
-                      style="width:100px;height:30px; text-align: center;display:block;line-height: 30px;"
+                      style="
+                        width: 100px;
+                        height: 30px;
+                        text-align: center;
+                        display: block;
+                        line-height: 30px;
+                      "
                       v-else
-                    >{{item.loss}}</span>
+                      >{{ item.loss }}</span
+                    >
                   </div>
                 </div>
                 <!-- <div v-if="antistopActive===true">
@@ -177,11 +248,14 @@
             </div>
           </div>
         </div>
-        <div style="margin:10px 0;" v-if="permission.indexOf('style_materials_use_edit')!=-1">
-          <div v-if="antistopActive==true">
+        <div
+          style="margin: 10px 0"
+          v-if="permission.indexOf('style_materials_use_edit') != -1"
+        >
+          <div v-if="antistopActive == true">
             <el-button @click="modification" type="primary">修改</el-button>
           </div>
-          <div v-if="antistopActive==false">
+          <div v-if="antistopActive == false">
             <el-button @click="affirm" type="primary">确认</el-button>
           </div>
         </div>
@@ -192,29 +266,34 @@
       <!-- 删除历史 -->
       <div class="delHistory">
         <div class="delHistoryName">删除历史</div>
-        <div class="delList" v-if="permission.indexOf('style_paperpattern_del_list')!=-1">
-          <span v-if="DelList.length>0">纸样文件</span>
+        <div
+          class="delList"
+          v-if="permission.indexOf('style_paperpattern_del_list') != -1"
+        >
+          <span v-if="DelList.length > 0">纸样文件</span>
           <div class="list" v-for="(item, index) in DelList" :key="index">
             <div class="list_name">
               <!-- <div class="img">
                 <img :src="item.picurl" alt />
               </div>-->
-              <div class="name">{{item.urlName}}</div>
-              <div style="margin:0 5px">{{item.name}}</div>
-              <div>提交于: {{item.del_time}}</div>
+              <div class="name">{{ item.urlName }}</div>
+              <div style="margin: 0 5px">{{ item.name }}</div>
+              <div>提交于: {{ item.del_time }}</div>
             </div>
             <div
               class="restore"
               @click="Resume(item)"
-              v-if="permission.indexOf('style_paperpattern_resume')!=-1"
-            >还原</div>
+              v-if="permission.indexOf('style_paperpattern_resume') != -1"
+            >
+              还原
+            </div>
           </div>
-          <span v-if="del_list.length>0">放码文件</span>
-          <div class="list" v-for="(item,index) in del_list" :key="index+1">
+          <span v-if="del_list.length > 0">放码文件</span>
+          <div class="list" v-for="(item, index) in del_list" :key="index + 1">
             <div class="list_name">
-              <div class="name">{{item.urlName}}</div>
-              <div style="margin:0 5px">{{item.name}}</div>
-              <div>提交于 {{item.delete_time}}</div>
+              <div class="name">{{ item.urlName }}</div>
+              <div style="margin: 0 5px">{{ item.name }}</div>
+              <div>提交于 {{ item.delete_time }}</div>
             </div>
             <div class="restore" @click="Resume1(item)">还原</div>
           </div>
@@ -232,7 +311,12 @@
       :close-on-press-escape="false"
     >
       <el-select v-model="form.user_id" @change="handleUser_id($event)">
-        <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
+        <el-option
+          v-for="item in stylists"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
+        ></el-option>
       </el-select>
       <span slot="footer" class="dialog-footer">
         <el-button @click="AssistantCancel">取 消</el-button>
@@ -261,9 +345,11 @@ import {
   download,
   styleMeasurementResume,
 } from "@/api/researchDevelopment";
+import { url } from "@/api/configuration";
 export default {
   data() {
     return {
+      url: url,
       del_list: [],
       tableData: [{ name: "部位" }, { name: "尺寸/CM" }],
       codeFilePic: {},
@@ -341,12 +427,14 @@ export default {
     async AssistantFinish() {
       let res = await pushSample({
         style_id: this.$route.query.id,
-        user_id: this.form.user_id,
+        user_id: this.form.user_id || -1,
       });
-      console.log(res);
       if (res.data.error_code == 0) {
         this.$message.success(res.data.msg);
         this.init();
+        this.obj.sample_status = 1;
+      } else {
+        this.$message.error(res.data.msg);
       }
       this.centerDialogVisible1 = false;
     },
@@ -529,7 +617,7 @@ export default {
       }
     },
     async getstylist() {
-      let res = await getStylistList({ department_id: 2 });
+      let res = await getStylistList({ role_id: 4 });
       let { data } = res.data;
       data.map((v) => {
         v["checked"] = false;
@@ -651,14 +739,14 @@ export default {
       .tables {
         padding: 10px;
         .boxed {
-          width: 100%;
+          width: 1600px;
           overflow: hidden;
           .childed {
             display: block;
             float: left;
             .hed {
               display: block;
-              width: 100px;
+              width: 80px;
               height: 30px;
               line-height: 30px;
               border: 1px solid #cccccc;
@@ -667,6 +755,7 @@ export default {
           }
           .list {
             float: left;
+            width: 1450px;
           }
           .over1 {
             display: block;
@@ -676,7 +765,7 @@ export default {
             text-align: center;
             border: 1px solid #cccccc;
             display: block;
-            width: 100px;
+            width: 50px;
             height: 30px;
             line-height: 30px;
             float: left;

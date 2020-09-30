@@ -13,7 +13,7 @@
         <i v-else class="el-icon-upload avatar-uploader-icon" style="font-size:16px">上传样衣图片</i>
       </el-upload>-->
       <el-upload
-        action="https://yj.ppp-pay.top/uploadpic.php"
+        :action="url + '/uploadpic.php'"
         list-type="picture-card"
         :on-preview="handlePictureCardPreview"
         :on-success="handleSuccess"
@@ -35,9 +35,11 @@ import {
   styleSampleList,
   styleSampleDel,
 } from "@/api/researchDevelopment";
+import { url } from "@/api/configuration";
 export default {
   data() {
     return {
+      url: url,
       power: "",
       dialogImageUrl: "",
       dialogVisible: false,

@@ -4,8 +4,13 @@
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>研发部</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/itemDesign' }">项目设计</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: `/designCheck?id=${this.$route.query.id}` }">项目详细</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/itemDesign' }"
+          >项目设计</el-breadcrumb-item
+        >
+        <el-breadcrumb-item
+          :to="{ path: `/designCheck?id=${this.$route.query.id}` }"
+          >项目详细</el-breadcrumb-item
+        >
         <el-breadcrumb-item>新增款式</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -15,7 +20,7 @@
         <div class="upload" @click="handle_style_pic_url">
           <el-image
             v-if="form.style_pic_url"
-            style="width: 150px; height: 150px;margin-right: 5px;"
+            style="width: 150px; height: 150px; margin-right: 5px"
             :src="form.style_pic_url"
             fit="cover"
           ></el-image>
@@ -25,25 +30,32 @@
           <div class="form">
             <el-form :model="form" ref="form" :rules="rules" label-width="80px">
               <el-form-item>
-                <div style="display:flex">
-                  <div style="width:170px">款号: {{form.styleno}}</div>
-                  <div style="width:170px">年份: {{defaultData.year}}</div>
-                  <div style="width:170px">季节: {{defaultData.season}}</div>
-                  <div style="width:170px">设计师: {{defaultData.user_name}}</div>
-                  <div style="display:flex">
+                <div style="display: flex">
+                  <div style="width: 170px">款号: {{ form.styleno }}</div>
+                  <div style="width: 170px">年份: {{ defaultData.year }}</div>
+                  <div style="width: 170px">季节: {{ defaultData.season }}</div>
+                  <div style="width: 170px">
+                    设计师: {{ defaultData.user_name }}
+                  </div>
+                  <div style="display: flex">
                     <div>协助:</div>
                     <div
                       v-for="(item, index) in defaultData.user_id_data"
                       :key="index"
-                    >{{item.name}},</div>
+                    >
+                      {{ item.name }},
+                    </div>
                   </div>
                 </div>
               </el-form-item>
               <el-form-item label="名称" prop="stylename">
-                <el-input v-model="form.stylename" style="width:200px"></el-input>
+                <el-input
+                  v-model="form.stylename"
+                  style="width: 200px"
+                ></el-input>
               </el-form-item>
               <el-form-item label="品类" prop="style_type">
-                <div style="display:flex">
+                <div style="display: flex">
                   <el-cascader
                     v-model="form.style_type"
                     :options="categorys"
@@ -51,11 +63,16 @@
                     @change="handleChange1"
                     :show-all-levels="false"
                   ></el-cascader>
-                  <router-link to="/goodsCategory" style="margin-left:30px" target="_blank">新增品类</router-link>
+                  <router-link
+                    to="/goodsCategory"
+                    style="margin-left: 30px"
+                    target="_blank"
+                    >新增品类</router-link
+                  >
                 </div>
               </el-form-item>
               <el-form-item label="颜色" prop="style_color">
-                <div style="display:flex">
+                <div style="display: flex">
                   <el-cascader
                     v-model="form.style_color"
                     :options="colors"
@@ -63,7 +80,12 @@
                     @change="handleChange"
                     :show-all-levels="false"
                   ></el-cascader>
-                  <router-link to="/colorManagement" style="margin-left:30px" target="_blank">新增颜色</router-link>
+                  <router-link
+                    to="/colorManagement"
+                    style="margin-left: 30px"
+                    target="_blank"
+                    >新增颜色</router-link
+                  >
                 </div>
               </el-form-item>
             </el-form>
@@ -77,13 +99,21 @@
             class="uploads"
             :style="`background-color:${form.color_code};`"
           ></div>
-          <img v-if="form.style_color_pic_url" :src="form.style_color_pic_url" alt />
+          <img
+            v-if="form.style_color_pic_url"
+            :src="form.style_color_pic_url"
+            alt
+          />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </div>
       </div>
-      <div style="margin:150px 300px; height:50px;">
-        <el-button round style="float:left" @click="handleClick">保存</el-button>
-        <el-button round style="float:left" @click="handleClickEdit">保存并编辑设计版单</el-button>
+      <div style="margin: 150px 300px; height: 50px">
+        <el-button round style="float: left" @click="handleClick"
+          >保存</el-button
+        >
+        <el-button round style="float: left" @click="handleClickEdit"
+          >保存并编辑设计版单</el-button
+        >
       </div>
     </div>
     <!-- 有数据 -->
@@ -93,7 +123,7 @@
           <!-- <img v-if="obj.style_pic_url" :src="obj.style_pic_url" alt /> -->
           <el-image
             v-if="obj.style_pic_url"
-            style="width: 150px; height: 150px;margin-right: 5px;"
+            style="width: 150px; height: 150px; margin-right: 5px"
             :src="obj.style_pic_url"
             fit="cover"
           ></el-image>
@@ -103,23 +133,28 @@
           <div class="form">
             <el-form ref="obj" :model="obj" :rules="rules1" label-width="80px">
               <el-form-item>
-                <div style="display:flex">
-                  <div style="width:200px;display:flex">
+                <div style="display: flex">
+                  <div style="width: 200px; display: flex">
                     <div>款号:</div>
-                    <div>{{styleno}}</div>
+                    <div>{{ styleno }}</div>
                   </div>
-                  <div style="width:200px;display:flex">
+                  <div style="width: 200px; display: flex">
                     <div>指派设计师:</div>
-                    <div>{{obj.user_name}}</div>
+                    <div>{{ obj.user_name }}</div>
                   </div>
-                  <div style="display:flex">
+                  <div style="display: flex">
                     <div>协助:</div>
-                    <div v-for="(item, index) in obj.user_id_data" :key="index">{{item.name}},</div>
+                    <div v-for="(item, index) in obj.user_id_data" :key="index">
+                      {{ item.name }},
+                    </div>
                   </div>
                 </div>
               </el-form-item>
               <el-form-item label="名称" prop="stylename">
-                <el-input v-model="obj.stylename" style="width:200px"></el-input>
+                <el-input
+                  v-model="obj.stylename"
+                  style="width: 200px"
+                ></el-input>
               </el-form-item>
               <el-form-item label="品类" prop="style_type">
                 <el-cascader
@@ -165,31 +200,71 @@
       </div>
       <div class="color">
         <div class="upload" @click="handle_obj_style_color_pic_url">
-          <div v-if="obj.color_code" class="uploads" :style="`background-color:${obj.color_code};`"></div>
-          <img v-if="obj.style_color_pic_url" :src="obj.style_color_pic_url" alt />
+          <div
+            v-if="obj.color_code"
+            class="uploads"
+            :style="`background-color:${obj.color_code};`"
+          ></div>
+          <img
+            v-if="obj.style_color_pic_url"
+            :src="obj.style_color_pic_url"
+            alt
+          />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </div>
       </div>
-      <el-button round style="margin:30px 300px" @click="handleClick1">保存</el-button>
+      <el-button round style="margin: 30px 300px" @click="handleClick1"
+        >保存</el-button
+      >
     </div>
-    <el-dialog title="拍照上传" :visible.sync="visible" @close="onCancel" width="1065px">
+    <el-dialog
+      title="拍照上传"
+      :visible.sync="visible"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      width="1065px"
+    >
       <div class="box">
-        <video id="videoCamera" class="canvas" :width="videoWidth" :height="videoHeight" autoplay></video>
+        <video
+          id="videoCamera"
+          class="canvas"
+          :width="videoWidth"
+          :height="videoHeight"
+          autoplay
+        ></video>
         <canvas
           id="canvasCamera"
           class="canvas"
           :width="videoWidth"
           :height="videoHeight"
-          style="margin-left:10px;"
+          style="margin-left: 10px"
         ></canvas>
       </div>
       <div slot="footer">
-        <el-button @click="drawImage" icon="el-icon-camera" size="small">拍照</el-button>
-        <el-button v-if="os" @click="getCompetence" icon="el-icon-video-camera" size="small">打开摄像头</el-button>
+        <el-button @click="drawImage" icon="el-icon-camera" size="small"
+          >拍照</el-button
+        >
+        <el-button
+          v-if="os"
+          @click="getCompetence"
+          icon="el-icon-video-camera"
+          size="small"
+          >打开摄像头</el-button
+        >
         <!-- <el-button v-else @click="stopNavigator" icon="el-icon-switch-button" size="small">关闭摄像头</el-button> -->
-        <el-button @click="resetCanvas" icon="el-icon-refresh" size="small">重置</el-button>
-        <el-button @click="ctrlShift" icon="el-icon-s-unfold" size="small">另存为</el-button>
-        <el-button @click="onCancel(1,numberr)" icon="el-icon-circle-close" size="small">完成</el-button>
+        <el-button @click="resetCanvas" icon="el-icon-refresh" size="small"
+          >重置</el-button
+        >
+        <el-button @click="ctrlShift" icon="el-icon-s-unfold" size="small"
+          >另存为</el-button
+        >
+        <el-button
+          @click="onCancel(numberr)"
+          icon="el-icon-circle-close"
+          size="small"
+          >完成</el-button
+        >
       </div>
     </el-dialog>
     <el-dialog
@@ -202,9 +277,9 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <div style="display:flex;">
+      <div style="display: flex">
         <div class="info-item">
-          <div style="display:flex;">
+          <div style="display: flex">
             <div>
               <div class="upload">
                 <input
@@ -217,15 +292,22 @@
                 上传色卡图片
               </div>
               <button
-                v-if="status===4||status===2"
+                v-if="status === 4 || status === 2"
                 class="upload"
-                style="margin-left:30px;padding:0 20px 0 10px;float:left;"
+                style="margin-left: 30px; padding: 0 20px 0 10px; float: left"
               >
                 选择颜色
-                <div v-if="this.$route.query.oldId===undefined&&status===2">
-                  <el-color-picker v-model="color_code" @change="color_picker"></el-color-picker>
+                <div
+                  v-if="this.$route.query.oldId === undefined && status === 2"
+                >
+                  <el-color-picker
+                    v-model="color_code"
+                    @change="color_picker"
+                  ></el-color-picker>
                 </div>
-                <div v-if="this.$route.query.oldId!==undefined&&status===4">
+                <div
+                  v-if="this.$route.query.oldId !== undefined && status === 4"
+                >
                   <el-color-picker v-model="color_code"></el-color-picker>
                 </div>
               </button>
@@ -235,8 +317,9 @@
                 type="info"
                 class="aj"
                 size="small"
-                v-if="status===4||status===2"
-              >拍照</el-button>
+                v-if="status === 4 || status === 2"
+                >拍照</el-button
+              >
             </div>
           </div>
 
@@ -261,24 +344,32 @@
                   @imgLoad="imgLoad"
                 ></vueCropper>
               </div>
-              <div class="show-preview" v-if="status===4||status===2">
+              <div class="show-preview" v-if="status === 4 || status === 2">
                 <div class="preview">
                   <div
                     v-if="color_code"
                     :style="`background-color:${color_code};width:150px;height:150px`"
                   ></div>
-                  <img v-if="previews.url" :src="previews.url" :style="previews.img" />
+                  <img
+                    v-if="previews.url"
+                    :src="previews.url"
+                    :style="previews.img"
+                  />
                 </div>
               </div>
-              <div class="show-preview1" v-if="status===1||status===3">
+              <div class="show-preview1" v-if="status === 1 || status === 3">
                 <div class="preview">
-                  <img v-if="previews.url" :src="previews.url" :style="previews.img" />
+                  <img
+                    v-if="previews.url"
+                    :src="previews.url"
+                    :style="previews.img"
+                  />
                 </div>
               </div>
             </div>
           </div>
           <input
-            style="width:30px;font-size:20px;margin:0 10px;"
+            style="width: 30px; font-size: 20px; margin: 0 10px"
             type="button"
             class="oper"
             value="+"
@@ -286,7 +377,7 @@
             @click="changeScale(1)"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;"
+            style="width: 30px; font-size: 20px; margin: 0 10px"
             type="button"
             class="oper"
             value="-"
@@ -294,7 +385,7 @@
             @click="changeScale(-1)"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;"
+            style="width: 30px; font-size: 20px; margin: 0 10px"
             type="button"
             class="oper"
             value="↺"
@@ -302,7 +393,7 @@
             @click="rotateLeft"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;"
+            style="width: 30px; font-size: 20px; margin: 0 10px"
             type="button"
             class="oper"
             value="↻"
@@ -310,7 +401,7 @@
             @click="rotateRight"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;"
+            style="width: 30px; font-size: 20px; margin: 0 10px"
             type="button"
             class="oper"
             value="↓"
@@ -335,7 +426,11 @@
       :close-on-press-escape="false"
     >
       <div v-for="(item, index) in stylists" :key="index">
-        <el-checkbox v-model="item.checked" @change="isCheckList(item,index)">{{item.name}}</el-checkbox>
+        <el-checkbox
+          v-model="item.checked"
+          @change="isCheckList(item, index)"
+          >{{ item.name }}</el-checkbox
+        >
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="AssistantCancel">取 消</el-button>
@@ -502,7 +597,9 @@ export default {
     },
     /*调用摄像头拍照开始*/
     onTake(num) {
-      this.numberr = num;
+      if (num != undefined) {
+        this.numberr = num;
+      }
       this.visible = true;
       this.getCompetence();
     },
@@ -518,11 +615,11 @@ export default {
       }
       return new File([u8arr], filename, { type: mime });
     },
-    async onCancel(val, num) {
+    async onCancel(num) {
       this.visible = false;
       /* this.resetCanvas();*/
       this.stopNavigator();
-      if (val == 1 && num == undefined) {
+      if (num != 101) {
         this.fileList1 = this.imgSrc;
         let file = this.dataURLtoFile(this.imgSrc, String(Math.random()));
         let param = new FormData(); // 创建form对象
@@ -539,10 +636,10 @@ export default {
             });
           }
         }
-      } else if (val == 1 && num != undefined) {
+      } else {
         let file = this.dataURLtoFile(this.imgSrc, String(Math.random()));
-        console.log(file);
-        this.fileName = file;
+
+        this.fileName = String(Math.random()) + ".png";
         this.option.img = this.imgSrc;
       }
       // this.imgSrc = "";
@@ -758,6 +855,7 @@ export default {
           let img = window.URL.createObjectURL(data);
           this.model = true;
           this.modelSrc = img;
+
           formData.append("file", data, this.fileName);
           Api(formData).then((response) => {
             if (this.status == 1) {
@@ -885,8 +983,6 @@ export default {
       this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
-        console.log(this.form);
-        console.log(this.defaultData);
         let obj = {};
         obj["style_type"] = this.form.style_type;
         obj["stylename"] = this.form.stylename;
@@ -900,7 +996,6 @@ export default {
         obj["project_id"] = this.defaultData.id;
         obj["color_code"] = this.form.color_code;
         let res = await projectStyleAdd(obj);
-        console.log(res);
         if (res.data.error_code) {
           this.$message({
             showClose: true,
@@ -916,8 +1011,6 @@ export default {
       this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
-        console.log(this.form);
-        console.log(this.defaultData);
         this.defaultData.user_id_data.map((v) => {
           delete v.id;
           delete v.name;
@@ -935,9 +1028,7 @@ export default {
         obj["project_id"] = this.defaultData.id;
         obj["user_id_data"] = this.defaultData.user_id_data;
         obj["color_code"] = this.form.color_code;
-        console.log(obj);
         let res = await projectStyleAdd(obj);
-        console.log(res);
         if (res.data.error_code) {
           this.$message({
             showClose: true,
@@ -979,7 +1070,6 @@ export default {
         obj["user_id_data"] = this.obj.user_id_data;
         obj["color_code"] = this.obj.color_code;
         let res = await projectStyleAdd(obj);
-        console.log(res);
         this.$router.go(-1);
       });
     },
@@ -991,11 +1081,9 @@ export default {
       let res = await getYearList();
       let { data } = res.data;
       this.years = data;
-      // console.log(this.years)
     },
     async getColor() {
       let res = await getColorSelect();
-      console.log(res);
       let { data } = res.data;
       this.colors = data;
     },
@@ -1044,12 +1132,10 @@ export default {
 
       if (oldId === undefined) {
         let res = await getProject({ id });
-        console.log(res);
         this.defaultData = res.data.data;
       }
       if (oldId !== undefined) {
         let res1 = await getStyle({ id: oldId });
-        console.log(res1);
         this.obj = res1.data.data;
       }
 

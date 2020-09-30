@@ -1,5 +1,8 @@
 <template>
-  <div class="authorityManagement" v-if="permission.indexOf('color_status_edit')!=-1">
+  <div
+    class="authorityManagement"
+    v-if="permission.indexOf('color_status_edit') != -1"
+  >
     <div class="aa">
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
@@ -16,53 +19,79 @@
           border
           size="mini"
           @cell-click="cellclick"
-          :tree-props="{children: 'color_data' , hasChildren: 'hasChildren'}"
+          :tree-props="{ children: 'color_data', hasChildren: 'hasChildren' }"
         >
-          <el-table-column prop="role_name" label="名称" width="90" :show-overflow-tooltip="true"></el-table-column>
-          <el-table-column prop="remarks" :show-overflow-tooltip="true" label="备注" width="160"></el-table-column>
+          <el-table-column
+            prop="role_name"
+            label="名称"
+            width="90"
+            :show-overflow-tooltip="true"
+          ></el-table-column>
+          <el-table-column
+            prop="remarks"
+            :show-overflow-tooltip="true"
+            label="备注"
+            width="160"
+          ></el-table-column>
           <el-table-column align="center" label="操作">
             <template slot-scope="scope">
               <el-tooltip
                 content="复制"
                 placement="top"
-                v-if="scope.row.id!==1&&permission.indexOf('role_add')!=-1"
+                v-if="
+                  scope.row.id !== 1 && permission.indexOf('role_add') != -1
+                "
               >
-                <div class="el-icon-document-copy btn" @click="handlecopy(scope.$index, scope.row)"></div>
+                <div
+                  class="el-icon-document-copy btn"
+                  @click="handlecopy(scope.$index, scope.row)"
+                ></div>
               </el-tooltip>
               <el-tooltip
                 content="编辑"
-                v-if="scope.row.id!==1&&permission.indexOf('role_edit')!=-1"
+                v-if="
+                  scope.row.id !== 1 && permission.indexOf('role_edit') != -1
+                "
                 placement="top"
               >
-                <div class="el-icon-edit btn" @click="handleEdit(scope.$index, scope.row)"></div>
+                <div
+                  class="el-icon-edit btn"
+                  @click="handleEdit(scope.$index, scope.row)"
+                ></div>
               </el-tooltip>
               <el-tooltip
                 content="删除"
                 placement="top"
-                v-if="scope.row.id!==1&&permission.indexOf('role_del')!=-1"
+                v-if="scope.row.id > 4 && permission.indexOf('role_del') != -1"
               >
-                <div class="el-icon-delete btn" @click="handleDelete(scope.$index, scope.row)"></div>
+                <div
+                  class="el-icon-delete btn"
+                  @click="handleDelete(scope.$index, scope.row)"
+                ></div>
               </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
       </div>
-      <div class="right" v-if="status===1">
+      <div class="right" v-if="status === 1">
         <div class="role_info">
           <div class="role_info_name">
             <div class="role_info_tit">角色信息</div>
-            <div class="role_info_con">提示: 员工的角色权限修改后需要退出重新登录才会生效。</div>
+            <div class="role_info_con">
+              提示: 员工的角色权限修改后需要退出重新登录才会生效。
+            </div>
           </div>
           <el-button
             type="primary"
             size="mini"
-            v-if="permission.indexOf('role_add')!=-1"
+            v-if="permission.indexOf('role_add') != -1"
             @click="The_new_role"
-          >新增角色</el-button>
+            >新增角色</el-button
+          >
         </div>
-        <div style="display:flex">
-          <div style="margin:10px">名称: {{obj.role_name}}</div>
-          <div style="margin:10px">备注: {{obj.remarks}}</div>
+        <div style="display: flex">
+          <div style="margin: 10px">名称: {{ obj.role_name }}</div>
+          <div style="margin: 10px">备注: {{ obj.remarks }}</div>
         </div>
         <div class="power_list">
           <div class="power_list_tlt">
@@ -70,27 +99,39 @@
             <div class="power_list_tlt_B">二级</div>
             <div class="power_list_tlt_C">三级</div>
           </div>
-          <div v-for="(item, index) in obj.power" :key="index" style="display:flex;">
-            <div class="stair" :style="item.children*height">
-              <el-checkbox v-model="item.checked" disabled>{{item.name}}</el-checkbox>
+          <div
+            v-for="(item, index) in obj.power"
+            :key="index"
+            style="display: flex"
+          >
+            <div class="stair" :style="item.children * height">
+              <el-checkbox v-model="item.checked" disabled>{{
+                item.name
+              }}</el-checkbox>
             </div>
             <div>
-              <div v-for="(item1, index1) in item.children" :key="index1" style="display:flex">
+              <div
+                v-for="(item1, index1) in item.children"
+                :key="index1"
+                style="display: flex"
+              >
                 <div class="second_level" :style="height">
                   <el-checkbox
                     v-model="item1.checked"
-                    v-if="item1.power_name!=='0'"
+                    v-if="item1.power_name !== '0'"
                     disabled
-                  >{{item1.name}}</el-checkbox>
+                    >{{ item1.name }}</el-checkbox
+                  >
                 </div>
                 <div class="three_level_A">
                   <div v-for="(item2, index2) in item1.children" :key="index2">
                     <div class="three_level_B">
                       <el-checkbox
                         v-model="item2.checked"
-                        v-if="item2.power_name!=='0'"
+                        v-if="item2.power_name !== '0'"
                         disabled
-                      >{{item2.name}}</el-checkbox>
+                        >{{ item2.name }}</el-checkbox
+                      >
                     </div>
                   </div>
                 </div>
@@ -99,22 +140,25 @@
           </div>
         </div>
       </div>
-      <div class="right" v-if="status===3">
+      <div class="right" v-if="status === 3">
         <div class="role_info">
           <div class="role_info_name">
             <div class="role_info_tit">角色信息</div>
-            <div class="role_info_con">提示: 员工的角色权限修改后需要退出重新登录才会生效。</div>
+            <div class="role_info_con">
+              提示: 员工的角色权限修改后需要退出重新登录才会生效。
+            </div>
           </div>
           <el-button
             type="primary"
             size="mini"
-            v-if="permission.indexOf('role_add')!=-1"
+            v-if="permission.indexOf('role_add') != -1"
             @click="The_new_role"
-          >新增角色</el-button>
+            >新增角色</el-button
+          >
         </div>
-        <div style="display:flex">
-          <div style="margin:10px">名称: {{data.role_name}}</div>
-          <div style="margin:10px">备注: {{data.remarks}}</div>
+        <div style="display: flex">
+          <div style="margin: 10px">名称: {{ data.role_name }}</div>
+          <div style="margin: 10px">备注: {{ data.remarks }}</div>
         </div>
         <div class="power_list">
           <div class="power_list_tlt">
@@ -122,27 +166,39 @@
             <div class="power_list_tlt_B">二级</div>
             <div class="power_list_tlt_C">三级</div>
           </div>
-          <div v-for="(item, index) in data.power" :key="index" style="display:flex;">
-            <div class="stair" :style="item.children*height">
-              <el-checkbox v-model="item.checked" disabled>{{item.name}}</el-checkbox>
+          <div
+            v-for="(item, index) in data.power"
+            :key="index"
+            style="display: flex"
+          >
+            <div class="stair" :style="item.children * height">
+              <el-checkbox v-model="item.checked" disabled>{{
+                item.name
+              }}</el-checkbox>
             </div>
             <div>
-              <div v-for="(item1, index1) in item.children" :key="index1" style="display:flex">
+              <div
+                v-for="(item1, index1) in item.children"
+                :key="index1"
+                style="display: flex"
+              >
                 <div class="second_level" :style="height">
                   <el-checkbox
                     v-model="item1.checked"
-                    v-if="item1.power_name!=='0'"
+                    v-if="item1.power_name !== '0'"
                     disabled
-                  >{{item1.name}}</el-checkbox>
+                    >{{ item1.name }}</el-checkbox
+                  >
                 </div>
                 <div class="three_level_A">
                   <div v-for="(item2, index2) in item1.children" :key="index2">
                     <div class="three_level_B">
                       <el-checkbox
                         v-model="item2.checked"
-                        v-if="item2.power_name!=='0'"
+                        v-if="item2.power_name !== '0'"
                         disabled
-                      >{{item2.name}}</el-checkbox>
+                        >{{ item2.name }}</el-checkbox
+                      >
                     </div>
                   </div>
                 </div>
@@ -151,21 +207,30 @@
           </div>
         </div>
       </div>
-      <div class="right" v-if="status===2">
+      <div class="right" v-if="status === 2">
         <div class="role_info">
           <div class="role_info_name">
             <div class="role_info_tit">角色信息</div>
-            <div class="role_info_con">提示: 员工的角色权限修改后需要退出重新登录才会生效。</div>
+            <div class="role_info_con">
+              提示: 员工的角色权限修改后需要退出重新登录才会生效。
+            </div>
           </div>
           <el-button
             type="primary"
             size="mini"
-            v-if="permission.indexOf('role_edit')!=-1"
+            v-if="permission.indexOf('role_edit') != -1"
             @click="handleAddRole"
-          >保存</el-button>
+            >保存</el-button
+          >
         </div>
         <div class="role_form">
-          <el-form :inline="true" :model="form" ref="form" :rules="rules" class="demo-form-inline">
+          <el-form
+            :inline="true"
+            :model="form"
+            ref="form"
+            :rules="rules"
+            class="demo-form-inline"
+          >
             <el-form-item prop="role_name">
               <el-input v-model="form.role_name" placeholder="名称"></el-input>
             </el-form-item>
@@ -182,30 +247,53 @@
             <div class="power_list_tlt_C">三级</div>
           </div>
           <div>
-            <div v-for="(item, index) in form.power" :key="index" style="display:flex;">
-              <div class="stair" :style="item.children*height">
+            <div
+              v-for="(item, index) in form.power"
+              :key="index"
+              style="display: flex"
+            >
+              <div class="stair" :style="item.children * height">
                 <el-checkbox
                   v-model="item.checked"
-                  @change="stair_checked_add(item,index)"
-                >{{item.name}}</el-checkbox>
+                  @change="stair_checked_add(item, index)"
+                  >{{ item.name }}</el-checkbox
+                >
               </div>
               <div>
-                <div v-for="(item1, index1) in item.children" :key="index1" style="display:flex">
+                <div
+                  v-for="(item1, index1) in item.children"
+                  :key="index1"
+                  style="display: flex"
+                >
                   <div class="second_level" :style="height">
                     <el-checkbox
                       v-model="item1.checked"
-                      v-if="item1.power_name!=='0'"
-                      @change="second_checked_add(item,index,item1,index1)"
-                    >{{item1.name}}</el-checkbox>
+                      v-if="item1.power_name !== '0'"
+                      @change="second_checked_add(item, index, item1, index1)"
+                      >{{ item1.name }}</el-checkbox
+                    >
                   </div>
                   <div class="three_level_A">
-                    <div v-for="(item2, index2) in item1.children" :key="index2">
+                    <div
+                      v-for="(item2, index2) in item1.children"
+                      :key="index2"
+                    >
                       <div class="three_level_B">
                         <el-checkbox
                           v-model="item2.checked"
-                          v-if="item2.power_name!=='0'"
-                          @change="three_checked_add(item,index,item1,index1,item2,index2)"
-                        >{{item2.name}}</el-checkbox>
+                          v-if="item2.power_name !== '0'"
+                          @change="
+                            three_checked_add(
+                              item,
+                              index,
+                              item1,
+                              index1,
+                              item2,
+                              index2
+                            )
+                          "
+                          >{{ item2.name }}</el-checkbox
+                        >
                       </div>
                     </div>
                   </div>
@@ -216,21 +304,30 @@
         </div>
       </div>
 
-      <div class="right" v-if="status===4">
+      <div class="right" v-if="status === 4">
         <div class="role_info">
           <div class="role_info_name">
             <div class="role_info_tit">角色信息</div>
-            <div class="role_info_con">提示: 员工的角色权限修改后需要退出重新登录才会生效。</div>
+            <div class="role_info_con">
+              提示: 员工的角色权限修改后需要退出重新登录才会生效。
+            </div>
           </div>
           <el-button
             type="primary"
             size="mini"
-            v-if="permission.indexOf('role_edit')!=-1"
+            v-if="permission.indexOf('role_edit') != -1"
             @click="handleEditRole"
-          >保存修改</el-button>
+            >保存修改</el-button
+          >
         </div>
         <div class="role_form">
-          <el-form :inline="true" :model="edit" ref="edit" :rules="rules1" class="demo-form-inline">
+          <el-form
+            :inline="true"
+            :model="edit"
+            ref="edit"
+            :rules="rules1"
+            class="demo-form-inline"
+          >
             <el-form-item label="名称" prop="role_name">
               <el-input v-model="edit.role_name" placeholder="名称"></el-input>
             </el-form-item>
@@ -245,30 +342,50 @@
             <div class="power_list_tlt_B">二级</div>
             <div class="power_list_tlt_C">三级</div>
           </div>
-          <div v-for="(item, index) in edit.power" :key="index" style="display:flex;">
-            <div class="stair" :style="item.children*height">
+          <div
+            v-for="(item, index) in edit.power"
+            :key="index"
+            style="display: flex"
+          >
+            <div class="stair" :style="item.children * height">
               <el-checkbox
                 v-model="item.checked"
-                @change="stair_checked_edit(item,index)"
-              >{{item.name}}</el-checkbox>
+                @change="stair_checked_edit(item, index)"
+                >{{ item.name }}</el-checkbox
+              >
             </div>
             <div>
-              <div v-for="(item1, index1) in item.children" :key="index1" style="display:flex">
+              <div
+                v-for="(item1, index1) in item.children"
+                :key="index1"
+                style="display: flex"
+              >
                 <div class="second_level" :style="height">
                   <el-checkbox
                     v-model="item1.checked"
-                    v-if="item1.power_name!=='0'"
-                    @change="second_checked_edit(item,index,item1,index1)"
-                  >{{item1.name}}</el-checkbox>
+                    v-if="item1.power_name !== '0'"
+                    @change="second_checked_edit(item, index, item1, index1)"
+                    >{{ item1.name }}</el-checkbox
+                  >
                 </div>
                 <div class="three_level_A">
                   <div v-for="(item2, index2) in item1.children" :key="index2">
                     <div class="three_level_B">
                       <el-checkbox
                         v-model="item2.checked"
-                        v-if="item2.power_name!=='0'"
-                        @change="three_checked_edit(item,index,item1,index1,item2,index2)"
-                      >{{item2.name}}</el-checkbox>
+                        v-if="item2.power_name !== '0'"
+                        @change="
+                          three_checked_edit(
+                            item,
+                            index,
+                            item1,
+                            index1,
+                            item2,
+                            index2
+                          )
+                        "
+                        >{{ item2.name }}</el-checkbox
+                      >
                     </div>
                   </div>
                 </div>
@@ -290,10 +407,10 @@
     >
       <el-form ref="copy" :model="copy" label-width="80px" resetFields>
         <el-form-item label="名称" prop="role_name" :rules="rules2">
-          <el-input v-model="copy.role_name" style="width:80%"></el-input>
+          <el-input v-model="copy.role_name" style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="备注">
-          <el-input v-model="copy.remarks" style="width:80%"></el-input>
+          <el-input v-model="copy.remarks" style="width: 80%"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -728,8 +845,8 @@ export default {
         });
       });
       this.form = JSON.parse(JSON.stringify(this.obj));
-      this.form.remarks = ''
-      this.form.role_name = ''
+      this.form.remarks = "";
+      this.form.role_name = "";
       this.form.power.map((v, i) => {
         v["checked"] = false;
         v.children.map((v1, i1) => {

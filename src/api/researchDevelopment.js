@@ -617,3 +617,10 @@ export const download = (data) => {
     data: data,
   });
 };
+export const  getQrcode = (data) => {
+  return axios({
+    url: "?g=get_qrcode",
+    method: "post",
+    data: data,
+  });
+};

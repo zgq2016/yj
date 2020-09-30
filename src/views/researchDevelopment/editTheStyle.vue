@@ -4,15 +4,23 @@
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>研发部</el-breadcrumb-item>
-        <el-breadcrumb-item v-if="navc.TL-0===30" :to="{ path: '/itemDesign' }">设计项目</el-breadcrumb-item>
         <el-breadcrumb-item
-          v-if="navc.TL-0===30"
+          v-if="navc.TL - 0 === 30"
+          :to="{ path: '/itemDesign' }"
+          >设计项目</el-breadcrumb-item
+        >
+        <el-breadcrumb-item
+          v-if="navc.TL - 0 === 30"
           :to="{ path: `/designCheck?id=${navc.project_id}` }"
-        >项目详细</el-breadcrumb-item>
+          >项目详细</el-breadcrumb-item
+        >
         <el-breadcrumb-item
-          v-if="navc.TL-0===30"
-          :to="{ path: `/designNote?id=${navc.id}&project_id=${navc.project_id}&TL=30` }"
-        >款式详细</el-breadcrumb-item>
+          v-if="navc.TL - 0 === 30"
+          :to="{
+            path: `/designNote?id=${navc.id}&project_id=${navc.project_id}&TL=30`,
+          }"
+          >款式详细</el-breadcrumb-item
+        >
         <el-breadcrumb-item>编辑款式</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -21,7 +29,7 @@
         <div class="upload" @click="handle_obj_style_pic_url">
           <el-image
             v-if="obj.style_pic_url"
-            style="width: 150px; height: 150px;margin-right: 5px;"
+            style="width: 150px; height: 150px; margin-right: 5px"
             :src="obj.style_pic_url"
             fit="cover"
           ></el-image>
@@ -32,23 +40,28 @@
             <el-form ref="obj" :model="obj" :rules="rules" label-width="80px">
               <el-form-item>
                 <!-- <div>{{obj.styleno}}</div> -->
-                <div style="display:flex">
-                  <div style="width:200px;display:flex">
+                <div style="display: flex">
+                  <div style="width: 200px; display: flex">
                     <div>款号:</div>
-                    <div>{{obj.styleno}}</div>
+                    <div>{{ obj.styleno }}</div>
                   </div>
-                  <div style="width:200px;display:flex">
+                  <div style="width: 200px; display: flex">
                     <div>指派设计师:</div>
-                    <div>{{obj.user_name}}</div>
+                    <div>{{ obj.user_name }}</div>
                   </div>
-                  <div style="display:flex">
+                  <div style="display: flex">
                     <div>协助:</div>
-                    <div v-for="(item, index) in obj.user_id_data" :key="index">{{item.name}},</div>
+                    <div v-for="(item, index) in obj.user_id_data" :key="index">
+                      {{ item.name }},
+                    </div>
                   </div>
                 </div>
               </el-form-item>
               <el-form-item label="名称" prop="stylename">
-                <el-input v-model="obj.stylename" style="width:200px"></el-input>
+                <el-input
+                  v-model="obj.stylename"
+                  style="width: 200px"
+                ></el-input>
               </el-form-item>
               <el-form-item label="品类" prop="style_type">
                 <!-- <el-select v-model="obj.style_type" placeholder="品类">
@@ -110,39 +123,83 @@
       </div>
       <div class="color">
         <div class="upload" @click="handle_obj_style_color_pic_url">
-          <div v-if="obj.color_code" class="uploads" :style="`background-color:${obj.color_code};`"></div>
-          <img v-if="obj.style_color_pic_url" :src="obj.style_color_pic_url" alt />
+          <div
+            v-if="obj.color_code"
+            class="uploads"
+            :style="`background-color:${obj.color_code};`"
+          ></div>
+          <img
+            v-if="obj.style_color_pic_url"
+            :src="obj.style_color_pic_url"
+            alt
+          />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </div>
       </div>
       <div class="display:flex">
         <el-button
-          v-if="permission.indexOf('style_edit')!=-1"
+          v-if="permission.indexOf('style_edit') != -1"
           round
-          style="margin:30px  100px 30px 250px"
+          style="margin: 30px 100px 30px 250px"
           @click="handleEdit"
-        >编辑</el-button>
-        <el-button v-if="permission.indexOf('style_del')!=-1" round @click="handleDel">删除</el-button>
+          >编辑</el-button
+        >
+        <el-button
+          v-if="permission.indexOf('style_del') != -1"
+          round
+          @click="handleDel"
+          >删除</el-button
+        >
       </div>
     </div>
-    <el-dialog title="拍照上传" :visible.sync="visible" @close="onCancel" width="1065px">
+    <el-dialog
+      title="拍照上传"
+      :visible.sync="visible"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      width="1065px"
+    >
       <div class="box">
-        <video id="videoCamera" class="canvas" :width="videoWidth" :height="videoHeight" autoplay></video>
+        <video
+          id="videoCamera"
+          class="canvas"
+          :width="videoWidth"
+          :height="videoHeight"
+          autoplay
+        ></video>
         <canvas
           id="canvasCamera"
           class="canvas"
           :width="videoWidth"
           :height="videoHeight"
-          style="margin-left:10px;"
+          style="margin-left: 10px"
         ></canvas>
       </div>
       <div slot="footer">
-        <el-button @click="drawImage" icon="el-icon-camera" size="small">拍照</el-button>
-        <el-button v-if="os" @click="getCompetence" icon="el-icon-video-camera" size="small">打开摄像头</el-button>
+        <el-button @click="drawImage" icon="el-icon-camera" size="small"
+          >拍照</el-button
+        >
+        <el-button
+          v-if="os"
+          @click="getCompetence"
+          icon="el-icon-video-camera"
+          size="small"
+          >打开摄像头</el-button
+        >
         <!-- <el-button v-else @click="stopNavigator" icon="el-icon-switch-button" size="small">关闭摄像头</el-button> -->
-        <el-button @click="resetCanvas" icon="el-icon-refresh" size="small">重置</el-button>
-        <el-button @click="ctrlShift" icon="el-icon-s-unfold" size="small">另存为</el-button>
-        <el-button @click="onCancel(1,numberr)" icon="el-icon-circle-close" size="small">完成</el-button>
+        <el-button @click="resetCanvas" icon="el-icon-refresh" size="small"
+          >重置</el-button
+        >
+        <el-button @click="ctrlShift" icon="el-icon-s-unfold" size="small"
+          >另存为</el-button
+        >
+        <el-button
+          @click="onCancel(numberr)"
+          icon="el-icon-circle-close"
+          size="small"
+          >完成</el-button
+        >
       </div>
     </el-dialog>
     <el-dialog
@@ -155,9 +212,9 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <div style="display:flex;">
+      <div style="display: flex">
         <div class="info-item">
-          <div style="display:flex;">
+          <div style="display: flex">
             <div>
               <div class="upload">
                 <input
@@ -170,15 +227,22 @@
                 上传色卡图片
               </div>
               <button
-                v-if="status===4||status===2"
+                v-if="status === 4 || status === 2"
                 class="upload"
-                style="margin-left:30px;padding:0 20px 0 10px;float:left;"
+                style="margin-left: 30px; padding: 0 20px 0 10px; float: left"
               >
                 选择颜色
-                <div v-if="this.$route.query.oldId===undefined&&status===2">
-                  <el-color-picker v-model="color_code" @change="color_picker"></el-color-picker>
+                <div
+                  v-if="this.$route.query.oldId === undefined && status === 2"
+                >
+                  <el-color-picker
+                    v-model="color_code"
+                    @change="color_picker"
+                  ></el-color-picker>
                 </div>
-                <div v-if="this.$route.query.oldId!==undefined&&status===4">
+                <div
+                  v-if="this.$route.query.oldId !== undefined && status === 4"
+                >
                   <el-color-picker v-model="color_code"></el-color-picker>
                 </div>
               </button>
@@ -188,8 +252,9 @@
                 type="info"
                 class="aj"
                 size="small"
-                v-if="status===4||status===2"
-              >拍照</el-button>
+                v-if="status === 4 || status === 2"
+                >拍照</el-button
+              >
             </div>
           </div>
           <div class="line">
@@ -213,24 +278,32 @@
                   @imgLoad="imgLoad"
                 ></vueCropper>
               </div>
-              <div class="show-preview" v-if="status===4||status===2">
+              <div class="show-preview" v-if="status === 4 || status === 2">
                 <div class="preview">
                   <div
                     v-if="color_code"
                     :style="`background-color:${color_code};width:150px;height:150px`"
                   ></div>
-                  <img v-if="previews.url" :src="previews.url" :style="previews.img" />
+                  <img
+                    v-if="previews.url"
+                    :src="previews.url"
+                    :style="previews.img"
+                  />
                 </div>
               </div>
-              <div class="show-preview1" v-if="status===1||status===3">
+              <div class="show-preview1" v-if="status === 1 || status === 3">
                 <div class="preview">
-                  <img v-if="previews.url" :src="previews.url" :style="previews.img" />
+                  <img
+                    v-if="previews.url"
+                    :src="previews.url"
+                    :style="previews.img"
+                  />
                 </div>
               </div>
             </div>
           </div>
           <input
-            style="width:30px;font-size:20px;margin:0 10px;"
+            style="width: 30px; font-size: 20px; margin: 0 10px"
             type="button"
             class="oper"
             value="+"
@@ -238,7 +311,7 @@
             @click="changeScale(1)"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;"
+            style="width: 30px; font-size: 20px; margin: 0 10px"
             type="button"
             class="oper"
             value="-"
@@ -246,7 +319,7 @@
             @click="changeScale(-1)"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;"
+            style="width: 30px; font-size: 20px; margin: 0 10px"
             type="button"
             class="oper"
             value="↺"
@@ -254,7 +327,7 @@
             @click="rotateLeft"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;"
+            style="width: 30px; font-size: 20px; margin: 0 10px"
             type="button"
             class="oper"
             value="↻"
@@ -262,7 +335,7 @@
             @click="rotateRight"
           />
           <input
-            style="width:30px;font-size:20px;margin:0 10px;"
+            style="width: 30px; font-size: 20px; margin: 0 10px"
             type="button"
             class="oper"
             value="↓"
@@ -287,7 +360,11 @@
       :close-on-press-escape="false"
     >
       <div v-for="(item, index) in stylists" :key="index">
-        <el-checkbox v-model="item.checked" @change="isCheckList(item,index)">{{item.name}}</el-checkbox>
+        <el-checkbox
+          v-model="item.checked"
+          @change="isCheckList(item, index)"
+          >{{ item.name }}</el-checkbox
+        >
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="AssistantCancel">取 消</el-button>
@@ -444,7 +521,9 @@ export default {
     },
     /*调用摄像头拍照开始*/
     onTake(num) {
-      this.numberr = num;
+      if (num != undefined) {
+        this.numberr = num;
+      }
       this.visible = true;
       this.getCompetence();
     },
@@ -460,11 +539,11 @@ export default {
       }
       return new File([u8arr], filename, { type: mime });
     },
-    async onCancel(val, num) {
+    async onCancel(num) {
       this.visible = false;
       /* this.resetCanvas();*/
       this.stopNavigator();
-      if (val == 1 && num == undefined) {
+      if (num != 101) {
         this.fileList1 = this.imgSrc;
         let file = this.dataURLtoFile(this.imgSrc, String(Math.random()));
         let param = new FormData(); // 创建form对象
@@ -481,10 +560,9 @@ export default {
             });
           }
         }
-      } else if (val == 1 && num != undefined) {
+      } else {
         let file = this.dataURLtoFile(this.imgSrc, String(Math.random()));
-        console.log(file);
-        this.fileName = file;
+        this.fileName = String(Math.random()) + ".png";
         this.option.img = this.imgSrc;
       }
       // this.imgSrc = "";
@@ -560,7 +638,6 @@ export default {
     //绘制图片
     drawImage() {
       // 点击，canvas画图
-      // console.log(this.thisContext);
       this.thisContext.drawImage(
         this.thisVideo,
         0,
@@ -804,7 +881,6 @@ export default {
         obj["user_id_data"] = this.obj.user_id_data;
         obj["color_code"] = this.obj.color_code;
         let res = await styleEdit(obj);
-        console.log(res);
         if (res.data.error_code) {
           this.$message({
             showClose: true,
@@ -914,7 +990,6 @@ export default {
     this.getStyleno();
     // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
-    console.log(this.power);
   },
 };
 </script>

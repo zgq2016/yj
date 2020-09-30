@@ -431,7 +431,7 @@
               <el-form-item label="附图:">
                 <el-upload
                   class="upload-demo"
-                  action="https://yj.ppp-pay.top/uploadpic.php"
+                  :action="url + '/uploadpic.php'"
                   :on-preview="handlePreview"
                   :on-remove="handleRemove"
                   :file-list="fileList"
@@ -544,9 +544,11 @@ import {
   bookStockOrderSizeDel,
 } from "@/api/warehouse.js";
 import { factoryList } from "@/api/archives";
+import { url } from "@/api/configuration";
 export default {
   data() {
     return {
+      url: url,
       power: "",
       total_price: 0, //结算总金额
       shopppings: [], //商品

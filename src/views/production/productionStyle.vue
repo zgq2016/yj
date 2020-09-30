@@ -522,7 +522,7 @@
                   </el-form-item>-->
                   <el-upload
                     class="avatar-uploader1"
-                    action="https://yj.ppp-pay.top/uploadpic.php"
+                    :action="url + '/uploadpic.php'"
                     :show-file-list="false"
                     :on-success="handleAvatarSuccess1"
                     :before-upload="beforeAvatarUpload"
@@ -578,7 +578,7 @@
                   </el-form-item>
                   <el-upload
                     class="avatar-uploader"
-                    action="https://yj.ppp-pay.top/uploadpic.php"
+                    :action="url + '/uploadpic.php'"
                     :show-file-list="false"
                     :on-success="handleAvatarSuccess"
                     :before-upload="beforeAvatarUpload"
@@ -820,7 +820,7 @@
                     <span>裁床单：</span>
                     <el-upload
                       class="avatar-uploader"
-                      action="https://yj.ppp-pay.top/uploadpic.php"
+                      :action="url + '/uploadpic.php'"
                       :show-file-list="false"
                       :on-success="handleAvatarSuccess2"
                       :before-upload="beforeAvatarUpload"
@@ -1214,9 +1214,11 @@ import {
   factoryList,
 } from "@/api/archives";
 import { storehouseList } from "@/api/warehouse.js";
+import { url } from "@/api/configuration";
 export default {
   data() {
     return {
+      url: url,
       power: "",
       home: false,
       // 下单信息验证

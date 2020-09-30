@@ -324,7 +324,7 @@
         <el-form-item label="附图" prop="picurl">
           <el-upload
             class="avatar-uploader"
-            action="https://yj.ppp-pay.top/uploadpic.php"
+            :action="url + '/uploadpic.php'"
             :show-file-list="false"
             :on-success="handleSuccess1"
             :before-upload="beforeUpload"
@@ -395,7 +395,7 @@
         <el-form-item label="附图" prop="picurl">
           <el-upload
             class="avatar-uploader"
-            action="https://yj.ppp-pay.top/uploadpic.php"
+            :action="url + '/uploadpic.php'"
             :show-file-list="false"
             :on-success="handleSuccess"
             :before-upload="beforeUpload"
@@ -422,7 +422,7 @@ import {
   getStylistList,
   getCategoryList,
 } from "@/api/researchDevelopment";
-
+import { url } from "@/api/configuration";
 import {
   supplierAccountList,
   balanceAccountSelect,
@@ -438,6 +438,7 @@ import {
 export default {
   data() {
     return {
+      url: url,
       permission: [],
       total_cope_money: "",
       total_pay_money: "",

@@ -19,7 +19,7 @@
         <el-upload
           class="upload-demo"
           ref="upload"
-          action="https://shesho.ppp-pay.top/webapi.php?g=test"
+          :action="url + '/webapi.php?g=test'"
           :auto-upload="true"
           name="image"
           :show-file-list="false"
@@ -374,6 +374,7 @@ import {
   getMaterialSelect,
   discern,
 } from "@/api/archives";
+import { url } from "@/api/configuration";
 import { VueCropper } from "vue-cropper";
 import { Api } from "@/js/api.js"; //接口url配置文件
 export default {
@@ -382,6 +383,7 @@ export default {
   },
   data() {
     return {
+      url: url,
       //剪切图片上传
       optionProps: {
         value: "color_name",

@@ -51,7 +51,7 @@
     <el-dialog
       title="添加分类"
       :visible.sync="centerDialogVisible"
-      width="30%"
+      width="80%"
       center
       :show-close="false"
       :close-on-click-modal="false"
@@ -62,8 +62,9 @@
           <el-select
             v-model="form.goods_category_id"
             placeholder="可选/可不选"
-            style="width:80%;"
+            style="width:40%;"
             clearable
+            @change="clearabled"
           >
             <el-option
               v-for="item in options"
@@ -74,16 +75,16 @@
           </el-select>
         </el-form-item>
         <el-form-item label="商品分类" prop="goods_category_name" v-if="form.goods_category_id===''">
-          <el-input v-model="form.goods_category_name" style="width:80%;"></el-input>
+          <el-input v-model="form.goods_category_name" style="width:40%;"></el-input>
         </el-form-item>
         <el-form-item label="商品名称" prop="goods_category_name" v-if="form.goods_category_id!==''">
-          <el-input v-model="form.goods_category_name" style="width:80%;"></el-input>
+          <el-input v-model="form.goods_category_name" style="width:40%;"></el-input>
         </el-form-item>
         <el-form-item label="编号" prop="no">
           <el-input
             type="text"
             placeholder="请输入编号"
-            style="width:80%;"
+            style="width:40%;"
             v-model.number="form.no"
             maxlength="2"
             show-word-limit
@@ -91,7 +92,7 @@
         </el-form-item>
 
         <el-form-item v-if="form.goods_category_id != ''" label="计量单位" prop="unit">
-          <el-select v-model="form.unit" clearable placeholder="请选择" style="width:80%;">
+          <el-select v-model="form.unit" clearable placeholder="请选择" style="width:40%;">
             <el-option
               v-for="item in units"
               :key="item.id"
@@ -100,32 +101,33 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item v-else label="部位" prop="unit">
-          <el-select
-            v-model="form.position"
-            multiple
-            collapse-tags
-            clearable
-            placeholder="请选择"
-            style="width:80%;"
-          >
-            <el-option v-for="item in positions" :key="item.id" :label="item.name" :value="item.id"></el-option>
-            <el-pagination
-              class="pagination"
-              @size-change="handleSizeChange1"
-              @current-change="handleCurrentChange1"
-              :current-page="pageIndex1"
-              :page-size="pageSize1"
-              layout="prev, pager, next"
-              :total="total1"
-            ></el-pagination>
-          </el-select>
+        <el-form-item
+          v-else
+          label="部位:"
+          style="position: absolute;;right:0;z-index:999;top:0;width:55%;"
+          prop="unit"
+          class="abcd"
+        >
+          <el-checkbox
+            :indeterminate="isIndeterminate"
+            v-model="checkAll"
+            @change="handleCheckAllChange"
+          >全选</el-checkbox>
+          <div style="margin: 15px 0;"></div>
+          <el-checkbox-group v-model="form.position" @change="handleCheckedCitiesChange">
+            <el-checkbox
+              v-for="item in positions"
+              :label="item.id"
+              :key="item.id"
+              :value="item.id"
+            >{{item.name}}</el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
         <el-form-item label="分类描述" prop="describe">
-          <el-input type="textarea" v-model="form.describe"></el-input>
+          <el-input type="textarea" style="width:40%;" v-model="form.describe"></el-input>
         </el-form-item>
         <el-form-item label="排序" prop="sort">
-          <el-input v-model="form.sort" style="width:80%;"></el-input>
+          <el-input v-model="form.sort" style="width:40%;"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -137,7 +139,7 @@
     <el-dialog
       title="编辑分类"
       :visible.sync="centerDialogVisible1"
-      width="30%"
+      width="80%"
       center
       :show-close="false"
       :close-on-click-modal="false"
@@ -145,13 +147,13 @@
     >
       <el-form ref="obj" :model="obj" :rules="rules" label-width="80px" resetFields>
         <el-form-item label="分类名称" prop="goods_category_name">
-          <el-input v-model="obj.goods_category_name" style="width:80%;"></el-input>
+          <el-input v-model="obj.goods_category_name" style="width:40%;"></el-input>
         </el-form-item>
         <el-form-item label="编号" prop="no">
           <el-input
             type="text"
             placeholder="请输入编号"
-            style="width:80%;"
+            style="width:40%;"
             v-model.number="obj.no"
             maxlength="2"
             show-word-limit
@@ -162,7 +164,7 @@
             v-model="region"
             clearable
             @change="get_goods_category_id($event)"
-            style="width:80%;"
+            style="width:40%;"
           >
             <el-option
               v-for="item in options"
@@ -182,32 +184,33 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item v-else label="部位" prop="unit">
-          <el-select
-            v-model="obj.position"
-            multiple
-            collapse-tags
-            clearable
-            placeholder="请选择"
-            style="width:80%;"
-          >
-            <el-option v-for="item in positions" :key="item.id" :label="item.name" :value="item.id"></el-option>
-            <el-pagination
-              class="pagination"
-              @size-change="handleSizeChange1"
-              @current-change="handleCurrentChange1"
-              :current-page="pageIndex1"
-              :page-size="pageSize1"
-              layout="prev, pager, next"
-              :total="total1"
-            ></el-pagination>
-          </el-select>
+        <el-form-item
+          v-else
+          label="部位:"
+          style="position: absolute;;right:0;z-index:999;top:0;width:55%;"
+          prop="unit"
+          class="abcd"
+        >
+          <el-checkbox
+            :indeterminate="isIndeterminate"
+            v-model="checkAll1"
+            @change="handleCheckAllChange1"
+          >全选</el-checkbox>
+          <div style="margin: 15px 0;"></div>
+          <el-checkbox-group v-model="obj.position" @change="handleCheckedCitiesChange1">
+            <el-checkbox
+              v-for="item in positions"
+              :label="item.id"
+              :key="item.id"
+              :value="item.id"
+            >{{item.name}}</el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
         <el-form-item label="分类描述">
-          <el-input type="textarea" v-model="obj.describe"></el-input>
+          <el-input type="textarea" style="width:40%;" v-model="obj.describe"></el-input>
         </el-form-item>
         <el-form-item label="排序">
-          <el-input v-model="obj.sort" style="width:80%;"></el-input>
+          <el-input v-model="obj.sort" style="width:40%;"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -241,6 +244,10 @@ import { getUnitSelect } from "@/api/archives";
 export default {
   data() {
     return {
+      checkAll: false,
+      isIndeterminate: true,
+      checkAll1: false,
+      isIndeterminate1: true,
       permission: [],
       units: [],
       power: "",
@@ -271,9 +278,11 @@ export default {
         unit: "",
         describe: "",
         sort: "",
+        position: [],
+        no: "",
       },
       region: "",
-      obj: {},
+      obj: { position: [] },
       options: [],
       pageIndex: 1,
       pageSize: 10,
@@ -289,6 +298,41 @@ export default {
     };
   },
   methods: {
+    clearabled() {
+      this.form.position = [];
+      // this.isIndeterminate = true;
+      this.checkAll = false;
+    },
+    handleCheckAllChange(val) {
+      let arr = [];
+      this.positions.map((v) => {
+        arr.push(v.id);
+      });
+      this.form.position = val ? arr : [];
+      this.isIndeterminate = false;
+    },
+    handleCheckedCitiesChange(value) {
+      console.log(value);
+      let checkedCount = value.length;
+      this.checkAll = checkedCount === this.positions.length;
+      this.isIndeterminate =
+        checkedCount > 0 && checkedCount < this.positions.length;
+    },
+    handleCheckAllChange1(val) {
+      let arr = [];
+      this.positions.map((v) => {
+        arr.push(v.id);
+      });
+      this.obj.position = val ? arr : [];
+      this.isIndeterminate1 = false;
+    },
+    handleCheckedCitiesChange1(value) {
+      console.log(value);
+      let checkedCount = value.length;
+      this.checkAll1 = checkedCount === this.positions.length;
+      this.isIndeterminate1 =
+        checkedCount > 0 && checkedCount < this.positions.length;
+    },
     handleClose(form) {
       this.$refs["form"].resetFields();
       this.form.position = [];
@@ -332,7 +376,7 @@ export default {
       this.obj.no = Number(row.no);
       let arr = [];
       row.position.map((v, i) => {
-        arr.push((v.id));
+        arr.push(v.id);
       });
       this.obj.position = arr;
       this.centerDialogVisible1 = true;
@@ -435,10 +479,7 @@ export default {
       this.units = data;
     },
     async positionList() {
-      let res = await positionList({
-        page: this.pageIndex1,
-        page_size: this.pageSize1,
-      });
+      let res = await positionList();
       let { data, count } = res.data;
       this.positions = data;
       this.total1 = count;
@@ -462,6 +503,18 @@ export default {
 
 <style lang="less" scoped>
 .goodsCategory {
+  /deep/.el-form {
+    position: relative;
+    /deep/.el-checkbox {
+      width: 80px;
+    }
+    .abcd {
+      .el-form-item__content {
+        padding-left: 20px;
+        border: 1px solid #cccccc;
+      }
+    }
+  }
   .addClassify {
     margin: 0 30px 30px 0;
     border-radius: 15px;
