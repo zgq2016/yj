@@ -1,25 +1,30 @@
 <template>
-  <div class="menus" v-if="power.indexOf('H1000400')!=-1">
+  <div class="menus">
     <div class="aa">
       <!-- 面包屑 -->
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>设置</el-breadcrumb-item>
-        <el-breadcrumb-item>菜单</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>设置</el-breadcrumb-item>
+          <el-breadcrumb-item>菜单</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <!-- 添加分类 -->
     <div class="addClassify" @click="addClassify">添加菜单</div>
     <el-table
       :data="tableData"
-      style="width: 100%;margin: 20px 0;"
+      style="width: 100%; margin: 20px 0"
       row-key="id"
       border
-      :tree-props="{children: 'children' , hasChildren: 'hasChildren'}"
+      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
     >
       <el-table-column prop="name" label="名称"></el-table-column>
       <el-table-column prop="route" label="路由地址"></el-table-column>
       <el-table-column prop="url" label="请求地址"></el-table-column>
-      <el-table-column prop="auth_name" label="是否需要验证权限"></el-table-column>
+      <el-table-column
+        prop="auth_name"
+        label="是否需要验证权限"
+      ></el-table-column>
       <el-table-column prop="sort" label="排序"></el-table-column>
 
       <el-table-column align="center" label="操作" width="200">
@@ -55,14 +60,14 @@
         </el-form-item>
 
         <el-form-item label="名称" prop="name">
-          <el-input v-model="form.name" style="width:80%;"></el-input>
+          <el-input v-model="form.name" style="width: 80%"></el-input>
         </el-form-item>
 
         <el-form-item label="路由地址">
-          <el-input v-model="form.route" style="width:80%;"></el-input>
+          <el-input v-model="form.route" style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="请求地址">
-          <el-input v-model="form.url" style="width:80%;"></el-input>
+          <el-input v-model="form.url" style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="权限验证">
           <el-radio-group v-model="form.auth">
@@ -72,12 +77,14 @@
         </el-form-item>
 
         <el-form-item label="排序" prop="sort">
-          <el-input v-model="form.sort" style="width:80%;"></el-input>
+          <el-input v-model="form.sort" style="width: 80%"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleClose('form')">取 消</el-button>
-        <el-button type="primary" @click="handleNewList('form')">确 定</el-button>
+        <el-button type="primary" @click="handleNewList('form')"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
     <!-- 编辑分类 -->
@@ -90,12 +97,18 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <el-form ref="obj" :model="obj" :rules="rules" label-width="80px" resetFields>
+      <el-form
+        ref="obj"
+        :model="obj"
+        :rules="rules"
+        label-width="80px"
+        resetFields
+      >
         <el-form-item label="名称">
-          <el-input v-model="obj.name" style="width:80%;"></el-input>
+          <el-input v-model="obj.name" style="width: 80%"></el-input>
         </el-form-item>
 
-        <el-form-item label="上级分类" v-if="obj.id>10">
+        <el-form-item label="上级分类" v-if="obj.id > 10">
           <!-- <el-select v-model="obj.pid" clearable style="width:80%;">
             <el-option v-for="item in pids" :key="item.value" :label="item.name " :value="item.id"></el-option>
           </el-select>-->
@@ -108,10 +121,10 @@
           ></el-cascader>
         </el-form-item>
         <el-form-item label="路由地址">
-          <el-input v-model="obj.route" style="width:80%;"></el-input>
+          <el-input v-model="obj.route" style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="请求地址">
-          <el-input v-model="obj.url" style="width:80%;"></el-input>
+          <el-input v-model="obj.url" style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="权限验证">
           <el-radio-group v-model="obj.auth">
@@ -120,7 +133,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="排序">
-          <el-input v-model="obj.sort" style="width:80%;"></el-input>
+          <el-input v-model="obj.sort" style="width: 80%"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -158,7 +171,6 @@ export default {
   data() {
     return {
       units: [],
-      power: "",
       optionProps: {
         value: "id",
         label: "name",
@@ -214,7 +226,7 @@ export default {
         if (this.obj.pid == "无") {
           this.obj.pid = 0;
         }
-        if (this.obj.pid.length>0) {
+        if (this.obj.pid.length > 0) {
           this.obj.pid = this.obj.pid.pop();
         }
         let res = await menuEdit(this.obj);
@@ -254,7 +266,7 @@ export default {
     async handleNewList(form) {
       this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
-        if (this.form.pid.length>0) {
+        if (this.form.pid.length > 0) {
           this.form.pid = this.form.pid.pop();
         }
 
@@ -324,7 +336,6 @@ export default {
   mounted() {
     this.init();
     this.getUnit();
-    this.power = localStorage.getItem("power");
   },
 };
 </script>

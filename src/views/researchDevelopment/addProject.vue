@@ -2,22 +2,24 @@
   <div class="addProject">
     <!-- 面包屑 -->
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>研发</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/itemDesign' }">
-          设计项目
-          <!-- <router-link to="/itemDesign"></router-link> -->
-        </el-breadcrumb-item>
-        <el-breadcrumb-item v-if="this.$route.query.id === 'a'"
-          >新增意向订单</el-breadcrumb-item
-        >
-        <el-breadcrumb-item v-if="this.$route.query.id === 'b'"
-          >新增阶段工作</el-breadcrumb-item
-        >
-        <el-breadcrumb-item v-if="this.$route.query.id === 'c'"
-          >新增企划系列</el-breadcrumb-item
-        >
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>研发</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/itemDesign' }">
+            设计项目
+            <!-- <router-link to="/itemDesign"></router-link> -->
+          </el-breadcrumb-item>
+          <el-breadcrumb-item v-if="this.$route.query.id === 'a'"
+            >新增意向订单</el-breadcrumb-item
+          >
+          <el-breadcrumb-item v-if="this.$route.query.id === 'b'"
+            >新增阶段工作</el-breadcrumb-item
+          >
+          <el-breadcrumb-item v-if="this.$route.query.id === 'c'"
+            >新增企划系列</el-breadcrumb-item
+          >
+        </el-breadcrumb>
+      </div>
     </div>
     <div class="main">
       <div class="upload" @click="handleImg">
@@ -238,6 +240,7 @@
       title="上传图片"
       :visible.sync="centerDialogVisible"
       center
+      width="80%"
       class="dialog"
       :show-close="false"
       :close-on-click-modal="false"
@@ -274,6 +277,7 @@
                   :info="false"
                   :img="option.img"
                   :outputSize="option.size"
+                  :centerBox="option.centerBox"
                   :outputType="option.outputType"
                   :full="option.full"
                   :canMove="option.canMove"
@@ -447,8 +451,8 @@ export default {
         original: false,
         canMoveBox: true,
         autoCrop: true,
-        autoCropWidth: 290,
-        autoCropHeight: 160,
+        autoCropWidth: 340,
+        autoCropHeight: 187,
         fixedBox: true,
         centerBox: true,
         infoTrue: false,
@@ -524,7 +528,7 @@ export default {
       thisVideo: null,
       thisContext: null,
       thisCancas: null,
-      videoWidth: 500,
+      videoWidth: 525,
       videoHeight: 400,
       postOptions: [],
       CertCtl: "",
@@ -851,8 +855,8 @@ export default {
       // reader.readAsDataURL(file)
       // 转化为blob
       reader.readAsArrayBuffer(file);
-      this.option.autoCropWidth = 290;
-      this.option.autoCropHeight = 160;
+      this.option.autoCropWidth = 340;
+      this.option.autoCropHeight = 187;
     },
     imgLoad(msg) {},
     handleImg() {
@@ -1083,12 +1087,12 @@ export default {
       justify-content: flex-end;
       -webkit-justify-content: flex-end;
       .cropper {
-        width: 350px;
-        height: 350px;
+        width: 500px;
+        height: 500px;
       }
       .show-preview {
-        width: 290px;
-        height: 160px;
+        width: 342px;
+        height: 187px;
         border-radius: 10px;
         overflow: hidden;
         border: 1px solid #ccc;

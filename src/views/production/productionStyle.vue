@@ -2,21 +2,23 @@
   <div class="productionStyle">
     <!-- 面包屑 -->
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>生产</el-breadcrumb-item>
-        <el-breadcrumb-item v-if="TL===0" :to="{ path: '/productionOrders' }">生产下单</el-breadcrumb-item>
-        <el-breadcrumb-item v-if="TL===1" :to="{ path: '/purchase' }">采购列表</el-breadcrumb-item>
-        <el-breadcrumb-item v-if="TL===2" :to="{ path: '/productionScheduling' }">生产排期</el-breadcrumb-item>
-        <el-breadcrumb-item v-if="TL===3" :to="{ path: '/tailor' }">裁剪</el-breadcrumb-item>
-        <!-- 款式详细-->
-        <el-breadcrumb-item v-if="TL===4" :to="{ path: '/shipment' }">生产出货</el-breadcrumb-item>
-        <el-breadcrumb-item v-if="TL===21" :to="{ path: '/designFile' }">款式档案</el-breadcrumb-item>
-        <el-breadcrumb-item
-          v-if="TL===21"
-          :to="{ path: `/designNote?id=${this.$route.query.id}&TL=21` }"
-        >款式详细</el-breadcrumb-item>
-        <el-breadcrumb-item>生产档案</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>生产</el-breadcrumb-item>
+          <el-breadcrumb-item v-if="TL===0" :to="{ path: '/productionOrders' }">生产下单</el-breadcrumb-item>
+          <el-breadcrumb-item v-if="TL===1" :to="{ path: '/purchase' }">采购列表</el-breadcrumb-item>
+          <el-breadcrumb-item v-if="TL===2" :to="{ path: '/productionScheduling' }">生产排期</el-breadcrumb-item>
+          <el-breadcrumb-item v-if="TL===3" :to="{ path: '/tailor' }">裁剪</el-breadcrumb-item>
+          <!-- 款式详细-->
+          <el-breadcrumb-item v-if="TL===4" :to="{ path: '/shipment' }">生产出货</el-breadcrumb-item>
+          <el-breadcrumb-item v-if="TL===21" :to="{ path: '/designFile' }">款式档案</el-breadcrumb-item>
+          <el-breadcrumb-item
+            v-if="TL===21"
+            :to="{ path: `/designNote?id=${this.$route.query.id}&TL=21` }"
+          >款式详细</el-breadcrumb-item>
+          <el-breadcrumb-item>生产档案</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <div class="main" v-if="!home">
       <div class="info">
@@ -37,7 +39,7 @@
                 <div>品类：{{obj.style_type}}</div>
                 <div>年份：{{obj.year}}</div>
                 <div>季节：{{obj.season}}</div>
-                <div>颜色：{{obj.style_color}}</div>
+                <!-- <div>颜色：{{obj.style_color}}</div> -->
                 <div>设计师：{{obj.user_name}}</div>
               </div>
               <div>
@@ -1219,7 +1221,6 @@ export default {
   data() {
     return {
       url: url,
-      power: "",
       home: false,
       // 下单信息验证
       rules: {
@@ -3773,9 +3774,7 @@ export default {
     // this.logData();
     this.TL = this.$route.query.TL - 0;
 
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
-    // console.log(this.power);
   },
 };
 </script>

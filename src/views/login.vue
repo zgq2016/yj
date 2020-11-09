@@ -11,10 +11,17 @@
       <div class="form">
         <el-form :model="form" ref="form" :rules="rules" label-width="80px">
           <el-form-item label="账户：" prop="username">
-            <el-input v-model="form.username" placeholder="请输入账号"></el-input>
+            <el-input
+              v-model="form.username"
+              placeholder="请输入账号"
+            ></el-input>
           </el-form-item>
           <el-form-item label="密码：" prop="password">
-            <el-input v-model="form.password" type="password" placeholder="请输入密码"></el-input>
+            <el-input
+              v-model="form.password"
+              type="password"
+              placeholder="请输入密码"
+            ></el-input>
           </el-form-item>
           <el-form-item>
             <el-button @click="login">登录</el-button>
@@ -22,6 +29,9 @@
         </el-form>
       </div>
     </div>
+    <p class="ft-v1">
+      &#169; 2019-2020 广州中数研科技有限公司 - 粤ICP备2020101058号-2
+    </p>
   </div>
 </template>
 
@@ -79,6 +89,9 @@ export default {
 
 <style lang="less" scoped>
 .login {
+  width: 100%;
+  height: 100%;
+  position: relative;
   .main {
     width: 500px;
     height: 400px;
@@ -120,6 +133,15 @@ export default {
         }
       }
     }
+  }
+  
+  .ft-v1 {
+    width: 100%;
+    // position: absolute;
+    // bottom: 28px;
+    // font-size: 12px;
+    text-align: center;
+    // padding-bottom: 28px;
   }
   /deep/ .el-form-item__content {
     margin: 0 !important;

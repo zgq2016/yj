@@ -112,7 +112,9 @@ a {
   display: block;
 }
 a:hover {
-  color: #e33333;
+  color: #666;
+  text-decoration: none;
+  display: block;
 }
 button,
 input {
@@ -166,13 +168,26 @@ body {
   height: 100px;
 }
 .aa {
+  /* position: fixed;
+  width: 100%;
+  z-index: 9; */
   height: 80px;
+  line-height: 90px;
+
+  /* background: #ffffff; */
+}
+.bb{
+  position: fixed;
+  top: 0;
+  z-index: 9;
+  width: 100%;
+  height: 80px;
+  background: #ffffff;
 }
 .aa .breadcrumb {
-  margin-top: 25px;
   display: inline-block;
-  background-color: #f2f2f2;
   height: 30px;
+  background-color: #f2f2f2;
   border-radius: 15px;
   padding: 8px 20px;
 }

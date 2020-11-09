@@ -2,34 +2,36 @@
   <div class="editTheStyle">
     <div class="aa">
       <!-- 面包屑 -->
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>研发部</el-breadcrumb-item>
-        <el-breadcrumb-item
-          v-if="navc.TL - 0 === 30"
-          :to="{ path: '/itemDesign' }"
-          >设计项目</el-breadcrumb-item
-        >
-        <el-breadcrumb-item
-          v-if="navc.TL - 0 === 30"
-          :to="{ path: `/designCheck?id=${navc.project_id}` }"
-          >项目详细</el-breadcrumb-item
-        >
-        <el-breadcrumb-item
-          v-if="navc.TL - 0 === 30"
-          :to="{
-            path: `/designNote?id=${navc.id}&project_id=${navc.project_id}&TL=30`,
-          }"
-          >款式详细</el-breadcrumb-item
-        >
-        <el-breadcrumb-item>编辑款式</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>研发部</el-breadcrumb-item>
+          <el-breadcrumb-item
+            v-if="navc.TL - 0 === 30"
+            :to="{ path: '/itemDesign' }"
+            >设计项目</el-breadcrumb-item
+          >
+          <el-breadcrumb-item
+            v-if="navc.TL - 0 === 30"
+            :to="{ path: `/designCheck?id=${navc.project_id}` }"
+            >项目详细</el-breadcrumb-item
+          >
+          <el-breadcrumb-item
+            v-if="navc.TL - 0 === 30"
+            :to="{
+              path: `/designNote?id=${navc.id}&project_id=${navc.project_id}&TL=30`,
+            }"
+            >款式详细</el-breadcrumb-item
+          >
+          <el-breadcrumb-item>编辑款式</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <div class="main">
       <div class="styleNumber">
         <div class="upload" @click="handle_obj_style_pic_url">
           <el-image
             v-if="obj.style_pic_url"
-            style="width: 150px; height: 150px; margin-right: 5px"
+            style="width: 160px; height: 160px; margin-right: 5px"
             :src="obj.style_pic_url"
             fit="cover"
           ></el-image>
@@ -60,8 +62,30 @@
               <el-form-item label="名称" prop="stylename">
                 <el-input
                   v-model="obj.stylename"
-                  style="width: 200px"
+                  style="width: 200px; margin-right: 20px"
                 ></el-input>
+                <!-- @change="onSubmit"
+                  placeholder="请选择仓库"
+                  style="width: 120px" -->
+                <el-select
+                  v-model="obj.project_id"
+                  clearable
+                  placeholder="请选择项目"
+                >
+                  <el-option
+                    v-for="item in formInlinedata"
+                    :key="item.id"
+                    :label="item.projectname"
+                    :value="item.id"
+                  ></el-option>
+                  <el-pagination
+                    small
+                    layout="prev, pager, next"
+                    @size-change="handleSize"
+                    @current-change="handleCurrent"
+                    :total="total2"
+                  ></el-pagination>
+                </el-select>
               </el-form-item>
               <el-form-item label="品类" prop="style_type">
                 <!-- <el-select v-model="obj.style_type" placeholder="品类">
@@ -100,8 +124,7 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="颜色" prop="style_color">
-                <!-- <el-select v-model="obj.style_color">
+              <!-- <el-select v-model="obj.style_color">
                   <el-option
                     v-for="item in colors"
                     :key="item.id"
@@ -109,6 +132,7 @@
                     :value="item.color_name"
                   ></el-option>
                 </el-select>-->
+              <!-- <el-form-item label="颜色" prop="style_color">
                 <el-cascader
                   v-model="obj.style_color"
                   :options="colors"
@@ -116,7 +140,7 @@
                   @change="handleChange"
                   :show-all-levels="false"
                 ></el-cascader>
-              </el-form-item>
+              </el-form-item> -->
             </el-form>
           </div>
         </div>
@@ -265,6 +289,7 @@
                   :info="false"
                   :img="option.img"
                   :outputSize="option.size"
+                  :centerBox="option.centerBox"
                   :outputType="option.outputType"
                   :full="option.full"
                   :canMove="option.canMove"
@@ -282,7 +307,7 @@
                 <div class="preview">
                   <div
                     v-if="color_code"
-                    :style="`background-color:${color_code};width:150px;height:150px`"
+                    :style="`background-color:${color_code};width:160px;height:160px`"
                   ></div>
                   <img
                     v-if="previews.url"
@@ -386,6 +411,7 @@ import {
   getStyle,
   styleEdit,
   styleDel,
+  getDataList,
 } from "@/api/researchDevelopment.js";
 
 import { VueCropper } from "vue-cropper";
@@ -397,8 +423,8 @@ export default {
   },
   data() {
     return {
+      aa: "",
       permission: [],
-      power: "",
       headImg: "",
       //剪切图片上传
       crap: false,
@@ -412,8 +438,8 @@ export default {
         original: false,
         canMoveBox: true,
         autoCrop: true,
-        autoCropWidth: 150,
-        autoCropHeight: 150,
+        autoCropWidth: 160,
+        autoCropHeight: 160,
         fixedBox: true,
         centerBox: true,
         infoTrue: false,
@@ -452,9 +478,9 @@ export default {
         user_name: [
           { required: true, message: "请输入设计师", trigger: "blur" },
         ],
-        style_color: [
-          { required: true, message: "请输入颜色", trigger: "blur" },
-        ],
+        // style_color: [
+        //   { required: true, message: "请输入颜色", trigger: "blur" },
+        // ],
       },
       Assistant: false,
       checkedList: [],
@@ -482,6 +508,11 @@ export default {
       thisCancas: null,
       videoWidth: 500,
       videoHeight: 400,
+      projectname_id: "",
+      pageIndex2: 1,
+      pageSize2: 9,
+      total2: 0,
+      formInlinedata: [],
       postOptions: [],
       CertCtl: "",
       // 遮罩层
@@ -512,6 +543,12 @@ export default {
     };
   },
   methods: {
+    handleSize(val) {
+      this.pageSize2 = val;
+    },
+    handleCurrent(val) {
+      this.pageIndex2 = val;
+    },
     ctrlShift() {
       var alink = document.createElement("a");
       alink.href = this.imgSrc;
@@ -834,10 +871,10 @@ export default {
       // 转化为blob
       reader.readAsArrayBuffer(file);
       if (this.status === 2 || this.status === 4) {
-        this.option.autoCropWidth = 150;
-        this.option.autoCropHeight = 150;
+        this.option.autoCropWidth = 160;
+        this.option.autoCropHeight = 160;
       } else if (this.status === 1 || this.status === 3) {
-        this.option.autoCropWidth = 150;
+        this.option.autoCropWidth = 160;
         this.option.autoCropHeight = 300;
       }
     },
@@ -868,6 +905,7 @@ export default {
           delete v.username;
         });
         obj["id"] = this.$route.query.id;
+        obj["project_id"] = this.obj.project_id || 0;
         obj["style_pic_url"] = this.obj.style_pic_url;
         obj["style_color_pic_url"] = this.obj.style_color_pic_url;
         obj["stylename"] = this.obj.stylename;
@@ -875,12 +913,13 @@ export default {
         obj["season"] = this.obj.season;
         obj["year"] = this.obj.year;
         obj["style_type"] = this.obj.style_type;
-        obj["style_color"] = this.obj.style_color;
+        // obj["style_color"] = this.obj.style_color;
         obj["user_name"] = this.obj.user_name;
         obj["user_id"] = this.obj.user_id;
         obj["user_id_data"] = this.obj.user_id_data;
         obj["color_code"] = this.obj.color_code;
         let res = await styleEdit(obj);
+        console.log(res);
         if (res.data.error_code) {
           this.$message({
             showClose: true,
@@ -903,6 +942,7 @@ export default {
       })
         .then(async () => {
           let res = await styleDel({ id: this.obj.id });
+          console.log(res);
           if (res.data.error_code) {
             this.$message({
               showClose: true,
@@ -974,6 +1014,15 @@ export default {
       let res = await getStyleno();
       this.form.styleno = res.data.data.styleno;
     },
+    async init() {
+      let formInline = {};
+      formInline["page"] = this.pageIndex2;
+      formInline["page_size"] = this.pageSize2;
+      let res = await getDataList(formInline);
+      // if (res.data.error_code === 0) {
+      let { data, count } = res.data;
+      this.formInlinedata = data;
+    },
   },
   async mounted() {
     let navc = this.$route.query;
@@ -981,14 +1030,16 @@ export default {
     let res = await getStyle({ id: navc.id });
 
     this.obj = res.data.data;
+    this.obj.project_id = this.obj.project_id - 0;
+    console.log(this.obj);
     // this.obj.color_code = this.color_code;
+    this.init();
     this.getYear();
     this.getColor();
     this.getSeason();
     this.getstylist();
     this.getCategory();
     this.getStyleno();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
 };
@@ -1021,24 +1072,24 @@ export default {
     }
   }
   .upload {
-    width: 150px;
-    height: 150px;
+    width: 160px;
+    height: 160px;
     border-radius: 10px;
     overflow: hidden;
     .avatar-uploader-icon {
       border: 1px solid #ccc;
       font-size: 28px;
       color: #8c939d;
-      width: 150px;
-      height: 150px;
+      width: 160px;
+      height: 160px;
       display: flex;
       justify-content: center;
       align-items: center;
     }
   }
   .uploads {
-    width: 150px;
-    height: 150px;
+    width: 160px;
+    height: 160px;
     border-radius: 10px;
     overflow: hidden;
     border: 1px solid #000;
@@ -1129,19 +1180,19 @@ export default {
       justify-content: flex-end;
       -webkit-justify-content: flex-end;
       .cropper {
-        width: 350px;
-        height: 350px;
+        width: 500px;
+        height: 500px;
       }
       .show-preview {
-        width: 150px;
-        height: 150px;
+        width: 160px;
+        height: 160px;
         border-radius: 10px;
         overflow: hidden;
         border: 1px solid #ccc;
         margin-left: 30px;
       }
       .show-preview1 {
-        width: 150px;
+        width: 160px;
         height: 300px;
         border-radius: 10px;
         overflow: hidden;

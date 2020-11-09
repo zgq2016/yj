@@ -25,7 +25,7 @@
       </ul>
     </div>
     <div class="main">
-      <div class="contents1" v-show="active == 0">
+      <div class="contents1" v-show="nav[active] == '色号'">
         <div class="headr_list">
           <div class="cont">
             <div class="update" @click="handleImg()">
@@ -66,8 +66,12 @@
             >
           </div>
 
-          <div class="abc">
+          <!-- <div class="abc">
             <el-button class="next" @click="variation(1)">下一步</el-button>
+          </div> -->
+          <div class="ensure">
+            <el-button class="step" @click="variation(1)">下一步</el-button>
+            <el-button class="next1" @click="handleEdit">保存</el-button>
           </div>
         </div>
         <el-divider></el-divider>
@@ -94,16 +98,9 @@
           </ul>
         </div>
       </div>
-      <div class="contents1 contents2" v-show="active == 1">
+      <div class="contents1 contents2" v-show="nav[active] == '基础信息'">
         <div class="input_s">
           <div class="box">
-            <el-input
-              v-model="form1.companyname"
-              class="maxsize left_float"
-              suffix-icon="el-icon-search"
-              placeholder="供应商"
-              @input="impedance"
-            ></el-input>
             <el-cascader
               v-model="form.materials_class_id"
               :options="classData"
@@ -113,16 +110,6 @@
               placeholder="分类"
               class="left_float"
             ></el-cascader>
-            <el-input
-              v-model="form.wsale_price"
-              class="left_float"
-              placeholder="大货单价"
-            ></el-input>
-            <el-input
-              v-model="form.materialsname"
-              class="maxsize left_float"
-              placeholder="物料名称"
-            ></el-input>
             <el-select
               class="left_float"
               v-model="form.unit"
@@ -135,14 +122,66 @@
                 :value="item.unit_name"
               ></el-option>
             </el-select>
+
+            <el-input
+              v-model="form.materialsname"
+              class="maxsize left_float"
+              placeholder="物料名称"
+            ></el-input>
+            <el-input
+              class="maxsize left_float"
+              v-model="form.wsale_price"
+              placeholder="大货单价"
+              style=""
+              ><i slot="suffix">元</i></el-input
+            >
+            <el-input
+              v-model="companyname"
+              class="maxsize left_float"
+              suffix-icon="el-icon-search"
+              placeholder="供应商"
+              @input="impedance"
+            ></el-input>
+            <div class="dataList">
+              <div
+                class="list"
+                v-for="(item, index) in SupplierList_item"
+                :key="index"
+              >
+                <div class="list_img">
+                  <img :src="item.cardpicurl" alt />
+                </div>
+                <div class="list_content">
+                  <div class="list_content_left">
+                    <div class="list_content_left_name">
+                      {{ item.companyname }}
+                    </div>
+                    <div>
+                      {{ item.mainclass }}
+                      <em v-if="item.materials_class_name"
+                        >({{ item.materials_class_name }})</em
+                      >
+                    </div>
+                    <div v-if="item.supplier_contact_data.length > 0">
+                      {{ item.supplier_contact_data[0].contacts }}:{{
+                        item.supplier_contact_data[0].phone
+                      }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="right_float">
             <el-button class="step" @click="variation(0)">上一步</el-button>
-            <el-button class="next1" @click="variation(2)">下一步</el-button>
+            <el-button class="next1" @click="variation(1)">下一步</el-button>
           </div>
         </div>
         <el-divider></el-divider>
-        <div class="dataList">
+        <div v-if="SupplierList.length == 0" @click="add_Supplier">
+          添加供应商
+        </div>
+        <div v-if="SupplierList.length > 0" class="dataList">
           <div
             @click="listDeital(item)"
             class="list"
@@ -183,7 +222,7 @@
         ></el-pagination>
       </div>
 
-      <div class="contents1 contents2" v-show="active == 2">
+      <div class="contents1 contents2" v-show="nav[active] == '物料信息'">
         <div class="input_s sencond">
           <div class="bax">
             <div class="recognition" @click="choice">
@@ -238,8 +277,8 @@
             </div>
           </div>
           <div class="right_float">
-            <el-button class="step" @click="variation(1)">上一步</el-button>
-            <el-button class="next1" @click="variation(3)">下一步</el-button>
+            <el-button class="step" @click="variation(0)">上一步</el-button>
+            <el-button class="next1" @click="variation(1)">下一步</el-button>
           </div>
         </div>
         <el-divider></el-divider>
@@ -270,7 +309,7 @@
           </div>
         </div>
       </div>
-      <div class="contents1" v-show="active == 3">
+      <div class="contents1" v-show="nav[active] == '选填内容'">
         <div class="optional">
           <span>选填</span>
 
@@ -292,7 +331,7 @@
             ></el-input>
           </div>
           <div class="ensure">
-            <el-button class="step" @click="variation(2)">上一步</el-button>
+            <el-button class="step" @click="variation(0)">上一步</el-button>
             <el-button class="next1" @click="handleEdit">保存</el-button>
             <el-button class="next1" @click="handleDel">删除</el-button>
           </div>
@@ -339,6 +378,7 @@
                   :info="false"
                   :img="option.img"
                   :outputSize="option.size"
+                  :centerBox="option.centerBox"
                   :outputType="option.outputType"
                   :full="option.full"
                   :canMove="option.canMove"
@@ -518,9 +558,11 @@ export default {
   data() {
     return {
       url: url,
-      form1: { picurl: "", color_no: "", color: "", companyname: "" },
+      form1: { picurl: "", color_no: "", color: "" },
+      companyname: "",
       dialogVisible: false,
       SupplierList: [],
+      SupplierList_item: [],
       active: 0,
       nav: ["色号", "基础信息", "物料信息", "选填内容"],
       s_company: [],
@@ -529,7 +571,6 @@ export default {
         label: "color_name",
         children: "children",
       },
-      power: "",
       //剪切图片上传
       crap: false,
       previews: {},
@@ -706,15 +747,91 @@ export default {
       length: 1,
     };
   },
-  methods: {
-    variation(index) {
+  // watch: {
+  //   form() {
+  //     let form = localStorage.getItem("form");
+  //     console.log(form);
+  //   },
+  // },
+  async mounted() {
+    let loca = this.$route.query.loca - 0;
+    if (loca == 2) {
+      let index = this.$route.query.index - 0;
+      this.form = {};
+      let form1 = localStorage.getItem("form");
+      let form2 = JSON.parse(form1);
+      this.form = form2;
       this.active = index;
+    } else {
+      localStorage.removeItem("form");
+      let res1 = await getSupplierSelect({
+        keyword: "",
+      });
+      let { data } = res1.data;
+      this.s_company = data;
+
+      let { id } = this.$route.query;
+      let res = await getMaterialsInfo({ id });
+      this.form = res.data.data;
+      this.form.materials_class_id = Number(res.data.data.materials_class_id);
+      if (this.form.materials_supplier_data.length > 0) {
+        this.form1.companyname = this.form.materials_supplier_data[0].supplier_companyname;
+        this.form.materials_supplier_id = this.form.materials_supplier_data[0].supplier_id;
+      }
+      if (this.form.materials_mainclass_name == "辅料") {
+        this.nav.splice(2, 1);
+      }
+    }
+    this.getClassData();
+    this.getUnit();
+    this.getColor();
+    this.getMaterialList();
+    this.impedance();
+    this.listDeital();
+    this.permission = localStorage.getItem("permission").split(",");
+  },
+  methods: {
+    add_Supplier() {
+      let form = JSON.stringify(this.form);
+      localStorage.setItem("form", form);
+      this.$router.push({
+        path: `/addSupplier?loca=2&index=1&id=${this.form.id}`,
+      });
+    },
+    variation(index) {
+      if (index) {
+        this.active++;
+      } else {
+        this.active--;
+      }
     },
     choice() {
       this.dialogVisible = true;
     },
     handleChange(e) {
-      this.form["materials_class_id"] = e[1];
+      let pid = 0;
+      this.classData.map((v, i) => {
+        if (v.classname == "辅料") {
+          pid = v.id;
+        }
+      });
+      console.log(pid);
+      if (e != undefined) {
+        if (e[0] != pid) {
+          if (this.nav.length == 3) {
+            this.nav.splice(2, 0, "物料信息");
+          }
+        } else {
+          if (this.nav.length == 4) {
+            this.nav.splice(2, 1);
+          }
+        }
+        this.form["materials_class_id"] = e[1];
+      } else {
+        if (this.nav.length == 3) {
+          this.nav.splice(2, 0, "物料信息");
+        }
+      }
     },
     // 切换内容
     actives(index) {
@@ -1008,7 +1125,7 @@ export default {
           Api(formData).then((response) => {
             if (this.status === 1) {
               for (let i = 0; i < this.colorValue.length; i++) {
-                this.item.picurl = response.data.data.pic_file_url;
+                this.form1.picurl = response.data.data.pic_file_url;
               }
               this.imgFile = "";
             }
@@ -1141,10 +1258,10 @@ export default {
           type: "error",
         });
       } else if (
-        this.form.materialsno == "" ||
-        this.form.breadth == "" ||
-        this.form.grammage == "" ||
-        this.form.material_data[0].material_name == ""
+        (this.form.materialsno == "" && this.nav.length > 4) ||
+        (this.form.breadth == "" && this.nav.length > 4) ||
+        (this.form.grammage == "" && this.nav.length > 4) ||
+        this.nav.length > 4
       ) {
         this.active = 2;
         this.$message({
@@ -1159,8 +1276,20 @@ export default {
         this.form.color_data.map((v, i) => {
           if (v.color instanceof Array) v.color = v.color.pop();
         });
+        if (this.nav.length < 4) {
+          this.form.materialsno = "";
+          this.form.breadth = "";
+          this.form.grammage = "";
+          this.form.material_data = "";
+        }
         let res = await materialsEdit(this.form);
-        this.$router.go(-1);
+        // this.$router.go(-1);
+        this.router.push({ path: "routeCard_list" });
+        let back = this.$route.query.back - 0;
+        let id = this.$route.query.id - 0;
+        if (back == 1) {
+          this.router.push({ path: `materialProcess?id=${id}` });
+        }
       }
     },
     async getMaterialList() {
@@ -1252,7 +1381,7 @@ export default {
     },
     async impedance() {
       let res = await getSupplierList({
-        companyname: this.form1.companyname,
+        companyname: this.companyname,
         page: this.pageIndex,
         page_size: this.pageSize,
       });
@@ -1268,9 +1397,29 @@ export default {
       this.pageIndex = val;
       this.impedance();
     },
-    listDeital(item) {
-      this.form.materials_supplier_id = item.id;
-      this.form1.companyname = item.companyname;
+    async listDeital(item) {
+      if (!item) {
+        let res = await getSupplierList({
+          companyname: this.form.materials_supplier_data[0]
+            .supplier_companyname,
+          page: 1,
+          page_size: 1,
+        });
+        let { data, count } = res.data;
+        this.total1 = count;
+        this.SupplierList_item = data;
+      }
+      if (item) {
+        let res = await getSupplierList({
+          companyname: item.companyname,
+          page: 1,
+          page_size: 1,
+        });
+        let { data, count } = res.data;
+        this.total1 = count;
+        this.SupplierList_item = data;
+        this.form.materials_supplier_id = item.id;
+      }
     },
     handleDeleteUser(index) {
       this.form.material_data.splice(index, 1);
@@ -1361,29 +1510,6 @@ export default {
       let { data } = res.data;
       this.materials = data;
     },
-  },
-  async mounted() {
-    let res1 = await getSupplierSelect({
-      keyword: "",
-    });
-    let { data } = res1.data;
-    this.s_company = data;
-
-    let { id } = this.$route.query;
-    let res = await getMaterialsInfo({ id });
-    this.form = res.data.data;
-    this.form.materials_class_id = Number(res.data.data.materials_class_id);
-    if (this.form.materials_supplier_data.length > 0) {
-      this.form1.companyname = this.form.materials_supplier_data[0].supplier_companyname;
-      this.form.materials_supplier_id = this.form.materials_supplier_data[0].supplier_id;
-    }
-    this.getClassData();
-    this.getUnit();
-    this.getColor();
-    this.getMaterialList();
-    this.impedance();
-    // this.power = localStorage.getItem("power");
-    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>
@@ -1566,14 +1692,21 @@ export default {
         color: #eee;
       }
     }
-    .abc {
-      float: right;
-      position: relative;
-      .next {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: 150px;
+    .ensure {
+      margin-top: 20px;
+      text-align: right;
+      .step {
+        width: 86px;
+        background: #000;
+        margin: 0;
+        height: 30px;
+        border-radius: 15px;
+        line-height: 2px;
+        color: #eee;
+        margin-right: 20px;
+      }
+      .next1 {
+        width: 139px;
         background: #000;
         margin: 0;
         height: 30px;
@@ -1589,12 +1722,21 @@ export default {
         margin-right: 20px;
       }
       .box {
-        width: 600px;
+        width: 500px !important;
       }
       .maxsize {
-        width: 225px !important;
+        width: 280px !important;
         height: 40px;
         margin-bottom: 5px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        position: relative;
+        i {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+        }
       }
 
       .next {
@@ -1691,7 +1833,7 @@ export default {
       }
     }
     .input_s {
-      height: 100px;
+      height: 251px;
     }
     .sencond {
       height: 150px;
@@ -2002,8 +2144,8 @@ export default {
       justify-content: flex-end;
       -webkit-justify-content: flex-end;
       .cropper {
-        width: 350px;
-        height: 350px;
+        width: 500px;
+        height: 500px;
       }
       .show-preview {
         width: 150px;

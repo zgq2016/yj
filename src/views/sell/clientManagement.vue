@@ -1,17 +1,25 @@
 <template>
-  <div class="clientManagement" v-if="permission.indexOf('clientManagement')!=-1">
+  <div
+    class="clientManagement"
+    v-if="permission.indexOf('clientManagement') != -1"
+  >
     <!-- 面包屑 -->
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>销售</el-breadcrumb-item>
-        <el-breadcrumb-item>客户管理</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>销售</el-breadcrumb-item>
+          <el-breadcrumb-item>客户管理</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <!-- 条件 -->
     <div class="form">
       <el-form :inline="true" :model="form" class="demo-form-inline">
         <el-form-item>
-          <el-input v-model="form.keyword" placeholder="公司名称关键字"></el-input>
+          <el-input
+            v-model="form.keyword"
+            placeholder="公司名称关键字"
+          ></el-input>
         </el-form-item>
         <el-form-item>
           <el-input v-model="form.contacts" placeholder="联系人"></el-input>
@@ -31,21 +39,33 @@
         </el-form-item>
       </el-form>
       <!-- 新增项目 -->
-      <div class="addStyle" v-if="permission.indexOf('customer_add')!=-1">
+      <div class="addStyle" v-if="permission.indexOf('customer_add') != -1">
         <div @click="addClient">新增客户</div>
       </div>
     </div>
 
     <!-- table -->
-    <div class="table" v-if="permission.indexOf('get_customer_list')!=-1">
+    <div class="table" v-if="permission.indexOf('get_customer_list') != -1">
       <el-table ref="singleTable" :data="tableData" highlight-current-row>
         <el-table-column type="index" width="50"></el-table-column>
-        <el-table-column property="companyname" label="公司" width="200"></el-table-column>
-        <el-table-column property="contacts" label="联系人" width="200"></el-table-column>
-        <el-table-column property="phone" label="电话" width="200"></el-table-column>
+        <el-table-column
+          property="companyname"
+          label="公司"
+          width="200"
+        ></el-table-column>
+        <el-table-column
+          property="contacts"
+          label="联系人"
+          width="200"
+        ></el-table-column>
+        <el-table-column
+          property="phone"
+          label="电话"
+          width="200"
+        ></el-table-column>
         <el-table-column
           label="操作"
-          v-if="permission.indexOf('get_customer_info')!=-1"
+          v-if="permission.indexOf('get_customer_info') != -1"
           align="right"
         >
           <!-- 插槽：匿名插槽，具名插槽，数据插槽 -->
@@ -74,7 +94,6 @@ import { getCustomerList } from "@/api/sell.js";
 export default {
   data() {
     return {
-      power: "",
       form: {},
       tableData: [],
       pageIndex: 1,
@@ -117,9 +136,7 @@ export default {
   },
   mounted() {
     this.init();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
-    console.log(this.power);
   },
 };
 </script>

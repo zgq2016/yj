@@ -1,24 +1,31 @@
 <template>
-  <div class="colorManagement" v-if="permission.indexOf('plantManagement')!=-1">
+  <div
+    class="colorManagement"
+    v-if="permission.indexOf('plantManagement') != -1"
+  >
     <div class="aa">
       <!-- 面包屑 -->
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>设置</el-breadcrumb-item>
-        <el-breadcrumb-item>加工分类与价格</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>设置</el-breadcrumb-item>
+          <el-breadcrumb-item>加工分类与价格</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <!-- 添加工厂 -->
     <div
       class="addClassify"
-      v-if="permission.indexOf('plantManagement')!=-1"
+      v-if="permission.indexOf('plantManagement') != -1"
       @click="addClassify"
-    >添加类型</div>
+    >
+      添加类型
+    </div>
     <el-table
       :data="tableData"
-      style="width: 100%;margin: 20px 0;"
+      style="width: 100%; margin: 20px 0"
       border
       row-key="Factory_id"
-      :tree-props="{children: 'children' , hasChildren: 'hasChildren'}"
+      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
     >
       <el-table-column prop="mode_name" label="加工类型"></el-table-column>
       <el-table-column prop="price" label="加工价格"></el-table-column>
@@ -28,7 +35,7 @@
         <template slot-scope="scope">
           <el-tooltip
             content="编辑"
-            v-if="permission.indexOf('factory_mode_edit')!=-1"
+            v-if="permission.indexOf('factory_mode_edit') != -1"
             placement="top"
             class="el-icon-edit btn"
           >
@@ -36,7 +43,7 @@
           </el-tooltip>
           <el-tooltip
             content="删除"
-            v-if="permission.indexOf('factory_mode_del')!=-1"
+            v-if="permission.indexOf('factory_mode_del') != -1"
             placement="top"
             class="el-icon-delete btn"
           >
@@ -59,12 +66,22 @@
         <el-form-item
           label="工厂名称"
           prop="mode_name"
-          :rules="[ { required: true, message: '请输入工厂名称', trigger: 'blur' },]"
+          :rules="[
+            { required: true, message: '请输入工厂名称', trigger: 'blur' },
+          ]"
         >
-          <el-input v-model="form.mode_name" placeholder="请输入工厂名称" style="width:80%"></el-input>
+          <el-input
+            v-model="form.mode_name"
+            placeholder="请输入工厂名称"
+            style="width: 80%"
+          ></el-input>
         </el-form-item>
         <el-form-item label="排序">
-          <el-input v-model="form.sort" placeholder="请输入内容" style="width:80%"></el-input>
+          <el-input
+            v-model="form.sort"
+            placeholder="请输入内容"
+            style="width: 80%"
+          ></el-input>
         </el-form-item>
         <el-form-item label="备注">
           <el-input
@@ -72,7 +89,7 @@
             type="textarea"
             :rows="3"
             placeholder="请输入内容"
-            style="width:80%"
+            style="width: 80%"
           ></el-input>
         </el-form-item>
       </el-form>
@@ -96,12 +113,18 @@
           label="商品价格"
           prop="price"
           placeholder="请输入商品价格"
-          :rules="[ { required: true, message: '请输入加工价格', trigger: 'blur' },]"
+          :rules="[
+            { required: true, message: '请输入加工价格', trigger: 'blur' },
+          ]"
         >
-          <el-input v-model="form1.price" style="width:80%"></el-input>
+          <el-input v-model="form1.price" style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="排序">
-          <el-input v-model="form1.sort" placeholder="请输入排序" style="width:80%"></el-input>
+          <el-input
+            v-model="form1.sort"
+            placeholder="请输入排序"
+            style="width: 80%"
+          ></el-input>
         </el-form-item>
         <el-form-item label="备注">
           <el-input
@@ -109,7 +132,7 @@
             type="textarea"
             :rows="3"
             placeholder="请输入内容"
-            style="width:80%"
+            style="width: 80%"
           ></el-input>
         </el-form-item>
       </el-form>
@@ -132,12 +155,18 @@
         <el-form-item
           label="工厂名称"
           prop="mode_name"
-          :rules="[ { required: true, message: '请输入工厂名称', trigger: 'blur' },]"
+          :rules="[
+            { required: true, message: '请输入工厂名称', trigger: 'blur' },
+          ]"
         >
-          <el-input v-model="form.mode_name" style="width:80%"></el-input>
+          <el-input v-model="form.mode_name" style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="排序">
-          <el-input v-model="form.sort" placeholder="请输入排序" style="width:80%"></el-input>
+          <el-input
+            v-model="form.sort"
+            placeholder="请输入排序"
+            style="width: 80%"
+          ></el-input>
         </el-form-item>
         <el-form-item label="备注">
           <el-input
@@ -145,7 +174,7 @@
             type="textarea"
             :rows="3"
             placeholder="请输入内容"
-            style="width:80%"
+            style="width: 80%"
           ></el-input>
         </el-form-item>
       </el-form>
@@ -191,7 +220,6 @@ export default {
       //   console.log(row);
       //   return row.id + row.children;
       // },
-      power: "",
       permission: [],
       tableData: [],
       centerDialogVisible: false, //添加工厂
@@ -326,7 +354,6 @@ export default {
   },
   mounted() {
     this.init();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
 };

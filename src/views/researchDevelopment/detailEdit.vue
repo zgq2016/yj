@@ -2,16 +2,18 @@
   <div class="detailEdit">
     <!-- 面包屑 -->
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>研发</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/itemDesign' }"
-          >设计项目</el-breadcrumb-item
-        >
-        <el-breadcrumb-item :to="{ path: `/designCheck?id=${obj.id}` }"
-          >项目详细</el-breadcrumb-item
-        >
-        <el-breadcrumb-item>编辑{{ obj.projecttype }}订单</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>研发</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/itemDesign' }"
+            >设计项目</el-breadcrumb-item
+          >
+          <el-breadcrumb-item :to="{ path: `/designCheck?id=${obj.id}` }"
+            >项目详细</el-breadcrumb-item
+          >
+          <el-breadcrumb-item>编辑{{ obj.projecttype }}订单</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <div class="main">
       <div class="upload" @click="handleImg">
@@ -284,6 +286,7 @@
     </el-dialog>
     <el-dialog
       title="上传图片"
+      width="80%"
       :visible.sync="centerDialogVisible"
       :show-close="false"
       :close-on-click-modal="false"
@@ -323,6 +326,7 @@
                   :info="false"
                   :img="option.img"
                   :outputSize="option.size"
+                  :centerBox="option.centerBox"
                   :outputType="option.outputType"
                   :full="option.full"
                   :canMove="option.canMove"
@@ -449,8 +453,8 @@ export default {
         original: false,
         canMoveBox: true,
         autoCrop: true,
-        autoCropWidth: 290,
-        autoCropHeight: 160,
+        autoCropWidth: 340,
+        autoCropHeight: 187,
         fixedBox: true,
         centerBox: true,
         infoTrue: false,
@@ -484,7 +488,6 @@ export default {
       year: "",
       season: "",
 
-      power: "",
       // 表单规则
       rules: {
         projectname: [
@@ -527,7 +530,7 @@ export default {
       thisVideo: null,
       thisContext: null,
       thisCancas: null,
-      videoWidth: 500,
+      videoWidth: 525,
       videoHeight: 400,
       postOptions: [],
       CertCtl: "",
@@ -855,8 +858,8 @@ export default {
       // reader.readAsDataURL(file)
       // 转化为blob
       reader.readAsArrayBuffer(file);
-      this.option.autoCropWidth = 290;
-      this.option.autoCropHeight = 160;
+      this.option.autoCropWidth = 340;
+      this.option.autoCropHeight = 187;
     },
     imgLoad(msg) {},
     handleImg() {
@@ -984,7 +987,6 @@ export default {
     this.getSeason();
     this.getstylist();
 
-    // this.power = localStorage.getItem("power");
     this.user_level = localStorage.getItem("level");
     this.permission = localStorage.getItem("permission").split(",");
   },
@@ -1112,12 +1114,12 @@ export default {
       justify-content: flex-end;
       -webkit-justify-content: flex-end;
       .cropper {
-        width: 350px;
-        height: 350px;
+        width: 500px;
+        height: 500px;
       }
       .show-preview {
-        width: 290px;
-        height: 160px;
+        width: 342px;
+        height: 187px;
         border-radius: 10px;
         overflow: hidden;
         border: 1px solid #ccc;

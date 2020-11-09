@@ -1,36 +1,56 @@
 <template>
-  <div class="homepage" v-if="permission.indexOf('homepage')!=-1">
+  <div class="homepage" v-if="permission.indexOf('homepage') != -1">
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>首页</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>首页</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <div class="main">
       <div class="header">
         <el-row :gutter="20">
-          <el-col :span="8" v-if="permission.indexOf('mouth_work_status')!=-1">
+          <el-col
+            :span="8"
+            v-if="permission.indexOf('mouth_work_status') != -1"
+          >
             <div class="grid-content bg-purples">
               <span class="fonts">【当月工作状况】</span>
               <div id="myChart"></div>
             </div>
           </el-col>
-          <el-col :span="8" v-if="permission.indexOf('notice_index_list')!=-1">
+          <el-col
+            :span="8"
+            v-if="permission.indexOf('notice_index_list') != -1"
+          >
             <div class="grid-content bg-purple">
-              <span class="fonts" @click.stop="$router.push({path: `/announcements`})">【公司公告】</span>
-              <ul v-if="nav_list.length>0">
-                <li @click.stop="lookTitle(item1)" v-for="(item1,index) in nav_list" :key="index">
-                  <span>{{item1.title}}</span>
+              <span
+                class="fonts"
+                @click.stop="$router.push({ path: `/announcements` })"
+                >【公司公告】</span
+              >
+              <ul v-if="nav_list.length > 0">
+                <li
+                  @click.stop="lookTitle(item1)"
+                  v-for="(item1, index) in nav_list"
+                  :key="index"
+                >
+                  <span>{{ item1.title }}</span>
                 </li>
               </ul>
               <h4 v-else>暂无公告信息</h4>
             </div>
           </el-col>
-          <el-col :span="8" v-if="permission.indexOf('warn_list')!=-1">
+          <el-col :span="8" v-if="permission.indexOf('warn_list') != -1">
             <div class="grid-content bg-purple">
               <span class="fonts">【提醒信息】</span>
-              <ul v-if="list2.length>0">
-                <li @click.stop="lookTitle1(item1)" v-for="(item1,index) in list2" :key="index">
-                  <span>{{item1.title}}</span>
+              <ul v-if="list2.length > 0">
+                <li
+                  @click.stop="lookTitle1(item1)"
+                  v-for="(item1, index) in list2"
+                  :key="index"
+                >
+                  <span>{{ item1.title }}</span>
                 </li>
               </ul>
               <h4 v-else>暂无提醒信息</h4>
@@ -38,282 +58,330 @@
           </el-col>
         </el-row>
       </div>
-      <div class="content_1" v-if="permission.indexOf('Z2000')!=-1">
+      <div class="content_1" v-if="permission.indexOf('Z2000') != -1">
         <div class="hed">
           <p>设计项目</p>
-          <span @click.stop="$router.push({path: `/itemDesign`})">更多</span>
+          <span @click.stop="$router.push({ path: `/itemDesign` })">更多</span>
         </div>
         <div class="tet">
-          <ul v-if="works_1.length>0">
-            <li @click.stop="rout1(item.id)" v-for="(item,index) in works_1" :key="index">
-              <div v-if="item.picurl!=''">
+          <ul v-if="works_1.length > 0">
+            <li
+              @click.stop="rout1(item.id)"
+              v-for="(item, index) in works_1"
+              :key="index"
+            >
+              <div v-if="item.picurl != ''">
                 <el-image
-                  style="width: 290px; height: 160px;border-radius: 10px;"
+                  class="images"
                   :src="item.picurl"
                   fit="cover"
                 ></el-image>
               </div>
               <div>
-                <div v-if="item.picurl==''">
+                <div v-if="item.picurl == ''">
                   <el-image
-                    style="width: 290px; height: 160px;border-radius: 10px;"
-                    v-if="item.projecttype=='【意向订单】'"
+                    class="images"
+                    v-if="item.projecttype == '【意向订单】'"
                     :src="img1"
                     alt
                   />
                   <el-image
-                    style="width: 290px; height: 160px;border-radius: 10px;"
-                    v-if="item.projecttype=='【阶段工作】'"
+                    class="images"
+                    v-if="item.projecttype == '【阶段工作】'"
                     :src="img2"
                     alt
                   />
                   <el-image
-                    style="width: 290px; height: 160px;border-radius: 10px;"
-                    v-if="item.projecttype=='【企划系列】'"
+                    class="images"
+                    v-if="item.projecttype == '【企划系列】'"
                     :src="img3"
                     alt
                   />
                 </div>
               </div>
-              <span>
-                <p>{{item.projecttype}}</p>
-                <p>{{item.projectname}}</p>
-                <p>{{item.user_name}}</p>
-              </span>
+              <div style="margin-top: 10px">
+                <p style="color: #000">{{ item.projectname }}</p>
+                <span style="display: flex">
+                  <p style="color: #999999">{{ item.user_name }}</p>
+                  <p>{{ item.projecttype }}</p>
+                </span>
+              </div>
             </li>
           </ul>
           <h4 v-else>暂无项目信息</h4>
         </div>
       </div>
-      <div class="content_2" v-if="permission.indexOf('Z3000')!=-1">
+      <div class="content_2" v-if="permission.indexOf('Z3000') != -1">
         <div class="hed">
           <p>设计款式</p>
-          <span @click.stop="$router.push({path: `/designStyle`})">更多</span>
+          <span @click.stop="$router.push({ path: `/designStyle` })">更多</span>
         </div>
         <div class="tet">
-          <ul v-if="works_2.length>0">
-            <li @click.stop="rout2(item.id,1)" v-for="(item,index) in works_2" :key="index">
+          <ul v-if="works_2.length > 0">
+            <li
+              @click.stop="rout2(item.id, 1)"
+              v-for="(item, index) in works_2"
+              :key="index"
+            >
               <el-image
-                style="width: 150px; height: 230px;border-radius: 10px;"
-                :src="item.style_pic_url? item.style_pic_url:img"
+                class="images"
+                :src="item.style_pic_url ? item.style_pic_url : img"
                 fit="cover"
               ></el-image>
 
               <span>
                 <p>
-                  <strong>{{item.style_type}}</strong>
+                  <strong>{{ item.style_type }}</strong>
                 </p>
-                <p>{{item.stylename}}</p>
-                <p>{{item.style_color}}</p>
-                <p>{{item.username}}</p>
+                <p>{{ item.stylename }}</p>
+                <!-- <p>{{ item.style_color }}</p> -->
+                <p>{{ item.username }}</p>
               </span>
             </li>
           </ul>
           <h4 v-else>暂无款式信息</h4>
         </div>
       </div>
-      <div class="content_3" v-if="permission.indexOf('Z4000')!=-1">
+      <div class="content_3" v-if="permission.indexOf('Z4000') != -1">
         <div class="hed">
           <p>版料采购</p>
-          <span @click.stop="$router.push({path: `/materialPurchase`})">更多</span>
+          <span @click.stop="$router.push({ path: `/materialPurchase` })"
+            >更多</span
+          >
         </div>
         <div class="tet">
-          <ul v-if="works_3.length>0">
-            <li @click.stop="rout2(item.id,2)" v-for="(item,index) in works_3" :key="index">
+          <ul v-if="works_3.length > 0">
+            <li
+              @click.stop="rout2(item.id, 2)"
+              v-for="(item, index) in works_3"
+              :key="index"
+            >
               <el-image
-                style="width: 150px; height: 230px;border-radius: 10px;"
-                :src="item.style_pic_url? item.style_pic_url:img"
+                class="images"
+                :src="item.style_pic_url ? item.style_pic_url : img"
                 fit="cover"
               ></el-image>
               <span>
                 <p>
-                  <strong>{{item.style_type}}</strong>
+                  <strong>{{ item.style_type }}</strong>
                 </p>
-                <p>{{item.stylename}}</p>
-                <p>{{item.style_color}}</p>
-                <p>{{item.username}}</p>
+                <p>{{ item.stylename }}</p>
+                <!-- <p>{{ item.style_color }}</p> -->
+                <p>{{ item.username }}</p>
               </span>
             </li>
           </ul>
           <h4 v-else>暂无版料采购信息</h4>
         </div>
       </div>
-      <div class="content_3" v-if="permission.indexOf('Z5000')!=-1">
+      <div class="content_3" v-if="permission.indexOf('Z5000') != -1">
         <div class="hed">
           <p>纸样</p>
-          <span @click.stop="$router.push({path: `/pattern`})">更多</span>
+          <span @click.stop="$router.push({ path: `/pattern` })">更多</span>
         </div>
         <div class="tet">
-          <ul v-if="works_3_1.length>0">
-            <li @click.stop="rout2(item.id,3)" v-for="(item,index) in works_3_1" :key="index">
+          <ul v-if="works_3_1.length > 0">
+            <li
+              @click.stop="rout2(item.id, 3)"
+              v-for="(item, index) in works_3_1"
+              :key="index"
+            >
               <el-image
-                style="width: 150px; height: 230px;border-radius: 10px;"
-                :src="item.style_pic_url? item.style_pic_url:img"
+                class="images"
+                :src="item.style_pic_url ? item.style_pic_url : img"
                 fit="cover"
               ></el-image>
               <span>
                 <p>
-                  <strong>{{item.style_type}}</strong>
+                  <strong>{{ item.style_type }}</strong>
                 </p>
-                <p>{{item.stylename}}</p>
-                <p>{{item.style_color}}</p>
-                <p>{{item.username}}</p>
+                <p>{{ item.stylename }}</p>
+                <!-- <p>{{ item.style_color }}</p> -->
+                <p>{{ item.username }}</p>
               </span>
             </li>
           </ul>
           <h4 v-else>暂无纸样信息</h4>
         </div>
       </div>
-      <div class="content_3" v-if="permission.indexOf('Z6000')!=-1">
+      <div class="content_3" v-if="permission.indexOf('Z6000') != -1">
         <div class="hed">
           <p>制版</p>
-          <span @click.stop="$router.push({path: `/platemaking`})">更多</span>
+          <span @click.stop="$router.push({ path: `/platemaking` })">更多</span>
         </div>
         <div class="tet">
-          <ul v-if="works_3_2.length>0">
-            <li @click.stop="rout2(item.id,4)" v-for="(item,index) in works_3_2" :key="index">
+          <ul v-if="works_3_2.length > 0">
+            <li
+              @click.stop="rout2(item.id, 4)"
+              v-for="(item, index) in works_3_2"
+              :key="index"
+            >
               <el-image
-                style="width: 150px; height: 230px;border-radius: 10px;"
-                :src="item.style_pic_url? item.style_pic_url:img"
+                class="images"
+                :src="item.style_pic_url ? item.style_pic_url : img"
                 fit="cover"
               ></el-image>
               <span>
                 <p>
-                  <strong>{{item.style_type}}</strong>
+                  <strong>{{ item.style_type }}</strong>
                 </p>
-                <p>{{item.stylename}}</p>
-                <p>{{item.style_color}}</p>
-                <p>{{item.username}}</p>
+                <p>{{ item.stylename }}</p>
+                <!-- <p>{{ item.style_color }}</p> -->
+                <p>{{ item.username }}</p>
               </span>
             </li>
           </ul>
           <h4 v-else>暂无制版信息</h4>
         </div>
       </div>
-      <div class="content_3" v-if="permission.indexOf('Z7000')!=-1">
+      <div class="content_3" v-if="permission.indexOf('Z7000') != -1">
         <div class="hed">
           <p>生产下单</p>
-          <span @click.stop="$router.push({path: `/productionOrders`})">更多</span>
+          <span @click.stop="$router.push({ path: `/productionOrders` })"
+            >更多</span
+          >
         </div>
         <div class="tet">
-          <ul v-if="works_4.length>0">
-            <li @click.stop="rout2(item.id,5)" v-for="(item,index) in works_4" :key="index">
+          <ul v-if="works_4.length > 0">
+            <li
+              @click.stop="rout2(item.id, 5)"
+              v-for="(item, index) in works_4"
+              :key="index"
+            >
               <el-image
-                style="width: 150px; height: 230px;border-radius: 10px;"
-                :src="item.style_pic_url? item.style_pic_url:img"
+                class="images"
+                :src="item.style_pic_url ? item.style_pic_url : img"
                 fit="cover"
               ></el-image>
               <span>
                 <p>
-                  <strong>{{item.style_type}}</strong>
+                  <strong>{{ item.style_type }}</strong>
                 </p>
-                <p>{{item.stylename}}</p>
-                <p>{{item.style_color}}</p>
-                <p>{{item.user_name}}</p>
+                <p>{{ item.stylename }}</p>
+                <!-- <p>{{ item.style_color }}</p> -->
+                <p>{{ item.user_name }}</p>
               </span>
             </li>
           </ul>
           <h4 v-else>暂无生产下单信息</h4>
         </div>
       </div>
-      <div class="content_3" v-if="permission.indexOf('Z8000')!=-1">
+      <div class="content_3" v-if="permission.indexOf('Z8000') != -1">
         <div class="hed">
           <p>生产采购</p>
-          <span @click.stop="$router.push({path: `/purchase`})">更多</span>
+          <span @click.stop="$router.push({ path: `/purchase` })">更多</span>
         </div>
         <div class="tet">
-          <ul v-if="works_5.length>0">
-            <li @click.stop="rout2(item.id,6)" v-for="(item,index) in works_5" :key="index">
+          <ul v-if="works_5.length > 0">
+            <li
+              @click.stop="rout2(item.id, 6)"
+              v-for="(item, index) in works_5"
+              :key="index"
+            >
               <el-image
-                style="width: 150px; height: 230px;border-radius: 10px;"
-                :src="item.style_pic_url? item.style_pic_url:img"
+                class="images"
+                :src="item.style_pic_url ? item.style_pic_url : img"
                 fit="cover"
               ></el-image>
               <span>
                 <p>
-                  <strong>{{item.style_type}}</strong>
+                  <strong>{{ item.style_type }}</strong>
                 </p>
-                <p>{{item.stylename}}</p>
-                <p>{{item.style_color}}</p>
-                <p>{{item.user_name}}</p>
+                <p>{{ item.stylename }}</p>
+                <!-- <p>{{ item.style_color }}</p> -->
+                <p>{{ item.user_name }}</p>
               </span>
             </li>
           </ul>
           <h4 v-else>暂无生产采购信息</h4>
         </div>
       </div>
-      <div class="content_3" v-if="permission.indexOf('Z9000')!=-1">
+      <div class="content_3" v-if="permission.indexOf('Z9000') != -1">
         <div class="hed">
           <p>生产排单</p>
-          <span @click.stop="$router.push({path: `/productionScheduling`})">更多</span>
+          <span @click.stop="$router.push({ path: `/productionScheduling` })"
+            >更多</span
+          >
         </div>
         <div class="tet">
-          <ul v-if="works_6.length>0">
-            <li @click.stop="rout2(item.id,7)" v-for="(item,index) in works_6" :key="index">
+          <ul v-if="works_6.length > 0">
+            <li
+              @click.stop="rout2(item.id, 7)"
+              v-for="(item, index) in works_6"
+              :key="index"
+            >
               <el-image
-                style="width: 150px; height: 230px;border-radius: 10px;"
-                :src="item.style_pic_url? item.style_pic_url:img"
+                class="images"
+                :src="item.style_pic_url ? item.style_pic_url : img"
                 fit="cover"
               ></el-image>
               <span>
                 <p>
-                  <strong>{{item.style_type}}</strong>
+                  <strong>{{ item.style_type }}</strong>
                 </p>
-                <p>{{item.stylename}}</p>
-                <p>{{item.style_color}}</p>
-                <p>{{item.user_name}}</p>
+                <p>{{ item.stylename }}</p>
+                <!-- <p>{{ item.style_color }}</p> -->
+                <p>{{ item.user_name }}</p>
               </span>
             </li>
           </ul>
           <h4 v-else>暂无生产排单信息</h4>
         </div>
       </div>
-      <div class="content_3" v-if="permission.indexOf('Z10000')!=-1">
+      <div class="content_3" v-if="permission.indexOf('Z10000') != -1">
         <div class="hed">
           <p>裁剪</p>
-          <span @click.stop="$router.push({path: `/tailor`})">更多</span>
+          <span @click.stop="$router.push({ path: `/tailor` })">更多</span>
         </div>
         <div class="tet">
-          <ul v-if="works_7.length>0">
-            <li @click.stop="rout2(item.id,8)" v-for="(item,index) in works_7" :key="index">
+          <ul v-if="works_7.length > 0">
+            <li
+              @click.stop="rout2(item.id, 8)"
+              v-for="(item, index) in works_7"
+              :key="index"
+            >
               <el-image
-                style="width: 150px; height: 230px;border-radius: 10px;"
-                :src="item.style_pic_url? item.style_pic_url:img"
+                class="images"
+                :src="item.style_pic_url ? item.style_pic_url : img"
                 fit="cover"
               ></el-image>
               <span>
                 <p>
-                  <strong>{{item.style_type}}</strong>
+                  <strong>{{ item.style_type }}</strong>
                 </p>
-                <p>{{item.stylename}}</p>
-                <p>{{item.style_color}}</p>
-                <p>{{item.user_name}}</p>
+                <p>{{ item.stylename }}</p>
+                <!-- <p>{{ item.style_color }}</p> -->
+                <p>{{ item.user_name }}</p>
               </span>
             </li>
           </ul>
           <h4 v-else>暂无裁剪信息</h4>
         </div>
       </div>
-      <div class="content_3" v-if="permission.indexOf('Z11000')!=-1">
+      <div class="content_3" v-if="permission.indexOf('Z11000') != -1">
         <div class="hed">
           <p>生产出货</p>
-          <span @click.stop="$router.push({path: `/shipment`})">更多</span>
+          <span @click.stop="$router.push({ path: `/shipment` })">更多</span>
         </div>
         <div class="tet">
-          <ul v-if="works_8.length>0">
-            <li @click.stop="rout2(item.id,9)" v-for="(item,index) in works_8" :key="index">
+          <ul v-if="works_8.length > 0">
+            <li
+              @click.stop="rout2(item.id, 9)"
+              v-for="(item, index) in works_8"
+              :key="index"
+            >
               <el-image
-                style="width: 150px; height: 230px;border-radius: 10px;"
-                :src="item.style_pic_url? item.style_pic_url:img"
+                class="images"
+                :src="item.style_pic_url ? item.style_pic_url : img"
                 fit="cover"
               ></el-image>
               <span>
                 <p>
-                  <strong>{{item.style_type}}</strong>
+                  <strong>{{ item.style_type }}</strong>
                 </p>
-                <p>{{item.stylename}}</p>
-                <p>{{item.style_color}}</p>
-                <p>{{item.user_name}}</p>
+                <p>{{ item.stylename }}</p>
+                <!-- <p>{{ item.style_color }}</p> -->
+                <p>{{ item.user_name }}</p>
               </span>
             </li>
           </ul>
@@ -322,30 +390,40 @@
       </div>
     </div>
     <!-- 公告信息 -->
-    <el-dialog title="公告信息" :visible.sync="dialogVisible1" width="45%" center>
-      <el-form :model="form" style="margin:0 20px" label-width="60px">
+    <el-dialog
+      title="公告信息"
+      :visible.sync="dialogVisible1"
+      width="45%"
+      center
+    >
+      <el-form :model="form" style="margin: 0 20px" label-width="60px">
         <el-form-item label="主题:">
-          <span>{{form.title}}</span>
+          <span>{{ form.title }}</span>
         </el-form-item>
         <el-form-item label="时间:">
-          <span>{{form.ctime}}</span>
+          <span>{{ form.ctime }}</span>
         </el-form-item>
         <el-form-item label="内容:">
-          <span>{{form.text}}</span>
+          <span>{{ form.text }}</span>
         </el-form-item>
       </el-form>
     </el-dialog>
     <!-- 提醒信息 -->
-    <el-dialog title="提醒信息" :visible.sync="dialogVisible2" width="45%" center>
-      <el-form :model="form1" style="margin:0 20px" label-width="60px">
+    <el-dialog
+      title="提醒信息"
+      :visible.sync="dialogVisible2"
+      width="45%"
+      center
+    >
+      <el-form :model="form1" style="margin: 0 20px" label-width="60px">
         <el-form-item label="主题:">
-          <span>{{form1.title}}</span>
+          <span>{{ form1.title }}</span>
         </el-form-item>
         <el-form-item label="时间:">
-          <span>{{form1.ctime}}</span>
+          <span>{{ form1.ctime }}</span>
         </el-form-item>
         <el-form-item label="内容:">
-          <span>{{form1.text}}</span>
+          <span>{{ form1.text }}</span>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -407,7 +485,6 @@ export default {
       works_7: [],
       works_8: [],
       vs: false,
-      power: "",
       img: "",
       img1: "",
       img2: "",
@@ -644,7 +721,7 @@ export default {
       if (this.permission.indexOf("Z2000") != -1) {
         let res = await getDataList({
           page: 1,
-          page_size: 5,
+          page_size: 4,
         });
         this.works_1 = res.data.data;
         this.works_1.map((v, i) => {
@@ -664,63 +741,63 @@ export default {
       if (this.permission.indexOf("Z3000") != -1) {
         let res2 = await getStyleAll({
           page: 1,
-          page_size: 10,
+          page_size: 8,
         });
         this.works_2 = res2.data.data;
       }
       if (this.permission.indexOf("Z7000") != -1) {
         let res3 = await getProduceList({
           page: 1,
-          page_size: 9,
+          page_size: 8,
         });
         this.works_4 = res3.data.data;
       }
       if (this.permission.indexOf("Z8000") != -1) {
         let res4 = await getProduceProcureList({
           page: 1,
-          page_size: 9,
+          page_size: 8,
         });
         this.works_5 = res4.data.data;
       }
       if (this.permission.indexOf("Z9000") != -1) {
         let res5 = await getProduceFactoryList({
           page: 1,
-          page_size: 9,
+          page_size: 8,
         });
         this.works_6 = res5.data.data;
       }
       if (this.permission.indexOf("Z10000") != -1) {
         let res6 = await getProduceCutList({
           page: 1,
-          page_size: 9,
+          page_size: 8,
         });
         this.works_7 = res6.data.data;
       }
       if (this.permission.indexOf("Z11000") != -1) {
         let res7 = await getProduceCompleteList({
           page: 1,
-          page_size: 9,
+          page_size: 8,
         });
         this.works_8 = res7.data.data;
       }
       if (this.permission.indexOf("Z4000") != -1) {
         let res8 = await getStylePurchase({
           page: 1,
-          page_size: 9,
+          page_size: 8,
         });
         this.works_3 = res8.data.data;
       }
       if (this.permission.indexOf("Z5000") != -1) {
         let res9 = await getStylePattern({
           page: 1,
-          page_size: 9,
+          page_size: 8,
         });
         this.works_3_1 = res9.data.data;
       }
       if (this.permission.indexOf("Z6000") != -1) {
         let res10 = await getStyleSample({
           page: 1,
-          page_size: 9,
+          page_size: 8,
         });
         this.works_3_2 = res10.data.data;
       }
@@ -773,7 +850,6 @@ export default {
     this.img2 = imgs2;
     this.img3 = imgs3;
     console.log(this.img);
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
     // console.log(this.permission);
     this.init();
@@ -789,35 +865,67 @@ export default {
 .homepage {
   .main {
     overflow: hidden;
-    margin-top: 10px;
-    max-width: 1600px;
+    // margin-top: 10px;
+    // max-width: 1600px;
     .el-row {
       min-width: 1000px;
       margin-bottom: 20px;
-      height: 160px;
+      height: 190px;
       &:last-child {
         margin-bottom: 0;
       }
     }
-    @media screen and (max-width: 1500px) {
+    @media screen and (min-width: 1920px) {
+      .header {
+        width: 1415px;
+      }
+      .el-row {
+        height: 235px;
+      }
       .el-col {
         border-radius: 10px;
         .grid-content {
-          height: 144px;
+          height: 208px;
         }
         #myChart {
           height: 180px;
           width: 100%;
           position: absolute;
-          top: -10px;
+          top: 40px;
         }
       }
     }
-    @media screen and (min-width: 1490px) {
+    @media screen and (min-width: 1601px) and (max-width: 1920px) {
+      .header {
+        width: 1415px;
+      }
+      .el-row {
+        height: 235px;
+      }
       .el-col {
         border-radius: 10px;
         .grid-content {
           height: 208px;
+        }
+        #myChart {
+          height: 180px;
+          width: 100%;
+          position: absolute;
+          top: 40px;
+        }
+      }
+    }
+    @media screen and (min-width: 1211px) and (max-width: 1600px) {
+      .header {
+        width: 1210px !important;
+      }
+      .el-row {
+        height: 120px;
+      }
+      .el-col {
+        border-radius: 10px;
+        .grid-content {
+          height: 175px;
         }
         #myChart {
           position: absolute;
@@ -827,7 +935,30 @@ export default {
         }
       }
       .content_1 {
-        margin-top: 85px;
+        margin-top: 75px;
+      }
+    }
+    @media screen and (max-width: 1210px) {
+      .header {
+        width: 1210px !important;
+      }
+      .el-row {
+        height: 120px;
+      }
+      .el-col {
+        border-radius: 10px;
+        .grid-content {
+          height: 175px;
+        }
+        #myChart {
+          position: absolute;
+          top: 30px;
+          height: 100%;
+          width: 100%;
+        }
+      }
+      .content_1 {
+        margin-top: 75px;
       }
     }
 
@@ -899,42 +1030,312 @@ export default {
       padding: 10px 0;
       background-color: #f9fafc;
     }
-
-    @media screen and (max-width: 1510px) {
+    @media screen and (min-width: 1601px) {
       .content_1 {
-        width: 1500px;
+        overflow: hidden;
+        margin-bottom: 25px;
+        width: 1440px;
+        height: 297px;
+        .tet {
+          h4 {
+            margin-top: 60px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 14px;
+          }
+          .images {
+            width: 340px;
+            height: 187px;
+            border-radius: 10px;
+          }
+          .pp {
+            color: #000;
+          }
+        }
         .hed {
-          width: 1220px;
+          overflow: hidden;
+          height: 60px;
+          p {
+            float: left;
+            margin: 20px 0;
+            color: #000000;
+            font-size: 16px;
+          }
+          span {
+            float: right;
+            margin-right: 30px;
+            cursor: pointer;
+            line-height: 60px;
+          }
+        }
+      }
+      .content_2 {
+        width: 1440px;
+        height: 440px;
+        overflow: hidden;
+        .tet {
+          h4 {
+            margin-top: 80px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 14px;
+          }
+          .images {
+            width: 160px;
+            height: 300px;
+            border-radius: 10px;
+          }
+        }
+        .hed {
+          overflow: hidden;
+          height: 60px;
+          p {
+            float: left;
+            font-weight: 600;
+            margin: 20px 0;
+            color: #000000;
+            font-size: 16px;
+          }
+          span {
+            float: right;
+            margin-right: 30px;
+            cursor: pointer;
+            line-height: 60px;
+          }
         }
         ul {
+          li {
+            float: left;
+            margin-right: 18px;
+            margin-bottom: 25px;
+            span {
+              display: block;
+              margin-top: 5px;
+              p {
+                color: #000000;
+              }
+              p:last-of-type {
+                color: #999999;
+                padding-top: 3px;
+              }
+            }
+          }
+          li:hover {
+            cursor: pointer;
+            .el-image {
+              animation: animations 0.1s linear forwards;
+            }
+          }
+        }
+      }
+      .content_3 {
+        width: 1440px;
+        height: 440px;
+        overflow: hidden;
+        .tet {
+          h4 {
+            margin-top: 80px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 14px;
+          }
+          .images {
+            width: 160px;
+            height: 300px;
+            border-radius: 10px;
+          }
+        }
+        .hed {
+          overflow: hidden;
+          height: 60px;
+          p {
+            float: left;
+            font-weight: 600;
+            margin: 20px 0;
+            color: #000000;
+            font-size: 16px;
+          }
+          span {
+            float: right;
+            cursor: pointer;
+            margin-right: 30px;
+            line-height: 60px;
+          }
+        }
+        ul {
+          li {
+            float: left;
+            margin-right: 18px;
+            margin-bottom: 25px;
+            span {
+              display: block;
+              margin-top: 5px;
+              p {
+                color: #000000;
+              }
+              p:last-of-type {
+                color: #999999;
+                padding-top: 3px;
+              }
+            }
+          }
+          li:hover {
+            cursor: pointer;
+            .el-image {
+              animation: animations 0.1s linear forwards;
+            }
+          }
+        }
+      }
+    }
+    @media screen and (min-width: 1211px) and (max-width: 1600px) {
+      .content_1 {
+        width: 1210px !important;
+        height: 274px !important;
+        .images {
+          width: 289px !important;
+          height: 163px !important;
+          border-radius: 10px;
+        }
+        .hed {
+          width: 1210px;
+          span {
+            margin-right: 12px !important;
+          }
+        }
+        ul {
+          li {
+            width: 289px !important;
+          }
           li:nth-child(4) {
             margin-right: 0;
           }
         }
       }
       .content_2 {
-        width: 1400px;
-        height: 375px;
-        overflow: hidden;
-
+        width: 1210px !important;
+        height: 391px !important;
+        .images {
+          width: 135px !important;
+          height: 252px !important;
+          border-radius: 10px;
+        }
         .hed {
           width: 1210px;
+          span {
+            margin-right: 12px !important;
+          }
+        }
+        ul {
+          li {
+            width: 135px !important;
+          }
+          li:nth-child(8) {
+            margin-right: 0;
+          }
         }
       }
       .content_3 {
-        width: 1400px;
-        height: 375px;
-        overflow: hidden;
-
+        width: 1210px !important;
+        height: 391px !important;
+        .images {
+          width: 129px !important;
+          height: 252px !important;
+          border-radius: 10px;
+        }
         .hed {
           width: 1210px;
+          span {
+            margin-right: 12px !important;
+          }
+        }
+        ul {
+          li {
+            width: 135px !important;
+          }
+          li:nth-child(8) {
+            margin-right: 0;
+          }
         }
       }
     }
+    @media screen and (max-width: 1210px) {
+      .content_1 {
+        width: 1210px !important;
+        height: 274px !important;
+        .images {
+          width: 289px !important;
+          height: 163px !important;
+          border-radius: 10px;
+        }
+        .hed {
+          width: 1210px;
+          span {
+            margin-right: 12px !important;
+          }
+        }
+        ul {
+          li {
+            width: 289px !important;
+          }
+          li:nth-child(4) {
+            margin-right: 0;
+          }
+        }
+      }
+      .content_2 {
+        width: 1210px !important;
+        height: 391px !important;
+        .images {
+          width: 135px !important;
+          height: 252px !important;
+          border-radius: 10px;
+        }
+        .hed {
+          width: 1210px;
+          span {
+            margin-right: 12px !important;
+          }
+        }
+        ul {
+          li {
+            width: 135px !important;
+          }
+          li:nth-child(8) {
+            margin-right: 0;
+          }
+        }
+      }
+      .content_3 {
+        width: 1210px !important;
+        height: 391px !important;
+        .images {
+          width: 129px !important;
+          height: 252px !important;
+          border-radius: 10px;
+        }
+        .hed {
+          width: 1210px;
+          span {
+            margin-right: 12px !important;
+          }
+        }
+        ul {
+          li {
+            width: 135px !important;
+          }
+          li:nth-child(8) {
+            margin-right: 0;
+          }
+        }
+      }
+    }
+
     .content_1 {
       overflow: hidden;
       margin-bottom: 25px;
-      height: 265px;
+      width: 1440px;
+      height: 297px;
       .tet {
         h4 {
           margin-top: 60px;
@@ -942,19 +1343,29 @@ export default {
           font-weight: 500;
           font-size: 14px;
         }
+        .images {
+          width: 340px;
+          height: 187px;
+          border-radius: 10px;
+        }
+        .pp {
+          color: #000;
+        }
       }
       .hed {
         overflow: hidden;
+        height: 60px;
         p {
           float: left;
-          font-weight: 600;
           margin: 20px 0;
           color: #000000;
           font-size: 16px;
         }
         span {
           float: right;
+          margin-right: 30px;
           cursor: pointer;
+          line-height: 60px;
         }
       }
       @keyframes animations {
@@ -977,8 +1388,8 @@ export default {
         }
         li {
           float: left;
-          width: 290px;
-          margin-right: 25px;
+          width: 340px;
+          margin-right: 18px;
           margin-bottom: 25px;
           // .el-image:hover {
           //   animation: anima 0.5s linear forwards;
@@ -1002,8 +1413,8 @@ export default {
       }
     }
     .content_2 {
-      width: 100%;
-      height: 375px;
+      width: 1440px;
+      height: 440px;
       overflow: hidden;
       .tet {
         h4 {
@@ -1012,9 +1423,15 @@ export default {
           font-weight: 500;
           font-size: 14px;
         }
+        .images {
+          width: 160px;
+          height: 300px;
+          border-radius: 10px;
+        }
       }
       .hed {
         overflow: hidden;
+        height: 60px;
         p {
           float: left;
           font-weight: 600;
@@ -1024,13 +1441,15 @@ export default {
         }
         span {
           float: right;
+          margin-right: 30px;
           cursor: pointer;
+          line-height: 60px;
         }
       }
       ul {
         li {
           float: left;
-          margin-right: 27px;
+          margin-right: 18px;
           margin-bottom: 25px;
           span {
             display: block;
@@ -1053,8 +1472,8 @@ export default {
       }
     }
     .content_3 {
-      width: 100%;
-      height: 375px;
+      width: 1440px;
+      height: 440px;
       overflow: hidden;
       .tet {
         h4 {
@@ -1066,6 +1485,7 @@ export default {
       }
       .hed {
         overflow: hidden;
+        height: 60px;
         p {
           float: left;
           font-weight: 600;
@@ -1076,13 +1496,14 @@ export default {
         span {
           float: right;
           cursor: pointer;
-          margin: 20px 0;
+          margin-right: 30px;
+          line-height: 60px;
         }
       }
       ul {
         li {
           float: left;
-          margin-right: 26px;
+          margin-right: 18px;
           margin-bottom: 25px;
           span {
             display: block;

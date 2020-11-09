@@ -5,11 +5,13 @@
   >
     <div class="aa">
       <!-- 面包屑 -->
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>设置</el-breadcrumb-item>
-        <el-breadcrumb-item>账户管理</el-breadcrumb-item>
-        <el-breadcrumb-item>权限管理</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>设置</el-breadcrumb-item>
+          <el-breadcrumb-item>账户管理</el-breadcrumb-item>
+          <el-breadcrumb-item>权限管理</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <div class="main">
       <div class="left">
@@ -255,6 +257,7 @@
               <div class="stair" :style="item.children * height">
                 <el-checkbox
                   v-model="item.checked"
+                  :disabled="item.auth == 0"
                   @change="stair_checked_add(item, index)"
                   >{{ item.name }}</el-checkbox
                 >
@@ -269,6 +272,7 @@
                     <el-checkbox
                       v-model="item1.checked"
                       v-if="item1.power_name !== '0'"
+                      :disabled="item1.auth == 0"
                       @change="second_checked_add(item, index, item1, index1)"
                       >{{ item1.name }}</el-checkbox
                     >
@@ -282,6 +286,7 @@
                         <el-checkbox
                           v-model="item2.checked"
                           v-if="item2.power_name !== '0'"
+                          :disabled="item2.auth == 0"
                           @change="
                             three_checked_add(
                               item,
@@ -351,6 +356,7 @@
               <el-checkbox
                 v-model="item.checked"
                 @change="stair_checked_edit(item, index)"
+                :disabled="item.auth == 0"
                 >{{ item.name }}</el-checkbox
               >
             </div>
@@ -363,6 +369,7 @@
                 <div class="second_level" :style="height">
                   <el-checkbox
                     v-model="item1.checked"
+                    :disabled="item1.auth == 0"
                     v-if="item1.power_name !== '0'"
                     @change="second_checked_edit(item, index, item1, index1)"
                     >{{ item1.name }}</el-checkbox
@@ -373,6 +380,7 @@
                     <div class="three_level_B">
                       <el-checkbox
                         v-model="item2.checked"
+                        :disabled="item2.auth == 0"
                         v-if="item2.power_name !== '0'"
                         @change="
                           three_checked_edit(
@@ -534,6 +542,7 @@ export default {
           });
         }
       });
+      console.log(this.edit);
     },
     three_checked_add(e, i, e1, i1, e2, i2) {
       this.form.power.map((x, y) => {
@@ -685,13 +694,23 @@ export default {
         this.status = 4;
         this.edit.power.map((v) => {
           v.checked = v.checked ? true : false;
+          if (v.auth == 0) {
+            v.checked = true;
+          }
           v.children.map((v1) => {
             v1.checked = v1.checked ? true : false;
+            if (v1.auth == 0) {
+              v1.checked = true;
+            }
             v1.children.map((v2) => {
               v2.checked = v2.checked ? true : false;
+              if (v2.auth == 0) {
+                v2.checked = true;
+              }
             });
           });
         });
+        console.log(this.edit);
       });
     },
     handleDelete(index, row) {
@@ -793,8 +812,10 @@ export default {
       });
       res.data.data.map((v, i) => {
         v["checked"] = false;
+
         v.children.map((v1, i1) => {
           v1["checked"] = false;
+
           v1.children.map((v2, i2) => {
             v2["checked"] = false;
           });
@@ -814,10 +835,19 @@ export default {
         this.data = obj;
         this.data.power.map((v) => {
           v.checked = v.checked ? true : false;
+          if (v.auth == 0) {
+            v.checked = true;
+          }
           v.children.map((v1) => {
             v1.checked = v1.checked ? true : false;
+            if (v1.auth == 0) {
+              v1.checked = true;
+            }
             v1.children.map((v2) => {
               v2.checked = v2.checked ? true : false;
+              if (v2.auth == 0) {
+                v2.checked = true;
+              }
             });
           });
         });

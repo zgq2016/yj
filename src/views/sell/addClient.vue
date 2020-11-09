@@ -2,11 +2,15 @@
   <div class="addClient">
     <!-- 面包屑 -->
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>销售</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/clientManagement' }">客户管理</el-breadcrumb-item>
-        <el-breadcrumb-item>新增客户</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>销售</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/clientManagement' }"
+            >客户管理</el-breadcrumb-item
+          >
+          <el-breadcrumb-item>新增客户</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <!-- form -->
     <div class="form">
@@ -24,8 +28,9 @@
           <el-button
             type="primary"
             @click="onSubmit"
-            style="padding:10px 50px;border-radius: 15px;"
-          >保存</el-button>
+            style="padding: 10px 50px; border-radius: 15px"
+            >保存</el-button
+          >
         </el-form-item>
       </el-form>
     </div>

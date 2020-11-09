@@ -1,13 +1,20 @@
 <template>
-  <div class="routeCard_list" v-if="permission.indexOf('routeCard_list')!=-1">
+  <div class="routeCard_list" v-if="permission.indexOf('routeCard_list') != -1">
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>档案库</el-breadcrumb-item>
-        <el-breadcrumb-item>物料工艺卡</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>档案库</el-breadcrumb-item>
+          <el-breadcrumb-item>物料工艺卡</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
-    <div style="margin-bottom:10px">
-      <el-input placeholder="工艺卡名称" v-model="form.materialsname" clearable style="width:200px"></el-input>
+    <div style="margin-bottom: 10px">
+      <el-input
+        placeholder="工艺卡名称"
+        v-model="form.materialsname"
+        clearable
+        style="width: 200px"
+      ></el-input>
 
       <el-button
         icon="el-icon-search"
@@ -44,7 +51,13 @@
           ></el-cascader>
         </el-form-item>
       </el-form>
-      <div class="addStyle" @click="addRouteCard" v-if="permission.indexOf('materials_add')!=-1">新增</div>
+      <div
+        class="addStyle"
+        @click="addRouteCard"
+        v-if="permission.indexOf('materials_add') != -1"
+      >
+        新增
+      </div>
     </div>
     <!-- main -->
     <div class="main">
@@ -64,14 +77,18 @@
             </el-image>
           </div>
           <div class="list_content">
-            <div style="font-weight: 600;font-size: 14px;">{{item.materialsname}}</div>
-            <div>内部编号:{{item.materialsno}}</div>
-            <div v-if="item.supplier_data.length>0">{{item.supplier_data[0].supplier_companyname}}</div>
+            <div style="font-weight: 600; font-size: 14px">
+              {{ item.materialsname }}
+            </div>
+            <div>内部编号:{{ item.materialsno }}</div>
+            <div v-if="item.supplier_data.length > 0">
+              {{ item.supplier_data[0].supplier_companyname }}
+            </div>
             <div>
-              {{item.materials_mainclass_name}}
-              <em
-                v-if="item.materials_class_name"
-              >({{item.materials_class_name}})</em>
+              {{ item.materials_mainclass_name }}
+              <em v-if="item.materials_class_name"
+                >({{ item.materials_class_name }})</em
+              >
             </div>
           </div>
         </div>
@@ -102,7 +119,6 @@ export default {
   },
   data() {
     return {
-      power: "",
       materialsname: "", //搜索
       SupplierList: [], //列表数据
       pageIndex: 1,
@@ -165,7 +181,6 @@ export default {
   mounted() {
     this.init();
     this.getClassData();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
   watch: {
@@ -239,7 +254,7 @@ export default {
           }
         }
         .list_content {
-          padding: 5px 10px;
+          padding: 5px 0 0 5px;
           div {
             margin: 3px 0px;
           }

@@ -1,25 +1,31 @@
 <template>
   <div
     class="customerReconciliationAndCollection"
-    v-if="permission.indexOf('summaryParagraph')!=-1"
+    v-if="permission.indexOf('summaryParagraph') != -1"
   >
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>财务</el-breadcrumb-item>
-        <el-breadcrumb-item>客户对账及收款</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>财务</el-breadcrumb-item>
+          <el-breadcrumb-item>客户对账及收款</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <el-container>
       <el-main>
-        <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
+        <el-tabs
+          type="border-card"
+          v-model="activeName"
+          @tab-click="handleClick"
+        >
           <el-tab-pane
             label="对账汇总"
-            v-if="permission.indexOf('customer_balance')!=-1"
+            v-if="permission.indexOf('customer_balance') != -1"
             name="/summaryParagraph"
           ></el-tab-pane>
           <el-tab-pane
             label="客户对账单"
-            v-if="permission.indexOf('customer_account_list')!=-1"
+            v-if="permission.indexOf('customer_account_list') != -1"
             name="/customerStatement"
           ></el-tab-pane>
           <router-view></router-view>

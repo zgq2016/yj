@@ -1,5 +1,4 @@
 <template>
-  <!--  v-if="power.indexOf('C2000100')!=-1" -->
   <div class="stockInquiry">
     <!-- 面包屑 -->
     <el-breadcrumb separator="/" class="breadcrumb">
@@ -56,7 +55,7 @@
             </el-form-item>
             <el-form-item class="sub">
               <el-button size="mini" type="primary" @click="onSubmit">查询</el-button>
-              <el-button size="mini" type="primary" v-if="power.indexOf('C2000900')!=-1">批量打印</el-button>
+              <el-button size="mini" type="primary">批量打印</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -106,13 +105,12 @@
             <h4>入库单-{{form.no}}-{{'zaan'}}</h4>
           </div>
           <div class="rh_right">
-            <el-button size="mini" type="primary" v-if="power.indexOf('C2000200')!=-1">扫码</el-button>
-            <el-button size="mini" type="primary" v-if="power.indexOf('C2000300')!=-1">导入</el-button>
+            <el-button size="mini" type="primary" >扫码</el-button>
+            <el-button size="mini" type="primary" >导入</el-button>
             <el-button
               size="mini"
               @click="addCreateWare"
               type="primary"
-              v-if="power.indexOf('C2000400')!=-1"
             >新增入库单</el-button>
           </div>
         </div>
@@ -469,19 +467,19 @@
               <el-form-item v-if="!vh4">
                 <el-button
                   size="mini"
-                  v-if="!vh3&&power.indexOf('C2000500')!=-1"
+                  v-if="!vh3"
                   type="primary"
                   @click="sketch(0)"
                 >草稿</el-button>
                 <el-button
                   size="mini"
-                  v-if="!vh3&&power.indexOf('C2000600')!=-1"
+                  v-if="!vh3"
                   type="primary"
                   @click="sketch(1)"
                 >入库</el-button>
                 <el-button
                   size="mini"
-                  v-if="vh2 && !vh3&&power.indexOf('C20001000')!=-1"
+                  v-if="vh2 && !vh3"
                   @click="delStock"
                   type="primary"
                 >删除</el-button>
@@ -549,7 +547,6 @@ export default {
   data() {
     return {
       url: url,
-      power: "",
       total_price: 0, //结算总金额
       shopppings: [], //商品
       settlement: [], //结算账户
@@ -1464,7 +1461,6 @@ export default {
     this.shopping();
     this.information();
     this.tables();
-    this.power = localStorage.getItem("power");
   },
 };
 </script>

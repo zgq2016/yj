@@ -260,6 +260,13 @@ export const getMaterialsProcureList = (data) => {
     data: data,
   });
 };
+export const getMaterialsPurchaseList = (data) => {
+  return axios({
+    url: "?g=get_materials_purchase_list",
+    method: "post",
+    data: data,
+  });
+};
 // 项目-款式-恢复物料
 export const styleMaterialsResume = (data) => {
   return axios({
@@ -617,9 +624,23 @@ export const download = (data) => {
     data: data,
   });
 };
-export const  getQrcode = (data) => {
+export const getQrcode = (data) => {
   return axios({
     url: "?g=get_qrcode",
+    method: "post",
+    data: data,
+  });
+};
+export const proposalEdit = (data) => {
+  return axios({
+    url: "?g=proposal_edit",
+    method: "post",
+    data: data,
+  });
+};
+export const styleFile = (data) => {
+  return axios({
+    url: "?g=style_file",
     method: "post",
     data: data,
   });

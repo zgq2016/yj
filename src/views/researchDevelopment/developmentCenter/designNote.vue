@@ -1,12 +1,13 @@
 <template>
   <div class="designNote" v-if="permission.indexOf('get_style_design') != -1">
     <div v-if="designRemark === 0">
+      <div style="margin: 10px 0" class="drawing">备注</div>
       <el-input
         type="textarea"
         v-model="obj.designidea"
         class="textarea"
       ></el-input>
-      <div class="drawing">图纸</div>
+      <div style="margin: 10px 0" class="drawing">图纸</div>
       <el-upload
         :action="url + '/uploadpic.php'"
         list-type="picture-card"
@@ -22,7 +23,9 @@
       <el-dialog :visible.sync="dialogVisible">
         <img width="100%" :src="dialogImageUrl" alt />
       </el-dialog>
-      <el-button size="mini" round @click="handleKeep">保存</el-button>
+      <el-button size="mini" style="margin: 10px 0" round @click="handleKeep"
+        >保存</el-button
+      >
     </div>
     <div class="designNoteMain" v-if="designRemark === 1">
       <div class="left">
@@ -246,10 +249,9 @@ export default {
   data() {
     return {
       url: url,
-      power: "",
       obj: { pattern_status: 0, designidea: "" },
       design_status: "",
-      designRemark: 1,
+      designRemark: 0,
       dialogImageUrl: "",
       dialogVisible: false,
       img_list: [], //图片数据
@@ -290,11 +292,15 @@ export default {
       let res = await designApply({ style_id: this.$route.query.id - 0 });
       console.log(res);
       this.init();
+      this.getstylist();
+      this.getStyle();
     },
     async cancel_design_apply() {
       let res = await cancelDesignApply({ style_id: this.$route.query.id - 0 });
       console.log(res);
       this.init();
+      this.getstylist();
+      this.getStyle();
     },
     handleKeepEdit() {
       this.designRemark = 0;
@@ -354,6 +360,9 @@ export default {
       this.img_list = res.data.data.designidea_pic.map((v) => {
         return { url: v.designidea_pic_url, id: v.id };
       });
+      if (this.img_list.length != 0) {
+        this.designRemark = 1;
+      }
     },
     async getstylist() {
       let res = await getStylistList({ role_id: 3 });
@@ -395,7 +404,6 @@ export default {
     this.init();
     this.getstylist();
     this.getStyle();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
 };
@@ -405,7 +413,9 @@ export default {
 .designNoteMain {
   display: flex;
   margin-bottom: 20px;
-
+  // .drawing{
+  //   margin: 10px;
+  // }
   .left {
     width: 1000px;
   }

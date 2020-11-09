@@ -1,26 +1,38 @@
 <template>
-  <div class="colorManagement" v-if="permission.indexOf('unitManagement')!=-1">
+  <div
+    class="colorManagement"
+    v-if="permission.indexOf('unitManagement') != -1"
+  >
     <div class="aa">
       <!-- 面包屑 -->
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>设置</el-breadcrumb-item>
-        <el-breadcrumb-item>单位管理</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>设置</el-breadcrumb-item>
+          <el-breadcrumb-item>单位管理</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <!-- 添加单位 -->
-    <div class="addClassify" v-if="permission.indexOf('unit_add')!=-1" @click="addClassify">添加单位</div>
-    <el-table :data="tableData" style="width: 100%;margin: 20px 0;">
-      <el-table-column prop="unit_name" label="单位名称" width="200"></el-table-column>
+    <div
+      class="addClassify"
+      v-if="permission.indexOf('unit_add') != -1"
+      @click="addClassify"
+    >
+      添加单位
+    </div>
+    <el-table :data="tableData" style="width: 100%; margin: 20px 0">
       <el-table-column
-        align="right"
-        label="操作"
-      >
+        prop="unit_name"
+        label="单位名称"
+        width="200"
+      ></el-table-column>
+      <el-table-column align="right" label="操作">
         <template slot-scope="scope">
           <el-tooltip
             content="编辑"
             placement="top"
             class="el-icon-edit btn"
-            v-if="permission.indexOf('unit_edit')!=-1"
+            v-if="permission.indexOf('unit_edit') != -1"
           >
             <div @click="handleEdit(scope.$index, scope.row)"></div>
           </el-tooltip>
@@ -28,7 +40,7 @@
             content="删除"
             placement="top"
             class="el-icon-delete btn"
-            v-if="permission.indexOf('unit_del')!=-1"
+            v-if="permission.indexOf('unit_del') != -1"
           >
             <div @click="handleDelete(scope.$index, scope.row)"></div>
           </el-tooltip>
@@ -49,9 +61,11 @@
         <el-form-item
           label="单位名称"
           prop="unit_name"
-          :rules="[ { required: true, message: '请输入单位名称', trigger: 'blur' },]"
+          :rules="[
+            { required: true, message: '请输入单位名称', trigger: 'blur' },
+          ]"
         >
-          <el-input v-model="form.unit_name" style="width:80%"></el-input>
+          <el-input v-model="form.unit_name" style="width: 80%"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -73,9 +87,11 @@
         <el-form-item
           label="单位名称"
           prop="unit_name"
-          :rules="[ { required: true, message: '请输入单位名称', trigger: 'blur' },]"
+          :rules="[
+            { required: true, message: '请输入单位名称', trigger: 'blur' },
+          ]"
         >
-          <el-input v-model="form.unit_name" style="width:80%"></el-input>
+          <el-input v-model="form.unit_name" style="width: 80%"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -102,7 +118,6 @@ import { unitList, unitAdd, unitEdit, unitDel } from "@/api/setting.js";
 export default {
   data() {
     return {
-      power: "",
       tableData: [],
       centerDialogVisible: false, //添加单位
       centerDialogVisible1: false, //编辑单位
@@ -114,7 +129,7 @@ export default {
       pageIndex: 1,
       pageSize: 10,
       total: 0,
-      permission:[]
+      permission: [],
     };
   },
   methods: {
@@ -202,8 +217,7 @@ export default {
   },
   mounted() {
     this.init();
-    // this.power = localStorage.getItem("power");
-     this.permission = localStorage.getItem("permission").split(",");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

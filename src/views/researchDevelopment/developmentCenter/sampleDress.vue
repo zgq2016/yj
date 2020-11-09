@@ -40,7 +40,6 @@ export default {
   data() {
     return {
       url: url,
-      power: "",
       dialogImageUrl: "",
       dialogVisible: false,
       img_list: [], //图片数据
@@ -76,7 +75,6 @@ export default {
   },
   mounted() {
     this.init();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
 };

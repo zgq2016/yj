@@ -286,6 +286,7 @@
                   ref="cropper"
                   :img="option.img"
                   :outputSize="option.size"
+                  :centerBox="option.centerBox"
                   :outputType="option.outputType"
                   :info="true"
                   :full="option.full"
@@ -413,7 +414,6 @@ export default {
       nav: ["基础信息", "选填内容"],
       active: 0,
       dialogVisible: false,
-      power: "",
       headImg: "",
       //剪切图片上传
       crap: false,
@@ -1067,7 +1067,6 @@ export default {
     this.getBankName();
     let res1 = await getMaterialsClass();
     this.classData = res1.data.data;
-    this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
 };
@@ -1449,8 +1448,8 @@ export default {
       justify-content: flex-end;
       -webkit-justify-content: flex-end;
       .cropper {
-        width: 260px;
-        height: 260px;
+        width: 500px;
+        height: 500px;
       }
       .show-preview {
         width: 150px;

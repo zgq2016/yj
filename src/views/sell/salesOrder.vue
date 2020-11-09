@@ -1,21 +1,34 @@
 <template>
-  <div class="salesOrder" v-if="permission.indexOf('salesOrder')!=-1">
+  <div class="salesOrder" v-if="permission.indexOf('salesOrder') != -1">
     <!-- 面包屑 -->
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>销售</el-breadcrumb-item>
-        <el-breadcrumb-item>销售订单</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>销售</el-breadcrumb-item>
+          <el-breadcrumb-item>销售订单</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
-    <div style="margin-bottom:10px">
-      <el-input placeholder="单据编号" v-model="formInline.no" clearable style="width:200px"></el-input>
-      <el-button icon="el-icon-search" size="mini" circle class="search_button" @click="onSubmit"></el-button>
+    <div style="margin-bottom: 10px">
+      <el-input
+        placeholder="单据编号"
+        v-model="formInline.no"
+        clearable
+        style="width: 200px"
+      ></el-input>
+      <el-button
+        icon="el-icon-search"
+        size="mini"
+        circle
+        class="search_button"
+        @click="onSubmit"
+      ></el-button>
     </div>
     <el-form
       :inline="true"
       :model="formInline"
       class="demo-form-inline"
-      style="position: relative;"
+      style="position: relative"
     >
       <el-form-item>
         <el-date-picker
@@ -32,7 +45,13 @@
       </el-form-item>
 
       <el-form-item>
-        <el-select v-model="formInline.customer_id" @change="onSubmit" size="small" clearable placeholder="客户">
+        <el-select
+          v-model="formInline.customer_id"
+          @change="onSubmit"
+          size="small"
+          clearable
+          placeholder="客户"
+        >
           <el-option
             v-for="item in wests"
             :key="item.value"
@@ -43,34 +62,103 @@
       </el-form-item>
 
       <el-form-item>
-        <el-select v-model="formInline.state" @change="onSubmit" size="small" clearable placeholder="状态">
-          <el-option v-for="item in states" :key="item.value" :label="item.state" :value="item.id"></el-option>
+        <el-select
+          v-model="formInline.state"
+          @change="onSubmit"
+          size="small"
+          clearable
+          placeholder="状态"
+        >
+          <el-option
+            v-for="item in states"
+            :key="item.value"
+            :label="item.state"
+            :value="item.id"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <div style="display: flex;justify-content: space-between;align-items: center;">
-          <div class="addStyle" v-if="permission.indexOf('customer_order_add')!=-1" @click="addSalesOrder">新增订单</div>
-          <div class="addStyle" style="background-color: #e3e3e3;color: #fff;">批量打印</div>
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <div
+            class="addStyle"
+            v-if="permission.indexOf('customer_order_add') != -1"
+            @click="addSalesOrder"
+          >
+            新增订单
+          </div>
+          <div class="addStyle" style="background-color: #e3e3e3; color: #fff">
+            批量打印
+          </div>
         </div>
       </el-form-item>
     </el-form>
 
     <div class="table">
-      <el-table :data="tableData" tooltip-effect="dark" size="small" width="100%">
-        <el-table-column align="center" type="selection" width="45"></el-table-column>
-        <el-table-column align="center" prop="states" label="状态"></el-table-column>
+      <el-table
+        :data="tableData"
+        tooltip-effect="dark"
+        size="small"
+        width="100%"
+      >
+        <el-table-column
+          align="center"
+          type="selection"
+          width="45"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="states"
+          label="状态"
+        ></el-table-column>
         <el-table-column align="center" label="日期" width="90">
           <template slot-scope="scope">{{ scope.row.ctime }}</template>
         </el-table-column>
-        <el-table-column align="center" prop="companyname" label="客户"></el-table-column>
-        <el-table-column align="center" prop="phone" label="联系电话"></el-table-column>
-        <el-table-column align="center" prop="storehouse_name" label="仓库"></el-table-column>
-        <el-table-column align="center" prop="account_name" label="结算账户"></el-table-column>
-        <el-table-column align="center" prop="pay_money" label="实付金额"></el-table-column>
-        <el-table-column align="center" prop="remark" label="备注"></el-table-column>
-        <el-table-column fixed="right" v-if="permission.indexOf('customer_order_info')!=-1" label="操作" width="100">
+        <el-table-column
+          align="center"
+          prop="companyname"
+          label="客户"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="phone"
+          label="联系电话"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="storehouse_name"
+          label="仓库"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="account_name"
+          label="结算账户"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="pay_money"
+          label="实付金额"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="remark"
+          label="备注"
+        ></el-table-column>
+        <el-table-column
+          fixed="right"
+          v-if="permission.indexOf('customer_order_info') != -1"
+          label="操作"
+          width="100"
+        >
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)"  type="text" size="small">查看</el-button>
+            <el-button @click="handleClick(scope.row)" type="text" size="small"
+              >查看</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -110,7 +198,6 @@ import {
 export default {
   data() {
     return {
-      power: "",
       formInline: {},
       user_id: "",
       tableData: [],
@@ -130,7 +217,7 @@ export default {
         { state: "已出售", id: 1 },
         { state: "已撤销", id: 4 },
       ],
-      permission:[]
+      permission: [],
     };
   },
   methods: {
@@ -227,7 +314,6 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
 };

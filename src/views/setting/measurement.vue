@@ -1,16 +1,28 @@
 <template>
-  <div class="measurement" v-if="permission.indexOf('measurement')!=-1">
+  <div class="measurement" v-if="permission.indexOf('measurement') != -1">
     <div class="aa">
       <!-- 面包屑 -->
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>设置</el-breadcrumb-item>
-        <el-breadcrumb-item>尺寸表管理</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>设置</el-breadcrumb-item>
+          <el-breadcrumb-item>尺寸表管理</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <!-- 部位季节 -->
-    <div class="addClassify" v-if="permission.indexOf('season_add')!=-1" @click="addClassify">添加部件</div>
-    <el-table :data="tableData" style="width: 100%;margin: 20px 0;">
-      <el-table-column prop="name" label="部位名称" width="200"></el-table-column>
+    <div
+      class="addClassify"
+      v-if="permission.indexOf('season_add') != -1"
+      @click="addClassify"
+    >
+      添加部件
+    </div>
+    <el-table :data="tableData" style="width: 100%; margin: 20px 0">
+      <el-table-column
+        prop="name"
+        label="部位名称"
+        width="200"
+      ></el-table-column>
       <el-table-column prop="sort" label="排序" width="200"></el-table-column>
       <el-table-column align="right" label="操作">
         <template slot-scope="scope">
@@ -18,7 +30,7 @@
             content="编辑"
             placement="top"
             class="el-icon-edit btn"
-            v-if="permission.indexOf('season_edit')!=-1"
+            v-if="permission.indexOf('season_edit') != -1"
           >
             <div @click="handleEdit(scope.$index, scope.row)"></div>
           </el-tooltip>
@@ -26,7 +38,7 @@
             content="删除"
             placement="top"
             class="el-icon-delete btn"
-            v-if="permission.indexOf('season_del')!=-1"
+            v-if="permission.indexOf('season_del') != -1"
           >
             <div @click="handleDelete(scope.$index, scope.row)"></div>
           </el-tooltip>
@@ -47,12 +59,23 @@
         <el-form-item
           label="部位名称"
           prop="name"
-          :rules="[ { required: true, message: '请输入部位名称', trigger: 'blur' },]"
+          :rules="[
+            { required: true, message: '请输入部位名称', trigger: 'blur' },
+          ]"
         >
-          <el-input v-model="form.name" placeholder="请输入部位名称" style="width:80%;"></el-input>
+          <el-input
+            v-model="form.name"
+            placeholder="请输入部位名称"
+            style="width: 80%"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="排序" >
-          <el-input type="text" placeholder="请输入序号" style="width:80%;" v-model="form.sort"></el-input>
+        <el-form-item label="排序">
+          <el-input
+            type="text"
+            placeholder="请输入序号"
+            style="width: 80%"
+            v-model="form.sort"
+          ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -74,12 +97,23 @@
         <el-form-item
           label="部位名称"
           prop="name"
-          :rules="[ { required: true, message: '请输入部位名称', trigger: 'blur' },]"
+          :rules="[
+            { required: true, message: '请输入部位名称', trigger: 'blur' },
+          ]"
         >
-          <el-input v-model="form.name" placeholder="请输入部位名称" style="width:80%;"></el-input>
+          <el-input
+            v-model="form.name"
+            placeholder="请输入部位名称"
+            style="width: 80%"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="排序" >
-          <el-input type="text" placeholder="请输入序号" style="width:80%;" v-model="form.sort"></el-input>
+        <el-form-item label="排序">
+          <el-input
+            type="text"
+            placeholder="请输入序号"
+            style="width: 80%"
+            v-model="form.sort"
+          ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -101,12 +135,16 @@
   </div>
 </template>
 <script>
-import { positionList, positionAdd, positionEdit, positionDel } from "@/api/setting.js";
+import {
+  positionList,
+  positionAdd,
+  positionEdit,
+  positionDel,
+} from "@/api/setting.js";
 
 export default {
   data() {
     return {
-      power: "",
       tableData: [],
       centerDialogVisible: false, //添加部位
       centerDialogVisible1: false, //编辑部位
@@ -207,7 +245,6 @@ export default {
   },
   mounted() {
     this.init();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
 };

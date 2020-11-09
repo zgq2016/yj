@@ -2,9 +2,11 @@
   <div class="panelPurchase">
     <div class="aa">
       <!-- 面包屑 -->
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>版料采购单</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>版料采购单</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <div class="main">
       <!-- 物料卡信息 供应商信息 -->
@@ -415,12 +417,16 @@ export default {
       this.centerDialogVisible = true;
     },
     async changed() {
-      this.form.money = (this.form.amountPurchased * this.form.purchasePrice).toFixed(2);
+      this.form.money = (
+        this.form.amountPurchased * this.form.purchasePrice
+      ).toFixed(2);
       // this.form.money = String(this.form.money);
       this.form.fullPayout = this.form.money;
     },
     async changed1() {
-      this.form.purchasePrice = (this.form.money / this.form.amountPurchased).toFixed(2);
+      this.form.purchasePrice = (
+        this.form.money / this.form.amountPurchased
+      ).toFixed(2);
       // this.form.purchasePrice = String(this.form.purchasePrice);
     },
     handleSize(val) {

@@ -1,30 +1,51 @@
 <template>
-  <div class="designFile" v-if="permission.indexOf('designFile')!=-1">
+  <div class="designFile" v-if="permission.indexOf('designFile') != -1">
     <!-- 面包屑 -->
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>档案库</el-breadcrumb-item>
-        <el-breadcrumb-item v-if="TL===1" :to="{ path: '/productionOrders' }">生产下单</el-breadcrumb-item>
-        <el-breadcrumb-item>款式档案</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>档案库</el-breadcrumb-item>
+          <el-breadcrumb-item
+            v-if="TL === 1"
+            :to="{ path: '/productionOrders' }"
+            >生产下单</el-breadcrumb-item
+          >
+          <el-breadcrumb-item>款式档案</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <div class="main">
       <el-form
         :inline="true"
         :model="formInline"
         class="demo-form-inline"
-        style="position: relative;"
+        style="position: relative"
       >
         <el-form-item>
           <el-input v-model="formInline.styleno" placeholder="款号"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.year" @change="onSubmit" clearable placeholder="年份">
-            <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
+          <el-select
+            v-model="formInline.year"
+            @change="onSubmit"
+            clearable
+            placeholder="年份"
+          >
+            <el-option
+              v-for="item in years"
+              :key="item.id"
+              :label="item.year"
+              :value="item.year"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.season" @change="onSubmit" clearable placeholder="季节">
+          <el-select
+            v-model="formInline.season"
+            @change="onSubmit"
+            clearable
+            placeholder="季节"
+          >
             <el-option
               v-for="item in seasons"
               :key="item.id"
@@ -34,19 +55,29 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="stylist" placeholder="设计师" clearable @change="handleUser_id($event)">
-            <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          <el-select
+            v-model="stylist"
+            placeholder="设计师"
+            clearable
+            @change="handleUser_id($event)"
+          >
+            <el-option
+              v-for="item in stylists"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
           <el-cascader
-          v-model="formInline.style_type"
-          placeholder="类别"
-          :options="categorys"
-          :props="optionProps1"
-          @change="onSubmit(101)"
-          :show-all-levels="false"
-        ></el-cascader>
+            v-model="formInline.style_type"
+            placeholder="类别"
+            :options="categorys"
+            :props="optionProps1"
+            @change="onSubmit(101)"
+            :show-all-levels="false"
+          ></el-cascader>
         </el-form-item>
 
         <el-form-item>
@@ -68,13 +99,22 @@
           @select-all="Checkbox"
           highlight-current-row
           size="small"
-          style="width:100%;"
+          style="width: 100%"
         >
-          <el-table-column type="index" width="50" label="序号"></el-table-column>
+          <el-table-column
+            type="index"
+            width="50"
+            label="序号"
+          ></el-table-column>
           <el-table-column align="center" width="80" label="图片">
             <template slot-scope="scope" property="style_pic_url">
               <el-image
-                style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
+                style="
+                  width: 50px;
+                  height: 50px;
+                  border-radius: 5px;
+                  margin-right: 5px;
+                "
                 :src="scope.row.style_pic_url"
                 fit="cover"
               >
@@ -84,36 +124,68 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column align="center" property="stylename" label="名称"></el-table-column>
-          <el-table-column align="center" property="styleno" label="款号"></el-table-column>
-          <el-table-column align="center" property="style_color" label="颜色"></el-table-column>
-          <el-table-column align="center" property="style_type" label="品类"></el-table-column>
-          <el-table-column align="center" property="year" label="年份"></el-table-column>
-          <el-table-column align="center" property="season" label="季节"></el-table-column>
-          <el-table-column align="center" property="stylist" label="设计师"></el-table-column>
+          <el-table-column
+            align="center"
+            property="stylename"
+            label="名称"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            property="styleno"
+            label="款号"
+          ></el-table-column>
+          <!-- <el-table-column align="center" property="style_color" label="颜色"></el-table-column> -->
+          <el-table-column
+            align="center"
+            property="style_type"
+            label="品类"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            property="year"
+            label="年份"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            property="season"
+            label="季节"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            property="stylist"
+            label="设计师"
+          ></el-table-column>
           <el-table-column align="center" width="70" label="操作">
             <template slot-scope="scope">
               <el-button
                 size="mini"
-                style="float:left;"
+                style="float: left"
                 @click="handleEdit(scope.$index, scope.row)"
-                v-if="permission.indexOf('get_style')!=-1"
-              >{{"查看"}}</el-button>
+                v-if="permission.indexOf('get_style') != -1"
+                >{{ "查看" }}</el-button
+              >
             </template>
           </el-table-column>
-          <el-table-column align="center" type="selection" width="55"></el-table-column>
+          <el-table-column
+            align="center"
+            type="selection"
+            width="55"
+          ></el-table-column>
         </el-table>
       </div>
     </div>
-    <div style="display: flex;justify-content: space-between;align-items: center;">
+    <div
+      style="display: flex; justify-content: space-between; align-items: center"
+    >
       <!-- 打印  导出-->
       <div class="btn">
         <el-button v-print="'#printTest'" size="mini">打印</el-button>
         <el-button
           @click="OrderCreate"
-          v-if="permission.indexOf('produce_lotadd')!=-1"
+          v-if="permission.indexOf('produce_lotadd') != -1"
           size="mini"
-        >生成下单表</el-button>
+          >生成下单表</el-button
+        >
         <el-button size="mini">导出</el-button>
       </div>
       <!-- 分页 -->
@@ -146,7 +218,6 @@ import { produceLotAdd } from "@/api/production";
 export default {
   data() {
     return {
-      power: "",
       TL: "",
       formInline: {
         styleno: "",
@@ -320,9 +391,7 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
-    // console.log(this.power);
   },
   watch: {
     $route() {

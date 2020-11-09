@@ -1,35 +1,49 @@
 <template>
   <div class="salesOrderDetailsAdd">
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <!-- <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" /> -->
-        <el-breadcrumb-item>销售</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/salesOrder' }">销售订单</el-breadcrumb-item>
-        <el-breadcrumb-item>销售订单详情</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <!-- <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" /> -->
+          <el-breadcrumb-item>销售</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/salesOrder' }"
+            >销售订单</el-breadcrumb-item
+          >
+          <el-breadcrumb-item>销售订单详情</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <div class="main">
       <div class="top">
         <div class="rh_left">
-          <h4>销售订单-{{form.no}}-{{'zaan'}}</h4>
+          <h4>销售订单-{{ form.no }}-{{ "zaan" }}</h4>
         </div>
         <div class="rh_right">
           <el-button size="mini" type="primary">扫码</el-button>
           <el-button size="mini" type="primary">导入</el-button>
-          <el-button size="mini" type="primary" @click="tables">新增销售订单</el-button>
+          <el-button size="mini" type="primary" @click="tables"
+            >新增销售订单</el-button
+          >
         </div>
       </div>
-      <hr style="border:1px dashed #ccc;margin:0 10px" />
+      <hr style="border: 1px dashed #ccc; margin: 0 10px" />
 
       <div class="right_form">
         <el-form :model="form" ref="form">
-          <el-form-item style="overflow: hidden;width:100%;">
-            <div style="float:left;padding:10px 0 0 15px;">
+          <el-form-item style="overflow: hidden; width: 100%">
+            <div style="float: left; padding: 10px 0 0 15px">
               客户尚欠款:
-              <em style="color:red;">&yen;{{'0.00'}}</em>
+              <em style="color: red">&yen;{{ "0.00" }}</em>
             </div>
-            <div class="cssa" style="float:right;padding:10px 15px 0 0;width:210px;">
-              <el-steps :space="110" align-center :active="0" finish-status="wait">
+            <div
+              class="cssa"
+              style="float: right; padding: 10px 15px 0 0; width: 210px"
+            >
+              <el-steps
+                :space="110"
+                align-center
+                :active="0"
+                finish-status="wait"
+              >
                 <el-step icon="el-icon-success" title="草稿"></el-step>
                 <el-step icon="el-icon-success" title="已出售"></el-step>
               </el-steps>
@@ -37,8 +51,16 @@
           </el-form-item>
 
           <!-- prop="factory_name" -->
-          <el-form-item style="float:left;width:30%;margin-left:3%;" label="客户:">
-            <el-select size="mini" clearable v-model="form.companyname" placeholder="请选择客户">
+          <el-form-item
+            style="float: left; width: 30%; margin-left: 3%"
+            label="客户:"
+          >
+            <el-select
+              size="mini"
+              clearable
+              v-model="form.companyname"
+              placeholder="请选择客户"
+            >
               <el-option
                 v-for="item in wests"
                 :key="item.value"
@@ -48,8 +70,16 @@
             </el-select>
           </el-form-item>
           <!-- prop="storehouse_name" -->
-          <el-form-item style="float:left;width:30%;margin-left:2%;" label="仓库:">
-            <el-select size="mini" v-model="form.storehouse_name" placeholder="请选择仓库" clearable>
+          <el-form-item
+            style="float: left; width: 30%; margin-left: 2%"
+            label="仓库:"
+          >
+            <el-select
+              size="mini"
+              v-model="form.storehouse_name"
+              placeholder="请选择仓库"
+              clearable
+            >
               <el-option
                 v-for="item in ware"
                 :key="item.id"
@@ -66,22 +96,28 @@
             </el-select>
           </el-form-item>
           <!-- prop="ctime" -->
-          <el-form-item style="float:left;width:30%;margin-left:1%;" label="日期:">
+          <el-form-item
+            style="float: left; width: 30%; margin-left: 1%"
+            label="日期:"
+          >
             <el-date-picker
               type="date"
               size="mini"
               placeholder="选择日期"
               v-model="form.ctime"
-              style="width: 150px;"
+              style="width: 150px"
               format="yyyy-MM-dd"
               value-format="yyyy-MM-dd"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item style="float:left;width:30%;margin-left:3%;" label="结算账户:">
+          <el-form-item
+            style="float: left; width: 30%; margin-left: 3%"
+            label="结算账户:"
+          >
             <el-select
               size="mini"
               clearable
-              style="width: 150px;"
+              style="width: 150px"
               v-model="form.account_name"
               placeholder="请选择结账账户"
             >
@@ -93,17 +129,29 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item style="float:left;width:30%;margin-left:2%;" label="实付金额:">
+          <el-form-item
+            style="float: left; width: 30%; margin-left: 2%"
+            label="实付金额:"
+          >
             <el-input
               size="mini"
               placeholder="请输入实付金额"
-              style="width: 150px;"
+              style="width: 150px"
               v-model="form.pay_money"
             ></el-input>
           </el-form-item>
 
-          <el-form-item style="float:left;width:31%;margin-left:1%;" label="备注:" prop="desc">
-            <el-input size="mini" style="width:200px;" type="textarea" v-model="form.remarks"></el-input>
+          <el-form-item
+            style="float: left; width: 31%; margin-left: 1%"
+            label="备注:"
+            prop="desc"
+          >
+            <el-input
+              size="mini"
+              style="width: 200px"
+              type="textarea"
+              v-model="form.remarks"
+            ></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -115,15 +163,24 @@
           :summary-method="getSummaries"
           row-key="id"
           size="mini"
-          style="cursor: pointer;"
+          style="cursor: pointer"
           @cell-click="cellClick"
         >
           <el-table-column type="index" width="35"></el-table-column>
 
           <el-table-column align="center" width="80" label="图片">
-            <template align="center" slot-scope="scope" property="style_pic_url">
+            <template
+              align="center"
+              slot-scope="scope"
+              property="style_pic_url"
+            >
               <el-image
-                style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
+                style="
+                  width: 50px;
+                  height: 50px;
+                  border-radius: 5px;
+                  margin-right: 5px;
+                "
                 :src="scope.row.style_pic_url"
                 fit="cover"
               >
@@ -133,22 +190,29 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column prop="stylename" width="110" align="center" label="商品">
+          <el-table-column
+            prop="stylename"
+            width="110"
+            align="center"
+            label="商品"
+          >
             <template slot-scope="scope">
               <el-select
                 v-model="scope.row.stylename"
                 filterable
                 size="mini"
                 v-if="scope.row.showHidden1"
-                @blur="bblur(scope.row,scope.column)"
-                @visible-change="visibleChange($event,scope.row)"
-                @change="handleSelect($event,scope.column, scope.row,scope.$index)"
+                @blur="bblur(scope.row, scope.column)"
+                @visible-change="visibleChange($event, scope.row)"
+                @change="
+                  handleSelect($event, scope.column, scope.row, scope.$index)
+                "
                 placeholder="请选择"
               >
                 <el-option
                   v-for="item in shoppings"
                   :key="item.value"
-                  :label="item.stylename+' '+item.styleno"
+                  :label="item.stylename + ' ' + item.styleno"
                   :value="item.id"
                 ></el-option>
                 <el-pagination
@@ -159,14 +223,25 @@
                   :total="total3"
                 ></el-pagination>
               </el-select>
-              <span v-if="!scope.row.showHidden1">{{scope.row.stylename|| "点击选择"}}</span>
+              <span v-if="!scope.row.showHidden1">{{
+                scope.row.stylename || "点击选择"
+              }}</span>
             </template>
             <!-- <template v-if="!scope.row.showHidden1 && !vh5" slot-scope="scope">
                   <span>{{scope.row.commodity || "点击选择"}}</span>
             </template>-->
           </el-table-column>
-          <el-table-column prop="produce_no" align="center" sum-text label="款号"></el-table-column>
-          <el-table-column prop="bar_code" align="center" label="条码"></el-table-column>
+          <el-table-column
+            prop="produce_no"
+            align="center"
+            sum-text
+            label="款号"
+          ></el-table-column>
+          <el-table-column
+            prop="bar_code"
+            align="center"
+            label="条码"
+          ></el-table-column>
           <el-table-column prop="style_color_name" align="center" label="颜色">
             <template slot-scope="scope">
               <!-- :disabled="scope.row.commodity==''? true : false" -->
@@ -177,11 +252,13 @@
                 :title="scope.row.style_color_name"
                 v-model="scope.row.style_color_name"
                 :fetch-suggestions="querySearch1"
-                @focus="focuss($event,scope.column, scope.row,scope.$index)"
-                @blur="bblur(scope.row,scope.column)"
-                @select="handleSelect($event,scope.column, scope.row,scope.$index)"
+                @focus="focuss($event, scope.column, scope.row, scope.$index)"
+                @blur="bblur(scope.row, scope.column)"
+                @select="
+                  handleSelect($event, scope.column, scope.row, scope.$index)
+                "
               ></el-autocomplete>
-              <span v-else>{{scope.row.style_color_name}}</span>
+              <span v-else>{{ scope.row.style_color_name }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="size" align="center" label="尺码">
@@ -192,61 +269,75 @@
                 v-if="scope.row.showHidden3"
                 :title="scope.row.size"
                 v-model="scope.row.size"
-                @focus="focuss($event,scope.column, scope.row,scope.$index)"
+                @focus="focuss($event, scope.column, scope.row, scope.$index)"
                 :fetch-suggestions="querySearch2"
-                @blur="bblur(scope.row,scope.column)"
-                @select="handleSelect($event,scope.column, scope.row,scope.$index)"
+                @blur="bblur(scope.row, scope.column)"
+                @select="
+                  handleSelect($event, scope.column, scope.row, scope.$index)
+                "
               ></el-autocomplete>
-              <span v-else>{{scope.row.size}}</span>
+              <span v-else>{{ scope.row.size }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="unit" align="center" label="单位"></el-table-column>
+          <el-table-column
+            prop="unit"
+            align="center"
+            label="单位"
+          ></el-table-column>
           <el-table-column prop="quantity" align="center" label="数量">
             <template slot-scope="scope">
               <input
                 v-model="scope.row.quantity"
-                @blur="bblur(scope.row,scope.column,scope.row.quantity)"
+                @blur="bblur(scope.row, scope.column, scope.row.quantity)"
                 v-if="scope.row.showHidden4"
-                style="border:1px solid #ccc;width:80%"
+                style="border: 1px solid #ccc; width: 80%"
               />
-              <span v-else>{{scope.row.quantity}}</span>
+              <span v-else>{{ scope.row.quantity }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="price" align="center" label="单价">
             <template slot-scope="scope">
               <input
                 v-model="scope.row.price"
-                @blur="bblur(scope.row,scope.column,scope.row.price)"
+                @blur="bblur(scope.row, scope.column, scope.row.price)"
                 v-if="scope.row.showHidden5"
-                style="border:1px solid #ccc;width:80%"
+                style="border: 1px solid #ccc; width: 80%"
               />
-              <span v-else>{{scope.row.price}}</span>
+              <span v-else>{{ scope.row.price }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="discount" align="center" label="折扣(%)">
             <template slot-scope="scope">
               <input
                 v-model="scope.row.discount"
-                @blur="bblur(scope.row,scope.column,scope.row.discount)"
+                @blur="bblur(scope.row, scope.column, scope.row.discount)"
                 v-if="scope.row.showHidden6"
-                style="border:1px solid #ccc;width:80%"
+                style="border: 1px solid #ccc; width: 80%"
               />
-              <span v-else>{{scope.row.discount}}</span>
+              <span v-else>{{ scope.row.discount }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="discount_price" align="center" label="折后价">
             <template slot-scope="scope">
               <input
                 v-model="scope.row.discount_price"
-                @blur="bblur(scope.row,scope.column,scope.row.discount_price)"
+                @blur="bblur(scope.row, scope.column, scope.row.discount_price)"
                 v-if="scope.row.showHidden7"
-                style="border:1px solid #ccc;width:80%"
+                style="border: 1px solid #ccc; width: 80%"
               />
-              <span v-else>{{scope.row.discount_price}}</span>
+              <span v-else>{{ scope.row.discount_price }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="money" align="center" label="金额"></el-table-column>
-          <el-table-column prop="discount_money" align="center" label="折后金额"></el-table-column>
+          <el-table-column
+            prop="money"
+            align="center"
+            label="金额"
+          ></el-table-column>
+          <el-table-column
+            prop="discount_money"
+            align="center"
+            label="折后金额"
+          ></el-table-column>
           <el-table-column prop="remark" align="center" label="备注">
             <template slot-scope="scope">
               <el-input
@@ -255,21 +346,21 @@
                 size="mini"
                 placeholder="最多20字"
                 v-model="scope.row.remark"
-                @blur="bblur(scope.row,scope.column,scope.row.remark)"
+                @blur="bblur(scope.row, scope.column, scope.row.remark)"
                 v-if="scope.row.showHidden8"
               ></el-input>
-              <span v-else>{{scope.row.remark}}</span>
+              <span v-else>{{ scope.row.remark }}</span>
             </template>
           </el-table-column>
           <el-table-column align="center" label="操作">
             <template slot-scope="scope">
               <div
-                style="width:50%;float:left"
+                style="width: 50%; float: left"
                 class="el-icon-plus btn"
                 @click="handleAdd(scope.$index, scope.row)"
               ></div>
               <div
-                style="width:50%;float:right"
+                style="width: 50%; float: right"
                 class="el-icon-delete btn"
                 @click="handleDelete(scope.$index, scope.row)"
               ></div>
@@ -291,42 +382,56 @@
                 :file-list="fileList"
                 :on-success="successFile"
                 list-type="picture"
-                style="float:left;"
+                style="float: left"
               >
                 <!-- v-if=" form.state!=1&&form.state!=4" -->
-                <el-button size="mini" v-if="vh" type="primary">点击上传</el-button>
+                <el-button size="mini" v-if="vh" type="primary"
+                  >点击上传</el-button
+                >
               </el-upload>
             </el-form-item>
           </div>
           <div class="texconts">
             <el-form-item label-width="80px" label="费用金额:">
-              <el-input size="mini" v-model="total_price" placeholder="请输入金额"></el-input>
+              <el-input
+                size="mini"
+                v-model="total_price"
+                placeholder="请输入金额"
+              ></el-input>
             </el-form-item>
 
             <el-form-item label-width="80px" label="总合计:">
-              <span style="color:red;font-size:16px;">&yen;{{total_price}}</span>
+              <span style="color: red; font-size: 16px"
+                >&yen;{{ total_price }}</span
+              >
             </el-form-item>
           </div>
           <div class="foote">
             <el-form-item>
               <el-button
                 size="small"
-                v-if="permission.indexOf('customer_order_edit')!=-1"
+                v-if="permission.indexOf('customer_order_edit') != -1"
                 type="primary"
                 @click="sketch(0)"
-              >草稿</el-button>
+                >草稿</el-button
+              >
               <el-button
-                v-if="permission.indexOf('customer_order_edit')!=-1"
+                v-if="permission.indexOf('customer_order_edit') != -1"
                 type="primary"
                 size="small"
                 @click="sketch(1)"
-              >出售</el-button>
+                >出售</el-button
+              >
               <el-button
                 size="small"
-                v-if="this.$route.query.state==0&&permission.indexOf('customer_order_del')!=-1"
+                v-if="
+                  this.$route.query.state == 0 &&
+                  permission.indexOf('customer_order_del') != -1
+                "
                 @click="delStock"
                 type="primary"
-              >删除</el-button>
+                >删除</el-button
+              >
             </el-form-item>
           </div>
         </el-form>
@@ -335,21 +440,31 @@
     <!-- 填尺码 -->
     <div v-if="this.weretable.length > 0">
       <el-dialog
-        :title="this.weretable[indexk].stylename+'  '+this.weretable[indexk].produce_no"
+        :title="
+          this.weretable[indexk].stylename +
+          '  ' +
+          this.weretable[indexk].produce_no
+        "
         :visible.sync="dialogFormVisible"
       >
         <el-form :model="form1">
           <div>
             <div class="table_nav">
               <span></span>
-              <span v-for="(item_t,index_t) in sizes" :key="index_t">{{item_t.value}}</span>
+              <span v-for="(item_t, index_t) in sizes" :key="index_t">{{
+                item_t.value
+              }}</span>
             </div>
             <br />
-            <div v-for="(item_c,index_c) in colors" :key="index_c" class="table_list">
-              <span>{{item_c.value}}</span>
+            <div
+              v-for="(item_c, index_c) in colors"
+              :key="index_c"
+              class="table_list"
+            >
+              <span>{{ item_c.value }}</span>
               <el-input
                 size="mini"
-                v-for="(item_t,index_t) in sizes"
+                v-for="(item_t, index_t) in sizes"
                 v-model="item_c.quantitys[index_t]"
                 :key="index_t"
               ></el-input>
@@ -403,7 +518,6 @@ export default {
       total_price: 0,
       ruleForm: {},
       fileList: [],
-      power: "",
       form: {},
       form1: {},
       ware: [],
@@ -1067,7 +1181,6 @@ export default {
     },
   },
   mounted() {
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
     this.init();
     this.store();

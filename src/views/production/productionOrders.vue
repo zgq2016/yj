@@ -1,15 +1,30 @@
  <template>
-  <div class="productionOrders" v-if="permission.indexOf('productionOrders')!=-1">
+  <div
+    class="productionOrders"
+    v-if="permission.indexOf('productionOrders') != -1"
+  >
     <div class="aa">
       <!-- 面包屑 -->
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>生产</el-breadcrumb-item>
-        <el-breadcrumb-item>生产下单</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>生产</el-breadcrumb-item>
+          <el-breadcrumb-item>生产下单</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
-    <div style="margin-bottom:10px">
-      <el-input v-model="formInline.styleno" placeholder="款号" style="width:200px"></el-input>
-      <el-button icon="el-icon-search" size="mini" circle class="search_button" @click="onSubmit"></el-button>
+    <div style="margin-bottom: 10px">
+      <el-input
+        v-model="formInline.styleno"
+        placeholder="款号"
+        style="width: 200px"
+      ></el-input>
+      <el-button
+        icon="el-icon-search"
+        size="mini"
+        circle
+        class="search_button"
+        @click="onSubmit"
+      ></el-button>
     </div>
 
     <div class="form">
@@ -19,10 +34,15 @@
             v-model="formInline.year"
             clearable
             placeholder="年份"
-            style="width:120px"
+            style="width: 120px"
             @change="onSubmit"
           >
-            <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
+            <el-option
+              v-for="item in years"
+              :key="item.id"
+              :label="item.year"
+              :value="item.year"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -30,7 +50,7 @@
             v-model="formInline.season"
             clearable
             placeholder="季节"
-            style="width:120px"
+            style="width: 120px"
             @change="onSubmit"
           >
             <el-option
@@ -47,9 +67,14 @@
             placeholder="设计师"
             @change="handleUser_id($event)"
             clearable
-            style="width:120px"
+            style="width: 120px"
           >
-            <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option
+              v-for="item in stylists"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -68,14 +93,19 @@
             v-model="formInline.order_status"
             clearable
             placeholder="状态"
-            style="width:120px"
+            style="width: 120px"
             @change="onSubmit"
           >
-            <el-option v-for="item in states" :key="item.id" :label="item.v" :value="item.id"></el-option>
+            <el-option
+              v-for="item in states"
+              :key="item.id"
+              :label="item.v"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
       </el-form>
-      <div class="addStyle" v-if="permission.indexOf('produce_lotadd')!=-1">
+      <div class="addStyle" v-if="permission.indexOf('produce_lotadd') != -1">
         <div @click="addOrders">新增下单</div>
       </div>
     </div>
@@ -93,7 +123,12 @@
         <el-table-column align="center" label="图片">
           <template slot-scope="scope" property="style_pic_url">
             <el-image
-              style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
+              style="
+                width: 50px;
+                height: 50px;
+                border-radius: 5px;
+                margin-right: 5px;
+              "
               :src="scope.row.style_pic_url"
               fit="cover"
             >
@@ -103,34 +138,77 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column align="center" property="styleno" label="款号"></el-table-column>
-        <el-table-column align="center" property="stylename" label="名称"></el-table-column>
-        <el-table-column align="center" property="produce_no" label="批号"></el-table-column>
-        <el-table-column align="center" property="style_color" label="颜色"></el-table-column>
-        <el-table-column align="center" property="style_type" label="品类"></el-table-column>
-        <el-table-column align="center" property="year" label="年份"></el-table-column>
-        <el-table-column align="center" property="season" label="季节"></el-table-column>
-        <el-table-column align="center" property="user_name" label="设计师"></el-table-column>
-        <el-table-column align="center" property="state" label="状态"></el-table-column>
-        <el-table-column align="center" v-if="permission.indexOf('produce_info')!=-1" label="操作">
+        <el-table-column
+          align="center"
+          property="styleno"
+          label="款号"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="stylename"
+          label="名称"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="produce_no"
+          label="批号"
+        ></el-table-column>
+        <!-- <el-table-column align="center" property="style_color" label="颜色"></el-table-column> -->
+        <el-table-column
+          align="center"
+          property="style_type"
+          label="品类"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="year"
+          label="年份"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="season"
+          label="季节"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="user_name"
+          label="设计师"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="state"
+          label="状态"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          v-if="permission.indexOf('produce_info') != -1"
+          label="操作"
+        >
           <template slot-scope="scope">
             <el-button
               class="elbtn"
               size="mini"
-              v-if="scope.row.order_status==1"
+              v-if="scope.row.order_status == 1"
               @click="handleEdit(scope.$index, scope.row)"
-            >{{"查看"}}</el-button>
+              >{{ "查看" }}</el-button
+            >
             <el-button
               class="elbtn"
               size="mini"
-              v-if="scope.row.order_status==0&&permission.indexOf('produce_info')!=-1"
+              v-if="
+                scope.row.order_status == 0 &&
+                permission.indexOf('produce_info') != -1
+              "
               @click="handleAdd(scope.$index, scope.row)"
-            >{{"下单"}}</el-button>
+              >{{ "下单" }}</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
     </div>
-    <div style="display: flex;justify-content: space-between;align-items: center;">
+    <div
+      style="display: flex; justify-content: space-between; align-items: center"
+    >
       <!-- 打印  导出-->
       <div class="btn">
         <el-button v-print="'#printTest'" size="mini">打印</el-button>
@@ -165,7 +243,6 @@ import { produceAdd, getProduceList } from "@/api/production";
 export default {
   data() {
     return {
-      power: "",
       formInline: {
         styleno: "",
         year: "",
@@ -334,7 +411,6 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
 };

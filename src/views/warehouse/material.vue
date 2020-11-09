@@ -2,10 +2,12 @@
   <div class="material" v-if="permission.indexOf('material') != -1">
     <!-- 面包屑 -->
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>仓库</el-breadcrumb-item>
-        <el-breadcrumb-item>物料库存查询 或 采购</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>仓库</el-breadcrumb-item>
+          <el-breadcrumb-item>物料库存查询</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <div class="main">
       <div style="margin-bottom: 10px">
@@ -113,7 +115,7 @@
             "
           >
             <div class="addStyle">展示统计数据</div>
-            <div class="addStyle" @click="handleCard">采购</div>
+            <!-- <div class="addStyle" @click="handleCard">采购</div> -->
             <!-- v-if="permission.indexOf('C3000200')!=-1" -->
           </div>
         </el-form-item>
@@ -130,7 +132,11 @@
             <div class="left">
               <img :src="item.picurl" alt />
               <div class="left_n">
-                <span class="hide" :title="item.classname+'('+item.materials_class_name+')'"
+                <span
+                  class="hide"
+                  :title="
+                    item.classname + '(' + item.materials_class_name + ')'
+                  "
                   >{{ item.classname }}({{ item.materials_class_name }})</span
                 >
                 <!-- <span>{{item.materialsname}}</span> -->
@@ -224,9 +230,9 @@
           class="pagination"
           @size-change="handleSizeChang"
           @current-change="handleCurrentChang"
-          :current-page="pageIndex"
+          :current-page="pageIndex1"
           :page-sizes="[9, 18, 27, 36]"
-          :page-size="pageSize"
+          :page-size="pageSize1"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total1"
         ></el-pagination>
@@ -370,7 +376,6 @@ export default {
   data() {
     return {
       url: url,
-      power: "",
       materials: 0,
       materials: [],
       entrepots: [],
@@ -545,8 +550,8 @@ export default {
     async handleSearchInput() {
       let res = await getMaterialsList({
         keyword: this.searchInput,
-        page: this.pageIndex,
-        page_size: this.pageSize,
+        page: this.pageIndex1,
+        page_size: this.pageSize1,
       });
       let { data, count } = res.data;
       this.MaterialsList = data;
@@ -622,7 +627,7 @@ export default {
           purchasePrice: this.form1.purchasePrice,
           storehouse_id: this.form1.storehouse_id,
           uploadDocuments: this.form1.picurl,
-          finishTime: this.form1.finishTime,
+          finishTime: moment(this.form1.finishTime).format("YYYY-MM-DD"),
           remark: this.form1.remark,
         });
         console.log(res);
@@ -657,7 +662,6 @@ export default {
     this.init();
     this.stock();
     this.balanc();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
 };

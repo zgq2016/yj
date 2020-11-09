@@ -1,17 +1,19 @@
 <template>
-  <div class="materialTable" >
+  <div class="materialTable">
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>仓库</el-breadcrumb-item>
-        <el-breadcrumb-item>物料库存查询</el-breadcrumb-item>
-        <el-breadcrumb-item>物料库存详情</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>仓库</el-breadcrumb-item>
+          <el-breadcrumb-item>物料库存查询</el-breadcrumb-item>
+          <el-breadcrumb-item>物料库存详情</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
 
     <div class="main">
       <div class="info">
         <!-- header -->
-        <div style="display: flex;">
+        <div style="display: flex">
           <div class="cardInfo">
             <div class="cardInfoTitle">物料卡信息</div>
             <div class="cardInfoContent">
@@ -19,28 +21,45 @@
                 <img :src="header.picurl" alt />
               </div>
               <div class="cardInfoContentText">
-                <div class="cardInfoContentTextName">{{header.materialsname}}</div>
-                <div style="display: flex;">
-                  <div style="margin-right:100px">
-                    <div>内部编号：{{header.materialsno}}</div>
-                    <div>编号：{{header.materialsno}}</div>
-                    <div>面料分类：{{header.materials_mainclass_name}}{{`(${header.materials_class_name})`}}</div>
+                <div class="cardInfoContentTextName">
+                  {{ header.materialsname }}
+                </div>
+                <div style="display: flex">
+                  <div style="margin-right: 100px">
+                    <div>内部编号：{{ header.materialsno }}</div>
+                    <div>编号：{{ header.materialsno }}</div>
+                    <div>
+                      面料分类：{{ header.materials_mainclass_name
+                      }}{{ `(${header.materials_class_name})` }}
+                    </div>
                     <div>
                       料 属 性 ：
                       <span
-                        style="margin-right:10px;text-align:center;width:50px;display:inline-block;"
-                        v-for="(item,index) in header.material_data"
+                        style="
+                          margin-right: 10px;
+                          text-align: center;
+                          width: 50px;
+                          display: inline-block;
+                        "
+                        v-for="(item, index) in header.material_data"
                         :key="index"
-                      >{{item.material_name}}</span>
+                        >{{ item.material_name }}</span
+                      >
                     </div>
-                    <div style="display: flex;">
+                    <div style="display: flex">
                       <div>
                         面料成分：
                         <span
-                          style="margin-right:10px;text-align:center;width:50px;display:inline-block;"
-                          v-for="(item,index) in header.material_data"
+                          style="
+                            margin-right: 10px;
+                            text-align: center;
+                            width: 50px;
+                            display: inline-block;
+                          "
+                          v-for="(item, index) in header.material_data"
                           :key="index"
-                        >{{item.content}}%</span>
+                          >{{ item.content }}%</span
+                        >
                       </div>
                       <!-- <div style="width:70px;">
                         <div></div>
@@ -50,10 +69,12 @@
                   <div>
                     <!-- <div>色号：{{colors.color_no}}</div> -->
                     <!-- <div>颜色：{{colors.color}}</div> -->
-                    <div>大货单价：{{header.wsale_price}}</div>
-                    <div>幅宽：{{header.unit}}</div>
-                    <div>到货时间：{{header.arrival_time}}天</div>
-                    <div :title="header.remarks" class="rearmk">备注：{{header.remarks}}</div>
+                    <div>大货单价：{{ header.wsale_price }}</div>
+                    <div>幅宽：{{ header.unit }}</div>
+                    <div>到货时间：{{ header.arrival_time }}天</div>
+                    <div :title="header.remarks" class="rearmk">
+                      备注：{{ header.remarks }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -67,10 +88,17 @@
                 <img :src="supplier.cardpicurl" alt />
               </div>
               <div class="supplierInfoContentText">
-                <div class="supplierInfoContentTextName">{{supplier.companyname}}</div>
-                <div v-for="(item,index) in supplier.contact_data" :key="index">{{item.phone}}</div>
+                <div class="supplierInfoContentTextName">
+                  {{ supplier.companyname }}
+                </div>
+                <div
+                  v-for="(item, index) in supplier.contact_data"
+                  :key="index"
+                >
+                  {{ item.phone }}
+                </div>
                 <div>账号信息：</div>
-                <div style="width:155px">{{supplier.address}}</div>
+                <div style="width: 155px">{{ supplier.address }}</div>
                 <div></div>
               </div>
             </div>
@@ -78,7 +106,11 @@
         </div>
 
         <div class="table">
-          <el-table :data="tableData" style="width: 100%;margin-top:15px;" size="mini">
+          <el-table
+            :data="tableData"
+            style="width: 100%; margin-top: 15px"
+            size="mini"
+          >
             <!-- <el-table-column align="center" type="index" label="采购批次" width="50"></el-table-column> -->
 
             <el-table-column type="expand">
@@ -91,10 +123,22 @@
                   highlight-current-row
                   style="width: 100%"
                 >
-                  <el-table-column prop="returntime" label="回料时间"></el-table-column>
-                  <el-table-column prop="quantity" label="回货量"></el-table-column>
-                  <el-table-column prop="amount" label="结算金额"></el-table-column>
-                  <el-table-column prop="balance" label="余结金额"></el-table-column>
+                  <el-table-column
+                    prop="returntime"
+                    label="回料时间"
+                  ></el-table-column>
+                  <el-table-column
+                    prop="quantity"
+                    label="回货量"
+                  ></el-table-column>
+                  <el-table-column
+                    prop="amount"
+                    label="结算金额"
+                  ></el-table-column>
+                  <el-table-column
+                    prop="balance"
+                    label="余结金额"
+                  ></el-table-column>
                 </el-table>
               </template>
             </el-table-column>
@@ -105,22 +149,60 @@
               width="90"
               label="采购批次"
             ></el-table-column>
-            <el-table-column align="center" width="95px" prop="create_time" label="采购时间"></el-table-column>
-            <el-table-column align="center" prop="color_no" label="色卡"></el-table-column>
-            <el-table-column align="center" prop="amountPurchased" label="采购量"></el-table-column>
-            <el-table-column align="center" prop="price" label="单价"></el-table-column>
-            <el-table-column align="center" prop="deposit" label="订金"></el-table-column>
-            <el-table-column align="center" prop="stock_quantity" label="回货量"></el-table-column>
-            <el-table-column align="center" width="95px" prop="create_time" label="预计回料时间"></el-table-column>
+            <el-table-column
+              align="center"
+              width="95px"
+              prop="create_time"
+              label="采购时间"
+            ></el-table-column>
+            <el-table-column
+              align="center"
+              prop="color_no"
+              label="色卡"
+            ></el-table-column>
+            <el-table-column
+              align="center"
+              prop="amountPurchased"
+              label="采购量"
+            ></el-table-column>
+            <el-table-column
+              align="center"
+              prop="price"
+              label="单价"
+            ></el-table-column>
+            <el-table-column
+              align="center"
+              prop="deposit"
+              label="订金"
+            ></el-table-column>
+            <el-table-column
+              align="center"
+              prop="stock_quantity"
+              label="回货量"
+            ></el-table-column>
+            <el-table-column
+              align="center"
+              width="95px"
+              prop="create_time"
+              label="预计回料时间"
+            ></el-table-column>
             <!-- <el-table-column align="center" prop="scheduledReceipt" label="入库量"></el-table-column> -->
             <!-- <el-table-column align="center" prop="stock_quantity" label="库存量"></el-table-column> -->
-            <el-table-column align="center" prop="amount" label="结算金额"></el-table-column>
-            <el-table-column align="center" prop="balance" label="余结金额"></el-table-column>
+            <el-table-column
+              align="center"
+              prop="amount"
+              label="结算金额"
+            ></el-table-column>
+            <el-table-column
+              align="center"
+              prop="balance"
+              label="余结金额"
+            ></el-table-column>
           </el-table>
         </div>
         <el-pagination
           class="pagination"
-          style="float:right"
+          style="float: right"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="pageIndex"
@@ -142,7 +224,6 @@ import {
 export default {
   data() {
     return {
-      power: "",
       header: [], //物料信息
       supplier: [], //供应商
       colors: {},
@@ -186,12 +267,20 @@ export default {
       // console.log(this.header, this.supplier);
     },
     async materials() {
-      let id = this.$route.query.materials_id;
-      let res2 = await materialStoreDetail({
+      // let id = this.$route.query.materials_id;
+      let { materials_id, type, id } = this.$route.query;
+      let obj = {
+        materials_id: materials_id,
         page: this.pageIndex,
         page_size: this.pageSize,
-        materials_id: id,
-      });
+      };
+      if (type) {
+        obj["type"] = type;
+      }
+      if (id) {
+        obj["id"] = id;
+      }
+      let res2 = await materialStoreDetail(obj);
       console.log(res2);
       this.tableData = res2.data.data;
       this.total = res2.data.count;
@@ -203,7 +292,6 @@ export default {
     },
   },
   mounted() {
-    // this.power = localStorage.getItem("power");
     this.init();
     this.materials();
   },
@@ -216,7 +304,7 @@ export default {
       .cardInfo {
         margin-right: 80px;
         .cardInfoTitle {
-          padding: 30px 10px;
+          padding:0 10px 30px 0;
           font-size: 16px;
         }
         .cardInfoContent {
@@ -226,6 +314,7 @@ export default {
             img {
               width: 200px;
               height: 200px;
+              border-radius: 15px;
             }
           }
           .cardInfoContentText {
@@ -256,7 +345,7 @@ export default {
       }
       .supplierInfo {
         .supplierInfoTitle {
-          padding: 30px 10px;
+          padding:0 10px 30px 0;
           font-size: 16px;
         }
         .supplierInfoContent {
@@ -265,6 +354,7 @@ export default {
             img {
               width: 200px;
               height: 200px;
+              border-radius: 15px;
             }
           }
           .supplierInfoContentText {

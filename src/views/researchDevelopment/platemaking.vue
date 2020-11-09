@@ -2,10 +2,12 @@
   <div class="platemaking" v-if="permission.indexOf('platemaking') != -1">
     <div class="aa">
       <!-- 面包屑 -->
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>研发</el-breadcrumb-item>
-        <el-breadcrumb-item>制版</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>研发</el-breadcrumb-item>
+          <el-breadcrumb-item>制版</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <div style="margin-bottom: 10px">
       <el-input
@@ -85,11 +87,22 @@
           :show-all-levels="false"
         ></el-cascader>
       </el-form-item>
-      <!-- <el-form-item>
-        <el-select v-model="formInline.state" clearable placeholder="状态" style="width:120px">
-          <el-option v-for="item in states" :key="item.id" :label="item.name" :value="item.id"></el-option>
+      <el-form-item>
+        <el-select
+          v-model="formInline.sample_status"
+          @change="sampleStatus($event)"
+          clearable
+          placeholder="状态"
+          style="width: 120px"
+        >
+          <el-option
+            v-for="item in states"
+            :key="item.sample_status"
+            :label="item.sample"
+            :value="item.sample_status"
+          ></el-option>
         </el-select>
-      </el-form-item>-->
+      </el-form-item>
     </el-form>
     <div class="table">
       <el-table
@@ -123,11 +136,18 @@
                 </div>
               </el-image>
               <img
+                v-if="scope.row.style_color_pic_url"
                 :src="scope.row.style_color_pic_url"
                 class="img"
                 style="width: 50px; height: 50px; border-radius: 5px"
                 alt
               />
+              <div
+                v-else
+                class="imgSrc"
+                style="width: 50px; height: 50px; border-radius: 5px"
+                :style="`background-color:${scope.row.color_code};`"
+              ></div>
             </div>
           </template>
         </el-table-column>
@@ -141,11 +161,11 @@
           align="center"
           label="款号"
         ></el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           width="90"
           property="style_color"
           label="颜色"
-        ></el-table-column>
+        ></el-table-column> -->
         <el-table-column
           property="style_type"
           align="center"
@@ -174,12 +194,9 @@
         <el-table-column align="center" label="状态">
           <template slot-scope="scope">
             <div
-              style="
-                background: url('https://yj.ppp-pay.top/upload/20200905/20200905182549.png') ;
-                background-repeat:no-repeat;
+              :style="`background: url(${url}/upload/20200905/20200905182549.png) no-repeat;
                 background-position: 100% 50%;
-                background-size: 49px;
-              "
+                background-size: 49px;`"
               v-if="scope.row.is_urgent"
             >
               <em>{{ scope.row.sample }}</em>
@@ -286,17 +303,19 @@ import {
   cancelSampleApply,
   sampleAgree,
 } from "@/api/researchDevelopment";
+import { url } from "@/api/configuration";
 export default {
   data() {
     return {
+      url: url,
       permission: [],
-      power: "",
       formInline: {
         styleno: "",
         year: "",
         season: "",
         user_id: "",
         style_type: "",
+        sample_status: "",
       },
       user_id: "",
       tableData: [],
@@ -317,10 +336,13 @@ export default {
       stylist: "",
       state: "",
       states: [
-        { name: "未开始", id: 0 },
-        { name: "开始制版", id: 1 },
-        { name: "制版中", id: 2 },
-        { name: "完成上传", id: 3 },
+        { sample: "等待纸样", sample_status: 0 },
+        { sample: "等待制版", sample_status: 1 },
+        { sample: "制版已上传", sample_status: 2 },
+        { sample: "样衣审核中", sample_status: 3 },
+        { sample: "取消审核", sample_status: 4 },
+        { sample: "审阅不通过", sample_status: 5 },
+        { sample: "制版完成", sample_status: 6 },
       ],
     };
   },
@@ -374,6 +396,10 @@ export default {
     handleUser_id(e) {
       this.pageIndex = 1;
       this.formInline.user_id = e;
+      this.init();
+    },
+    sampleStatus(e) {
+      this.pageIndex = 1;
       this.init();
     },
     async getYear() {
@@ -451,7 +477,6 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
   computed: {

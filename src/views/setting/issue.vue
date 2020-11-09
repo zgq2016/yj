@@ -1,35 +1,69 @@
 <template>
-  <div class="announcements" v-if="permission.indexOf('announcements')!=-1">
+  <div class="announcements" v-if="permission.indexOf('announcements') != -1">
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>设置</el-breadcrumb-item>
-        <el-breadcrumb-item>问题反馈</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>设置</el-breadcrumb-item>
+          <el-breadcrumb-item>问题反馈</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <div class="main">
       <el-button
         type="primary"
         size="small"
-        v-if="permission.indexOf('notice_add')!=-1"
+        v-if="permission.indexOf('notice_add') != -1"
         @click="bulletin"
-      >添加问题</el-button>
-      <el-table :data="tableData" style="width: 100%;margin-top:20px;cursor: pointer;" size="small">
+        >添加问题</el-button
+      >
+      <el-table
+        :data="tableData"
+        style="width: 100%; margin-top: 20px; cursor: pointer"
+        size="small"
+      >
         <el-table-column type="index" label="序号"></el-table-column>
-        <el-table-column align="center" prop="title" label="标题"></el-table-column>
-        <el-table-column align="center" prop="status_name" label="状态"></el-table-column>
-        <el-table-column align="center" prop="username" label="发布人"></el-table-column>
-        <el-table-column align="center" prop="create_time" label="发布时间"></el-table-column>
-        <el-table-column align="center" prop="fix_username" label="回复人"></el-table-column>
-        <el-table-column align="center" prop="finish_time" label="回复时间"></el-table-column>
+        <el-table-column
+          align="center"
+          prop="title"
+          label="标题"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="status_name"
+          label="状态"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="username"
+          label="发布人"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="create_time"
+          label="发布时间"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="fix_username"
+          label="回复人"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="finish_time"
+          label="回复时间"
+        ></el-table-column>
         <el-table-column align="center" fixed="right" label="操作" width="100">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+            <el-button @click="handleClick(scope.row)" type="text" size="small"
+              >查看</el-button
+            >
             <el-button
               type="text"
-              v-if="scope.row.status!=1"
+              v-if="scope.row.status != 1"
               @click="delBulletin(scope.row)"
               size="small"
-            >回复</el-button>
+              >回复</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -45,12 +79,27 @@
         :total="total"
       ></el-pagination>
     </div>
-    <el-dialog title="回复信息" :visible.sync="dialogVisible2" width="60%" center>
+    <el-dialog
+      title="回复信息"
+      :visible.sync="dialogVisible2"
+      width="60%"
+      center
+    >
       <!-- :rules="rules" -->
-      <el-form :model="form" ref="form" label-width="60px" class="demo-ruleForm">
+      <el-form
+        :model="form"
+        ref="form"
+        label-width="60px"
+        class="demo-ruleForm"
+      >
         <el-form-item label="内容:">
           <!-- <script id="editor" type="text/plain"></script> -->
-          <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="form.reply"></el-input>
+          <el-input
+            type="textarea"
+            :rows="2"
+            placeholder="请输入内容"
+            v-model="form.reply"
+          ></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="editBulletin()">回复</el-button>
@@ -58,7 +107,13 @@
       </el-form>
     </el-dialog>
 
-    <el-dialog title="发布问题" @close="close" :visible.sync="dialogVisible" width="60%" center>
+    <el-dialog
+      title="发布问题"
+      @close="close"
+      :visible.sync="dialogVisible"
+      width="60%"
+      center
+    >
       <el-form
         :model="ruleForm"
         :rules="rules"
@@ -119,10 +174,10 @@
         </el-form-item>
 
         <el-form-item label="内容:" prop="content">
-          <div v-html="ruleForm.content">{{ruleForm.content}}</div>
+          <div v-html="ruleForm.content">{{ ruleForm.content }}</div>
         </el-form-item>
-        <el-form-item v-if="ruleForm.reply!=''" label="回复内容:">
-          <div>{{ruleForm.reply}}</div>
+        <el-form-item v-if="ruleForm.reply != ''" label="回复内容:">
+          <div>{{ ruleForm.reply }}</div>
         </el-form-item>
         <!-- <el-form-item>
           <el-button type="primary" @click="editBulletin()">保存</el-button>

@@ -353,7 +353,6 @@ export default {
       del_list: [],
       tableData: [{ name: "部位" }, { name: "尺寸/CM" }],
       codeFilePic: {},
-      power: "",
       fileList: [],
       dosageCargo: "",
 
@@ -648,7 +647,6 @@ export default {
   mounted() {
     this.init();
     this.antistopActive = true;
-    // this.power = localStorage.getItem("power");
     this.getstylist();
     this.getStylePosition();
     this.getStyleMeasurement();

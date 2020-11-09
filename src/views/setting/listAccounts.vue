@@ -1,60 +1,80 @@
 <template>
-  <div class="listAccounts" v-if="permission.indexOf('listAccounts')!=-1">
+  <div class="listAccounts" v-if="permission.indexOf('listAccounts') != -1">
     <div class="aa">
       <!-- 面包屑 -->
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>设置</el-breadcrumb-item>
-        <el-breadcrumb-item>账户管理</el-breadcrumb-item>
-        <el-breadcrumb-item>用户列表</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>设置</el-breadcrumb-item>
+          <el-breadcrumb-item>账户管理</el-breadcrumb-item>
+          <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
-    <el-button type="primary" v-if="permission.indexOf('register')!=-1" @click="addAccounts">增加账户</el-button>
-    <el-table
-      :data="tableData"
-      @cell-mouse-enter="setUser"
-      style="width: 100%;margin: 20px 0;"
-      row-key="id"
-      border
-    >
-      <el-table-column prop="name" label="用户名"></el-table-column>
-      <el-table-column prop="no" label="编号"></el-table-column>
-      <el-table-column prop="department" label="部门"></el-table-column>
-      <el-table-column prop="role_name" label="权限角色"></el-table-column>
-      <el-table-column prop="username" label="账号"></el-table-column>
-      <el-table-column prop="Access" label="权限等级"></el-table-column>
-      <el-table-column label="启用/禁用" v-if="permission.indexOf('user_status_edit')!=-1" width="200">
-        <template slot-scope="scope">
-          <el-switch
-            v-model="scope.row.status"
-            :active-value="1"
-            :inactive-value="0"
-            @change="get_switch_active(scope.$index, scope.row)"
-          ></el-switch>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" width="100" label="操作">
-        <template slot-scope="scope">
-          <el-tooltip
-            class="item"
-            effect="dark"
-            content="编辑"
-            v-if="permission.indexOf('user_info_edit')!=-1"
-            placement="top-start"
-          >
-            <div class="el-icon-s-tools btn" @click="handleEdit(scope.$index, scope.row)"></div>
-          </el-tooltip>
-          <el-tooltip
-            class="item"
-            effect="dark"
-            content="设置权限"
-            v-if="permission.indexOf('user_edit')!=-1"
-            placement="top-start"
-          >
-            <div class="el-icon-edit btn" @click="handleEditUser(scope.$index, scope.row)"></div>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-    </el-table>
+    <div class="">
+      <el-button
+        type="primary"
+        v-if="permission.indexOf('register') != -1"
+        @click="addAccounts"
+        >增加账户</el-button
+      >
+      <el-table
+        :data="tableData"
+        @cell-mouse-enter="setUser"
+        style="width: 100%; margin: 20px 0"
+        row-key="id"
+        border
+      >
+        <el-table-column prop="name" label="用户名"></el-table-column>
+        <el-table-column prop="no" label="编号"></el-table-column>
+        <el-table-column prop="department" label="部门"></el-table-column>
+        <el-table-column prop="role_name" label="权限角色"></el-table-column>
+        <el-table-column prop="username" label="账号"></el-table-column>
+        <el-table-column prop="Access" label="权限等级"></el-table-column>
+        <el-table-column
+          label="启用/禁用"
+          v-if="permission.indexOf('user_status_edit') != -1"
+          width="200"
+        >
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.status"
+              :active-value="1"
+              :inactive-value="0"
+              @change="get_switch_active(scope.$index, scope.row)"
+            ></el-switch>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" width="100" label="操作">
+          <template slot-scope="scope">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="编辑"
+              v-if="permission.indexOf('user_info_edit') != -1"
+              placement="top-start"
+            >
+              <div
+                class="el-icon-s-tools btn"
+                @click="handleEdit(scope.$index, scope.row)"
+              ></div>
+            </el-tooltip>
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="设置权限"
+              v-if="permission.indexOf('user_edit') != -1"
+              placement="top-start"
+            >
+              <div
+                class="el-icon-edit btn"
+                @click="handleEditUser(scope.$index, scope.row)"
+              ></div>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
     <!-- 编辑分类 -->
     <el-dialog
       title="修改密码"
@@ -65,16 +85,26 @@
       width="30%"
       center
     >
-      <el-form ref="form" :rules="rules" :model="form" label-width="100px" resetFields>
+      <el-form
+        ref="form"
+        :rules="rules"
+        :model="form"
+        label-width="100px"
+        resetFields
+      >
         <el-form-item label="用户名:">
-          <el-input v-model="form.name" placeholder="请输入用户名" style="width:80%"></el-input>
+          <el-input
+            v-model="form.name"
+            placeholder="请输入用户名"
+            style="width: 80%"
+          ></el-input>
           <!-- <span>{{form.name}}</span> -->
         </el-form-item>
         <el-form-item label="编号" prop="no">
           <el-input
             type="text"
             placeholder="请输入编号"
-            style="width:80%;"
+            style="width: 80%"
             v-model.number="form.no"
             maxlength="2"
             show-word-limit
@@ -82,7 +112,11 @@
         </el-form-item>
         <el-form-item label="账号:">
           <!-- <span>{{form.username}}</span> -->
-          <el-input v-model="form.username" placeholder="请输入账号" style="width:80%"></el-input>
+          <el-input
+            v-model="form.username"
+            placeholder="请输入账号"
+            style="width: 80%"
+          ></el-input>
         </el-form-item>
         <el-form-item v-if="level >= form.level" label="原密码:">
           <el-input
@@ -90,7 +124,7 @@
             placeholder="请输入原密码"
             show-password
             id="pwd"
-            style="width:80%"
+            style="width: 80%"
           ></el-input>
         </el-form-item>
         <el-form-item label="修改后密码:">
@@ -98,7 +132,7 @@
             v-model="form.passworded"
             placeholder="请输入修改后密码"
             show-password
-            style="width:80%"
+            style="width: 80%"
           ></el-input>
         </el-form-item>
       </el-form>
@@ -108,10 +142,19 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="添加权限" :visible.sync="centerDialogVisible2" width="30%" center>
+    <el-dialog
+      title="添加权限"
+      :visible.sync="centerDialogVisible2"
+      width="30%"
+      center
+    >
       <el-form ref="form1" :model="form1" :rules="rules1" label-width="100px">
         <el-form-item label="权限角色：" prop="role_name">
-          <el-select v-model="form1.role_name" @change="role" placeholder="请选择">
+          <el-select
+            v-model="form1.role_name"
+            @change="role"
+            placeholder="请选择"
+          >
             <el-option
               v-for="item in userRoleList"
               :key="item.value"
@@ -132,13 +175,20 @@
         </el-form-item>
         <el-form-item label="部门：">
           <el-select v-model="form1.department_id" placeholder="请选择部门">
-            <el-option v-for="item in branch" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option
+              v-for="item in branch"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleEditUserListClose('form1')">取 消</el-button>
-        <el-button type="primary" @click="handleEditUserList('form1')">确 定</el-button>
+        <el-button type="primary" @click="handleEditUserList('form1')"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
 
@@ -153,13 +203,17 @@
     >
       <el-form ref="form2" :model="form2" :rules="rules2" label-width="100px">
         <el-form-item label="用户名：" prop="name">
-          <el-input v-model="form2.name" style="width:80%" placeholder="请输入用户名"></el-input>
+          <el-input
+            v-model="form2.name"
+            style="width: 80%"
+            placeholder="请输入用户名"
+          ></el-input>
         </el-form-item>
         <el-form-item label="编号" prop="no">
           <el-input
             type="text"
             placeholder="请输入编号"
-            style="width:80%;"
+            style="width: 80%"
             v-model.number="form2.no"
             maxlength="2"
             show-word-limit
@@ -167,14 +221,28 @@
         </el-form-item>
         <el-form-item label="部门：" prop="department">
           <el-select v-model="form2.department_id" placeholder="请选择部门">
-            <el-option v-for="item in branch" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option
+              v-for="item in branch"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="手机号：" prop="username">
-          <el-input v-model="form2.username" style="width:80%" placeholder="请输入手机号"></el-input>
+          <el-input
+            v-model="form2.username"
+            style="width: 80%"
+            placeholder="请输入手机号"
+          ></el-input>
         </el-form-item>
         <el-form-item label="密码：" prop="password">
-          <el-input v-model="form2.password" style="width:80%" placeholder="请输入密码" show-password></el-input>
+          <el-input
+            v-model="form2.password"
+            style="width: 80%"
+            placeholder="请输入密码"
+            show-password
+          ></el-input>
         </el-form-item>
         <el-form-item label="权限等级：" prop="level">
           <el-select v-model="form2.level" placeholder="权限等级">
@@ -199,7 +267,9 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handlecloseAccounts('form2')">取 消</el-button>
-        <el-button type="primary" @click="handleaddAccounts('form2')">确 定</el-button>
+        <el-button type="primary" @click="handleaddAccounts('form2')"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
     <!-- 分页 -->
@@ -252,7 +322,7 @@ export default {
         level: "",
         role: "",
       },
-      form1: { role_name: "", Access: "" },
+      form1: { role_name: "", Access: "", department_id: "" },
       options: [],
       pageIndex: 1,
       pageSize: 10,
@@ -313,6 +383,9 @@ export default {
     };
   },
   methods: {
+    get_department_id(e) {
+      console.log(e);
+    },
     async department() {
       let res = await departmentSelect();
       this.branch = res.data.data;
@@ -336,7 +409,7 @@ export default {
     handlecloses() {
       this.$refs["form"].resetFields();
       this.form = {};
-      this.init()
+      this.init();
       this.centerDialogVisible1 = false;
     },
     async handleaddAccounts(form) {

@@ -1,26 +1,55 @@
 <template>
-  <div class="announcements" v-if="permission.indexOf('announcements')!=-1" >
+  <div class="announcements" v-if="permission.indexOf('announcements') != -1">
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>设置</el-breadcrumb-item>
-        <el-breadcrumb-item>公司公告</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>设置</el-breadcrumb-item>
+          <el-breadcrumb-item>公司公告</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <div class="main">
-      <el-button type="primary" size="small"  v-if="permission.indexOf('notice_add')!=-1" @click="bulletin">发公告</el-button>
+      <el-button
+        type="primary"
+        size="small"
+        v-if="permission.indexOf('notice_add') != -1"
+        @click="bulletin"
+        >发公告</el-button
+      >
       <el-table
         :data="tableData"
-        style="width: 100%;margin-top:20px;cursor: pointer;"
+        style="width: 100%; margin-top: 20px; cursor: pointer"
         size="small"
       >
         <el-table-column type="index" label="序号"></el-table-column>
-        <el-table-column align="center" prop="ctime" width="95" label="时间"></el-table-column>
-        <el-table-column prop="title" width="250" label="标题"></el-table-column>
+        <el-table-column
+          align="center"
+          prop="ctime"
+          width="95"
+          label="时间"
+        ></el-table-column>
+        <el-table-column
+          prop="title"
+          width="250"
+          label="标题"
+        ></el-table-column>
         <el-table-column prop="text" label="内容"></el-table-column>
         <el-table-column align="center" fixed="right" label="操作" width="100">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text"  v-if="permission.indexOf('notice_edit')!=-1" size="small">修改</el-button>
-            <el-button type="text" @click="delBulletin(scope.row)"  v-if="permission.indexOf('notice_del')!=-1" size="small">删除</el-button>
+            <el-button
+              @click="handleClick(scope.row)"
+              type="text"
+              v-if="permission.indexOf('notice_edit') != -1"
+              size="small"
+              >修改</el-button
+            >
+            <el-button
+              type="text"
+              @click="delBulletin(scope.row)"
+              v-if="permission.indexOf('notice_del') != -1"
+              size="small"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -37,7 +66,13 @@
       ></el-pagination>
     </div>
     <!-- 发布公告 -->
-    <el-dialog title="发布公告" @close="close" :visible.sync="dialogVisible" width="40%" center>
+    <el-dialog
+      title="发布公告"
+      @close="close"
+      :visible.sync="dialogVisible"
+      width="40%"
+      center
+    >
       <el-form
         :model="ruleForm"
         :rules="rules"
@@ -49,7 +84,11 @@
           <el-input v-model="ruleForm.title"></el-input>
         </el-form-item>
         <el-form-item label="内容:" prop="text">
-          <el-input type="textarea" :rows="15" v-model="ruleForm.text"></el-input>
+          <el-input
+            type="textarea"
+            :rows="15"
+            v-model="ruleForm.text"
+          ></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="send()">发送</el-button>
@@ -76,10 +115,14 @@
           <el-input v-model="ruleForm.title"></el-input>
         </el-form-item>
         <el-form-item label="时间:">
-          <span>{{ruleForm.ctime}}</span>
+          <span>{{ ruleForm.ctime }}</span>
         </el-form-item>
         <el-form-item label="内容:" prop="text">
-          <el-input type="textarea" :rows="15" v-model="ruleForm.text"></el-input>
+          <el-input
+            type="textarea"
+            :rows="15"
+            v-model="ruleForm.text"
+          ></el-input>
         </el-form-item>
 
         <el-form-item>
@@ -94,7 +137,7 @@ import { noticeList, noticeAdd, noticeEdit, noticeDel } from "@/api/setting.js";
 export default {
   data() {
     return {
-      permission:[],
+      permission: [],
       tableData: [],
       ruleForm: {},
       rules: {

@@ -2,11 +2,15 @@
   <div class="Check">
     <!-- 面包屑 -->
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>销售</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/clientManagement' }">客户管理</el-breadcrumb-item>
-        <el-breadcrumb-item>查看</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>销售</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/clientManagement' }"
+            >客户管理</el-breadcrumb-item
+          >
+          <el-breadcrumb-item>查看</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <div class="form">
       <el-form ref="form" :rules="rules" :model="form" label-width="80px">
@@ -22,15 +26,17 @@
         <el-form-item>
           <!--   -->
           <el-button
-            v-if="permission.indexOf('customer_edit')!=-1"
+            v-if="permission.indexOf('customer_edit') != -1"
             @click="handleEdit"
-            style="padding:10px 50px;border-radius: 15px;"
-          >保存</el-button>
+            style="padding: 10px 50px; border-radius: 15px"
+            >保存</el-button
+          >
           <el-button
-            v-if="permission.indexOf('customer_del')!=-1"
+            v-if="permission.indexOf('customer_del') != -1"
             @click="handleDel"
-            style="padding:10px 50px;border-radius: 15px;"
-          >删除</el-button>
+            style="padding: 10px 50px; border-radius: 15px"
+            >删除</el-button
+          >
         </el-form-item>
       </el-form>
     </div>
@@ -42,8 +48,7 @@ import { getCustomer, getEdit, customerDel } from "@/api/sell.js";
 export default {
   data() {
     return {
-      permission:[],
-      power: "",
+      permission: [],
       form: {
         companyname: "",
         contacts: "",
@@ -105,9 +110,7 @@ export default {
     let res = await getCustomer({ id });
     this.form = res.data.data;
     console.log(res);
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
-    console.log(this.power);
   },
 };
 </script>

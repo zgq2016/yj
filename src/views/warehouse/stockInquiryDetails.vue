@@ -1,17 +1,19 @@
 <template>
   <div class="stockInquiryDetails">
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <!-- <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" /> -->
-        <el-breadcrumb-item>仓库</el-breadcrumb-item>
-        <el-breadcrumb-item>产品入库</el-breadcrumb-item>
-        <el-breadcrumb-item>产品入库详情</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <!-- <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" /> -->
+          <el-breadcrumb-item>仓库</el-breadcrumb-item>
+          <el-breadcrumb-item>产品入库</el-breadcrumb-item>
+          <el-breadcrumb-item>产品入库详情</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <div class="main">
       <div class="top">
         <div class="rh_left">
-          <h4>入库单-{{form.no}}-{{'zaan'}}</h4>
+          <h4>入库单-{{ form.no }}-{{ "zaan" }}</h4>
         </div>
         <div class="rh_right">
           <el-button size="mini" type="primary">扫码</el-button>
@@ -20,48 +22,80 @@
             size="mini"
             @click="addCreateWare"
             type="primary"
-            v-if="permission.indexOf('book_stock_order_add')!=-1"
-          >新增入库单</el-button>
+            v-if="permission.indexOf('book_stock_order_add') != -1"
+            >新增入库单</el-button
+          >
         </div>
       </div>
-      <hr style="border:1px dashed #ccc;margin:0 10px" />
+      <hr style="border: 1px dashed #ccc; margin: 0 10px" />
 
       <div class="right_form">
         <el-form :model="form" ref="form">
-          <el-form-item style="overflow: hidden;width:100%;">
-            <div style="float:left;padding:10px 0 0 15px;">
+          <el-form-item style="overflow: hidden; width: 100%">
+            <div style="float: left; padding: 10px 0 0 15px">
               尚欠厂商款:
-              <em style="color:red;">&yen;{{'0.00'}}</em>
+              <em style="color: red">&yen;{{ "0.00" }}</em>
             </div>
-            <div class="cssa" style="float:right;padding:10px 15px 0 0;width:210px;">
-              <el-steps :space="110" align-center :active="actionsLenght" finish-status="wait">
+            <div
+              class="cssa"
+              style="float: right; padding: 10px 15px 0 0; width: 210px"
+            >
+              <el-steps
+                :space="110"
+                align-center
+                :active="actionsLenght"
+                finish-status="wait"
+              >
                 <el-step icon="el-icon-success" title="草稿"></el-step>
                 <el-step icon="el-icon-success" title="已入库"></el-step>
-                <el-step icon="el-icon-success" v-if="this.$route.query.state == 4" title="已撤销"></el-step>
+                <el-step
+                  icon="el-icon-success"
+                  v-if="this.$route.query.state == 4"
+                  title="已撤销"
+                ></el-step>
               </el-steps>
             </div>
           </el-form-item>
 
           <!-- prop="factory_name" -->
-          <el-form-item style="float:left;width:30%;margin-left:3%;" label="厂商:">
-            <span>{{form.factory_name}}</span>
+          <el-form-item
+            style="float: left; width: 30%; margin-left: 3%"
+            label="厂商:"
+          >
+            <span>{{ form.factory_name }}</span>
           </el-form-item>
           <!-- prop="storehouse_name" -->
-          <el-form-item style="float:left;width:30%;margin-left:2%;" label="仓库:">
-            <span>{{form.storehouse_name}}</span>
+          <el-form-item
+            style="float: left; width: 30%; margin-left: 2%"
+            label="仓库:"
+          >
+            <span>{{ form.storehouse_name }}</span>
           </el-form-item>
           <!-- prop="ctime" -->
-          <el-form-item style="float:left;width:30%;margin-left:1%;" label="日期:">
-            <span>{{form.ctime}}</span>
+          <el-form-item
+            style="float: left; width: 30%; margin-left: 1%"
+            label="日期:"
+          >
+            <span>{{ form.ctime }}</span>
           </el-form-item>
-          <el-form-item style="float:left;width:30%;margin-left:3%;" label="结算账户:">
-            <span>{{form.account_name}}</span>
+          <el-form-item
+            style="float: left; width: 30%; margin-left: 3%"
+            label="结算账户:"
+          >
+            <span>{{ form.account_name }}</span>
           </el-form-item>
-          <el-form-item style="float:left;width:30%;margin-left:2%;" label="实付金额:">
-            <span>{{form.pay_price}}</span>
+          <el-form-item
+            style="float: left; width: 30%; margin-left: 2%"
+            label="实付金额:"
+          >
+            <span>{{ form.pay_price }}</span>
           </el-form-item>
-          <el-form-item style="float:left;width:31%;margin-left:1%;" label="备注:" prop="desc">
-            <span>{{form.remarks}}</span>
+          <el-form-item
+            style="float: left; width: 31%; margin-left: 1%"
+            label="备注:"
+            prop="desc"
+          >
+            <span>{{ form.remarks }}</span>
           </el-form-item>
         </el-form>
       </div>
@@ -72,14 +106,23 @@
           :data="weretable"
           show-summary
           size="small"
-          style="cursor: pointer;"
+          style="cursor: pointer"
           :summary-method="getSummaries"
         >
           <el-table-column type="index" width="45"></el-table-column>
           <el-table-column align="center" width="80" label="图片">
-            <template align="center" slot-scope="scope" property="style_pic_url">
+            <template
+              align="center"
+              slot-scope="scope"
+              property="style_pic_url"
+            >
               <el-image
-                style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
+                style="
+                  width: 50px;
+                  height: 50px;
+                  border-radius: 5px;
+                  margin-right: 5px;
+                "
                 :src="scope.row.style_pic_url"
                 fit="cover"
               >
@@ -89,19 +132,59 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column prop="stylename" align="center" label="商品"></el-table-column>
-          <el-table-column property="produce_no" align="center" label="款号"></el-table-column>
-          <el-table-column prop="bar_code" align="center" label="条码"></el-table-column>
-          <el-table-column prop="style_color_name" align="center" label="颜色"></el-table-column>
-          <el-table-column prop="size" align="center" label="尺码"></el-table-column>
-          <el-table-column prop="unit" align="center" label="单位"></el-table-column>
-          <el-table-column prop="quantity" align="center" label="数量"></el-table-column>
-          <el-table-column prop="price" align="center" label="加工单价"></el-table-column>
+          <el-table-column
+            prop="stylename"
+            align="center"
+            label="商品"
+          ></el-table-column>
+          <el-table-column
+            property="produce_no"
+            align="center"
+            label="款号"
+          ></el-table-column>
+          <el-table-column
+            prop="bar_code"
+            align="center"
+            label="条码"
+          ></el-table-column>
+          <el-table-column
+            prop="style_color_name"
+            align="center"
+            label="颜色"
+          ></el-table-column>
+          <el-table-column
+            prop="size"
+            align="center"
+            label="尺码"
+          ></el-table-column>
+          <el-table-column
+            prop="unit"
+            align="center"
+            label="单位"
+          ></el-table-column>
+          <el-table-column
+            prop="quantity"
+            align="center"
+            label="数量"
+          ></el-table-column>
+          <el-table-column
+            prop="price"
+            align="center"
+            label="加工单价"
+          ></el-table-column>
           <!-- <el-table-column prop="discount" align="center" label="折扣(%)"></el-table-column>
           <el-table-column prop="discount_price" align="center" label="折后价"></el-table-column>-->
-          <el-table-column prop="money" align="center" label="金额"></el-table-column>
+          <el-table-column
+            prop="money"
+            align="center"
+            label="金额"
+          ></el-table-column>
           <!-- <el-table-column prop="discount_money" align="center" label="折后金额"></el-table-column> -->
-          <el-table-column prop="remark" align="center" label="备注"></el-table-column>
+          <el-table-column
+            prop="remark"
+            align="center"
+            label="备注"
+          ></el-table-column>
         </el-table>
       </div>
 
@@ -111,7 +194,7 @@
           <div class="imgs">
             <el-form-item label="附图:">
               <ul>
-                <li v-for="(item,index) in fileList" :key="index">
+                <li v-for="(item, index) in fileList" :key="index">
                   <img :src="item.url" alt srcset />
                 </li>
               </ul>
@@ -119,21 +202,25 @@
           </div>
           <div class="texconts">
             <el-form-item label-width="80px" label="费用金额:">
-              <span>&yen;{{total_price}}</span>
+              <span>&yen;{{ total_price }}</span>
             </el-form-item>
 
             <!-- <el-form-item label-width="80px" label="总合计:">
               <span style="color:red;font-size:16px;">&yen;{{total_price}}</span>
             </el-form-item>-->
           </div>
-          <div style="position: absolute;bottom:5px;left:40%;">
+          <div style="position: absolute; bottom: 5px; left: 40%">
             <el-form-item>
               <el-button
                 size="small"
-                v-if="this.$route.query.state==1&&permission.indexOf('book_stock_order_edit')"
+                v-if="
+                  this.$route.query.state == 1 &&
+                  permission.indexOf('book_stock_order_edit')
+                "
                 @click="sketch(4)"
                 type="primary"
-              >撤销</el-button>
+                >撤销</el-button
+              >
             </el-form-item>
           </div>
         </el-form>
@@ -160,7 +247,6 @@ export default {
       total_price: 0,
       ruleForm: {},
       fileList: [],
-      power: "",
       form: {},
       actionsLenght: 0,
       permission: [],
@@ -324,7 +410,6 @@ export default {
     },
   },
   mounted() {
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
     this.init();
   },

@@ -2,62 +2,98 @@
   <div class="developmentStatus">
     <div class="aa">
       <!-- 面包屑 -->
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>研发部</el-breadcrumb-item>
-        <el-breadcrumb-item v-if="TL===0" :to="{ path: '/itemDesign' }">设计项目</el-breadcrumb-item>
-        <el-breadcrumb-item v-if="TL===0" :to="{ path: `/designCheck?id=${obj.project_id}` }">项目详细</el-breadcrumb-item>
-        <el-breadcrumb-item v-if="TL===30" :to="{ path: '/itemDesign' }">设计项目</el-breadcrumb-item>
-        <el-breadcrumb-item v-if="TL===30" :to="{ path: `/designCheck?id=${obj.project_id}` }">项目详细</el-breadcrumb-item>
-        <el-breadcrumb-item v-if="TL===1" :to="{ path: `/materialPurchase` }">版料采购</el-breadcrumb-item>
-        <el-breadcrumb-item v-if="TL===2" :to="{ path: `/pattern` }">纸样</el-breadcrumb-item>
-        <el-breadcrumb-item v-if="TL===3" :to="{ path: `/platemaking` }">制版</el-breadcrumb-item>
-        <el-breadcrumb-item v-if="TL===20" :to="{ path: `/productionOrders` }">生产下单</el-breadcrumb-item>
-        <el-breadcrumb-item v-if="TL===21" :to="{ path: `/designFile` }">款式档案</el-breadcrumb-item>
-        <el-breadcrumb-item v-if="TL===100" :to="{ path: `/designStyle` }">设计款式</el-breadcrumb-item>
-        <el-breadcrumb-item>款式详细</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>研发部</el-breadcrumb-item>
+          <el-breadcrumb-item v-if="TL === 0" :to="{ path: '/itemDesign' }"
+            >设计项目</el-breadcrumb-item
+          >
+          <el-breadcrumb-item
+            v-if="TL === 0"
+            :to="{ path: `/designCheck?id=${obj.project_id}` }"
+            >项目详细</el-breadcrumb-item
+          >
+          <el-breadcrumb-item v-if="TL === 30" :to="{ path: '/itemDesign' }"
+            >设计项目</el-breadcrumb-item
+          >
+          <el-breadcrumb-item
+            v-if="TL === 30"
+            :to="{ path: `/designCheck?id=${obj.project_id}` }"
+            >项目详细</el-breadcrumb-item
+          >
+          <el-breadcrumb-item
+            v-if="TL === 1"
+            :to="{ path: `/materialPurchase` }"
+            >版料采购</el-breadcrumb-item
+          >
+          <el-breadcrumb-item v-if="TL === 2" :to="{ path: `/pattern` }"
+            >纸样</el-breadcrumb-item
+          >
+          <el-breadcrumb-item v-if="TL === 3" :to="{ path: `/platemaking` }"
+            >制版</el-breadcrumb-item
+          >
+          <el-breadcrumb-item
+            v-if="TL === 20"
+            :to="{ path: `/productionOrders` }"
+            >生产下单</el-breadcrumb-item
+          >
+          <el-breadcrumb-item v-if="TL === 21" :to="{ path: `/designFile` }"
+            >款式档案</el-breadcrumb-item
+          >
+          <el-breadcrumb-item v-if="TL === 100" :to="{ path: `/designStyle` }"
+            >设计款式</el-breadcrumb-item
+          >
+          <el-breadcrumb-item>款式详细</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <div class="main">
       <div class="particulars">
-        <div style="display: flex;justify-content: space-between;">
+        <div style="display: flex; justify-content: space-between">
           <div class="content">
             <el-image
               class="imgSrc"
-              style="width: 150px; height: 150px;margin-right: 5px;"
+              style="width: 160px; height: 160px; margin-right: 5px"
               :src="obj.style_pic_url"
               fit="cover"
             ></el-image>
             <img
-              v-if="obj.style_color_pic_url!==''"
+              v-if="obj.style_color_pic_url !== ''"
               class="imgSrc"
-              style="width:150px;height:150px"
+              style="width: 160px; height: 160px"
               :src="obj.style_color_pic_url"
               alt
             />
             <div
-              v-if="obj.style_color_pic_url===''"
+              v-if="obj.style_color_pic_url === ''"
               class="imgSrc"
-              style="width:150px;height:150px"
+              style="width: 160px; height: 160px"
               :style="`background-color:${obj.color_code};`"
             ></div>
             <div class="info">
-              <div style="height:165px">
-                <div class="name">{{obj.stylename}}</div>
-                <div>款号：{{obj.styleno}}</div>
-                <div>品类：{{obj.style_type}}</div>
-                <div>年份：{{obj.year}}</div>
-                <div>季节：{{obj.season}}</div>
-                <div>设计师：{{obj.user_name}}</div>
-                <div>颜色：{{obj.style_color}}</div>
+              <div style="height: 165px">
+                <div class="name">{{ obj.stylename }}</div>
+                <div>款号：{{ obj.styleno }}</div>
+                <div>品类：{{ obj.style_type }}</div>
+                <div>年份：{{ obj.year }}</div>
+                <div>季节：{{ obj.season }}</div>
+                <div>设计师：{{ obj.user_name }}</div>
+                <!-- <div>颜色：{{obj.style_color}}</div> -->
               </div>
             </div>
           </div>
         </div>
         <div class="editBtn">
+          <div v-if="obj.file != 1" class="jour" @click="handle_filing">
+            存档
+          </div>
           <el-tooltip
             class="edit"
-            style="background-color: #f2f2f2;"
-            v-if="permission.indexOf('style_edit')!=-1||permission.indexOf('style_del')!=-1"
+            style="background-color: #f2f2f2"
+            v-if="
+              permission.indexOf('style_edit') != -1 ||
+              permission.indexOf('style_del') != -1
+            "
             content="编辑"
             placement="top"
           >
@@ -77,10 +113,13 @@
       </div>
 
       <el-container>
-        <div class="orderInformation" style="margin-bottom: 20px;" v-if="log">
-          <el-steps finish-status="wait" :active="activities_endlong.length-1">
+        <div class="orderInformation" style="margin-bottom: 20px" v-if="log">
+          <el-steps
+            finish-status="wait"
+            :active="activities_endlong.length - 1"
+          >
             <el-step
-              style="width:100px"
+              style="width: 100px"
               v-for="(item_g, index_g) in activities_endlong"
               :key="index_g"
               title
@@ -89,12 +128,12 @@
             >
               <template v-slot:title>
                 <div class="tt">
-                  <span>{{item_g.logname}}</span>
+                  <span>{{ item_g.logname }}</span>
                 </div>
               </template>
               <template v-slot:description>
                 <div class="dt">
-                  <span>{{item_g.ctime}}</span>
+                  <span>{{ item_g.ctime }}</span>
                 </div>
               </template>
             </el-step>
@@ -103,32 +142,40 @@
         <el-header>
           <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane
-              v-if="permission.indexOf('get_style_design')!=-1"
+              v-if="permission.indexOf('get_style_design') != -1"
               label="设计版单"
               name="/designNote"
             ></el-tab-pane>
             <el-tab-pane
-              v-if="permission.indexOf('materialProcess')!=-1"
+              v-if="permission.indexOf('materialProcess') != -1"
               label="物料工艺"
               name="/materialProcess"
             ></el-tab-pane>
             <el-tab-pane
-              v-if="permission.indexOf('materialPurchasing')!=-1"
+              v-if="permission.indexOf('materialPurchasing') != -1"
               label="版料采购"
               name="/materialPurchasing"
             ></el-tab-pane>
             <el-tab-pane
-              v-if="permission.indexOf('patternStatus')!=-1"
+              v-if="permission.indexOf('patternStatus') != -1"
               label="纸样"
               name="/patternStatus"
             ></el-tab-pane>
             <el-tab-pane
-              v-if="permission.indexOf('sampleDress')!=-1"
+              v-if="permission.indexOf('sampleDress') != -1"
               label="样衣"
               name="/sampleDress"
             ></el-tab-pane>
-            <el-tab-pane v-if="TL===21" label="生产信息" name="/ProductionStyle"></el-tab-pane>
-            <el-tab-pane v-if="TL===21" label="商品信息" name="/merchandiseNews"></el-tab-pane>
+            <el-tab-pane
+              v-if="TL === 21"
+              label="生产信息"
+              name="/ProductionStyle"
+            ></el-tab-pane>
+            <el-tab-pane
+              v-if="TL === 21"
+              label="商品信息"
+              name="/merchandiseNews"
+            ></el-tab-pane>
           </el-tabs>
         </el-header>
         <el-main>
@@ -140,11 +187,10 @@
 </template>
 
 <script>
-import { getStyle } from "@/api/researchDevelopment";
+import { getStyle, styleFile } from "@/api/researchDevelopment";
 export default {
   data() {
     return {
-      power: "",
       permission: [],
       obj: {},
       activeName: "",
@@ -155,6 +201,28 @@ export default {
     };
   },
   methods: {
+    async handle_filing() {
+      this.$confirm("是否存档?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          let { id, TL } = this.$route.query;
+          let res = await styleFile({ id });
+          console.log(res);
+          this.$message(res.data.msg);
+          if (res.data.error_code == 0) {
+            this.init();
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消存档",
+          });
+        });
+    },
     get_view_log() {
       this.log = !this.log;
     },
@@ -186,7 +254,6 @@ export default {
     this.TL = this.$route.query.TL - 0;
     this.TL1 = this.$route.query.TL1 - 0;
 
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
   watch: {
@@ -203,8 +270,8 @@ export default {
     .particulars {
       display: flex;
       justify-content: space-between;
-      height: 160px;
-      margin: 20px;
+      align-items: flex-end;
+      height: 170px;
       .editBtn {
         display: flex;
         align-items: flex-end;
@@ -217,24 +284,21 @@ export default {
           justify-content: center;
           align-items: center;
           cursor: pointer;
-          margin-right: 15px;
+          margin: 0 15px;
         }
-         .jour {
-            margin: 5px 0;
-            width: 100px;
-            height: 30px;
-            line-height: 30px;
-            background: #f2f2f2;
-            text-align: center;
-            border-radius: 8px;
-          }
-          .jour:hover {
-            cursor: pointer;
-            background: #000000;
-            color: #fff;
-          }
-        div {
-          margin: 0 0 5px 0px;
+        .jour {
+          width: 100px;
+          height: 30px;
+          background: #f2f2f2;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 8px;
+        }
+        .jour:hover {
+          cursor: pointer;
+          background: #000000;
+          color: #fff;
         }
       }
     }
@@ -316,7 +380,6 @@ export default {
       font-weight: 600;
     }
     .content {
-      margin: 20px 0;
       display: flex;
       .imgSrc {
         width: 200px;
@@ -353,6 +416,9 @@ export default {
     height: 1px;
     background-color: #e4e7ed;
     z-index: 1;
+  }
+  /deep/ .el-header {
+    padding: 0 !important;
   }
 }
 </style>

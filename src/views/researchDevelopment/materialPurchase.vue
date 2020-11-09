@@ -1,32 +1,52 @@
 <template>
-  <div class="materialPurchase" v-if="permission.indexOf('materialPurchasing')!=-1">
+  <div
+    class="materialPurchase"
+    v-if="permission.indexOf('materialPurchasing') != -1"
+  >
     <div class="aa">
       <!-- 面包屑 -->
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>研发</el-breadcrumb-item>
-        <el-breadcrumb-item>版料采购</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>研发</el-breadcrumb-item>
+          <el-breadcrumb-item>版料采购</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
 
-    <div style="margin-bottom:10px">
-      <el-input v-model="formInline.styleno" placeholder="款号" style="width:200px"></el-input>
-      <el-button icon="el-icon-search" size="mini" circle class="search_button" @click="onSubmit"></el-button>
+    <div style="margin-bottom: 10px">
+      <el-input
+        v-model="formInline.styleno"
+        placeholder="款号"
+        style="width: 200px"
+      ></el-input>
+      <el-button
+        icon="el-icon-search"
+        size="mini"
+        circle
+        class="search_button"
+        @click="onSubmit"
+      ></el-button>
     </div>
     <el-form
       :inline="true"
       :model="formInline"
       class="demo-form-inline"
-      style="position: relative;"
+      style="position: relative"
     >
       <el-form-item>
         <el-select
           v-model="formInline.year"
           clearable
           placeholder="年份"
-          style="width:120px"
+          style="width: 120px"
           @change="get_year($event)"
         >
-          <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
+          <el-option
+            v-for="item in years"
+            :key="item.id"
+            :label="item.year"
+            :value="item.year"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -34,7 +54,7 @@
           v-model="formInline.season"
           clearable
           placeholder="季节"
-          style="width:120px"
+          style="width: 120px"
           @change="get_season($event)"
         >
           <el-option
@@ -51,9 +71,14 @@
           placeholder="设计师"
           @change="handleUser_id($event)"
           clearable
-          style="width:120px"
+          style="width: 120px"
         >
-          <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          <el-option
+            v-for="item in stylists"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -66,11 +91,22 @@
           :show-all-levels="false"
         ></el-cascader>
       </el-form-item>
-      <!-- <el-form-item>
-        <el-select v-model="formInline.state" clearable placeholder="状态" style="width:120px">
-          <el-option v-for="item in states" :key="item.id" :label="item.name" :value="item.id"></el-option>
+      <el-form-item>
+        <el-select
+          v-model="formInline.purchase_status"
+          @change="purchaseStatus($event)"
+          clearable
+          placeholder="状态"
+          style="width: 120px"
+        >
+          <el-option
+            v-for="item in states"
+            :key="item.purchase_status"
+            :label="item.purchase"
+            :value="item.purchase_status"
+          ></el-option>
         </el-select>
-      </el-form-item>-->
+      </el-form-item>
     </el-form>
     <div class="table">
       <el-table
@@ -80,12 +116,22 @@
         highlight-current-row
         style="width: 100%"
       >
-        <el-table-column align="center" label="序号" type="index" width="50"></el-table-column>
+        <el-table-column
+          align="center"
+          label="序号"
+          type="index"
+          width="50"
+        ></el-table-column>
         <el-table-column align="center" label="图片" width="140">
           <template slot-scope="scope" property="style_pic_url">
-            <div style="display: flex;">
+            <div style="display: flex">
               <el-image
-                style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
+                style="
+                  width: 50px;
+                  height: 50px;
+                  border-radius: 5px;
+                  margin-right: 5px;
+                "
                 :src="scope.row.style_pic_url"
                 fit="cover"
               >
@@ -97,31 +143,61 @@
                 v-if="scope.row.style_color_pic_url"
                 :src="scope.row.style_color_pic_url"
                 class="img"
-                style="width: 50px; height: 50px;border-radius: 5px;"
+                style="width: 50px; height: 50px; border-radius: 5px"
                 alt
               />
+              <div
+                v-else
+                class="imgSrc"
+                style="width: 50px; height: 50px; border-radius: 5px"
+                :style="`background-color:${scope.row.color_code};`"
+              ></div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="center" property="stylename" label="名称"></el-table-column>
-        <el-table-column align="center" property="styleno" label="款号"></el-table-column>
-        <el-table-column align="center" width="90" property="style_color" label="颜色"></el-table-column>
-        <el-table-column align="center" property="style_type" label="品类"></el-table-column>
-        <el-table-column align="center" property="year" label="年份"></el-table-column>
-        <el-table-column align="center" property="season" label="季节"></el-table-column>
-        <el-table-column align="center" property="username" label="设计师"></el-table-column>
+        <el-table-column
+          align="center"
+          property="stylename"
+          label="名称"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="styleno"
+          label="款号"
+        ></el-table-column>
+        <!-- <el-table-column align="center" width="90" property="style_color" label="颜色"></el-table-column> -->
+        <el-table-column
+          align="center"
+          property="style_type"
+          label="品类"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="year"
+          label="年份"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="season"
+          label="季节"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="username"
+          label="设计师"
+        ></el-table-column>
         <el-table-column align="center" label="状态">
           <template slot-scope="scope">
             <div
-              style="background:url('https://yj.ppp-pay.top/upload/20200905/20200905182549.png') no-repeat;background-position: 100% 50%;
-              background-size: 49px;"
+              :style="`background: url(${url}/upload/20200905/20200905182549.png) no-repeat;
+                background-position: 100% 50%;
+                background-size: 49px;`"
               v-if="scope.row.is_urgent"
             >
-              <em>{{scope.row.purchase}}</em>
-              <!-- <div ></div> -->
+              <em>{{ scope.row.purchase }}</em>
             </div>
             <div v-else>
-              <em>{{scope.row.purchase}}</em>
+              <em>{{ scope.row.purchase }}</em>
               <!-- <div ></div> -->
             </div>
           </template>
@@ -130,17 +206,32 @@
           <template slot-scope="scope">
             <div class="btn">
               <div
-                @click="materials_agree(scope.$index, scope.row,1)"
-                v-if="scope.row.materials_status==='2'&&permission.indexOf('materials_agree')!=-1"
-              >通过</div>
+                @click="materials_agree(scope.$index, scope.row, 1)"
+                v-if="
+                  scope.row.materials_status === '2' &&
+                  permission.indexOf('materials_agree') != -1
+                "
+              >
+                通过
+              </div>
               <div
-                @click="materials_agree(scope.$index, scope.row,0)"
-                v-if="scope.row.materials_status==='2'&&permission.indexOf('materials_agree')!=-1"
-              >不通过</div>
+                @click="materials_agree(scope.$index, scope.row, 0)"
+                v-if="
+                  scope.row.materials_status === '2' &&
+                  permission.indexOf('materials_agree') != -1
+                "
+              >
+                不通过
+              </div>
               <div
-                v-if="scope.row.materials_status !='2'&&permission.indexOf('get_style_purchase')!=-1"
+                v-if="
+                  scope.row.materials_status != '2' &&
+                  permission.indexOf('get_style_purchase') != -1
+                "
                 @click="handleEdit(scope.$index, scope.row)"
-              >查看</div>
+              >
+                查看
+              </div>
             </div>
           </template>
         </el-table-column>
@@ -172,17 +263,18 @@ import {
   getStylePurchase,
   materialsAgree,
 } from "@/api/researchDevelopment";
-
+import { url } from "@/api/configuration";
 export default {
   data() {
     return {
-      power: "",
+      url: url,
       formInline: {
         styleno: "",
         year: "",
         season: "",
         user_id: "",
         style_type: "",
+        purchase_status: "",
       },
       user_id: "",
       tableData: [],
@@ -203,11 +295,13 @@ export default {
       stylist: "",
       state: "",
       states: [
-        { name: "未下单", id: 0 },
-        { name: "已下单", id: 1 },
-        { name: "部份回料", id: 2 },
-        { name: "延时回料", id: 3 },
-        { name: "全部回料", id: 4 },
+        { purchase_status: 0, purchase: "未生成采购单" },
+        { purchase_status: 1, purchase: "等待采购" },
+        { purchase_status: 2, purchase: "部分主料已下单" },
+        { purchase_status: 3, purchase: "全部主料已下单" },
+        { purchase_status: 4, purchase: "部分辅料已下单" },
+        { purchase_status: 5, purchase: "全部辅料已下单" },
+        { purchase_status: 6, purchase: "全部回料完成" },
       ],
       permission: [],
     };
@@ -241,6 +335,10 @@ export default {
     handleUser_id(e) {
       this.pageIndex = 1;
       this.formInline.user_id = e;
+      this.init();
+    },
+    purchaseStatus(e) {
+      this.pageIndex = 1;
       this.init();
     },
     async getYear() {
@@ -316,8 +414,8 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
+    console.log(url);
   },
 };
 </script>

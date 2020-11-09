@@ -1,26 +1,36 @@
 <template>
-  <div class="goodsCategory" v-if="permission.indexOf('goodsCategory')!=-1">
+  <div class="goodsCategory" v-if="permission.indexOf('goodsCategory') != -1">
     <div class="aa">
       <!-- 面包屑 -->
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>设置</el-breadcrumb-item>
-        <el-breadcrumb-item>商品分类</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>设置</el-breadcrumb-item>
+          <el-breadcrumb-item>商品分类</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <!-- 添加分类 -->
     <div
       class="addClassify"
-      v-if="permission.indexOf('goods_category_add')!=-1"
+      v-if="permission.indexOf('goods_category_add') != -1"
       @click="addClassify"
-    >添加分类</div>
+    >
+      添加分类
+    </div>
     <el-table
       :data="tableData"
-      style="width: 100%;margin: 20px 0;"
+      style="width: 100%; margin: 20px 0"
       row-key="id"
       border
-      :tree-props="{children: 'goods_category_data' , hasChildren: 'hasChildren'}"
+      :tree-props="{
+        children: 'goods_category_data',
+        hasChildren: 'hasChildren',
+      }"
     >
-      <el-table-column prop="goods_category_name" label="分类名称"></el-table-column>
+      <el-table-column
+        prop="goods_category_name"
+        label="分类名称"
+      ></el-table-column>
       <el-table-column prop="no" label="编号"></el-table-column>
       <el-table-column prop="describe" label="分类描述"></el-table-column>
       <el-table-column prop="sort" label="排序"></el-table-column>
@@ -31,7 +41,7 @@
           <el-tooltip
             content="编辑"
             placement="top"
-            v-if="permission.indexOf('goods_category_edit')!=-1"
+            v-if="permission.indexOf('goods_category_edit') != -1"
             class="el-icon-edit btn"
           >
             <div @click="handleEdit(scope.$index, scope.row)"></div>
@@ -39,7 +49,7 @@
           <el-tooltip
             content="删除"
             placement="top"
-            v-if="permission.indexOf('goods_category_del')!=-1"
+            v-if="permission.indexOf('goods_category_del') != -1"
             class="el-icon-delete btn"
           >
             <div @click="handleDelete(scope.$index, scope.row)"></div>
@@ -62,7 +72,7 @@
           <el-select
             v-model="form.goods_category_id"
             placeholder="可选/可不选"
-            style="width:40%;"
+            style="width: 40%"
             clearable
             @change="clearabled"
           >
@@ -74,25 +84,48 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="商品分类" prop="goods_category_name" v-if="form.goods_category_id===''">
-          <el-input v-model="form.goods_category_name" style="width:40%;"></el-input>
+        <el-form-item
+          label="商品分类"
+          prop="goods_category_name"
+          v-if="form.goods_category_id === ''"
+        >
+          <el-input
+            v-model="form.goods_category_name"
+            style="width: 40%"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="商品名称" prop="goods_category_name" v-if="form.goods_category_id!==''">
-          <el-input v-model="form.goods_category_name" style="width:40%;"></el-input>
+        <el-form-item
+          label="商品名称"
+          prop="goods_category_name"
+          v-if="form.goods_category_id !== ''"
+        >
+          <el-input
+            v-model="form.goods_category_name"
+            style="width: 40%"
+          ></el-input>
         </el-form-item>
         <el-form-item label="编号" prop="no">
           <el-input
             type="text"
             placeholder="请输入编号"
-            style="width:40%;"
+            style="width: 40%"
             v-model.number="form.no"
             maxlength="2"
             show-word-limit
           ></el-input>
         </el-form-item>
 
-        <el-form-item v-if="form.goods_category_id != ''" label="计量单位" prop="unit">
-          <el-select v-model="form.unit" clearable placeholder="请选择" style="width:40%;">
+        <el-form-item
+          v-if="form.goods_category_id != ''"
+          label="计量单位"
+          prop="unit"
+        >
+          <el-select
+            v-model="form.unit"
+            clearable
+            placeholder="请选择"
+            style="width: 40%"
+          >
             <el-option
               v-for="item in units"
               :key="item.id"
@@ -104,7 +137,7 @@
         <el-form-item
           v-else
           label="部位:"
-          style="position: absolute;;right:0;z-index:999;top:0;width:55%;"
+          style="position: absolute; right: 0; z-index: 999; top: 0; width: 55%"
           prop="unit"
           class="abcd"
         >
@@ -112,27 +145,38 @@
             :indeterminate="isIndeterminate"
             v-model="checkAll"
             @change="handleCheckAllChange"
-          >全选</el-checkbox>
-          <div style="margin: 15px 0;"></div>
-          <el-checkbox-group v-model="form.position" @change="handleCheckedCitiesChange">
+            >全选</el-checkbox
+          >
+          <div style="margin: 15px 0"></div>
+          <el-checkbox-group
+            v-model="form.position"
+            @change="handleCheckedCitiesChange"
+          >
             <el-checkbox
               v-for="item in positions"
               :label="item.id"
               :key="item.id"
               :value="item.id"
-            >{{item.name}}</el-checkbox>
+              >{{ item.name }}</el-checkbox
+            >
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="分类描述" prop="describe">
-          <el-input type="textarea" style="width:40%;" v-model="form.describe"></el-input>
+          <el-input
+            type="textarea"
+            style="width: 40%"
+            v-model="form.describe"
+          ></el-input>
         </el-form-item>
         <el-form-item label="排序" prop="sort">
-          <el-input v-model="form.sort" style="width:40%;"></el-input>
+          <el-input v-model="form.sort" style="width: 40%"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleClose('form')">取 消</el-button>
-        <el-button type="primary" @click="handleNewList('form')">确 定</el-button>
+        <el-button type="primary" @click="handleNewList('form')"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
     <!-- 编辑分类 -->
@@ -145,36 +189,45 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <el-form ref="obj" :model="obj" :rules="rules" label-width="80px" resetFields>
+      <el-form
+        ref="obj"
+        :model="obj"
+        :rules="rules"
+        label-width="80px"
+        resetFields
+      >
         <el-form-item label="分类名称" prop="goods_category_name">
-          <el-input v-model="obj.goods_category_name" style="width:40%;"></el-input>
+          <el-input
+            v-model="obj.goods_category_name"
+            style="width: 40%"
+          ></el-input>
         </el-form-item>
         <el-form-item label="编号" prop="no">
           <el-input
             type="text"
             placeholder="请输入编号"
-            style="width:40%;"
+            style="width: 40%"
             v-model.number="obj.no"
             maxlength="2"
             show-word-limit
           ></el-input>
         </el-form-item>
-        <el-form-item label="上级分类" v-if="rowLevel==='1'">
+        <el-form-item label="上级分类" v-if="rowLevel === '1'">
           <el-select
             v-model="region"
             clearable
             @change="get_goods_category_id($event)"
-            style="width:40%;"
+            style="width: 40%"
           >
             <el-option
               v-for="item in options"
               :key="item.value"
-              :label="item.goods_category_name "
+              :label="item.goods_category_name"
               :value="item.id"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item v-if="region != ''&&rowLevel==='1'" label="计量单位">
+        <el-form-item v-if="region != '' && rowLevel === '1'" label="计量单位">
           <el-select v-model="obj.unit" clearable placeholder="请选择">
             <el-option
               v-for="item in units"
@@ -187,7 +240,7 @@
         <el-form-item
           v-else
           label="部位:"
-          style="position: absolute;;right:0;z-index:999;top:0;width:55%;"
+          style="position: absolute; right: 0; z-index: 999; top: 0; width: 55%"
           prop="unit"
           class="abcd"
         >
@@ -195,22 +248,31 @@
             :indeterminate="isIndeterminate"
             v-model="checkAll1"
             @change="handleCheckAllChange1"
-          >全选</el-checkbox>
-          <div style="margin: 15px 0;"></div>
-          <el-checkbox-group v-model="obj.position" @change="handleCheckedCitiesChange1">
+            >全选</el-checkbox
+          >
+          <div style="margin: 15px 0"></div>
+          <el-checkbox-group
+            v-model="obj.position"
+            @change="handleCheckedCitiesChange1"
+          >
             <el-checkbox
               v-for="item in positions"
               :label="item.id"
               :key="item.id"
               :value="item.id"
-            >{{item.name}}</el-checkbox>
+              >{{ item.name }}</el-checkbox
+            >
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="分类描述">
-          <el-input type="textarea" style="width:40%;" v-model="obj.describe"></el-input>
+          <el-input
+            type="textarea"
+            style="width: 40%"
+            v-model="obj.describe"
+          ></el-input>
         </el-form-item>
         <el-form-item label="排序">
-          <el-input v-model="obj.sort" style="width:40%;"></el-input>
+          <el-input v-model="obj.sort" style="width: 40%"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -250,7 +312,6 @@ export default {
       isIndeterminate1: true,
       permission: [],
       units: [],
-      power: "",
       rules: {
         goods_category_name: [
           { required: true, message: "请输入分类名称", trigger: "blur" },
@@ -495,7 +556,6 @@ export default {
     this.getUnit();
     this.positionList();
     this.news();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
 };

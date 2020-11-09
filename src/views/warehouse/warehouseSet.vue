@@ -1,17 +1,23 @@
 <template>
-  <div class="warehouseSet" v-if="permission.indexOf('warehouseSet')!=-1">
+  <div class="warehouseSet" v-if="permission.indexOf('warehouseSet') != -1">
     <!-- 面包屑 -->
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>仓库</el-breadcrumb-item>
-        <el-breadcrumb-item>库存设置</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>仓库</el-breadcrumb-item>
+          <el-breadcrumb-item>库存设置</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <div class="main">
       <div class="header">
-        <el-form style="float:left" :inline="true" :model="form">
+        <el-form style="float: left" :inline="true" :model="form">
           <el-form-item>
-            <el-input v-model="form.storehouse_name" size="small" placeholder="请输入仓库名称"></el-input>
+            <el-input
+              v-model="form.storehouse_name"
+              size="small"
+              placeholder="请输入仓库名称"
+            ></el-input>
           </el-form-item>
           <el-form-item>
             <el-button
@@ -23,39 +29,74 @@
             ></el-button>
           </el-form-item>
         </el-form>
-        <el-form style="float:right">
+        <el-form style="float: right">
           <el-button
             size="small"
             type="primary"
             @click="addWarehouse"
-            v-if="permission.indexOf('storehouse_add')!=-1"
-          >+增加仓库</el-button>
+            v-if="permission.indexOf('storehouse_add') != -1"
+            >+增加仓库</el-button
+          >
         </el-form>
       </div>
     </div>
     <div class="center table">
       <el-table :data="ware" row-key="id" size="mini">
-        <el-table-column property="storehouse_name" align="center" label="仓库名称"></el-table-column>
-        <el-table-column property="contacts" align="center" label="负责人"></el-table-column>
-        <el-table-column property="storehouse_type" align="center" label="仓库类型"></el-table-column>
-        <el-table-column property="remarks" align="center" label="备注"></el-table-column>
-        <el-table-column property="ctime" width="90" align="center" label="创建时间"></el-table-column>
-        <el-table-column property="utime" width="90" align="center" label="更新时间"></el-table-column>
-        <el-table-column property="sort" align="center" label="排序"></el-table-column>
-        <el-table-column property="state" align="center" label="状态"></el-table-column>
+        <el-table-column
+          property="storehouse_name"
+          align="center"
+          label="仓库名称"
+        ></el-table-column>
+        <el-table-column
+          property="contacts"
+          align="center"
+          label="负责人"
+        ></el-table-column>
+        <el-table-column
+          property="storehouse_type"
+          align="center"
+          label="仓库类型"
+        ></el-table-column>
+        <el-table-column
+          property="remarks"
+          align="center"
+          label="备注"
+        ></el-table-column>
+        <el-table-column
+          property="ctime"
+          width="90"
+          align="center"
+          label="创建时间"
+        ></el-table-column>
+        <el-table-column
+          property="utime"
+          width="90"
+          align="center"
+          label="更新时间"
+        ></el-table-column>
+        <el-table-column
+          property="sort"
+          align="center"
+          label="排序"
+        ></el-table-column>
+        <el-table-column
+          property="state"
+          align="center"
+          label="状态"
+        ></el-table-column>
         <el-table-column align="center" width="90" label="操作">
           <template slot-scope="scope">
             <div
-              style="width:20px;float:left"
+              style="width: 20px; float: left"
               class="el-icon-edit btn"
               @click="handleEdit(scope.$index, scope.row)"
-              v-if="permission.indexOf('storehouse_edit')!=-1"
+              v-if="permission.indexOf('storehouse_edit') != -1"
             ></div>
             <div
-              style="width:20px;float:right"
+              style="width: 20px; float: right"
               class="el-icon-delete btn"
               @click="handleDelete(scope.$index, scope.row)"
-              v-if="permission.indexOf('storehouse_del')!=-1"
+              v-if="permission.indexOf('storehouse_del') != -1"
             ></div>
           </template>
         </el-table-column>
@@ -83,29 +124,73 @@
       :visible.sync="dialogFormVisible"
     >
       <el-form ref="form1" :rules="rules1" :model="form1">
-        <el-form-item prop="storehouse_name" label="仓库名称：" label-width="25%">
-          <el-input style="width:60%" placeholder="请输入仓库名称" v-model="form1.storehouse_name"></el-input>
+        <el-form-item
+          prop="storehouse_name"
+          label="仓库名称："
+          label-width="25%"
+        >
+          <el-input
+            style="width: 60%"
+            placeholder="请输入仓库名称"
+            v-model="form1.storehouse_name"
+          ></el-input>
         </el-form-item>
         <el-form-item prop="contacts" label="仓库负责人：" label-width="25%">
-          <el-select style="width:60%" v-model="form1.contacts" placeholder="请选择仓库负责人">
-            <el-option v-for="item in user" :key="item.value" :label="item.name" :value="item.id"></el-option>
+          <el-select
+            style="width: 60%"
+            v-model="form1.contacts"
+            placeholder="请选择仓库负责人"
+          >
+            <el-option
+              v-for="item in user"
+              :key="item.value"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item prop="storehouse_type" label="仓库类型：" label-width="25%">
-          <el-select style="width:60%" v-model="form1.storehouse_type" placeholder="请选择仓库类型">
-            <el-option v-for="item in genre" :key="item.value" :label="item.name" :value="item.id"></el-option>
+        <el-form-item
+          prop="storehouse_type"
+          label="仓库类型："
+          label-width="25%"
+        >
+          <el-select
+            style="width: 60%"
+            v-model="form1.storehouse_type"
+            placeholder="请选择仓库类型"
+          >
+            <el-option
+              v-for="item in genre"
+              :key="item.value"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item prop="state" label="状态：" label-width="25%">
-          <el-select style="width:60%" v-model="form1.state" placeholder="请选择状态">
-            <el-option v-for="item in invoke" :key="item.value" :label="item.name" :value="item.id"></el-option>
+          <el-select
+            style="width: 60%"
+            v-model="form1.state"
+            placeholder="请选择状态"
+          >
+            <el-option
+              v-for="item in invoke"
+              :key="item.value"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="排序：" label-width="25%">
-          <el-input style="width:60%" v-model="form1.sort"></el-input>
+          <el-input style="width: 60%" v-model="form1.sort"></el-input>
         </el-form-item>
         <el-form-item label="备注：" label-width="25%">
-          <el-input style="width:60%" type="textarea" :rows="3" v-model="form1.remarks"></el-input>
+          <el-input
+            style="width: 60%"
+            type="textarea"
+            :rows="3"
+            v-model="form1.remarks"
+          ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -124,29 +209,73 @@
       :visible.sync="dialogFormVisible1"
     >
       <el-form ref="form2" :rules="rules2" :model="form2">
-        <el-form-item prop="storehouse_name" label="仓库名称：" label-width="25%">
-          <el-input style="width:60%" placeholder="请输入仓库名称" v-model="form2.storehouse_name"></el-input>
+        <el-form-item
+          prop="storehouse_name"
+          label="仓库名称："
+          label-width="25%"
+        >
+          <el-input
+            style="width: 60%"
+            placeholder="请输入仓库名称"
+            v-model="form2.storehouse_name"
+          ></el-input>
         </el-form-item>
         <el-form-item prop="contacts" label="仓库负责人：" label-width="25%">
-          <el-select style="width:60%" v-model="form2.contacts" placeholder="请选择仓库负责人">
-            <el-option v-for="item in user" :key="item.value" :label="item.name" :value="item.id"></el-option>
+          <el-select
+            style="width: 60%"
+            v-model="form2.contacts"
+            placeholder="请选择仓库负责人"
+          >
+            <el-option
+              v-for="item in user"
+              :key="item.value"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item prop="storehouse_type" label="仓库类型：" label-width="25%">
-          <el-select style="width:60%" v-model="form2.storehouse_type" placeholder="请选择仓库类型">
-            <el-option v-for="item in genre" :key="item.value" :label="item.name" :value="item.id"></el-option>
+        <el-form-item
+          prop="storehouse_type"
+          label="仓库类型："
+          label-width="25%"
+        >
+          <el-select
+            style="width: 60%"
+            v-model="form2.storehouse_type"
+            placeholder="请选择仓库类型"
+          >
+            <el-option
+              v-for="item in genre"
+              :key="item.value"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item prop="state" label="状态：" label-width="25%">
-          <el-select style="width:60%" v-model="form2.state" placeholder="请选择状态">
-            <el-option v-for="item in invoke" :key="item.value" :label="item.name" :value="item.id"></el-option>
+          <el-select
+            style="width: 60%"
+            v-model="form2.state"
+            placeholder="请选择状态"
+          >
+            <el-option
+              v-for="item in invoke"
+              :key="item.value"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="排序：" label-width="25%">
-          <el-input style="width:60%" v-model="form2.sort"></el-input>
+          <el-input style="width: 60%" v-model="form2.sort"></el-input>
         </el-form-item>
         <el-form-item label="备注：" label-width="25%">
-          <el-input style="width:60%" type="textarea" :rows="3" v-model="form2.remarks"></el-input>
+          <el-input
+            style="width: 60%"
+            type="textarea"
+            :rows="3"
+            v-model="form2.remarks"
+          ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -169,7 +298,6 @@ import {
 export default {
   data() {
     return {
-      power: "",
       // 数据表
       form: {
         name: "",
@@ -398,7 +526,6 @@ export default {
   async mounted() {
     this.getStylist();
     this.init();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
 };

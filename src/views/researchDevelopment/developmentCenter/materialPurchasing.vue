@@ -1,58 +1,82 @@
 <template>
   <div class="materialPurchasing">
-    <div class="material_purchase_name" v-if="permission.indexOf('materialPurchasing')!=-1">
+    <!-- <div
+      class="material_purchase_name"
+      v-if="permission.indexOf('materialPurchasing') != -1"
+    >
       <div
         v-for="(item, index) in obj.style_color_data"
         :key="index"
-        style="display: flex;align-items: center;margin:20px 0;"
+        style="display: flex; align-items: center; margin: 20px 0"
       >
         <div
-          style="margin:0 10px;cursor: pointer;"
-          @click="handleColorNum(item,index)"
-          :class="active===index?'active':''"
+          style="margin: 0 10px; cursor: pointer"
+          @click="handleColorNum(item, index)"
+          :class="active === index ? 'active' : ''"
           class="backg"
-        >{{item.style_color_name}}</div>
+        >
+          {{ item.style_color_name }}
+        </div>
       </div>
-    </div>
-    <div v-if="permission.indexOf('get_style_purchase')!=-1">
+    </div> -->
+    <div v-if="permission.indexOf('get_style_purchase') != -1">
       <div v-for="(item, index) in style_materials" :key="index">
-        <div class="content" v-for="(item1, index1) in item.style_materials_data" :key="index1">
+        <div
+          class="content"
+          v-for="(item1, index1) in item.style_materials_data"
+          :key="index1"
+        >
           <div class="card">
             <div class="cardStyle">
+              <span class="bos">{{
+                item1.materials_mainclass_name.slice(0, 1)
+              }}</span>
               <div class="cardStyle_left">
                 <div class="cardStyle_left_img">
                   <img :src="item1.picurl" alt />
                 </div>
                 <div class="cardStyle_left_content">
                   <div class="cardStyle_left_content_name">
-                    <div>{{item1.materials_data[0].materialsname}}</div>
+                    <div>
+                      {{ item1.materials_data.materialsname || "已删除" }}
+                    </div>
 
                     <div
                       class="el-icon-close"
-                      style="cursor: pointer;"
-                      v-if="item1.style_purchase_log_data.length===0&&permission.indexOf('style_purchase_del')!=-1"
+                      style="cursor: pointer"
+                      v-if="
+                        item1.style_purchase_log_data.length === 0 &&
+                        permission.indexOf('style_purchase_del') != -1
+                      "
                       @click.stop="handleStyleMaterialsDel(item1)"
                     ></div>
                   </div>
-                  <div>内部编号:{{item1.materials_data[0].materialsno}}</div>
-                  <div
-                    v-if="item1.style_materials_supplier_data.length>0"
-                  >{{item1.style_materials_supplier_data[0].companyname}}</div>
-                  <div>{{item1.materials_mainclass_name}} ({{item1.materials_class_name}})</div>
+                  <div>内部编号:{{ item1.materials_data.materialsno }}</div>
+                  <div v-if="item1.style_materials_supplier_data.length > 0">
+                    {{ item1.style_materials_supplier_data[0].companyname }}
+                  </div>
+                  <div>
+                    {{ item1.materials_mainclass_name }} ({{
+                      item1.materials_class_name
+                    }})
+                  </div>
                 </div>
               </div>
               <div class="cardStyle_right">
                 <div>
-                  <div>{{item1.color}}</div>
-                  <span class="cardStyle_right_no">{{item1.color_no}}</span>
+                  <div>{{ item1.color }}</div>
+                  <span class="cardStyle_right_no">{{ item1.color_no }}</span>
                 </div>
               </div>
             </div>
           </div>
           <div class="orderInformation">
-            <el-steps finish-status="wait" :active="item1.style_purchase_log_data.length-1">
+            <el-steps
+              finish-status="wait"
+              :active="item1.style_purchase_log_data.length - 1"
+            >
               <el-step
-                style="width:125px"
+                style="width: 125px"
                 v-for="(item_g, index_g) in item1.style_purchase_log_data"
                 :key="index_g"
                 title
@@ -62,22 +86,24 @@
                 <template v-slot:title>
                   <div class="tt">
                     <span>
-                      {{item_g.logname}}
-                      <em>{{''}}</em>
+                      {{ item_g.logname }}
+                      <em>{{ "" }}</em>
                       <!-- <em v-if="item_g.state == '1'">{{item_g.quantity+"m"}}</em> -->
                     </span>
-                    <span>{{item_g.ctime}}</span>
+                    <span>{{ item_g.ctime }}</span>
                   </div>
                 </template>
                 <template v-slot:description>
                   <div class="dt">
                     <!-- <span>{{item_g.logname}}</span> -->
-                    <span v-if="index_g==0">{{"预计回料时间"}}</span>
-                    <span v-if="item_g.state == '2'">{{"延迟回料时间"}}</span>
-                    <span v-if="item_g.state == '1'">{{"部分回料时间"}}</span>
-                    <span v-if="item_g.state == '3'">{{"回料总量"}}</span>
-                    <span v-if="item_g.state == '3'">{{item1.quantity+'m'}}</span>
-                    <span v-else>{{item_g.returntime}}</span>
+                    <span v-if="index_g == 0">{{ "预计回料时间" }}</span>
+                    <span v-if="item_g.state == '2'">{{ "延迟回料时间" }}</span>
+                    <span v-if="item_g.state == '1'">{{ "部分回料时间" }}</span>
+                    <span v-if="item_g.state == '3'">{{ "回料总量" }}</span>
+                    <span v-if="item_g.state == '3'">{{
+                      item1.quantity + "m"
+                    }}</span>
+                    <span v-else>{{ item_g.returntime }}</span>
                     <!-- ****************************************************************** -->
                     <!-- <span v-if="item_g.state == '2'">{{"延迟回料时间"}}</span>
                   <span v-if="item_g.state == '1'">{{"部分回料时间"}}</span>
@@ -93,36 +119,82 @@
                 size="mini"
                 round
                 @click="goPanelPurchase(item1)"
-                v-if="item1.style_purchase_log_data.length===0&&permission.indexOf('purchase_edit')!=-1"
-              >{{"采购录入"}}</el-button>
+                v-if="
+                  item1.style_purchase_log_data.length === 0 &&
+                  permission.indexOf('purchase_edit') != -1
+                "
+                >{{ "采购录入" }}</el-button
+              >
 
               <el-button
                 size="mini"
                 round
-                @click="updateStatus(item1)"
-                v-if="item1.style_purchase_log_data.length>0&&item1.style_purchase_log_data[item1.style_purchase_log_data.length-1].state!=='3'&&permission.indexOf('style_purchase_log_add')!=-1"
-              >{{"更新状态"}}</el-button>
+                @click="updateStatus(item, item1)"
+                v-if="
+                  item1.style_purchase_log_data.length > 0 &&
+                  item1.style_purchase_log_data[
+                    item1.style_purchase_log_data.length - 1
+                  ].state !== '3' &&
+                  permission.indexOf('style_purchase_log_add') != -1
+                "
+                >{{ "更新状态" }}</el-button
+              >
               <el-button
                 size="mini"
-                style="margin-left:10px"
+                style="margin-left: 10px"
                 @click.stop="seeDetails1(item1)"
-                v-if="item1.style_purchase_log_data.length>0 &&item1.style_purchase_log_data[item1.style_purchase_log_data.length-1].state=='3'"
+                v-if="
+                  item1.style_purchase_log_data.length > 0 &&
+                  item1.style_purchase_log_data[
+                    item1.style_purchase_log_data.length - 1
+                  ].state == '3'
+                "
                 round
-              >查看详情</el-button>
+                >查看详情</el-button
+              >
               <!-- &&item1.style_purchase_log_data[item1.style_purchase_log_data.length-1].logname!=='全部回料' -->
             </div>
           </div>
         </div>
-        <el-divider content-position="right">{{item.mainclass}}</el-divider>
+        <!-- <el-divider content-position="right">{{item.mainclass}}</el-divider> -->
       </div>
     </div>
     <!-- 弹框 -->
-    <el-dialog width="30%" title="请选择更新后的状态" class="tan" :visible.sync="outerVisible" center>
+    <el-dialog
+      width="30%"
+      title="请选择更新后的状态"
+      class="tan"
+      :visible.sync="outerVisible"
+      center
+    >
       <!-- 全部回料 -->
-      <el-dialog width="30%" title="请上传全部回料凭证" :visible.sync="innerVisibled1" append-to-body center>
+      <el-dialog
+        width="30%"
+        title="请上传全部回料凭证"
+        :visible.sync="innerVisibled1"
+        append-to-body
+        center
+      >
         <el-form ref="form2" :model="form2" :rules="rules2" label-width="100px">
+          <el-form-item label="采购量">
+            {{ quantity }}
+          </el-form-item>
+          <el-form-item label="采购单价">
+            {{ price }}
+          </el-form-item>
+          <el-form-item label="金额">
+            {{ totalprice }}
+          </el-form-item>
+          <el-form-item label="已付">
+            {{ paid_money }}
+          </el-form-item>
           <el-form-item label="结算金额" prop="money">
-            <el-input placeholder="请输入内容" style="width:50%" v-model="form2.money"></el-input>
+            <el-input
+              placeholder="请输入内容"
+              style="width: 50%"
+              v-model="form2.money"
+              @change="get_form2_money(form2.money)"
+            ></el-input>
           </el-form-item>
           <!-- <el-form-item label="仓库:" prop="storehouse_id">
             <el-select
@@ -156,23 +228,42 @@
             <img v-if="form2.imageUrl" :src="form2.imageUrl" class="avatar1" />
             <i v-else class="el-icon-upload avatar-uploader-icon"></i>
           </el-upload>
-          <div style="width:150px;margin:0 auto">
+          <div style="width: 150px; margin: 0 auto">
             <el-button @click="innerVisibled1 = false">取消</el-button>
             <el-button @click="allMaterial">确定</el-button>
           </div>
         </el-form>
       </el-dialog>
       <!-- 部分回料 -->
-      <el-dialog width="30%" title="部分回料" :visible.sync="innerVisible" append-to-body center>
+      <el-dialog
+        width="30%"
+        title="部分回料"
+        :visible.sync="innerVisible"
+        append-to-body
+        center
+      >
         <el-form ref="form3" :model="form3" :rules="rules" label-width="120px">
           <el-form-item label="回料数量" prop="number">
-            <el-input placeholder="请输入内容" style="width:50%" v-model="form3.number"></el-input>
+            <el-input
+              placeholder="请输入内容"
+              style="width: 50%"
+              v-model="form3.number"
+            ></el-input>
           </el-form-item>
           <el-form-item label="结算金额" prop="money">
-            <el-input placeholder="请输入内容" style="width:50%" v-model="form3.money"></el-input>
+            <el-input
+              placeholder="请输入内容"
+              style="width: 50%"
+              v-model="form3.money"
+            ></el-input>
           </el-form-item>
           <el-form-item label="部分回料时间" prop="date">
-            <el-date-picker v-model="form3.date" type="date" style="width:50%" placeholder="选择日期"></el-date-picker>
+            <el-date-picker
+              v-model="form3.date"
+              type="date"
+              style="width: 50%"
+              placeholder="选择日期"
+            ></el-date-picker>
           </el-form-item>
 
           <!-- <el-form-item label="仓库:" prop="storehouse_id">
@@ -198,7 +289,7 @@
             </el-select>
           </el-form-item>-->
           <el-form-item label="余结金额">
-            <span style="width:50%" :model="form3.money1"></span>
+            <span style="width: 50%" :model="form3.money1"></span>
           </el-form-item>
           <el-upload
             class="avatar-uploader"
@@ -210,31 +301,64 @@
             <img v-if="form3.imageUrl" :src="form3.imageUrl" class="avatar" />
             <i v-else class="el-icon-upload avatar-uploader-icon"></i>
           </el-upload>
-          <div style="width:200px;margin:0 auto">
+          <div style="width: 200px; margin: 0 auto">
             <el-button @click="innerVisible = false">取消</el-button>
             <el-button @click="partBack()">确定</el-button>
           </div>
         </el-form>
       </el-dialog>
       <!-- 延迟回料 -->
-      <el-dialog width="30%" title="延迟回料" :visible.sync="innerVisibled" append-to-body center>
+      <el-dialog
+        width="30%"
+        title="延迟回料"
+        :visible.sync="innerVisibled"
+        append-to-body
+        center
+      >
         <el-form ref="form4" :model="form4" :rules="rules1" label-width="80px">
           <el-form-item label="延迟时间" prop="date">
-            <el-date-picker v-model="form4.date" type="date" placeholder="选择日期"></el-date-picker>
+            <el-date-picker
+              v-model="form4.date"
+              type="date"
+              placeholder="选择日期"
+            ></el-date-picker>
           </el-form-item>
           <el-form-item label="原因" prop="reason">
-            <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="form4.reason"></el-input>
+            <el-input
+              type="textarea"
+              :rows="5"
+              placeholder="请输入内容"
+              v-model="form4.reason"
+            ></el-input>
           </el-form-item>
-          <div style="width:200px;margin:0 auto">
+          <div style="width: 200px; margin: 0 auto">
             <el-button @click="innerVisibled = false">取消</el-button>
             <el-button @click="delayBack()">确定</el-button>
           </div>
         </el-form>
       </el-dialog>
-      <div slot="footer" style="height:80px;" class="dialog-footer">
-        <el-button @click="outerVisible = false;innerVisibled1 = true;">全部回料</el-button>
-        <el-button @click="outerVisible = false;innerVisible = true;">部分回料</el-button>
-        <el-button @click="outerVisible = false;innerVisibled = true;">延迟回料</el-button>
+      <div slot="footer" style="height: 80px" class="dialog-footer">
+        <el-button
+          @click="
+            outerVisible = false;
+            innerVisibled1 = true;
+          "
+          >全部回料</el-button
+        >
+        <el-button
+          @click="
+            outerVisible = false;
+            innerVisible = true;
+          "
+          >部分回料</el-button
+        >
+        <el-button
+          @click="
+            outerVisible = false;
+            innerVisibled = true;
+          "
+          >延迟回料</el-button
+        >
       </div>
     </el-dialog>
   </div>
@@ -258,7 +382,6 @@ export default {
       pageIndex1: 1,
       pageSize1: 10,
       total1: 0,
-      power: "",
       cardList: [
         {
           materialsCard: "主料卡",
@@ -341,9 +464,19 @@ export default {
         // ],
       },
       permission: [],
+      quantity: "",
+      price: "",
+      totalprice: "",
+      paid_money: "",
     };
   },
   methods: {
+    get_form2_money(e) {
+      console.log(e);
+      if(this.totalprice-this.paid_money!=e){
+        this.$message('结算金额不匹配')
+      }
+    },
     // 采购查看
     async seeDetails1(item) {
       this.$router.push({
@@ -424,7 +557,6 @@ export default {
     handleAvatarSuccess2(res, file) {
       this.tailorList[this.ac].imageUrl = res.data.pic_file_url;
     },
-    updateStatus() {},
     async handleStyleMaterialsDel(e) {
       this.$confirm("此操作将永久删除该物料, 是否继续?", "提示", {
         confirmButtonText: "确定",
@@ -480,9 +612,14 @@ export default {
       });
     },
     // 更新状态
-    async updateStatus(item) {
+    async updateStatus(item, item1) {
+      console.log(item, item1);
+      this.quantity = item1.quantity;
+      this.price = item1.price;
+      this.totalprice = item1.totalprice;
+      this.paid_money = item1.paid_money;
       this.outerVisible = true;
-      this.produce_order_procure_id = item.id;
+      this.produce_order_procure_id = item1.id;
     },
     handleSize1(val) {
       this.pageSize1 = val;
@@ -521,7 +658,6 @@ export default {
   mounted() {
     this.init();
     this.storehouseInit();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
 };
@@ -543,9 +679,24 @@ export default {
       justify-content: space-between;
       align-items: flex-end;
       .cardStyle {
+        position: relative;
         width: 320px;
         height: 100px;
         display: flex;
+        .bos {
+          position: absolute;
+          bottom: 3px;
+          left: 3px;
+          border-radius: 50%;
+          background: rgba(15, 15, 15, 0.8);
+          display: block;
+          text-align: center;
+          color: #fff;
+          width: 25px;
+          height: 25px;
+          padding: 4px 5px;
+          font-size: 10px;
+        }
         .cardStyle_left {
           width: 270px;
           display: flex;

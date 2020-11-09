@@ -1,14 +1,30 @@
 <template>
-  <div class="accountFlowAndBookkeeping" v-if="permission.indexOf('accountFlowAndBookkeeping')!=-1">
+  <div
+    class="accountFlowAndBookkeeping"
+    v-if="permission.indexOf('accountFlowAndBookkeeping') != -1"
+  >
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>财务</el-breadcrumb-item>
-        <el-breadcrumb-item>账户流水及记账</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>财务</el-breadcrumb-item>
+          <el-breadcrumb-item>账户流水及记账</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
-    <div style="margin-bottom:10px">
-      <el-input placeholder="单据编号" v-model="formInline.account_no" clearable style="width:200px"></el-input>
-      <el-button icon="el-icon-search" size="mini" circle class="search_button" @click="onsearch"></el-button>
+    <div style="margin-bottom: 10px">
+      <el-input
+        placeholder="单据编号"
+        v-model="formInline.account_no"
+        clearable
+        style="width: 200px"
+      ></el-input>
+      <el-button
+        icon="el-icon-search"
+        size="mini"
+        circle
+        class="search_button"
+        @click="onsearch"
+      ></el-button>
     </div>
     <div class="form">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
@@ -63,33 +79,62 @@
             placeholder="操作者"
             @change="get_user_id($event)"
           >
-            <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option
+              v-for="item in stylists"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <div style="display: flex;justify-content: space-between;align-items: center;">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
             <el-tooltip class="edit" content="更多" placement="top">
-              <el-dropdown trigger="click" @command="handleCommand" placement="bottom">
+              <el-dropdown
+                trigger="click"
+                @command="handleCommand"
+                placement="bottom"
+              >
                 <span class="el-icon-more"></span>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item v-if="permission.indexOf('my_account_add')!=-1" command="a">账户互转</el-dropdown-item>
-                  <el-dropdown-item v-if="permission.indexOf('my_account_add')!=-1" command="b">期初调整</el-dropdown-item>
-                  <el-dropdown-item command="c" v-print="'#printTest'">打印</el-dropdown-item>
+                  <el-dropdown-item
+                    v-if="permission.indexOf('my_account_add') != -1"
+                    command="a"
+                    >账户互转</el-dropdown-item
+                  >
+                  <el-dropdown-item
+                    v-if="permission.indexOf('my_account_add') != -1"
+                    command="b"
+                    >期初调整</el-dropdown-item
+                  >
+                  <el-dropdown-item command="c" v-print="'#printTest'"
+                    >打印</el-dropdown-item
+                  >
                   <el-dropdown-item command="d">导出</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </el-tooltip>
             <div
               class="addStyle"
-              style="background-color: #e3e3e3;color: #fff;"
-              v-if="permission.indexOf('my_account_add')!=-1"
+              style="background-color: #e3e3e3; color: #fff"
+              v-if="permission.indexOf('my_account_add') != -1"
               @click="onexpend"
-            >支出</div>
+            >
+              支出
+            </div>
             <div
               class="addStyle"
-              v-if="permission.indexOf('my_account_add')!=-1"
+              v-if="permission.indexOf('my_account_add') != -1"
               @click="onincome"
-            >收入</div>
+            >
+              收入
+            </div>
             <!-- <div
               class="addStyle"
               v-if="permission.indexOf('F2000400')!=-1"
@@ -109,43 +154,104 @@
     <el-divider></el-divider>
     <div id="printTest">
       <div class="header">
-        <h2 style="text-align:center;height:40px;">资金流水账</h2>
+        <h2 style="text-align: center; height: 40px">资金流水账</h2>
         <div class="cont">
-          <span>账目类型：{{account_type_name}}</span>
-          <span>结算账户：{{balance_account_id}}</span>
-          <span>日期：{{formInline.ctime_start}} 至 {{formInline.ctime_end}}</span>
+          <span>账目类型：{{ account_type_name }}</span>
+          <span>结算账户：{{ balance_account_id }}</span>
+          <span
+            >日期：{{ formInline.ctime_start }} 至
+            {{ formInline.ctime_end }}</span
+          >
         </div>
         <div class="tb">
           <div class="dv">当前查询统计数据：</div>
           <div class="dv">
             收入
-            <span style="color:orange;">{{total_cope_money}}</span>
+            <span style="color: orange">{{ total_cope_money }}</span>
           </div>
           <div class="dv">
             支出
-            <span style="color:orange;">{{total_pay_money}}</span>
+            <span style="color: orange">{{ total_pay_money }}</span>
           </div>
           <div class="dv">
             盈余
-            <span style="color:orange;">{{total_opay_money}}</span>
+            <span style="color: orange">{{ total_opay_money }}</span>
           </div>
         </div>
       </div>
       <div class="table">
         <el-table size="mini" :data="tableData" border>
-          <el-table-column :show-overflow-tooltip="true" prop="ctime" label="业务时间"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="account_no" label="单据编号"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="account_type_name" label="账目类型"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="account_name" label="结算账户"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="transaction_type" label="交易类型"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="counterparty" label="交易方"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="user_name" label="操作人"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="cope_money" label="收入"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="pay_money" label="支出"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="opay_money" label="盈余"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="total_money" label="账户余额"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="remarks" label="备注"></el-table-column>
-          <el-table-column prop="data" label="操作"></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            prop="ctime"
+            label="业务时间"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            prop="account_no"
+            label="单据编号"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            prop="account_type_name"
+            label="账目类型"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            prop="account_name"
+            label="结算账户"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            prop="transaction_type"
+            label="交易类型"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            prop="counterparty"
+            label="交易方"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            prop="user_name"
+            label="操作人"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            prop="cope_money"
+            label="收入"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            prop="pay_money"
+            label="支出"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            prop="opay_money"
+            label="盈余"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            prop="total_money"
+            label="账户余额"
+          ></el-table-column>
+          <el-table-column
+            :show-overflow-tooltip="true"
+            prop="remarks"
+            label="备注"
+          ></el-table-column>
+          <el-table-column prop="data" label="操作">
+            <template slot-scope="scope">
+              <el-button
+                v-if="(scope.row.origin != '' && scope.row.origin_code != 0)"
+                @click="handleClick(scope.row)"
+                type="text"
+                size="small"
+                >查看</el-button
+              >
+            </template>
+          </el-table-column>
         </el-table>
       </div>
     </div>
@@ -171,11 +277,17 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <el-form :model="form3" :rules="rules3" ref="form3" label-width="140px" class="demo-form">
+      <el-form
+        :model="form3"
+        :rules="rules3"
+        ref="form3"
+        label-width="140px"
+        class="demo-form"
+      >
         <el-form-item label="账户:" prop="balance_account_id">
           <el-select
             v-model="form3.balance_account_id"
-            style="width:70%;"
+            style="width: 70%"
             @change="handle_balance_account_id3($event)"
           >
             <el-option
@@ -187,25 +299,36 @@
           </el-select>
         </el-form-item>
         <el-form-item label="账户余额:" prop="balance">
-          <div>{{form3.balance}}</div>
+          <div>{{ form3.balance }}</div>
         </el-form-item>
         <el-form-item label="期初金额:" prop="total_money">
-          <el-input v-model="form3.total_money" placeholder="请输入内容" style="width:70%;"></el-input>
+          <el-input
+            v-model="form3.total_money"
+            placeholder="请输入内容"
+            style="width: 70%"
+          ></el-input>
         </el-form-item>
         <el-form-item label="业务时间" prop="service_time">
           <el-date-picker
             v-model="form3.service_time"
             type="date"
             placeholder="选择日期"
-            style="width:70%;"
+            style="width: 70%"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="备注" prop="remarks">
-          <el-input type="textarea" v-model="form3.remarks" placeholder="请输入内容" style="width:70%;"></el-input>
+          <el-input
+            type="textarea"
+            v-model="form3.remarks"
+            placeholder="请输入内容"
+            style="width: 70%"
+          ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleAddForm3('form3')">提 交</el-button>
+        <el-button type="primary" @click="handleAddForm3('form3')"
+          >提 交</el-button
+        >
         <el-button @click="handleClose3('form3')">取 消</el-button>
       </span>
     </el-dialog>
@@ -220,11 +343,17 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <el-form :model="form2" :rules="rules2" ref="form2" label-width="140px" class="demo-form">
+      <el-form
+        :model="form2"
+        :rules="rules2"
+        ref="form2"
+        label-width="140px"
+        class="demo-form"
+      >
         <el-form-item label="转出账户:" prop="balance_account_id_to">
           <el-select
             v-model="form2.balance_account_id_to"
-            style="width:70%;"
+            style="width: 70%"
             @change="handle_balance_account_id2($event)"
           >
             <el-option
@@ -236,10 +365,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="账户余额:" prop="balance">
-          <div>{{form2.balance}}</div>
+          <div>{{ form2.balance }}</div>
         </el-form-item>
         <el-form-item label="转入账户:" prop="balance_account_id">
-          <el-select v-model="form2.balance_account_id" style="width:70%;">
+          <el-select v-model="form2.balance_account_id" style="width: 70%">
             <el-option
               v-for="item in BalanceAccount"
               :key="item.id"
@@ -249,22 +378,33 @@
           </el-select>
         </el-form-item>
         <el-form-item label="收入金额:" prop="total_money">
-          <el-input v-model="form2.total_money" placeholder="请输入内容" style="width:70%;"></el-input>
+          <el-input
+            v-model="form2.total_money"
+            placeholder="请输入内容"
+            style="width: 70%"
+          ></el-input>
         </el-form-item>
         <el-form-item label="业务时间" prop="service_time">
           <el-date-picker
             v-model="form2.service_time"
             type="date"
             placeholder="选择日期"
-            style="width:70%;"
+            style="width: 70%"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="备注" prop="remarks">
-          <el-input type="textarea" v-model="form2.remarks" placeholder="请输入内容" style="width:70%;"></el-input>
+          <el-input
+            type="textarea"
+            v-model="form2.remarks"
+            placeholder="请输入内容"
+            style="width: 70%"
+          ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleAddForm2('form2')">提 交</el-button>
+        <el-button type="primary" @click="handleAddForm2('form2')"
+          >提 交</el-button
+        >
         <el-button @click="handleClose2('form2')">取 消</el-button>
       </span>
     </el-dialog>
@@ -279,11 +419,17 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <el-form :model="form1" :rules="rules1" ref="form1" label-width="140px" class="demo-form">
+      <el-form
+        :model="form1"
+        :rules="rules1"
+        ref="form1"
+        label-width="140px"
+        class="demo-form"
+      >
         <el-form-item label="结算账户:" prop="balance_account_id">
           <el-select
             v-model="form1.balance_account_id"
-            style="width:70%;"
+            style="width: 70%"
             @change="handle_balance_account_id1($event)"
           >
             <el-option
@@ -295,10 +441,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="账户余额:" prop="balance">
-          <div>{{form1.balance}}</div>
+          <div>{{ form1.balance }}</div>
         </el-form-item>
         <el-form-item label="账目类型:" prop="account_type_id">
-          <el-select v-model="form1.account_type_id" style="width:70%;">
+          <el-select v-model="form1.account_type_id" style="width: 70%">
             <el-option
               v-for="item in BalanceAccountType"
               :key="item.id"
@@ -308,18 +454,27 @@
           </el-select>
         </el-form-item>
         <el-form-item label="收入金额:" prop="total_money">
-          <el-input v-model="form1.total_money" placeholder="请输入内容" style="width:70%;"></el-input>
+          <el-input
+            v-model="form1.total_money"
+            placeholder="请输入内容"
+            style="width: 70%"
+          ></el-input>
         </el-form-item>
         <el-form-item label="业务时间" prop="service_time">
           <el-date-picker
             v-model="form1.service_time"
             type="date"
             placeholder="选择日期"
-            style="width:70%;"
+            style="width: 70%"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="备注" prop="remarks">
-          <el-input type="textarea" v-model="form1.remarks" placeholder="请输入内容" style="width:70%;"></el-input>
+          <el-input
+            type="textarea"
+            v-model="form1.remarks"
+            placeholder="请输入内容"
+            style="width: 70%"
+          ></el-input>
         </el-form-item>
         <el-form-item label="附图" prop="picurl">
           <el-upload
@@ -335,7 +490,9 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleAddForm1('form1')">提 交</el-button>
+        <el-button type="primary" @click="handleAddForm1('form1')"
+          >提 交</el-button
+        >
         <el-button @click="handleClose1('form1')">取 消</el-button>
       </span>
     </el-dialog>
@@ -350,11 +507,17 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <el-form :model="form" :rules="rules" ref="form" label-width="140px" class="demo-form">
+      <el-form
+        :model="form"
+        :rules="rules"
+        ref="form"
+        label-width="140px"
+        class="demo-form"
+      >
         <el-form-item label="结算账户:" prop="balance_account_id">
           <el-select
             v-model="form.balance_account_id"
-            style="width:70%;"
+            style="width: 70%"
             @change="handle_balance_account_id($event)"
           >
             <el-option
@@ -366,10 +529,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="账户余额:" prop="balance">
-          <div>{{form.balance}}</div>
+          <div>{{ form.balance }}</div>
         </el-form-item>
         <el-form-item label="账目类型:" prop="account_type_id">
-          <el-select v-model="form.account_type_id" style="width:70%;">
+          <el-select v-model="form.account_type_id" style="width: 70%">
             <el-option
               v-for="item in BalanceAccountType"
               :key="item.id"
@@ -379,18 +542,27 @@
           </el-select>
         </el-form-item>
         <el-form-item label="收入金额:" prop="total_money">
-          <el-input v-model="form.total_money" placeholder="请输入内容" style="width:70%;"></el-input>
+          <el-input
+            v-model="form.total_money"
+            placeholder="请输入内容"
+            style="width: 70%"
+          ></el-input>
         </el-form-item>
         <el-form-item label="业务时间" prop="service_time">
           <el-date-picker
             v-model="form.service_time"
             type="date"
             placeholder="选择日期"
-            style="width:70%;"
+            style="width: 70%"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="备注" prop="remarks">
-          <el-input type="textarea" v-model="form.remarks" placeholder="请输入内容" style="width:70%;"></el-input>
+          <el-input
+            type="textarea"
+            v-model="form.remarks"
+            placeholder="请输入内容"
+            style="width: 70%"
+          ></el-input>
         </el-form-item>
         <el-form-item label="附图" prop="picurl">
           <el-upload
@@ -406,7 +578,9 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleAddForm('form')">提 交</el-button>
+        <el-button type="primary" @click="handleAddForm('form')"
+          >提 交</el-button
+        >
         <el-button @click="handleClose('form')">取 消</el-button>
       </span>
     </el-dialog>
@@ -445,7 +619,6 @@ export default {
       total_opay_money: "",
       account_type_name: "",
       balance_account_id: "",
-      power: "",
       ctime_start: "",
       ctime_end: "",
       pageIndex: 1,
@@ -570,6 +743,12 @@ export default {
     };
   },
   methods: {
+    handleClick(e) {
+      console.log(e);
+      this.$router.push({
+        path: `/purchaseMaterial?origin=${e.origin}&origin_code=${e.origin_code}`,
+      });
+    },
     get_account_type_name(e) {
       this.pageIndex = 1;
       console.log(e);
@@ -802,7 +981,6 @@ export default {
     this.getBalanceAccountType();
     this.getSettlementModes();
     this.getTransactionType();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
 };

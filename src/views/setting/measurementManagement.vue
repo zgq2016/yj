@@ -1,24 +1,43 @@
 <template>
-  <div class="goodsCategory" v-if="permission.indexOf('measurementManagement')!=-1">
+  <div
+    class="goodsCategory"
+    v-if="permission.indexOf('measurementManagement') != -1"
+  >
     <div class="aa">
       <!-- 面包屑 -->
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>设置</el-breadcrumb-item>
-        <el-breadcrumb-item>尺码管理</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>设置</el-breadcrumb-item>
+          <el-breadcrumb-item>尺码管理</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <!-- 添加尺码 -->
-    <div class="addClassify" @click="addClassify" v-if="permission.indexOf('size_add')!=-1">添加尺码</div>
+    <div
+      class="addClassify"
+      @click="addClassify"
+      v-if="permission.indexOf('size_add') != -1"
+    >
+      添加尺码
+    </div>
     <el-table
       :data="tableData"
-      style="width: 100%;margin: 20px 0;"
+      style="width: 100%; margin: 20px 0"
       row-key="id"
       border
-      :tree-props="{children: 'size_data' , hasChildren: 'hasChildren'}"
+      :tree-props="{ children: 'size_data', hasChildren: 'hasChildren' }"
     >
-      <el-table-column prop="size_name" label="分类名称" width="200"></el-table-column>
+      <el-table-column
+        prop="size_name"
+        label="分类名称"
+        width="200"
+      ></el-table-column>
       <el-table-column prop="sort" label="排序" width="200"></el-table-column>
-      <el-table-column  label="启用/禁用" v-if="permission.indexOf('size_status_edit')!=-1" width="200">
+      <el-table-column
+        label="启用/禁用"
+        v-if="permission.indexOf('size_status_edit') != -1"
+        width="200"
+      >
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.status"
@@ -28,16 +47,13 @@
           ></el-switch>
         </template>
       </el-table-column>
-      <el-table-column
-        align="right"
-        label="操作"
-      >
+      <el-table-column align="right" label="操作">
         <template slot-scope="scope">
           <el-tooltip
             content="编辑"
             placement="top"
             class="el-icon-edit btn"
-            v-if="permission.indexOf('size_edit')!=-1"
+            v-if="permission.indexOf('size_edit') != -1"
           >
             <div @click="handleEdit(scope.$index, scope.row)"></div>
           </el-tooltip>
@@ -45,7 +61,7 @@
             content="删除"
             placement="top"
             class="el-icon-delete btn"
-            v-if="permission.indexOf('size_del')!=-1"
+            v-if="permission.indexOf('size_del') != -1"
           >
             <div @click="handleDelete(scope.$index, scope.row)"></div>
           </el-tooltip>
@@ -64,7 +80,11 @@
     >
       <el-form ref="form" :model="form" :rules="rules1" label-width="80px">
         <el-form-item label="上级分类" prop="size_id">
-          <el-select v-model="form.size_id" placeholder="可选/可不选" style="width:80%;">
+          <el-select
+            v-model="form.size_id"
+            placeholder="可选/可不选"
+            style="width: 80%"
+          >
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -73,19 +93,29 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="尺码名称" prop="size_name" v-if="form.size_id!==''">
-          <el-input v-model="form.size_name" style="width:80%;"></el-input>
+        <el-form-item
+          label="尺码名称"
+          prop="size_name"
+          v-if="form.size_id !== ''"
+        >
+          <el-input v-model="form.size_name" style="width: 80%"></el-input>
         </el-form-item>
-        <el-form-item label="尺码分类" prop="size_name" v-if="form.size_id===''">
-          <el-input v-model="form.size_name" style="width:80%;"></el-input>
+        <el-form-item
+          label="尺码分类"
+          prop="size_name"
+          v-if="form.size_id === ''"
+        >
+          <el-input v-model="form.size_name" style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="排序" prop="sort">
-          <el-input v-model="form.sort" style="width:80%;"></el-input>
+          <el-input v-model="form.sort" style="width: 80%"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleClose('form')">取 消</el-button>
-        <el-button type="primary" @click="handleNewList('form')">确 定</el-button>
+        <el-button type="primary" @click="handleNewList('form')"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
     <!-- 编辑分类 -->
@@ -98,12 +128,22 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <el-form ref="obj" :model="obj" :rules="rules1" label-width="80px" resetFields>
+      <el-form
+        ref="obj"
+        :model="obj"
+        :rules="rules1"
+        label-width="80px"
+        resetFields
+      >
         <el-form-item label="尺码名称" prop="size_name">
-          <el-input v-model="obj.size_name" style="width:80%;"></el-input>
+          <el-input v-model="obj.size_name" style="width: 80%"></el-input>
         </el-form-item>
-        <el-form-item label="上级分类" v-if="rowLevel==='1'">
-          <el-select v-model="region" @change="get_goods_category_id($event)" style="width:80%;">
+        <el-form-item label="上级分类" v-if="rowLevel === '1'">
+          <el-select
+            v-model="region"
+            @change="get_goods_category_id($event)"
+            style="width: 80%"
+          >
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -113,7 +153,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="排序">
-          <el-input v-model="obj.sort" style="width:80%;"></el-input>
+          <el-input v-model="obj.sort" style="width: 80%"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -147,8 +187,7 @@ export default {
   data() {
     return {
       switch_active: "",
-      permission:[],
-      power: "",
+      permission: [],
       rules: {
         size_name: [
           { required: true, message: "请输入尺码名称", trigger: "blur" },
@@ -298,8 +337,7 @@ export default {
   },
   mounted() {
     this.init();
-    // this.power = localStorage.getItem("power");
-     this.permission = localStorage.getItem("permission").split(",");
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

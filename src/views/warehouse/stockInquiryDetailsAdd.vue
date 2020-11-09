@@ -1,12 +1,14 @@
 <template>
   <div class="stockInquiryDetails">
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <!-- <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" /> -->
-        <el-breadcrumb-item>仓库</el-breadcrumb-item>
-        <el-breadcrumb-item>产品入库</el-breadcrumb-item>
-        <el-breadcrumb-item>产品入库详情</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <!-- <img src="../../assets/mbxlogo.svg" alt class="mbxlogo" /> -->
+          <el-breadcrumb-item>仓库</el-breadcrumb-item>
+          <el-breadcrumb-item>产品入库</el-breadcrumb-item>
+          <el-breadcrumb-item>产品入库详情</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <div class="main">
       <div class="top">
@@ -509,7 +511,6 @@ export default {
       total_price: 0,
       ruleForm: {},
       fileList: [],
-      power: "",
       form: {},
       form1: {},
       ware: [],
@@ -1207,7 +1208,6 @@ export default {
     },
   },
   mounted() {
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
     this.init();
     this.store();

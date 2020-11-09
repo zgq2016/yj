@@ -1,20 +1,31 @@
 <template>
-  <div class="materialStorage" v-if="permission.indexOf('materialStorage')!=-1">
+  <div
+    class="materialStorage"
+    v-if="permission.indexOf('materialStorage') != -1"
+  >
     <!-- 面包屑 -->
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>仓库</el-breadcrumb-item>
-        <el-breadcrumb-item>物料库存流水</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>仓库</el-breadcrumb-item>
+          <el-breadcrumb-item>物料库存流水</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
-    <div style="margin-bottom:10px">
+    <div style="margin-bottom: 10px">
       <el-input
-        style="width:130px"
+        style="width: 130px"
         size="small"
         v-model="form.materials_name"
         placeholder="请输入商品名称"
       ></el-input>
-      <el-button icon="el-icon-search" size="mini" circle class="search_button" @click="onSubmit"></el-button>
+      <el-button
+        icon="el-icon-search"
+        size="mini"
+        circle
+        class="search_button"
+        @click="onSubmit"
+      ></el-button>
     </div>
     <el-form :inline="true" :model="form">
       <el-form-item>
@@ -36,7 +47,7 @@
           v-model="form.storehouse_id"
           clearable
           placeholder="请选择仓库"
-          style="width:120px"
+          style="width: 120px"
           @change="onSubmit"
         >
           <el-option
@@ -61,11 +72,11 @@
           size="small"
           clearable
           placeholder="请选择分类"
-          style="width:120px"
+          style="width: 120px"
           @change="onSubmit"
         >
           <el-option
-            v-for="(item,index) in options"
+            v-for="(item, index) in options"
             :key="index"
             :label="item.color_name"
             :value="item.color_name"
@@ -94,23 +105,59 @@
         style="width: 100%"
         border
       >
-        <el-table-column align="center" property="business_time" label="业务时间"></el-table-column>
-        <el-table-column align="center" property="business_type" label="业务类别"></el-table-column>
-        <el-table-column align="center" property="business_no" label="业务单号"></el-table-column>
-        <el-table-column align="center" property="materials_name" label="名称"></el-table-column>
-        <el-table-column align="center" property="materials_id" label="货号"></el-table-column>
-        <el-table-column align="center" property="color" label="颜色"></el-table-column>
+        <el-table-column
+          align="center"
+          property="business_time"
+          label="业务时间"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="business_type"
+          label="业务类别"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="business_no"
+          label="业务单号"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="materials_name"
+          label="名称"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="materials_id"
+          label="货号"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="color"
+          label="颜色"
+        ></el-table-column>
         <!-- <el-table-column align="center" property="category1" label="尺码"></el-table-column> -->
-        <el-table-column align="center" property="storehouse_name" label="仓库"></el-table-column>
-        <el-table-column align="center" property="add_quantity" label="库存增加数量"></el-table-column>
-        <el-table-column align="center" property="quantity" label="剩余数量"></el-table-column>
+        <el-table-column
+          align="center"
+          property="storehouse_name"
+          label="仓库"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="add_quantity"
+          label="库存增加数量"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="quantity"
+          label="剩余数量"
+        ></el-table-column>
       </el-table>
     </div>
 
     <!-- 分页 -->
     <el-pagination
       class="pagination"
-      style="float:right"
+      style="float: right"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="pageIndex"
@@ -129,7 +176,6 @@ import { getSizeSelect } from "@/api/production";
 export default {
   data() {
     return {
-      power: "",
       input: "",
       form: {},
       tableData: [],
@@ -171,7 +217,7 @@ export default {
         this.form.ctime_end = this.form.business_time[1];
       }
       // console.log(this.form);
-      this.pageIndex = 1
+      this.pageIndex = 1;
       this.init(this.form);
     },
     // 尺码
@@ -209,7 +255,6 @@ export default {
     this.init();
     this.stock();
     this.sized();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
 };

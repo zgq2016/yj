@@ -1,20 +1,31 @@
 <template>
-  <div class="goodsCategory" v-if="permission.indexOf('materialClassification')!=-1">
+  <div
+    class="goodsCategory"
+    v-if="permission.indexOf('materialClassification') != -1"
+  >
     <div class="aa">
       <!-- 面包屑 -->
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>设置</el-breadcrumb-item>
-        <el-breadcrumb-item>物料分类</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>设置</el-breadcrumb-item>
+          <el-breadcrumb-item>物料分类</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <!-- 添加分类 -->
-    <div class="addClassify" v-if="permission.indexOf('materials_class_add')!=-1" @click="addClassify">添加分类</div>
+    <div
+      class="addClassify"
+      v-if="permission.indexOf('materials_class_add') != -1"
+      @click="addClassify"
+    >
+      添加分类
+    </div>
     <el-table
       :data="tableData"
-      style="width: 100%;margin: 20px 0;"
+      style="width: 100%; margin: 20px 0"
       row-key="id"
       border
-      :tree-props="{children: 'class_data' , hasChildren: 'hasChildren'}"
+      :tree-props="{ children: 'class_data', hasChildren: 'hasChildren' }"
     >
       <el-table-column prop="classname" label="分类名称"></el-table-column>
       <el-table-column label="操作" width="200px">
@@ -23,8 +34,10 @@
             content="编辑"
             placement="top"
             class="el-icon-edit btn"
-            v-if="scope.row.is_origin!==1&&permission.indexOf('get_materials_class_edit')!=-1"
-            
+            v-if="
+              scope.row.is_origin !== 1 &&
+              permission.indexOf('get_materials_class_edit') != -1
+            "
           >
             <div @click="handleEdit(scope.$index, scope.row)"></div>
           </el-tooltip>
@@ -32,7 +45,10 @@
             content="删除"
             placement="top"
             class="el-icon-delete btn"
-            v-if="scope.row.is_origin!==1&&permission.indexOf('materials_class_del')!=-1"
+            v-if="
+              scope.row.is_origin !== 1 &&
+              permission.indexOf('materials_class_del') != -1
+            "
           >
             <div @click="handleDelete(scope.$index, scope.row)"></div>
           </el-tooltip>
@@ -51,7 +67,12 @@
     >
       <el-form ref="form" :rules="rules" :model="form" label-width="80px">
         <el-form-item label="上级分类" prop="class_id">
-          <el-select v-model="form.class_id" placeholder="可选/可不选" style="width:80%;" clearable>
+          <el-select
+            v-model="form.class_id"
+            placeholder="可选/可不选"
+            style="width: 80%"
+            clearable
+          >
             <el-option
               v-for="item in classData"
               :key="item.id"
@@ -60,11 +81,19 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="物料名称" prop="classname" v-if="form.class_id!==''">
-          <el-input v-model="form.classname" style="width:80%;"></el-input>
+        <el-form-item
+          label="物料名称"
+          prop="classname"
+          v-if="form.class_id !== ''"
+        >
+          <el-input v-model="form.classname" style="width: 80%"></el-input>
         </el-form-item>
-        <el-form-item label="物料分类" prop="classname" v-if="form.class_id===''">
-          <el-input v-model="form.classname" style="width:80%;"></el-input>
+        <el-form-item
+          label="物料分类"
+          prop="classname"
+          v-if="form.class_id === ''"
+        >
+          <el-input v-model="form.classname" style="width: 80%"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -83,12 +112,23 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <el-form ref="obj" :model="obj" :rules="rules1" label-width="80px" resetFields>
+      <el-form
+        ref="obj"
+        :model="obj"
+        :rules="rules1"
+        label-width="80px"
+        resetFields
+      >
         <el-form-item label="分类名称" prop="classname">
-          <el-input v-model="obj.classname" style="width:80%;"></el-input>
+          <el-input v-model="obj.classname" style="width: 80%"></el-input>
         </el-form-item>
-        <el-form-item label="上级分类" prop="class_id" v-if="obj.level==1">
-          <el-select v-model="obj.class_id" placeholder="可选/可不选" style="width:80%;" clearable>
+        <el-form-item label="上级分类" prop="class_id" v-if="obj.level == 1">
+          <el-select
+            v-model="obj.class_id"
+            placeholder="可选/可不选"
+            style="width: 80%"
+            clearable
+          >
             <el-option
               v-for="item in classData"
               :key="item.id"
@@ -100,7 +140,9 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleClose1('obj')">取 消</el-button>
-        <el-button type="primary" @click="handleEditList('obj')">确 定</el-button>
+        <el-button type="primary" @click="handleEditList('obj')"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
     <!-- 分页 -->
@@ -134,9 +176,8 @@ import {
 export default {
   data() {
     return {
-      permission:[],
+      permission: [],
       classData: [],
-      power: "",
       rules: {
         classname: [
           { required: true, message: "请输入分类名称", trigger: "blur" },
@@ -264,7 +305,6 @@ export default {
   },
   mounted() {
     this.init();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
 };

@@ -60,6 +60,7 @@ import WarehouseSet from "@/views/warehouse/warehouseSet.vue";
 import ProductStorehouse from "@/views/warehouse/productStorehouse.vue";
 import MaterialStorage from "@/views/warehouse/materialStorage.vue";
 import Material from "@/views/warehouse/material.vue";
+import PurchaseMaterial from "@/views/warehouse/purchaseMaterial.vue";
 import MaterialTable from "@/views/warehouse/materialTable.vue";
 import Purchase from "@/views/production/purchase.vue";
 import ProductionScheduling from "@/views/production/productionScheduling.vue";
@@ -324,11 +325,16 @@ const routes = [
         component: Material,
       },
       {
+        path: "/purchase",
+        name: "Purchase",
+        component: Purchase,
+      },
+      {
         path: "/materialTable",
         name: "MaterialTable",
         component: MaterialTable,
       },
-      { path: "/purchase", name: "Purchase", component: Purchase },
+      { path: "/purchaseMaterial", name: "PurchaseMaterial", component: PurchaseMaterial },
       {
         path: "/productionScheduling",
         name: "ProductionScheduling",

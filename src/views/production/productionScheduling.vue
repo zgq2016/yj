@@ -1,11 +1,14 @@
 <template>
   <div class="productionScheduling" v-if="permission.indexOf('productionScheduling')!=-1">
     <div class="aa">
+      <div class="bb">
+
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>生产</el-breadcrumb-item>
         <el-breadcrumb-item>生产排单</el-breadcrumb-item>
       </el-breadcrumb>
+      </div>
     </div>
     <div style="margin-bottom:10px">
       <el-input v-model="formInline.styleno" placeholder="款号" style="width:200px"></el-input>
@@ -98,7 +101,7 @@
         <el-table-column align="center" property="styleno" label="款号"></el-table-column>
         <el-table-column align="center" property="stylename" label="名称"></el-table-column>
         <el-table-column align="center" property="produce_no" label="批号"></el-table-column>
-        <el-table-column align="center" property="style_color" label="颜色"></el-table-column>
+        <!-- <el-table-column align="center" property="style_color" label="颜色"></el-table-column> -->
         <el-table-column align="center" property="style_type" label="品类"></el-table-column>
         <el-table-column align="center" property="year" label="年份"></el-table-column>
         <el-table-column align="center" property="season" label="季节"></el-table-column>
@@ -157,7 +160,6 @@ import { getProduceFactoryList } from "@/api/production";
 export default {
   data() {
     return {
-      power: "",
       formInline: {
         styleno: "",
         year: "",
@@ -307,9 +309,7 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
-    console.log(this.power);
   },
 };
 </script>

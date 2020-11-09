@@ -285,6 +285,7 @@
                   :outputSize="option.size"
                   :outputType="option.outputType"
                   :info="true"
+                  :centerBox="option.centerBox"
                   :full="option.full"
                   :canMove="option.canMove"
                   :canMoveBox="option.canMoveBox"
@@ -463,6 +464,8 @@ export default {
         autoCropWidth: 150,
         autoCropHeight: 150,
         fixedBox: true,
+        centerBox: true,
+        infoTrue: false,
       },
       fileName: "", //本机文件地址
       downImg: "#",
@@ -981,7 +984,20 @@ export default {
             type: "error",
           });
         } else {
-          this.$router.go(-1);
+          let loca = this.$route.query.loca - 0;
+          let id = this.$route.query.id - 0;
+          let index = this.$route.query.index - 0;
+          if (loca == 1) {
+            this.$router.push({
+              path: `/addRouteCard?loca=1&id=${id}&index=${index}`,
+            });
+          } else if (loca == 2) {
+            this.$router.push({
+              path: `/editRouteCard?loca=2&id=${id}&index=${index}`,
+            });
+          } else {
+            this.$router.go(-1);
+          }
         }
       }
     },
@@ -1434,8 +1450,8 @@ export default {
       justify-content: flex-end;
       -webkit-justify-content: flex-end;
       .cropper {
-        width: 260px;
-        height: 260px;
+        width: 500px;
+        height: 500px;
       }
       .show-preview {
         width: 150px;

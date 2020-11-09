@@ -1,6 +1,7 @@
 <template>
-  <div class="accounter" v-if="permission.indexOf('accounter')!=-1">
+  <div class="accounter" v-if="permission.indexOf('accounter') != -1">
     <div class="aa">
+      <div class="bb"></div>
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>财务</el-breadcrumb-item>
         <el-breadcrumb-item>结算帐户</el-breadcrumb-item>
@@ -8,13 +9,19 @@
     </div>
     <div
       @click="dialogVisible = true"
-      v-if="permission.indexOf('balance_account_add')!=-1"
+      v-if="permission.indexOf('balance_account_add') != -1"
       class="addStyle"
-    >新增帐户</div>
+    >
+      新增帐户
+    </div>
 
-    <div class="table" style="width: 100%;margin:10px 0">
+    <div class="table" style="width: 100%; margin: 10px 0">
       <el-table size="mini" :data="data" border style="width: 100%">
-        <el-table-column fixed prop="account_name" label="账户名称"></el-table-column>
+        <el-table-column
+          fixed
+          prop="account_name"
+          label="账户名称"
+        ></el-table-column>
         <el-table-column prop="account" label="账号"></el-table-column>
         <el-table-column prop="name" label="开户人"></el-table-column>
         <el-table-column prop="user_name" label="使用人"></el-table-column>
@@ -28,7 +35,10 @@
             <el-tooltip
               content="编辑"
               placement="top"
-              v-if="permission.indexOf('balance_account_edit')!=-1&&scope.row.is_origin!=1"
+              v-if="
+                permission.indexOf('balance_account_edit') != -1 &&
+                scope.row.is_origin != 1
+              "
               class="el-icon-edit btn"
             >
               <div @click="handleEdit(scope.$index, scope.row)"></div>
@@ -36,7 +46,10 @@
             <el-tooltip
               content="删除"
               placement="top"
-              v-if="permission.indexOf('balance_account_del')!=-1&&scope.row.is_origin!=1"
+              v-if="
+                permission.indexOf('balance_account_del') != -1 &&
+                scope.row.is_origin != 1
+              "
               class="el-icon-delete btn"
             >
               <div @click="handleDelete(scope.$index, scope.row)"></div>
@@ -66,29 +79,40 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <el-form :model="obj" :rules="rules" ref="obj" label-width="100px" class="demo-form">
+      <el-form
+        :model="obj"
+        :rules="rules"
+        ref="obj"
+        label-width="100px"
+        class="demo-form"
+      >
         <el-form-item label="账户名称" prop="account_name">
-          <el-input v-model="obj.account_name" style="width:80%"></el-input>
+          <el-input v-model="obj.account_name" style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="账号" prop="account">
-          <el-input v-model="obj.account" style="width:80%"></el-input>
+          <el-input v-model="obj.account" style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="开户人" prop="name">
-          <el-input v-model="obj.name" style="width:80%"></el-input>
+          <el-input v-model="obj.name" style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="使用人">
-          <el-select v-model="obj.user_id" style="width:80%">
-            <el-option v-for="item in userlist" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          <el-select v-model="obj.user_id" style="width: 80%">
+            <el-option
+              v-for="item in userlist"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="状态" prop="status">
-          <el-radio-group v-model="obj.status" style="width:80%">
+          <el-radio-group v-model="obj.status" style="width: 80%">
             <el-radio :label="'1'">启用</el-radio>
             <el-radio :label="'0'">停用</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="账户类型" prop="account_type">
-          <el-select v-model="obj.account_type" style="width:80%">
+          <el-select v-model="obj.account_type" style="width: 80%">
             <el-option
               v-for="item in balance"
               :key="item.id"
@@ -98,14 +122,24 @@
           </el-select>
         </el-form-item>
         <el-form-item label="备注" prop="remarks">
-          <el-input type="textarea" v-model="obj.remarks" style="width:80%"></el-input>
+          <el-input
+            type="textarea"
+            v-model="obj.remarks"
+            style="width: 80%"
+          ></el-input>
         </el-form-item>
         <el-form-item label="排序" prop="sort">
-          <el-input v-model="obj.sort" style="width:80%" @input="handleInput"></el-input>
+          <el-input
+            v-model="obj.sort"
+            style="width: 80%"
+            @input="handleInput"
+          ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleEditForm('obj')">提 交</el-button>
+        <el-button type="primary" @click="handleEditForm('obj')"
+          >提 交</el-button
+        >
         <el-button @click="handleEditClose('obj')">取 消</el-button>
       </span>
     </el-dialog>
@@ -120,29 +154,40 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="demo-form">
+      <el-form
+        :model="form"
+        :rules="rules"
+        ref="form"
+        label-width="100px"
+        class="demo-form"
+      >
         <el-form-item label="账户名称" prop="account_name">
-          <el-input v-model="form.account_name" style="width:80%"></el-input>
+          <el-input v-model="form.account_name" style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="账号" prop="account">
-          <el-input v-model="form.account" style="width:80%"></el-input>
+          <el-input v-model="form.account" style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="开户人" prop="name">
-          <el-input v-model="form.name" style="width:80%"></el-input>
+          <el-input v-model="form.name" style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="使用人">
-          <el-select v-model="form.user_id" style="width:80%">
-            <el-option v-for="item in userlist" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          <el-select v-model="form.user_id" style="width: 80%">
+            <el-option
+              v-for="item in userlist"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="状态" prop="status">
-          <el-radio-group v-model="form.status" style="width:80%">
+          <el-radio-group v-model="form.status" style="width: 80%">
             <el-radio :label="1">启用</el-radio>
             <el-radio :label="0">停用</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="账户类型" prop="account_type">
-          <el-select v-model="form.account_type" style="width:80%">
+          <el-select v-model="form.account_type" style="width: 80%">
             <el-option
               v-for="item in balance"
               :key="item.id"
@@ -152,14 +197,24 @@
           </el-select>
         </el-form-item>
         <el-form-item label="备注" prop="remarks">
-          <el-input type="textarea" v-model="form.remarks" style="width:80%"></el-input>
+          <el-input
+            type="textarea"
+            v-model="form.remarks"
+            style="width: 80%"
+          ></el-input>
         </el-form-item>
         <el-form-item label="排序" prop="sort">
-          <el-input v-model="form.sort" style="width:80%" @input="handleInput"></el-input>
+          <el-input
+            v-model="form.sort"
+            style="width: 80%"
+            @input="handleInput"
+          ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleAddForm('form')">提 交</el-button>
+        <el-button type="primary" @click="handleAddForm('form')"
+          >提 交</el-button
+        >
         <el-button @click="handleClose('form')">取 消</el-button>
       </span>
     </el-dialog>
@@ -179,7 +234,6 @@ import { getStylistList } from "@/api/researchDevelopment";
 export default {
   data() {
     return {
-      power: "",
       pageIndex: 1,
       pageSize: 9,
       total: 0,
@@ -334,7 +388,6 @@ export default {
     this.get_balance();
     this.init();
     this.user();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
 };

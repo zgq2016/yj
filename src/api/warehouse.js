@@ -160,3 +160,11 @@ export const materialStoreRecord = data => {
         data: data
     });
 };
+// 
+export const materialsPurchaseLog = data => {
+    return axios({
+        url: "?g=materials_purchase_log",
+        method: "post",
+        data: data
+    });
+};

@@ -37,7 +37,6 @@ const actions = {
       method: "POST",
       data,
     }).then((res) => {
-      console.log(res);
       if (res.data.error_code === 0) {
         // console.log(window.document.cookie)
         // console.log(window)
@@ -46,6 +45,7 @@ const actions = {
         // 调用user下的mutations的方法
         store.commit("setUserInfo", res.data.data);
         localStorage.setItem("permission", this.state.userInfo.permission);
+        localStorage.setItem("name", this.state.userInfo.name);
         localStorage.setItem("power", this.state.userInfo.power);
         localStorage.setItem("user_id", this.state.userInfo.id);
         localStorage.setItem("itcast_pro_token", res.data.data.token);

@@ -1,69 +1,30 @@
 <template>
   <div class="routeCardDeital">
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>档案库</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/routeCard_list' }">物料工艺卡</el-breadcrumb-item>
-        <el-breadcrumb-item>物料工艺卡详细</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>档案库</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/routeCard_list' }"
+            >物料工艺卡</el-breadcrumb-item
+          >
+          <el-breadcrumb-item>物料工艺卡详细</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <div class="main">
-      <div style="display:flex;justify-content: space-between;">
-        <div class="up">
-          <div class="up_img" v-if="upData.color_data">
-            <img :src="upData.color_data[0].picurl" alt @click="handlePreview" />
-          </div>
-          <div class="up_content">
-            <div class="up_content_name">{{upData.materialsname}}</div>
-            <div style="display:flex;">
-              <div style="margin-right:100px;">
-                <div>内部编号 : {{upData.materialsno}}</div>
-                <div>编号 : {{upData.materialsno}}</div>
-                <div>面料分类</div>
-                <div>料属性</div>
-                <div style="display:flex;">
-                  <div>面料成分：</div>
-                  <div v-for="(item, index) in upData.material_data" :key="index">
-                    <div>
-                      <div>{{item.content}}%</div>
-                      <div>{{item.material_name}}</div>
-                    </div>
-                  </div>
-                </div>
-                
-              </div>
-              <div>
-                <div>大货量单价：&yen;{{upData.wsale_price}}</div>
-                <!-- <div>幅宽：{{upData.unit}}</div> -->
-                <div>幅宽：{{upData.breadth}}cm</div>
-                <div>克重：{{upData.grammage}}g</div>
-                <div>是否有货：{{upData.instock}}</div>
-                <div>到货时间：{{upData.arrival_time}}天</div>
-                <div class="bz">备注：{{upData.remarks}}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <router-link
-          :to="`/editrouteCard?id=${upData.id}&TL=2`"
-          :data="upData"
-          v-if="permission.indexOf('materials_edit')!=-1"
-        >
-          <span class="el-icon-edit" style="font-size: 30px;cursor: pointer;"></span>
-        </router-link>
-      </div>
+      <div style="font-size: 18px; padding: 5px">供应商信息</div>
       <div class="supplier">
         <div class="main_left">
           <div class="main_left_img">
             <img :src="obj.cardpicurl" alt @click="handlePreview1" />
           </div>
           <div class="main_left_deital">
-            <div class="main_left_deital_name">{{obj.companyname}}</div>
+            <div class="main_left_deital_name">{{ obj.companyname }}</div>
             <div>
               <div>
                 <div v-for="(item, index) in obj.contact_data" :key="index">
-                  <span style="margin:0 10px">{{item.contacts}}:</span>
-                  <span>{{item.phone}}</span>
+                  <span style="margin: 0 10px">{{ item.contacts }}:</span>
+                  <span>{{ item.phone }}</span>
                 </div>
               </div>
             </div>
@@ -71,15 +32,77 @@
               账号信息：
               <div>
                 <div v-for="(item, index) in obj.bank_data" :key="index">
-                  <span>{{item.bank}}</span>
-                  <span style="margin:0 10px">{{item.bankid}}</span>
-                  <span>{{item.name}}</span>
+                  <span>{{ item.bank }}</span>
+                  <span style="margin: 0 10px">{{ item.bankid }}</span>
+                  <span>{{ item.name }}</span>
                 </div>
               </div>
             </div>
-            <div>{{obj.address}}</div>
+            <div>{{ obj.address }}</div>
           </div>
         </div>
+      </div>
+      <div style="font-size: 18px; padding: 5px">物料信息</div>
+      <div
+        style="display: flex; justify-content: space-between"
+        v-for="(item, index) in upData.color_data"
+        :key="index"
+      >
+        <div class="up">
+          <div class="up_img">
+            <img :src="item.picurl" alt @click="handlePreview" />
+          </div>
+          <div class="">
+            <div style="display: flex">
+              <div style="margin:5px 100px 0 0">
+                <div>颜色 : {{ item.color }}</div>
+                <div>色号 : {{ item.color_no }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="up_content" v-if="index == 0">
+            <div class="up_content_name">{{ upData.materialsname }}</div>
+            <div style="display: flex">
+              <div style="margin-right: 100px">
+                <div>内部编号 : {{ upData.materialsno }}</div>
+                <div>编号 : {{ upData.materialsno }}</div>
+                <div>面料分类</div>
+                <div>料属性</div>
+                <div style="display: flex">
+                  <div>面料成分：</div>
+                  <div
+                    v-for="(item, index) in upData.material_data"
+                    :key="index"
+                  >
+                    <div>
+                      <div>{{ item.content }}%</div>
+                      <div>{{ item.material_name }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div>大货量单价：&yen;{{ upData.wsale_price }}</div>
+                <!-- <div>幅宽：{{upData.unit}}</div> -->
+                <div>幅宽：{{ upData.breadth }}cm</div>
+                <div>克重：{{ upData.grammage }}g</div>
+                <div>是否有货：{{ upData.instock }}</div>
+                <div>到货时间：{{ upData.arrival_time }}天</div>
+                <div class="bz">备注：{{ upData.remarks }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <router-link
+          :to="`/editrouteCard?id=${upData.id}&TL=2`"
+          :data="upData"
+          v-if="permission.indexOf('materials_edit') != -1 && index == 0"
+        >
+          <span
+            class="el-icon-edit"
+            style="font-size: 30px; cursor: pointer"
+          ></span>
+        </router-link>
       </div>
     </div>
     <el-dialog :visible.sync="dialogVisible">
@@ -96,7 +119,6 @@ import { getMaterialsInfo, getSupplierInfo } from "@/api/archives";
 export default {
   data() {
     return {
-      power: "",
       upData: {},
       obj: {},
       dialogVisible: false,
@@ -131,8 +153,6 @@ export default {
       this.upData.instock = "否";
     }
     this.init();
-    // this.power = localStorage.getItem("power");
-    // console.log(this.power);
     this.permission = localStorage.getItem("permission").split(",");
   },
 };
@@ -152,6 +172,7 @@ export default {
       .up_img {
         margin-right: 20px;
         img {
+          border-radius: 15px;
           width: 200px;
           height: 200px;
         }
@@ -175,6 +196,7 @@ export default {
         .main_left_img {
           margin-right: 20px;
           img {
+            border-radius: 15px;
             width: 200px;
             height: 200px;
           }

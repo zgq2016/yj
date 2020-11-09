@@ -1,31 +1,51 @@
 <template>
-  <div class="platemaking" v-if="permission.indexOf('ExaminationAndApprovalWork')!=-1">
+  <div
+    class="platemaking"
+    v-if="permission.indexOf('ExaminationAndApprovalWork') != -1"
+  >
     <div class="aa">
       <!-- 面包屑 -->
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>审批</el-breadcrumb-item>
-        <el-breadcrumb-item>工作审批</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>审批</el-breadcrumb-item>
+          <el-breadcrumb-item>工作审批</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
-    <div style="margin-bottom:10px">
-      <el-input v-model="formInline.styleno" placeholder="款号" style="width:200px"></el-input>
-      <el-button icon="el-icon-search" size="mini" circle class="search_button" @click="onSubmit"></el-button>
+    <div style="margin-bottom: 10px">
+      <el-input
+        v-model="formInline.styleno"
+        placeholder="款号"
+        style="width: 200px"
+      ></el-input>
+      <el-button
+        icon="el-icon-search"
+        size="mini"
+        circle
+        class="search_button"
+        @click="onSubmit"
+      ></el-button>
     </div>
     <el-form
       :inline="true"
       :model="formInline"
       class="demo-form-inline"
-      style="position: relative;"
+      style="position: relative"
     >
       <el-form-item>
         <el-select
           v-model="formInline.year"
           clearable
           placeholder="年份"
-          style="width:120px"
+          style="width: 120px"
           @change="get_year($event)"
         >
-          <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
+          <el-option
+            v-for="item in years"
+            :key="item.id"
+            :label="item.year"
+            :value="item.year"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -33,7 +53,7 @@
           v-model="formInline.season"
           clearable
           placeholder="季节"
-          style="width:120px"
+          style="width: 120px"
           @change="get_season($event)"
         >
           <el-option
@@ -50,9 +70,14 @@
           placeholder="设计师"
           @change="handleUser_id($event)"
           clearable
-          style="width:120px"
+          style="width: 120px"
         >
-          <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          <el-option
+            v-for="item in stylists"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -60,7 +85,7 @@
           v-model="formInline.style_type"
           clearable
           placeholder="类别"
-          style="width:120px"
+          style="width: 120px"
           @change="get_style_type($event)"
         >
           <el-option
@@ -76,12 +101,21 @@
           <el-option v-for="item in states" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </el-form-item>-->
-      <div style="float:right;">
-        <el-button size="small" @click="approval(0)" v-if="is_approval" round type="info">关闭审批</el-button>
-        <el-button size="small" @click="approval(1)" v-else round type="info">开启审批</el-button>
+      <div style="float: right">
+        <el-button
+          size="small"
+          @click="approval(0)"
+          v-if="is_approval"
+          round
+          type="info"
+          >关闭审批</el-button
+        >
+        <el-button size="small" @click="approval(1)" v-else round type="info"
+          >开启审批</el-button
+        >
       </div>
     </el-form>
-    <div class="table" v-if="permission.indexOf('get_style_approve')!=-1">
+    <div class="table" v-if="permission.indexOf('get_style_approve') != -1">
       <el-table
         ref="singleTable"
         size="mini"
@@ -89,43 +123,85 @@
         highlight-current-row
         style="width: 100%"
       >
-        <el-table-column align="center" label="序号" type="index" width="50"></el-table-column>
+        <el-table-column
+          align="center"
+          label="序号"
+          type="index"
+          width="50"
+        ></el-table-column>
         <el-table-column align="center" label="图片" width="140">
           <template slot-scope="scope" property="style_pic_url">
             <el-image
-              style="width: 50px; height: 50px;border-radius: 5px;margin-right: 5px;"
+              style="
+                width: 50px;
+                height: 50px;
+                border-radius: 5px;
+                margin-right: 5px;
+              "
               :src="scope.row.style_pic_url"
               fit="cover"
             ></el-image>
           </template>
         </el-table-column>
-        <el-table-column align="center" property="stylename" label="名称"></el-table-column>
-        <el-table-column align="center" property="styleno" label="款号"></el-table-column>
-        <el-table-column align="center" property="style_color" label="颜色"></el-table-column>
-        <el-table-column align="center" property="style_type" label="品类"></el-table-column>
-        <el-table-column align="center" property="year" label="年份"></el-table-column>
-        <el-table-column align="center" property="season" label="季节"></el-table-column>
-        <el-table-column align="center" property="name" label="设计师"></el-table-column>
-        <el-table-column align="center" property="aa" label="状态"></el-table-column>
+        <el-table-column
+          align="center"
+          property="stylename"
+          label="名称"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="styleno"
+          label="款号"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="style_color"
+          label="颜色"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="style_type"
+          label="品类"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="year"
+          label="年份"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="season"
+          label="季节"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="name"
+          label="设计师"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          property="aa"
+          label="状态"
+        ></el-table-column>
         <el-table-column align="center" width="200" label="操作">
           <template slot-scope="scope">
-            <div style="display: flex;align-items: center;">
+            <div style="display: flex; align-items: center">
               <router-link
-                v-if="scope.row.design_status===2"
+                v-if="scope.row.design_status === 2"
                 :to="`/designNote?id=${scope.row.id}`"
                 target="_blank"
               >
                 <el-button class="elbtn" size="mini">查看</el-button>
               </router-link>
               <router-link
-                v-if="scope.row.pattern_status===3"
+                v-if="scope.row.pattern_status === 3"
                 :to="`/patternStatus?id=${scope.row.id}`"
                 target="_blank"
               >
                 <el-button class="elbtn" size="mini">查看</el-button>
               </router-link>
               <router-link
-                v-if="scope.row.sample_status===3"
+                v-if="scope.row.sample_status === 3"
                 :to="`/sampleDress?id=${scope.row.id}`"
                 target="_blank"
               >
@@ -135,12 +211,14 @@
                 class="elbtn"
                 size="mini"
                 @click="pattern_agree1(scope.$index, scope.row, 1)"
-              >通过</el-button>
+                >通过</el-button
+              >
               <el-button
                 class="elbtn"
                 size="mini"
                 @click="pattern_agree2(scope.$index, scope.row, 0)"
-              >不通过</el-button>
+                >不通过</el-button
+              >
             </div>
           </template>
         </el-table-column>
@@ -184,7 +262,6 @@ import {
 export default {
   data() {
     return {
-      power: "",
       formInline: {
         styleno: "",
         year: "",
@@ -345,7 +422,6 @@ export default {
     this.getCategory();
     this.getWest();
     this.init();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
     let res = await isApproval();
     this.is_approval = res.data.data.is_approval;

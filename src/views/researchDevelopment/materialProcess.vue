@@ -93,9 +93,7 @@
                       </div>
                       <div class="cardStyle_left_content">
                         <div class="cardStyle_left_content_name">
-                          <div>
-                            {{ item2.materials_data.materialsname || "已删除" }}
-                          </div>
+                          <div>{{ item2.materials_data[0].materialsname }}</div>
 
                           <div
                             v-if="
@@ -109,7 +107,7 @@
                           ></div>
                         </div>
                         <div>
-                          内部编号:{{ item2.materials_data.materialsno }}
+                          内部编号:{{ item2.materials_data[0].materialsno }}
                         </div>
                         <div
                           v-if="item2.style_materials_supplier_data.length > 0"
@@ -224,9 +222,9 @@
 
               <div class="cardStyle_left_content">
                 <div class="name">
-                  {{ item1.materials_data.materialsname || "已删除" }}
+                  {{ item1.materials_data[0].materialsname }}
                 </div>
-                <div>内部编号: {{ item1.materials_data.materialsno }}</div>
+                <div>内部编号: {{ item1.materials_data[0].materialsno }}</div>
                 <div v-if="item1.style_materials_supplier_data.length > 0">
                   {{ item1.style_materials_supplier_data[0].companyname }}
                 </div>
@@ -296,9 +294,7 @@
                       </div>
                       <div class="cardStyle_left_content">
                         <div class="cardStyle_left_content_name">
-                          <div>
-                            {{ item2.materials_data.materialsname || "已删除" }}
-                          </div>
+                          <div>{{ item2.materials_data[0].materialsname }}</div>
 
                           <div
                             v-if="
@@ -312,7 +308,7 @@
                           ></div>
                         </div>
                         <div>
-                          内部编号:{{ item2.materials_data.materialsno }}
+                          内部编号:{{ item2.materials_data[0].materialsno }}
                         </div>
                         <div
                           v-if="item2.style_materials_supplier_data.length > 0"
@@ -437,7 +433,7 @@
               </div>
               <div class="cardStyle_left_content">
                 <div style="font-weight: 600; font-size: 14px">
-                  {{ item.materialsname || "" }}
+                  {{ item.materialsname }}
                 </div>
                 <div>内部编号:{{ item.materialsno }}</div>
                 <div v-if="item.supplier_data.length > 0">
@@ -594,7 +590,6 @@ export default {
 
       Cardvalue: "",
       active_index: 0,
-      color_name_id: "",
     };
   },
   methods: {
@@ -686,7 +681,6 @@ export default {
         });
     },
     async addMaterialsList(item) {
-      console.log(item);
       this.$confirm("确定选择", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -697,7 +691,7 @@ export default {
         let style_color_name =
           this.activeItem.style_color_name ||
           this.obj.style_color_data[0].style_color_name;
-        let mainclass = item.materials_mainclass_name;
+        let mainclass = this.materials;
         let materials_id = item.id;
         let materials_color_id =
           this.materials_color_id || item.materials_color_data[0].id;
@@ -720,9 +714,8 @@ export default {
           let style_id = this.$route.query.id;
           let e = {
             style_id: style_id,
-            style_color_name: this.color_name_id,
+            style_color_name: this.activeItem.style_color_name,
           };
-          console.log(e);
           let index = this.active;
           this.active_index = 1;
           this.handleColorNum(e, index);
@@ -975,7 +968,6 @@ export default {
     },
     // 切换颜色
     async handleColorNum(item, index) {
-      this.color_name_id = item.style_color_name;
       this.active = index;
       console.log(item);
       this.activeItem = item;
@@ -1047,8 +1039,8 @@ export default {
       console.log(res);
       this.obj = res.data.data;
       this.style_color_data_length = res.data.data.style_color_data.length;
+
       if (this.active_index == 0 && this.style_color_data_length > 0) {
-      this.color_name_id = this.obj.style_color_data[0].style_color_name;
         this.card_init();
       }
       let res2 = await getColorSelect();
@@ -1416,7 +1408,6 @@ export default {
             }
           }
           .cardStyle_right {
-            
             display: flex;
             justify-content: center;
             align-items: center;

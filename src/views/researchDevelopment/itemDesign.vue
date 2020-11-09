@@ -1,18 +1,20 @@
 <template>
-  <div class="itemDesign" v-if="permission.indexOf('itemDesign')!=-1">
+  <div class="itemDesign" v-if="permission.indexOf('itemDesign') != -1">
     <div class="aa">
       <!-- 面包屑 -->
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>研发</el-breadcrumb-item>
-        <el-breadcrumb-item>设计项目</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>研发</el-breadcrumb-item>
+          <el-breadcrumb-item>设计项目</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
-    <div style="margin-bottom:10px">
+    <div style="margin-bottom: 10px">
       <el-input
         v-model="formInline.stylekeyword"
         placeholder="项目"
         class="project"
-        style="width:200px"
+        style="width: 200px"
       ></el-input>
       <el-button
         icon="el-icon-search"
@@ -29,10 +31,15 @@
             v-model="formInline.year"
             clearable
             placeholder="年份"
-            style="width:100px"
+            style="width: 100px"
             @change="get_year"
           >
-            <el-option v-for="item in years" :key="item.id" :label="item.year" :value="item.year"></el-option>
+            <el-option
+              v-for="item in years"
+              :key="item.id"
+              :label="item.year"
+              :value="item.year"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -40,7 +47,7 @@
             v-model="formInline.season"
             clearable
             placeholder="季节"
-            style="width:100px"
+            style="width: 100px"
             @change="get_seasons"
           >
             <el-option
@@ -57,9 +64,14 @@
             clearable
             placeholder="设计师"
             @change="handleUser_id($event)"
-            style="width:100px"
+            style="width: 100px"
           >
-            <el-option v-for="item in stylists" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option
+              v-for="item in stylists"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <!-- <el-form-item>
@@ -84,7 +96,7 @@
             clearable
             placeholder="西所"
             @change="handleCustomer_id($event)"
-            style="width:100px"
+            style="width: 100px"
           >
             <el-option
               v-for="item in wests"
@@ -100,13 +112,18 @@
             clearable
             placeholder="状态"
             @change="handelState($event)"
-            style="width:100px"
+            style="width: 100px"
           >
-            <el-option v-for="item in states" :key="item.id" :label="item.v" :value="item.id"></el-option>
+            <el-option
+              v-for="item in states"
+              :key="item.id"
+              :label="item.v"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <div class="addStyle" v-if="permission.indexOf('project_add')!=-1">
+          <div class="addStyle" v-if="permission.indexOf('project_add') != -1">
             <el-dropdown trigger="click" @command="handleCommand">
               <span class="el-dropdown-link">新增项目</span>
               <el-dropdown-menu slot="dropdown">
@@ -122,43 +139,42 @@
     </div>
 
     <!-- 列表 -->
-    <div class="dataList"  v-if="permission.indexOf('get_project_list')!=-1">
-      <div class="list" v-for="(item, index) in data" :key="index" >
-        <div @click="handleEdit(item)"  >
+    <div class="dataList" v-if="permission.indexOf('get_project_list') != -1">
+      <div class="list" v-for="(item, index) in data" :key="index">
+        <div @click="handleEdit(item)">
           <el-image
             v-if="item.picurl"
-            style="width: 150px; height: 150px;
-        border-radius: 10px;"
+            style="width: 150px; height: 150px; border-radius: 10px"
             :src="item.picurl"
             fit="cover"
           ></el-image>
-          <div v-if="item.picurl===''">
+          <div v-if="item.picurl === ''">
             <img
-              style="width: 150px; height: 150px;"
-              v-if="item.projecttype==='意向订单'"
+              style="width: 150px; height: 150px"
+              v-if="item.projecttype === '意向订单'"
               src="../../assets/意向.jpg"
               alt
             />
             <img
-              style="width: 150px; height: 150px;"
-              v-if="item.projecttype==='阶段工作'"
+              style="width: 150px; height: 150px"
+              v-if="item.projecttype === '阶段工作'"
               src="../../assets/阶段.jpg"
               alt
             />
             <img
-              style="width: 150px; height: 150px;"
-              v-if="item.projecttype==='企划系列'"
+              style="width: 150px; height: 150px"
+              v-if="item.projecttype === '企划系列'"
               src="../../assets/系列.jpg"
               alt
             />
           </div>
         </div>
         <div class="information">
-          <div class="projecttype">{{item.projecttype}}</div>
-          <div class="detailed">{{item.projectname}}</div>
-          <div class="finishtime">完成时间：{{item.finishtime}}</div>
-          <div class="user_name">{{item.user_name}}</div>
-          <div class="updatetime">提交于 {{item.ctime}}</div>
+          <div class="projecttype">{{ item.projecttype }}</div>
+          <div class="detailed">{{ item.projectname }}</div>
+          <div class="finishtime">完成时间：{{ item.finishtime }}</div>
+          <div class="user_name">{{ item.user_name }}</div>
+          <div class="updatetime">提交于 {{ item.ctime }}</div>
         </div>
       </div>
       <!-- 无数据 -->
@@ -227,7 +243,6 @@ export default {
         },
       ],
       obj: {},
-      power: "",
       formInline: {
         stylekeyword: "",
         year: "",
@@ -362,7 +377,6 @@ export default {
     this.getStylist();
     this.getCategory();
     this.getWest();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
   watch: {

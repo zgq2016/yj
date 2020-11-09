@@ -2,17 +2,19 @@
   <div class="newTheStyle">
     <div class="aa">
       <!-- 面包屑 -->
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>研发部</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/itemDesign' }"
-          >项目设计</el-breadcrumb-item
-        >
-        <el-breadcrumb-item
-          :to="{ path: `/designCheck?id=${this.$route.query.id}` }"
-          >项目详细</el-breadcrumb-item
-        >
-        <el-breadcrumb-item>新增款式</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>研发部</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/itemDesign' }"
+            >项目设计</el-breadcrumb-item
+          >
+          <el-breadcrumb-item
+            :to="{ path: `/designCheck?id=${this.$route.query.id}` }"
+            >项目详细</el-breadcrumb-item
+          >
+          <el-breadcrumb-item>新增款式</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <!-- 没有数据 -->
     <div class="main" v-if="!this.$route.query.oldId">
@@ -20,7 +22,7 @@
         <div class="upload" @click="handle_style_pic_url">
           <el-image
             v-if="form.style_pic_url"
-            style="width: 150px; height: 150px; margin-right: 5px"
+            style="width: 160px; height: 160px; margin-right: 5px"
             :src="form.style_pic_url"
             fit="cover"
           ></el-image>
@@ -71,7 +73,7 @@
                   >
                 </div>
               </el-form-item>
-              <el-form-item label="颜色" prop="style_color">
+              <!-- <el-form-item label="颜色" prop="style_color">
                 <div style="display: flex">
                   <el-cascader
                     v-model="form.style_color"
@@ -87,7 +89,7 @@
                     >新增颜色</router-link
                   >
                 </div>
-              </el-form-item>
+              </el-form-item> -->
             </el-form>
           </div>
         </div>
@@ -112,7 +114,7 @@
           >保存</el-button
         >
         <el-button round style="float: left" @click="handleClickEdit"
-          >保存并编辑设计版单</el-button
+          >进入编辑状态</el-button
         >
       </div>
     </div>
@@ -123,7 +125,7 @@
           <!-- <img v-if="obj.style_pic_url" :src="obj.style_pic_url" alt /> -->
           <el-image
             v-if="obj.style_pic_url"
-            style="width: 150px; height: 150px; margin-right: 5px"
+            style="width: 160px; height: 160px; margin-right: 5px"
             :src="obj.style_pic_url"
             fit="cover"
           ></el-image>
@@ -185,7 +187,7 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="颜色" prop="style_color_name">
+              <!-- <el-form-item label="颜色" prop="style_color_name">
                 <el-cascader
                   v-model="obj.style_color_name"
                   :options="colors"
@@ -193,7 +195,7 @@
                   @change="handleChange"
                   :show-all-levels="false"
                 ></el-cascader>
-              </el-form-item>
+              </el-form-item> -->
             </el-form>
           </div>
         </div>
@@ -332,6 +334,7 @@
                   :img="option.img"
                   :outputSize="option.size"
                   :outputType="option.outputType"
+                  :centerBox="option.centerBox"
                   :full="option.full"
                   :canMove="option.canMove"
                   :canMoveBox="option.canMoveBox"
@@ -348,7 +351,7 @@
                 <div class="preview">
                   <div
                     v-if="color_code"
-                    :style="`background-color:${color_code};width:150px;height:150px`"
+                    :style="`background-color:${color_code};width:160px;height:160px`"
                   ></div>
                   <img
                     v-if="previews.url"
@@ -447,7 +450,7 @@ import {
   getSeasonList,
   getStylistList,
   getCategoryList,
-  getColorSelect,
+  // getColorSelect,
   getStyle,
   projectStyleAdd,
   getProject,
@@ -475,8 +478,8 @@ export default {
         original: false,
         canMoveBox: true,
         autoCrop: true,
-        autoCropWidth: 150,
-        autoCropHeight: 150,
+        autoCropWidth: 160,
+        autoCropHeight: 160,
         fixedBox: true,
         centerBox: true,
         infoTrue: false,
@@ -518,9 +521,9 @@ export default {
         style_type: [
           { required: true, message: "请输入品类", trigger: "blur" },
         ],
-        style_color: [
-          { required: true, message: "请输入颜色", trigger: "blur" },
-        ],
+        // style_color: [
+        //   { required: true, message: "请输入颜色", trigger: "blur" },
+        // ],
       },
       rules1: {
         stylename: [{ required: true, message: "请输入名称", trigger: "blur" }],
@@ -529,9 +532,9 @@ export default {
         ],
         year: [{ required: true, message: "请输入年份", trigger: "blur" }],
         season: [{ required: true, message: "请输入季节", trigger: "blur" }],
-        style_color_name: [
-          { required: true, message: "请输入颜色", trigger: "blur" },
-        ],
+        // style_color_name: [
+        //   { required: true, message: "请输入颜色", trigger: "blur" },
+        // ],
       },
       Assistant: false,
       checkedList: [],
@@ -948,10 +951,10 @@ export default {
       // 转化为blob
       reader.readAsArrayBuffer(file);
       if (this.status === 2 || this.status === 4) {
-        this.option.autoCropWidth = 150;
-        this.option.autoCropHeight = 150;
+        this.option.autoCropWidth = 160;
+        this.option.autoCropHeight = 160;
       } else if (this.status === 1 || this.status === 3) {
-        this.option.autoCropWidth = 150;
+        this.option.autoCropWidth = 160;
         this.option.autoCropHeight = 300;
       }
     },
@@ -987,7 +990,7 @@ export default {
         obj["style_type"] = this.form.style_type;
         obj["stylename"] = this.form.stylename;
         obj["styleno"] = this.form.styleno;
-        obj["style_color"] = this.form.style_color;
+        // obj["style_color"] = this.form.style_color;
         obj["style_color_pic_url"] = this.form.style_color_pic_url;
         obj["style_pic_url"] = this.form.style_pic_url;
         obj["year"] = this.defaultData.year;
@@ -1019,7 +1022,7 @@ export default {
         obj["style_type"] = this.form.style_type;
         obj["stylename"] = this.form.stylename;
         obj["styleno"] = this.form.styleno;
-        obj["style_color"] = this.form.style_color;
+        // obj["style_color"] = this.form.style_color;
         obj["style_color_pic_url"] = this.form.style_color_pic_url;
         obj["style_pic_url"] = this.form.style_pic_url;
         obj["year"] = this.defaultData.year;
@@ -1066,7 +1069,7 @@ export default {
         obj["year"] = this.obj.year;
         obj["style_type"] = this.obj.style_type;
         obj["style_color_pic_url"] = this.style_color_pic_url;
-        obj["style_color"] = this.obj.style_color_name;
+        // obj["style_color"] = this.obj.style_color_name;
         obj["user_id_data"] = this.obj.user_id_data;
         obj["color_code"] = this.obj.color_code;
         let res = await projectStyleAdd(obj);
@@ -1082,11 +1085,11 @@ export default {
       let { data } = res.data;
       this.years = data;
     },
-    async getColor() {
-      let res = await getColorSelect();
-      let { data } = res.data;
-      this.colors = data;
-    },
+    // async getColor() {
+    //   let res = await getColorSelect();
+    //   let { data } = res.data;
+    //   this.colors = data;
+    // },
     async getSeason() {
       let res = await getSeasonList();
       let { data } = res.data;
@@ -1152,7 +1155,7 @@ export default {
     this.getYear();
     this.getSeason();
     this.getCategory();
-    this.getColor();
+    // this.getColor();
     this.init();
   },
 };
@@ -1185,8 +1188,8 @@ export default {
   }
 
   .upload {
-    width: 150px;
-    height: 150px;
+    width: 160px;
+    height: 160px;
     border-radius: 10px;
     overflow: hidden;
 
@@ -1194,15 +1197,15 @@ export default {
       border: 1px solid #ccc;
       font-size: 28px;
       color: #8c939d;
-      width: 150px;
-      height: 150px;
+      width: 160px;
+      height: 160px;
       display: flex;
       justify-content: center;
       align-items: center;
     }
     .uploads {
-      width: 150px;
-      height: 150px;
+      width: 160px;
+      height: 160px;
       border-radius: 10px;
       overflow: hidden;
       border: 1px solid #000;
@@ -1296,19 +1299,19 @@ export default {
       justify-content: flex-end;
       -webkit-justify-content: flex-end;
       .cropper {
-        width: 350px;
-        height: 350px;
+        width: 500px;
+        height: 500px;
       }
       .show-preview {
-        width: 150px;
-        height: 150px;
+        width: 160px;
+        height: 160px;
         border-radius: 10px;
         overflow: hidden;
         border: 1px solid #ccc;
         margin-left: 30px;
       }
       .show-preview1 {
-        width: 150px;
+        width: 160px;
         height: 300px;
         border-radius: 10px;
         overflow: hidden;

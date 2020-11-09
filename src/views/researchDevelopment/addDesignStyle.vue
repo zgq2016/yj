@@ -5,20 +5,22 @@
   >
     <div class="aa">
       <!-- 面包屑 -->
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>研发部</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/designStyle' }"
-          >设计款式</el-breadcrumb-item
-        >
-        <el-breadcrumb-item>新增设计款式</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>研发部</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/designStyle' }"
+            >设计款式</el-breadcrumb-item
+          >
+          <el-breadcrumb-item>新增设计款式</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <div class="main">
       <div class="styleNumber">
         <div class="upload" @click="handle_form_style_pic_url">
           <el-image
             v-if="form.style_pic_url"
-            style="width: 150px; height: 150px; margin-right: 5px"
+            style="width: 160px; height: 160px; margin-right: 5px"
             :src="form.style_pic_url"
             fit="cover"
           ></el-image>
@@ -41,8 +43,27 @@
               <el-form-item label="名称" prop="stylename">
                 <el-input
                   v-model="form.stylename"
-                  style="width: 200px"
+                  style="width: 200px; margin-right: 20px"
                 ></el-input>
+                <el-select
+                  v-model="project_id"
+                  clearable
+                  placeholder="请选择项目"
+                >
+                  <el-option
+                    v-for="item in formInlinedata"
+                    :key="item.id"
+                    :label="item.projectname"
+                    :value="item.id"
+                  ></el-option>
+                  <el-pagination
+                    small
+                    layout="prev, pager, next"
+                    @size-change="handleSize"
+                    @current-change="handleCurrent"
+                    :total="total2"
+                  ></el-pagination>
+                </el-select>
               </el-form-item>
               <el-form-item label="品类" prop="style_type">
                 <el-cascader
@@ -73,7 +94,7 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="颜色" prop="style_color">
+              <!-- <el-form-item label="颜色" prop="style_color">
                 <el-cascader
                   v-model="form.style_color"
                   :options="colors"
@@ -81,7 +102,7 @@
                   @change="handleChange"
                   :show-all-levels="false"
                 ></el-cascader>
-              </el-form-item>
+              </el-form-item> -->
               <el-form-item
                 v-if="
                   level != 2 ||
@@ -147,7 +168,7 @@
           round
           style="margin: 30px 100px 30px 250px; float: left"
           @click="handleClickEdit"
-          >保存并编辑设计版单</el-button
+          >进入编辑状态</el-button
         >
       </div>
     </div>
@@ -260,6 +281,7 @@
             <div class="cropper-content">
               <div class="cropper">
                 <vueCropper
+                  :centerBox="option.centerBox"
                   ref="cropper"
                   :info="false"
                   :img="option.img"
@@ -281,12 +303,13 @@
                 <div class="preview">
                   <div
                     v-if="color_code"
-                    :style="`background-color:${color_code};width:150px;height:150px`"
+                    :style="`background-color:${color_code};width:160px;height:160px`"
                   ></div>
                   <img
                     v-if="previews.url"
                     :src="previews.url"
                     :style="previews.img"
+                    style="width:350px;height:350px"
                   />
                 </div>
               </div>
@@ -296,6 +319,7 @@
                     v-if="previews.url"
                     :src="previews.url"
                     :style="previews.img"
+                    style="width:350px;height:350px"
                   />
                 </div>
               </div>
@@ -385,6 +409,7 @@ import {
   getStyle,
   styleEdit,
   styleDel,
+  getDataList,
 } from "@/api/researchDevelopment.js";
 
 import { VueCropper } from "vue-cropper";
@@ -396,7 +421,6 @@ export default {
   },
   data() {
     return {
-      power: "",
       headImg: "",
       //剪切图片上传
       crap: false,
@@ -410,8 +434,8 @@ export default {
         original: false,
         canMoveBox: true,
         autoCrop: true,
-        autoCropWidth: 150,
-        autoCropHeight: 150,
+        autoCropWidth: 160,
+        autoCropHeight: 160,
         fixedBox: true,
         centerBox: true,
         infoTrue: false,
@@ -431,7 +455,7 @@ export default {
         season: "",
         year: "",
         style_type: "",
-        style_color: "",
+        // style_color: "",
         user_id: "",
       },
       years: [],
@@ -450,9 +474,9 @@ export default {
         user_id: [
           { required: true, message: "请输入设计师", trigger: "change" },
         ],
-        style_color: [
-          { required: true, message: "请输入颜色", trigger: "change" },
-        ],
+        // style_color: [
+        //   { required: true, message: "请输入颜色", trigger: "change" },
+        // ],
       },
       Assistant: false,
       checkedList: [],
@@ -481,6 +505,11 @@ export default {
       thisCancas: null,
       videoWidth: 500,
       videoHeight: 400,
+      pageIndex2: 1,
+      pageSize2: 9,
+      total2: 0,
+      project_id: "",
+      formInlinedata: [],
       postOptions: [],
       CertCtl: "",
       // 遮罩层
@@ -832,10 +861,10 @@ export default {
       // 转化为blob
       reader.readAsArrayBuffer(file);
       if (this.status === 2 || this.status === 4) {
-        this.option.autoCropWidth = 150;
-        this.option.autoCropHeight = 150;
+        this.option.autoCropWidth = 160;
+        this.option.autoCropHeight = 160;
       } else if (this.status === 1 || this.status === 3) {
-        this.option.autoCropWidth = 150;
+        this.option.autoCropWidth = 160;
         this.option.autoCropHeight = 300;
       }
     },
@@ -865,19 +894,21 @@ export default {
           delete v.username;
           delete v.id;
         });
+        form["project_id"] = this.project_id || 0;
         form["style_pic_url"] = this.form.style_pic_url;
         form["style_color_pic_url"] = this.form.style_color_pic_url;
         form["stylename"] = this.form.stylename;
         form["styleno"] = this.form.styleno;
-        form["project_id"] = 0;
+        // form["project_id"] = 0;
         form["season"] = this.form.season;
         form["year"] = this.form.year;
         form["style_type"] = this.form.style_type;
-        form["style_color"] = this.form.style_color;
+        // form["style_color"] = this.form.style_color;
         form["user_id"] = this.form.user_id;
         form["user_id_data"] = this.arr;
         form["color_code"] = this.form.color_code;
         let res = await projectStyleAdd(form);
+        console.log(res);
         if (res.data.error_code) {
           this.$message({
             showClose: true,
@@ -906,19 +937,21 @@ export default {
           delete v.username;
           delete v.id;
         });
+        form["project_id"] = this.project_id || 0;
         form["style_pic_url"] = this.form.style_pic_url;
         form["style_color_pic_url"] = this.form.style_color_pic_url;
         form["stylename"] = this.form.stylename;
         form["styleno"] = this.form.styleno;
-        form["project_id"] = 0;
         form["season"] = this.form.season;
         form["year"] = this.form.year;
         form["style_type"] = this.form.style_type;
-        form["style_color"] = this.form.style_color;
         form["user_id"] = this.form.user_id;
         form["user_id_data"] = this.arr;
         form["color_code"] = this.form.color_code;
+        // form["project_id"] = 0;
+        // form["style_color"] = this.form.style_color;
         let res = await projectStyleAdd(form);
+        console.log(res);
         if (res.data.error_code) {
           this.$message({
             showClose: true,
@@ -969,15 +1002,30 @@ export default {
       let res = await getStyleno();
       this.form.styleno = res.data.data.styleno;
     },
+    async init() {
+      let formInline = {};
+      formInline["page"] = this.pageIndex2;
+      formInline["page_size"] = this.pageSize2;
+      let res = await getDataList(formInline);
+      // if (res.data.error_code === 0) {
+      let { data, count } = res.data;
+      this.formInlinedata = data;
+    },
+    handleSize(val) {
+      this.pageSize2 = val;
+    },
+    handleCurrent(val) {
+      this.pageIndex2 = val;
+    },
   },
   async mounted() {
+    this.init();
     this.getYear();
     this.getColor();
     this.getSeason();
     this.getstylist();
     this.getCategory();
     this.getStyleno();
-    // this.power = localStorage.getItem("power");
     this.level = localStorage.getItem("level");
     this.permission = localStorage.getItem("permission").split(",");
   },
@@ -1011,24 +1059,24 @@ export default {
     }
   }
   .upload {
-    width: 150px;
-    height: 150px;
+    width: 160px;
+    height: 160px;
     border-radius: 10px;
     overflow: hidden;
     .avatar-uploader-icon {
       border: 1px solid #ccc;
       font-size: 28px;
       color: #8c939d;
-      width: 150px;
-      height: 150px;
+      width: 160px;
+      height: 160px;
       display: flex;
       justify-content: center;
       align-items: center;
     }
   }
   .uploads {
-    width: 150px;
-    height: 150px;
+    width: 160px;
+    height: 160px;
     border-radius: 10px;
     overflow: hidden;
     border: 1px solid #000;
@@ -1119,19 +1167,19 @@ export default {
       justify-content: flex-end;
       -webkit-justify-content: flex-end;
       .cropper {
-        width: 350px;
-        height: 350px;
+        width: 500px;
+        height: 500px;
       }
       .show-preview {
-        width: 150px;
-        height: 150px;
+        width: 160px;
+        height: 160px;
         border-radius: 10px;
         overflow: hidden;
         border: 1px solid #ccc;
         margin-left: 30px;
       }
       .show-preview1 {
-        width: 150px;
+        width: 160px;
         height: 300px;
         border-radius: 10px;
         overflow: hidden;

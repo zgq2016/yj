@@ -4,10 +4,12 @@
     v-if="permission.indexOf('supplierReconciliationAndPayment') != -1"
   >
     <div class="aa">
-      <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item>财务</el-breadcrumb-item>
-        <el-breadcrumb-item>供应商对账及付款</el-breadcrumb-item>
-      </el-breadcrumb>
+      <div class="bb">
+        <el-breadcrumb separator="/" class="breadcrumb">
+          <el-breadcrumb-item>财务</el-breadcrumb-item>
+          <el-breadcrumb-item>供应商对账及付款</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
     </div>
     <div style="margin-bottom: 10px">
       <el-input
@@ -407,7 +409,6 @@ export default {
     return {
       url: url,
       permission: [],
-      power: "",
       total_cope_money: "",
       total_pay_money: "",
       total_opay_money: "",
@@ -677,7 +678,6 @@ export default {
     this.getStylist();
     this.getBalanceAccount();
     this.getBalanceAccountType();
-    // this.power = localStorage.getItem("power");
     this.permission = localStorage.getItem("permission").split(",");
   },
 };
