@@ -223,7 +223,7 @@
       </div>
     </el-dialog>
     <el-dialog
-      title="色卡/颜色"
+      :title="`${status == 1 ? '款式图片' : '色卡/颜色'}`"
       :visible.sync="centerDialogVisible"
       width="50%"
       center
@@ -309,7 +309,7 @@
                     v-if="previews.url"
                     :src="previews.url"
                     :style="previews.img"
-                    style="width:350px;height:350px"
+                    style="width: 350px; height: 350px"
                   />
                 </div>
               </div>
@@ -319,7 +319,7 @@
                     v-if="previews.url"
                     :src="previews.url"
                     :style="previews.img"
-                    style="width:350px;height:350px"
+                    style="width: 350px; height: 350px"
                   />
                 </div>
               </div>
@@ -880,6 +880,10 @@ export default {
       this.centerDialogVisible = true;
     },
     async handleClickEdit() {
+      if (this.form.style_pic_url == "") {
+        this.$message("请上传款式图片");
+        return;
+      }
       this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
@@ -923,6 +927,10 @@ export default {
       });
     },
     async handleEdit() {
+      if (this.form.style_pic_url == "") {
+        this.$message("请上传款式图片");
+        return;
+      }
       this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
@@ -988,7 +996,7 @@ export default {
       this.seasons = data;
     },
     async getstylist() {
-      let res = await getStylistList({ role_id: 2 });
+      let res = await getStylistList({ department_id: 1 });
       // console.log(res);
       let { data } = res.data;
       this.stylists = data;

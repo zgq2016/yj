@@ -220,9 +220,9 @@ export default {
       //   path: "/productionStyle?id=" + row.style_id + "&activeNames=3"
       // });
       this.$router.push({
-        path: `/productionStyle?id=${
+        path: `/sc_materialPurchasing?id=${
           row.style_id
-        }&activeNames=${3}&TL=${2}&produce_no=${row.produce_no}`,
+        }&TL=${2}&produce_no=${row.produce_no}`,
       });
     },
     onSubmit(val) {
@@ -249,7 +249,7 @@ export default {
       this.seasons = data;
     },
     async getStylist() {
-      let res = await getStylistList();
+      let res = await getStylistList({ department_id: 1 });
       let { data } = res.data;
       // console.log(data);
       this.stylists = data;

@@ -7,14 +7,14 @@
       <div>年份：{{ obj.year }}</div>
       <div>季节：{{ obj.season }}</div>
       <div>设计师：{{ obj.user_name }}</div>
-      <div>颜色：{{ obj.style_color }}</div>
+      <div>备注{{ obj.designidea }}</div>
       <!-- <div class="lining">
         <div>面料样板</div>
       </div>-->
       <div v-if="qrcode" class="code">
         <el-image
           :src="qrcode"
-          style="width: 150px; height: 150px;margin:10px 75px;"
+          style="width: 150px; height: 150px"
           fit="cover"
         ></el-image>
       </div>
@@ -119,6 +119,7 @@ export default {
   height: 595px;
   color: #000;
   margin: 0 10px;
+  // position: relative;
   .left {
     width: 340px;
     margin-left: 10px;
@@ -177,7 +178,10 @@ export default {
       background: #fff;
     }
     .code {
-      width: 300px;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      // width: 300px;
     }
     .liningke {
       width: 300px;

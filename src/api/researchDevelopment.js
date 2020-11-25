@@ -645,3 +645,24 @@ export const styleFile = (data) => {
     data: data,
   });
 };
+export const getStylePurchaseInfo = (data) => {
+  return axios({
+    url: "?g=get_style_purchase_info",
+    method: "post",
+    data: data,
+  });
+};
+export const getProduceOrderProcureInfo = (data) => {
+  return axios({
+    url: "?g=get_produce_order_procure_info",
+    method: "post",
+    data: data,
+  });
+};
+export const getMaterialsPurchaseInfo = (data) => {
+  return axios({
+    url: "?g=get_materials_purchase_info",
+    method: "post",
+    data: data,
+  });
+};

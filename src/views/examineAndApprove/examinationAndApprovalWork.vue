@@ -66,8 +66,8 @@
       </el-form-item>
       <el-form-item>
         <el-select
-          v-model="stylist"
-          placeholder="设计师"
+          v-model="department_id"
+          placeholder="部门"
           @change="handleUser_id($event)"
           clearable
           style="width: 120px"
@@ -259,6 +259,7 @@ import {
   isApproval,
   approvalEdit,
 } from "@/api/examineAndApprove";
+import { departmentSelect } from "@/api/setting.js";
 export default {
   data() {
     return {
@@ -280,7 +281,7 @@ export default {
       page: 1,
       page_size: 9,
       count: 0,
-      stylist: "",
+      department_id: "",
       state: "",
       states: [
         { name: "未开始", id: 0 },
@@ -357,7 +358,7 @@ export default {
       this.init(this.formInline);
     },
     handleUser_id(e) {
-      this.formInline.user_id = e;
+      this.formInline.department_id = e;
       this.init();
     },
     async getYear() {
@@ -371,7 +372,7 @@ export default {
       this.seasons = data;
     },
     async getStylist() {
-      let res = await getStylistList();
+      let res = await departmentSelect();
       let { data } = res.data;
       this.stylists = data;
       // console.log(this.stylists);

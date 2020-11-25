@@ -253,6 +253,10 @@ export default {
         page_size: this.pageSize,
       });
       console.log(res);
+      if (res.data.data.length == 0) {
+        this.pageIndex = 1;
+        this.init();
+      }
       let { data, count } = res.data;
       this.tableData = data;
       this.total = count;

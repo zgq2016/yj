@@ -1,24 +1,5 @@
 <template>
   <div class="materialPurchasing">
-    <!-- <div
-      class="material_purchase_name"
-      v-if="permission.indexOf('materialPurchasing') != -1"
-    >
-      <div
-        v-for="(item, index) in obj.style_color_data"
-        :key="index"
-        style="display: flex; align-items: center; margin: 20px 0"
-      >
-        <div
-          style="margin: 0 10px; cursor: pointer"
-          @click="handleColorNum(item, index)"
-          :class="active === index ? 'active' : ''"
-          class="backg"
-        >
-          {{ item.style_color_name }}
-        </div>
-      </div>
-    </div> -->
     <div v-if="permission.indexOf('get_style_purchase') != -1">
       <div v-for="(item, index) in style_materials" :key="index">
         <div
@@ -97,10 +78,10 @@
                   <div class="dt">
                     <!-- <span>{{item_g.logname}}</span> -->
                     <span v-if="index_g == 0">{{ "预计回料时间" }}</span>
-                    <span v-if="item_g.state == '2'">{{ "延迟回料时间" }}</span>
-                    <span v-if="item_g.state == '1'">{{ "部分回料时间" }}</span>
-                    <span v-if="item_g.state == '3'">{{ "回料总量" }}</span>
-                    <span v-if="item_g.state == '3'">{{
+                    <span v-if="item_g.state == '3'">{{ "延迟回料时间" }}</span>
+                    <span v-if="item_g.state == '2'">{{ "部分回料时间" }}</span>
+                    <span v-if="item_g.state == '4'">{{ "回料总量" }}</span>
+                    <span v-if="item_g.state == '4'">{{
                       item1.quantity + "m"
                     }}</span>
                     <span v-else>{{ item_g.returntime }}</span>
@@ -120,8 +101,8 @@
                 round
                 @click="goPanelPurchase(item1)"
                 v-if="
-                  item1.style_purchase_log_data.length === 0 &&
-                  permission.indexOf('purchase_edit') != -1
+                  permission.indexOf('purchase_edit') != -1 &&
+                  (item1.state == 0 || item1.state == 5)
                 "
                 >{{ "采购录入" }}</el-button
               >
@@ -131,10 +112,7 @@
                 round
                 @click="updateStatus(item, item1)"
                 v-if="
-                  item1.style_purchase_log_data.length > 0 &&
-                  item1.style_purchase_log_data[
-                    item1.style_purchase_log_data.length - 1
-                  ].state !== '3' &&
+                  (item1.state == 1 || item1.state == 2 || item1.state == 3) &&
                   permission.indexOf('style_purchase_log_add') != -1
                 "
                 >{{ "更新状态" }}</el-button
@@ -143,25 +121,18 @@
                 size="mini"
                 style="margin-left: 10px"
                 @click.stop="seeDetails1(item1)"
-                v-if="
-                  item1.style_purchase_log_data.length > 0 &&
-                  item1.style_purchase_log_data[
-                    item1.style_purchase_log_data.length - 1
-                  ].state == '3'
-                "
+                v-if="item1.state == 4"
                 round
                 >查看详情</el-button
               >
-              <!-- &&item1.style_purchase_log_data[item1.style_purchase_log_data.length-1].logname!=='全部回料' -->
             </div>
           </div>
         </div>
-        <!-- <el-divider content-position="right">{{item.mainclass}}</el-divider> -->
       </div>
     </div>
     <!-- 弹框 -->
     <el-dialog
-      width="30%"
+      width="300"
       title="请选择更新后的状态"
       class="tan"
       :visible.sync="outerVisible"
@@ -169,7 +140,7 @@
     >
       <!-- 全部回料 -->
       <el-dialog
-        width="30%"
+        width="300"
         title="请上传全部回料凭证"
         :visible.sync="innerVisibled1"
         append-to-body
@@ -188,7 +159,7 @@
           <el-form-item label="已付">
             {{ paid_money }}
           </el-form-item>
-          <el-form-item label="结算金额" prop="money">
+          <el-form-item label="余结金额" prop="money">
             <el-input
               placeholder="请输入内容"
               style="width: 50%"
@@ -236,7 +207,7 @@
       </el-dialog>
       <!-- 部分回料 -->
       <el-dialog
-        width="30%"
+        width="300"
         title="部分回料"
         :visible.sync="innerVisible"
         append-to-body
@@ -250,7 +221,7 @@
               v-model="form3.number"
             ></el-input>
           </el-form-item>
-          <el-form-item label="结算金额" prop="money">
+          <el-form-item label="本次结款" prop="money">
             <el-input
               placeholder="请输入内容"
               style="width: 50%"
@@ -289,7 +260,7 @@
             </el-select>
           </el-form-item>-->
           <el-form-item label="余结金额">
-            <span style="width: 50%" :model="form3.money1"></span>
+            <span style="width: 50%">{{ totalprice - paid_money }}</span>
           </el-form-item>
           <el-upload
             class="avatar-uploader"
@@ -309,7 +280,7 @@
       </el-dialog>
       <!-- 延迟回料 -->
       <el-dialog
-        width="30%"
+        width="300"
         title="延迟回料"
         :visible.sync="innerVisibled"
         append-to-body
@@ -339,12 +310,23 @@
       </el-dialog>
       <div slot="footer" style="height: 80px" class="dialog-footer">
         <el-button
+          v-if="item1_state.state == 1 || item1_state.state == 5"
+          @click="handle_modify_order(item1_state)"
+          >修改订单</el-button
+        >
+        <el-button
+          v-if="item1_state.state == 1 || item1_state.state == 5"
+          @click="handle_cancel_order(item1_state)"
+          >取消订单</el-button
+        >
+        <el-button
           @click="
             outerVisible = false;
-            innerVisibled1 = true;
+            innerVisibled = true;
           "
-          >全部回料</el-button
+          >延迟回料</el-button
         >
+
         <el-button
           @click="
             outerVisible = false;
@@ -355,9 +337,9 @@
         <el-button
           @click="
             outerVisible = false;
-            innerVisibled = true;
+            innerVisibled1 = true;
           "
-          >延迟回料</el-button
+          >全部回料</el-button
         >
       </div>
     </el-dialog>
@@ -468,13 +450,55 @@ export default {
       price: "",
       totalprice: "",
       paid_money: "",
+      item1_state: "",
     };
   },
   methods: {
+    handle_cancel_order(e) {
+      console.log(e);
+      this.$confirm("是否取消订单?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          console.log(e);
+          let res = await stylePurchaseDel({
+            id: e.id,
+          });
+          this.$message({
+            showClose: true,
+            message: res.data.msg,
+          });
+          if (res.data.error_code == 0) {
+            this.outerVisible = false;
+            this.init();
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消",
+          });
+        });
+    },
+    handle_modify_order(e) {
+      console.log(e);
+      // ?materials_id=${
+      //     e.materials_id
+      //   }&id=${e.id}&style_id=${e.style_id}&project_id=${
+      //     this.$route.query.project_id
+      //   }
+      this.$router.push({
+        path: `panelPurchase_edit?materials_id=${
+          e.materials_id
+        }&tabName=${"仓库采购"}&id=${e.style_id}&style_purchase_id=${e.id}`,
+      });
+    },
     get_form2_money(e) {
       console.log(e);
-      if(this.totalprice-this.paid_money!=e){
-        this.$message('结算金额不匹配')
+      if (this.totalprice - this.paid_money != e) {
+        this.$message("结算金额不匹配");
       }
     },
     // 采购查看
@@ -491,7 +515,7 @@ export default {
         style_purchase_id: this.produce_order_procure_id, //生产采购单id
         logname: "全部回料", //日志名称
         returntime: "", //预计回料时间/部分回料时间/延迟时间
-        state: "3", //回料状态 1部份回料 2延时回料 3全部回料
+        state: "4", //回料状态 1部份回料 2延时回料 3全部回料
         picurl: this.form2.imageUrl, //凭证图片
         quantity: 0, //回料数量
         amount: Number(this.form2.money), //结算金额
@@ -512,7 +536,7 @@ export default {
           style_purchase_id: this.produce_order_procure_id, //生产采购单id
           logname: "部分回料", //日志名称
           returntime: this.form3.date, //预计回料时间/部分回料时间/延迟时间
-          state: "1", //回料状态 1部份回料 2延时回料 3全部回料
+          state: "2", //回料状态 1部份回料 2延时回料 3全部回料
           picurl: this.form3.imageUrl, //凭证图片
           quantity: Number(this.form3.number), //回料数量
           amount: Number(this.form3.money), //结算金额
@@ -535,7 +559,7 @@ export default {
           style_purchase_id: this.produce_order_procure_id, //生产采购单id
           logname: "延迟回料", //日志名称
           returntime: this.form4.date, //预计回料时间/部分回料时间/延迟时间
-          state: "2", //回料状态 1部份回料 2延时回料 3全部回料
+          state: "3", //回料状态 1部份回料 2延时回料 3全部回料
           picurl: this.form4.imageUrl, //凭证图片
           quantity: 0, //回料数量
           amount: 0, //结算金额
@@ -618,6 +642,7 @@ export default {
       this.price = item1.price;
       this.totalprice = item1.totalprice;
       this.paid_money = item1.paid_money;
+      this.item1_state = item1;
       this.outerVisible = true;
       this.produce_order_procure_id = item1.id;
     },
@@ -681,7 +706,7 @@ export default {
       .cardStyle {
         position: relative;
         width: 320px;
-        height: 100px;
+        height: 120px;
         display: flex;
         .bos {
           position: absolute;
@@ -705,8 +730,8 @@ export default {
           overflow: hidden;
           .cardStyle_left_img {
             img {
-              width: 100px;
-              height: 100px;
+              width: 120px;
+              height: 120px;
             }
           }
           .cardStyle_left_content {
@@ -730,7 +755,7 @@ export default {
           justify-content: center;
           align-items: center;
           width: 50px;
-          height: 100px;
+          height: 120px;
           background-color: #f2f2f2;
           border-radius: 10px;
           .cardStyle_right_no {
@@ -745,12 +770,17 @@ export default {
       border-radius: 10px;
       background-color: #f2f2f2;
       flex: 1;
-      // width: 600px;
+      overflow-x: scroll;
+      overflow-y: hidden;
       display: flex;
       justify-content: space-between;
+      word-spacing: normal;
       align-items: flex-end;
-      height: 100px;
+      height: 120px;
       padding: 10px;
+      &::-webkit-scrollbar {
+        // display: none;
+      }
     }
   }
   .active {

@@ -109,7 +109,11 @@
               :rules="rules"
               label-width="120px"
             >
-              <el-form-item label="用量" prop="dosage">
+              <el-form-item
+                label="用量"
+                prop="dosage"
+                v-if="this.$route.query.type != 'materials_purchase'"
+              >
                 <el-col :span="6">
                   <el-input
                     v-model="form.dosage"
@@ -192,6 +196,7 @@
               <el-form-item label="预计回料时间" prop="finishTime">
                 <el-date-picker
                   v-model="form.finishTime"
+                  @change="get_finishtime"
                   type="date"
                   placeholder="选择日期"
                 ></el-date-picker>
@@ -237,34 +242,19 @@
                 ></el-input>
               </el-form-item>
               <el-form-item>
-                <el-button round @click="onSubmit">保存</el-button>
+                <el-button round @click="onSubmit('form')">保存</el-button>
               </el-form-item>
             </el-form>
           </div>
         </div>
       </div>
     </div>
-    <el-dialog
-      title="增加款式颜色"
-      :visible.sync="centerDialogVisible"
-      width="30%"
-      center
-      class="dialog"
-    >
-      aa
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="centerDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="centerDialogVisible = false"
-          >确 定</el-button
-        >
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import moment from "moment";
-import { storehouseList } from "@/api/warehouse.js";
+import { storehouseList,materialsPurchaseEdit } from "@/api/warehouse.js";
 import { url } from "@/api/configuration";
 import {
   getMaterialsInfo, //物料
@@ -277,6 +267,9 @@ import {
 } from "@/api/production";
 import {
   purchaseEdit, //编辑物料
+  getStylePurchaseInfo,
+  getProduceOrderProcureInfo,
+  getMaterialsPurchaseInfo,
 } from "@/api/researchDevelopment";
 import { balanceAccountSelect } from "@/api/finance";
 export default {
@@ -299,6 +292,7 @@ export default {
         fullPayout: "", //全额支付
         picurl: "", //图片
         remark: "", //备注
+        storehouse_id: "", //备注
       },
       centerDialogVisible: false,
       header: [], //物料信息
@@ -379,13 +373,8 @@ export default {
         payment: [
           { required: true, message: "请选择付款方式 ", trigger: "blur" },
         ],
-        finishTime: [
-          {
-            type: "date",
-            required: true,
-            message: "请输入时间",
-            trigger: "blur",
-          },
+        finishtime: [
+          { required: true, message: "请输入时间", trigger: "blur" },
         ],
         deposit: [
           {
@@ -437,29 +426,18 @@ export default {
       this.pageIndex2 = val;
       this.stock();
     },
-    async onSubmit() {
-      this.$refs["form"].validate(async (valid) => {
+    get_finishtime(e) {
+      this.form["finishTime"] = moment(e).format("YYYY-MM-DD");
+    },
+    onSubmit(form) {
+      let { tabName, type } = this.$route.query;
+      this.$refs[form].validate(async (valid) => {
         if (!valid) return;
-        // 调用actions的登录方法
 
-        if (this.$route.query.tabName === "采购") {
-          this.form.finishTime = moment(this.form.finishTime).format(
-            "YYYY-MM-DD"
-          );
-          let e1 = this.$route.query.e;
-          let e = JSON.parse(e1);
-          let res = await produceOrderProcureEdit({
-            id: e.id,
-            style_id: Number(e.style_id),
-            produce_no: e.produce_no,
-            style_color_name: e.style_color_name,
-            mainclass: e.mainclass,
-
-            materials_id: this.colors.materials_id,
-            color: this.colors.color,
-            color_no: this.colors.color_no,
-            picurl: this.colors.picurl,
-            //
+        if (tabName == "版料采购") {
+          console.log('版料采购');
+          let res = await purchaseEdit({
+            id: this.$route.query.style_purchase_id,
             amountPurchased: this.form.amountPurchased,
             deposit: this.form.deposit,
             dosage: this.form.dosage,
@@ -481,70 +459,70 @@ export default {
             });
           } else {
             this.$router.push({
-              path: `/ProductionStyle?id=${e.style_id}&activeNames=2`,
+              path: `/materialPurchasing?id=${this.$route.query.id}`,
             });
           }
         }
-        if (this.$route.query.tabName === "仓库采购") {
-          this.form.finishTime = moment(this.form.finishTime).format(
-            "YYYY-MM-DD"
-          );
-          let res = await purchaseEdit({
-            id: this.$route.query.id,
-            amountPurchased: this.form.amountPurchased,
-            deposit: this.form.deposit,
-            dosage: this.form.dosage,
-            finishTime: this.form.finishTime,
-            balance_account_id: this.form.balance_account_id,
-            money: this.form.money,
-            payment: this.form.payment,
-            purchasePrice: this.form.purchasePrice,
-            remark: this.form.remark,
-            uploadDocuments: this.form.picurl,
-            storehouse_id: this.form.storehouse_id,
-          });
-          console.log(res);
-          if (res.data.error_code) {
-            this.$message({
-              showClose: true,
-              message: res.data.msg,
-              type: "error",
+        if (tabName == "仓库采购") {
+          console.log('仓库采购');
+          if ((type == "style_purchase")) {
+            let res = await purchaseEdit({
+              id: this.$route.query.style_purchase_id,
+              amountPurchased: this.form.amountPurchased,
+              deposit: this.form.deposit,
+              dosage: this.form.dosage,
+              finishTime: this.form.finishTime,
+              balance_account_id: this.form.balance_account_id,
+              money: this.form.money,
+              payment: this.form.payment,
+              purchasePrice: this.form.purchasePrice,
+              remark: this.form.remark,
+              uploadDocuments: this.form.picurl,
+              storehouse_id: this.form.storehouse_id,
             });
-          } else {
-            this.$router.push({
-              path: `/purchaseMaterial`,
-            });
+            console.log(res);
+            if (res.data.error_code) {
+              this.$message({
+                showClose: true,
+                message: res.data.msg,
+                type: "error",
+              });
+            } else {
+              this.$router.push({
+                path: `/purchaseMaterial`,
+              });
+            }
           }
-        }
-        if (this.$route.query.tabName === "版料采购") {
-          this.form.finishTime = moment(this.form.finishTime).format(
-            "YYYY-MM-DD"
-          );
-          let res = await purchaseEdit({
-            id: this.$route.query.id,
-            amountPurchased: this.form.amountPurchased,
-            deposit: this.form.deposit,
-            dosage: this.form.dosage,
-            finishTime: this.form.finishTime,
-            balance_account_id: this.form.balance_account_id,
-            money: this.form.money,
-            payment: this.form.payment,
-            purchasePrice: this.form.purchasePrice,
-            remark: this.form.remark,
-            uploadDocuments: this.form.picurl,
-            storehouse_id: this.form.storehouse_id,
-          });
-          console.log(res);
-          if (res.data.error_code) {
-            this.$message({
-              showClose: true,
-              message: res.data.msg,
-              type: "error",
+          if ((type == "produce_order_procure")) {
+          }
+          if ((type == "materials_purchase")) {
+            console.log('materials_purchase');
+            let res = await materialsPurchaseEdit({
+              id: this.$route.query.style_purchase_id,
+              amountPurchased: this.form.amountPurchased,
+              // dosage: this.form.dosage,
+              deposit: this.form.deposit,
+              finishTime: this.form.finishTime,
+              balance_account_id: this.form.balance_account_id,
+              money: this.form.money,
+              payment: this.form.payment,
+              purchasePrice: this.form.purchasePrice,
+              remark: this.form.remark,
+              uploadDocuments: this.form.picurl,
+              storehouse_id: this.form.storehouse_id,
             });
-          } else {
-            this.$router.push({
-              path: `/materialPurchasing?id=${this.$route.query.style_id}`,
-            });
+            console.log(res);
+            if (res.data.error_code) {
+              this.$message({
+                showClose: true,
+                message: res.data.msg,
+                type: "error",
+              });
+            } else {
+              this.$router.push({
+                path: `/purchaseMaterial`,
+              });
+            }
           }
         }
       });
@@ -569,6 +547,72 @@ export default {
       this.ware = data;
       this.total2 = res.data.count;
     },
+    async get_StylePurchaseInfo() {
+      let { style_purchase_id, type } = this.$route.query;
+      if (type == "style_purchase") {
+        let res = await getStylePurchaseInfo({ id: style_purchase_id });
+        let { data } = res.data;
+        this.form.dosage = data.actualusage;
+        this.form.amountPurchased = data.quantity;
+        this.form.purchasePrice = data.price;
+        this.form.money = data.totalprice;
+        this.form.balance_account_id = data.balance_account_id;
+        this.form.payment = data.payment;
+        if (data.payment == 0) {
+          this.form.deposit = data.deposit;
+        }
+        if (data.payment == 1) {
+          this.form.fullPayout = data.totalprice;
+        }
+        this.form.finishTime = data.finishTime;
+        // this.form.fullPayout = data.totalprice;
+        this.form.picurl = data.picurl;
+        this.form.remark = data.remark;
+        this.form.storehouse_id = data.storehouse_id;
+      }
+      if (type == "produce_order_procure") {
+        let res = await getProduceOrderProcureInfo({ id: style_purchase_id });
+        let { data } = res.data;
+        this.form.dosage = data.actualusage;
+        this.form.amountPurchased = data.quantity;
+        this.form.purchasePrice = data.price;
+        this.form.money = data.totalprice;
+        this.form.balance_account_id = data.balance_account_id;
+        this.form.payment = data.payment;
+        if (data.payment == 0) {
+          this.form.deposit = data.deposit;
+        }
+        if (data.payment == 1) {
+          this.form.fullPayout = data.totalprice;
+        }
+        this.form.finishTime = data.finishTime;
+        // this.form.fullPayout = data.totalprice;
+        this.form.picurl = data.picurl;
+        this.form.remark = data.remark;
+        this.form.storehouse_id = data.storehouse_id;
+      }
+      if (type == "materials_purchase") {
+        let res = await getMaterialsPurchaseInfo({ id: style_purchase_id });
+        let { data } = res.data;
+        this.form.dosage = data.actualusage;
+        this.form.amountPurchased = data.quantity;
+        this.form.purchasePrice = data.price;
+        this.form.money = data.totalprice;
+        this.form.balance_account_id = data.balance_account_id;
+        this.form.payment = data.payment;
+        if (data.payment == 0) {
+          this.form.deposit = data.deposit;
+        }
+        if (data.payment == 1) {
+          this.form.fullPayout = data.totalprice;
+        }
+        this.form.finishTime = data.finishTime;
+        // this.form.fullPayout = data.totalprice;
+        this.form.picurl = data.picurl;
+        this.form.remark = data.remark;
+        this.form.storehouse_id = data.storehouse_id;
+      }
+    },
     async init() {
       // 物料
       let { materials_id } = this.$route.query;
@@ -591,10 +635,12 @@ export default {
       let data1 = res1.data.data;
       this.supplier = data1;
 
+      this.get_StylePurchaseInfo();
       //
     },
     async selectPayment(value) {
       if (value == 1) {
+        this.form.fullPayout = this.form.money;
         this.form.deposit = this.form.fullPayout;
       } else {
         this.form.deposit = "";

@@ -174,13 +174,20 @@
           </el-select>
         </el-form-item>
         <el-form-item label="部门：">
-          <el-select v-model="form1.department_id" placeholder="请选择部门">
+          <el-select
+            v-model="form1.department_id"
+            multiple
+            placeholder="请选择"
+            style="width: 80%"
+            @change="get_department_id"
+          >
             <el-option
               v-for="item in branch"
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            ></el-option>
+            >
+            </el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -220,13 +227,19 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="部门：" prop="department">
-          <el-select v-model="form2.department_id" placeholder="请选择部门">
+          <el-select
+            v-model="form2.department_id"
+            multiple
+            placeholder="请选择"
+            style="width: 80%"
+          >
             <el-option
               v-for="item in branch"
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            ></el-option>
+            >
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="手机号：" prop="username">
@@ -321,8 +334,10 @@ export default {
         password: "",
         level: "",
         role: "",
+        no: "",
+        department_id: [],
       },
-      form1: { role_name: "", Access: "", department_id: "" },
+      form1: { role_name: "", Access: "", department_id: [] },
       options: [],
       pageIndex: 1,
       pageSize: 10,
@@ -403,6 +418,7 @@ export default {
       this.init();
     },
     handlecloseAccounts(form) {
+      this.form2.department_id = [];
       this.$refs[form].resetFields();
       this.centerDialogVisible3 = false;
     },
@@ -438,6 +454,7 @@ export default {
             });
             this.centerDialogVisible3 = false;
             this.$refs[form].resetFields();
+            this.form2.department_id = [];
             this.init();
           }
         }
@@ -467,16 +484,15 @@ export default {
       }
       delete this.form1.Access;
       let res = await userEdit(this.form1);
-      this.$refs[form].resetFields();
-      this.centerDialogVisible2 = false;
-      if (res.data.error_code) {
-        this.$message({
-          showClose: true,
-          message: res.data.msg,
-          type: "error",
-        });
+      this.$message({
+        showClose: true,
+        message: res.data.msg,
+      });
+      if (res.data.error_code == 0) {
+        this.$refs[form].resetFields();
+        this.centerDialogVisible2 = false;
+        this.init();
       }
-      this.init();
     },
     setUser(row, column, cell, event) {
       if (
@@ -497,13 +513,16 @@ export default {
       // if (localStorage.getItem("level") == 0) {
       console.log(row);
       if (localStorage.getItem("level") < row.level) {
+        this.form1.department_id = row.department_id.map((v, i) => {
+          return Number(v);
+        });
         this.form1.role_name = row.role_name;
         this.form1.Access = row.Access;
         this.form1.name = row.name;
         this.form1.id = row.id;
         this.form1.role_id = row.role;
-        this.form1.department_id = row.department_id;
         this.centerDialogVisible2 = true;
+        console.log(this.form1.department_id);
       }
 
       // }

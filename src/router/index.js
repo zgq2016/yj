@@ -7,6 +7,7 @@ import ItemDesign from "@/views/researchDevelopment/itemDesign.vue";
 import AddProject from "@/views/researchDevelopment/addProject.vue";
 import DesignStyle from "@/views/researchDevelopment/designStyle.vue";
 import PanelPurchase from "@/views/researchDevelopment/panelPurchase.vue";
+import PanelPurchase_edit from "@/views/researchDevelopment/panelPurchase_edit.vue";
 import NewTheStyle from "@/views/researchDevelopment/newTheStyle.vue";
 import MaterialPurchase from "@/views/researchDevelopment/materialPurchase.vue";
 import EditTheStyle from "@/views/researchDevelopment/editTheStyle.vue";
@@ -66,6 +67,12 @@ import Purchase from "@/views/production/purchase.vue";
 import ProductionScheduling from "@/views/production/productionScheduling.vue";
 import ProductionOrders from "@/views/production/productionOrders.vue";
 import Tailor from "@/views/production/tailor.vue";
+import Sc_Order_information from "@/views/production/sc/sc_Order_information.vue";
+import Sc_purchase from "@/views/production/sc/sc_purchase.vue";
+import Sc_materialPurchasing from "@/views/production/sc/sc_materialPurchasing.vue";
+import AA from "@/views/production/sc/aa.vue";
+import Sc_tailor from "@/views/production/sc/sc_tailor.vue";
+import Sc_shipment from "@/views/production/sc/sc_shipment.vue";
 import Shipment from "@/views/production/shipment.vue";
 import ProductionStyle from "@/views/production/productionStyle.vue";
 import SalesOrder from "@/views/sell/salesOrder.vue";
@@ -142,6 +149,11 @@ const routes = [
         path: "/panelPurchase",
         name: "PanelPurchase",
         component: PanelPurchase,
+      },
+      {
+        path: "/panelPurchase_edit",
+        name: "PanelPurchase_edit",
+        component: PanelPurchase_edit,
       },
       { path: "/newTheStyle", name: "NewTheStyle", component: NewTheStyle },
       {
@@ -334,7 +346,11 @@ const routes = [
         name: "MaterialTable",
         component: MaterialTable,
       },
-      { path: "/purchaseMaterial", name: "PurchaseMaterial", component: PurchaseMaterial },
+      {
+        path: "/purchaseMaterial",
+        name: "PurchaseMaterial",
+        component: PurchaseMaterial,
+      },
       {
         path: "/productionScheduling",
         name: "ProductionScheduling",
@@ -359,6 +375,38 @@ const routes = [
         path: "/productionStyle",
         name: "ProductionStyle",
         component: ProductionStyle,
+        children: [
+          {
+            path: "/sc_Order_information",
+            name: "Sc_Order_information",
+            component: Sc_Order_information,
+          },
+          {
+            path: "/sc_purchase",
+            name: "Sc_purchase",
+            component: Sc_purchase,
+          },
+          {
+            path: "/aa",
+            name: "AA",
+            component: AA,
+          },
+          {
+            path: "/sc_materialPurchasing",
+            name: "Sc_materialPurchasing",
+            component: Sc_materialPurchasing,
+          },
+          {
+            path: "/sc_tailor",
+            name: "Sc_tailor",
+            component: Sc_tailor,
+          },
+          {
+            path: "/sc_shipment",
+            name: "Sc_shipment",
+            component: Sc_shipment,
+          },
+        ],
       },
       {
         path: "/developmentStatus",

@@ -270,7 +270,7 @@
       </div>
     </el-dialog>
     <el-dialog
-      title="色卡/颜色"
+      :title="`${status == 1 || status == 3 ? '款式图片' : '色卡/颜色'}`"
       :visible.sync="centerDialogVisible"
       width="50%"
       center
@@ -983,6 +983,10 @@ export default {
       this.centerDialogVisible = true;
     },
     async handleClickEdit() {
+      if (this.form.style_pic_url == "") {
+        this.$message("请上传款式图片");
+        return;
+      }
       this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
@@ -1011,6 +1015,10 @@ export default {
       });
     },
     async handleClick() {
+      if (this.form.style_pic_url == "") {
+        this.$message("请上传款式图片");
+        return;
+      }
       this.$refs["form"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
@@ -1044,6 +1052,10 @@ export default {
       });
     },
     async handleClick1() {
+      if (this.obj.style_pic_url == "") {
+        this.$message("请上传款式图片");
+        return;
+      }
       this.$refs["obj"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
@@ -1098,7 +1110,7 @@ export default {
     async getstylist() {
       let { oldId } = this.$route.query;
       let { id } = this.$route.query;
-      let res = await getStylistList();
+      let res = await getStylistList({ department_id: 1 });
       let { data } = res.data;
       if (oldId === undefined) {
         this.defaultData.user_id_data.map((v) => {

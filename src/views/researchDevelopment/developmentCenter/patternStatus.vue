@@ -616,7 +616,7 @@ export default {
       }
     },
     async getstylist() {
-      let res = await getStylistList({ role_id: 4 });
+      let res = await getStylistList({ department_id: 2 });
       let { data } = res.data;
       data.map((v) => {
         v["checked"] = false;

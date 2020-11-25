@@ -246,14 +246,14 @@
                 v-for="(item, index) in form.material_data"
                 :key="index"
               >
-                <el-select v-model="item.material_name" placeholder="成分">
-                  <el-option
-                    v-for="item1 in materials"
-                    :key="item1.id"
-                    :label="item1.name"
-                    :value="item1.material_name"
-                  ></el-option>
-                </el-select>
+                <el-autocomplete
+                  v-model="item.material_name"
+                  :fetch-suggestions="querySearch"
+                  placeholder="请输入内容"
+                  @input="handleSelect(item, index)"
+                  suffix-icon="el-icon-search"
+                  value-key="name"
+                ></el-autocomplete>
                 <el-input v-model="item.content" placeholder="%"></el-input>
                 <span
                   v-if="length == index + 1"
@@ -540,6 +540,7 @@ import {
 import { VueCropper } from "vue-cropper";
 import { Api } from "@/js/api.js"; //接口url配置文件
 import { url } from "@/api/configuration";
+import { materialAdd } from "@/api/setting.js";
 export default {
   components: {
     VueCropper,
@@ -560,7 +561,7 @@ export default {
       },
       crap: false,
       previews: {},
-      form1: { picurl: "", color_no: "", color: "" },
+      form1: { picurl: "", color_no: "", color: "", timer_out: "" },
       companyname: "",
       option: {
         img: "",
@@ -746,6 +747,47 @@ export default {
     };
   },
   methods: {
+    querySearch(queryString, cb) {
+      var restaurants = this.materials;
+      var results = queryString
+        ? restaurants.filter(this.createFilter(queryString))
+        : restaurants;
+      // 调用 callback 返回建议列表的数据
+      cb(results);
+    },
+    createFilter(queryString) {
+      return (restaurant) => {
+        return (
+          restaurant.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+        );
+      };
+    },
+    handleSelect(item, index) {
+      if (
+        this.materials.filter(this.createFilter(item.material_name)).length == 0
+      ) {
+        this.$confirm("是否添加", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+          .then(async () => {
+            let res = await materialAdd({ material_name: item.material_name });
+            this.getMaterialList();
+          })
+          .catch((err) => {
+            this.materials.map((v, i) => {
+              if (index == i) {
+                v.material_name = "";
+              }
+            });
+            this.$message({
+              type: "success",
+              message: "已取消添加",
+            });
+          });
+      }
+    },
     add_Supplier() {
       // this.$router.push({ path: "/addSupplier?loca=1" });
       let form = JSON.stringify(this.form);
@@ -1211,18 +1253,6 @@ export default {
     handleDeleteColor(index) {
       this.form.color_data.splice(index, 1);
     },
-    async querySearch(value, cb) {
-      let res = await getSupplierSelect({
-        keyword: value,
-      });
-      let { data } = res.data;
-
-      cb(data);
-    },
-    handleSelect(item) {
-      this.form.supplier_companyname = item.value;
-      this.form.materials_supplier_id = item.address;
-    },
     async handleClassDatasId(e) {
       this.classDatasId = e;
       let res = await getMaterialsClassInfo({
@@ -1357,10 +1387,42 @@ export default {
       this.materials = data;
     },
     recompose(item, index) {
-      this.index = index;
-      let obj = JSON.parse(JSON.stringify(item));
-      this.form1 = obj;
-      this.vs1 = true;
+      if (this.form1.picurl != "") {
+        this.$message({
+          showClose: true,
+          message: "请先保存",
+          type: "error",
+        });
+        return;
+      }
+      if (this.form1.color != "") {
+        this.$message({
+          showClose: true,
+          message: "请先保存",
+          type: "error",
+        });
+        return;
+      }
+      if (this.form1.color_no != "") {
+        this.$message({
+          showClose: true,
+          message: "请先保存",
+          type: "error",
+        });
+        return;
+      }
+      this.form1.picurl = item.picurl;
+      this.form1.color_no = item.color_no;
+      this.form1.color = item.color;
+      this.form1.timer_out = item.timer_out;
+      this.form.color_data.map((v, i) => {
+        if (item.timer_out == v.timer_out) {
+          if (v.color_no == "无编号") {
+            v.color_no = "";
+          }
+          v.color = "";
+        }
+      });
     },
     dels(index) {
       this.$confirm("此操作将永久删除该色卡, 是否继续?", "提示", {
@@ -1384,55 +1446,69 @@ export default {
         });
     },
     determine() {
-      if (!this.vs1) {
-        if (
-          this.form1.picurl == "" ||
-          this.form1.picurl == undefined ||
-          this.form1.color == "" ||
-          this.form1.color == undefined ||
-          this.form1.color_no == "" ||
-          this.form1.color_no == undefined
-        ) {
-          this.$message({
-            showClose: true,
-            message: "请将数据填充完整！",
-            type: "error",
-          });
-        } else {
-          let obj = JSON.parse(JSON.stringify(this.form1));
-          this.form.color_data.push(obj);
-          this.form1 = {
-            picurl: "",
-            color_no: "",
-            color: "",
-            companyname: this.form1.companyname,
-          };
-        }
+      if (this.form1.picurl == "") {
+        this.$message({
+          type: "error",
+          message: "请上传图片",
+        });
+      } else if (this.form1.color == "") {
+        this.$message({
+          type: "error",
+          message: "请选择颜色",
+        });
+      } else if (this.form1.color_no == "") {
+        this.$message({
+          type: "error",
+          message: "请填写色号",
+        });
       } else {
-        this.vs1 = false;
-        if (
-          this.form1.picurl == "" ||
-          this.form1.picurl == undefined ||
-          this.form1.color == "" ||
-          this.form1.color == undefined ||
-          this.form1.color_no == "" ||
-          this.form1.color_no == undefined
-        ) {
-          this.$message({
-            showClose: true,
-            message: "请将数据填充完整！",
-            type: "error",
-          });
-        } else {
-          let obj = JSON.parse(JSON.stringify(this.form1));
-          this.form.color_data.splice(this.index, 1, obj);
-          this.form1 = {
-            picurl: "",
-            color_no: "",
-            color: "",
-            companyname: this.form1.companyname,
-          };
+        for (let index = 0; index < this.form.color_data.length; index++) {
+          if (this.form.color_data[index].color == this.form1.color) {
+            this.$message({
+              type: "error",
+              message: "颜色不可重复",
+            });
+            return;
+          }
+          if (
+            this.form.color_data[index].color_no == this.form1.color_no &&
+            this.form.color_data[index].color_no != "无编号"
+          ) {
+            this.$message({
+              type: "error",
+              message: "色号不可重复",
+            });
+            return;
+          }
         }
+      }
+      if (
+        !this.form1.picurl == "" &&
+        !this.form1.color == "" &&
+        !this.form1.color_no == ""
+      ) {
+        if (this.form1.timer_out == "") {
+          this.form.color_data.push({
+            picurl: this.form1.picurl,
+            color: this.form1.color,
+            color_no: this.form1.color_no,
+            timer_out: new Date().getTime(),
+          });
+        }
+        if (this.form1.timer_out != "") {
+          this.form.color_data.map((v, i) => {
+            if (v.timer_out == this.form1.timer_out) {
+              v.picurl = this.form1.picurl;
+              v.color = this.form1.color;
+              v.color_no = this.form1.color_no;
+              v.timer_out = new Date().getTime();
+            }
+          });
+        }
+        this.form1.picurl = "";
+        this.form1.color = "";
+        this.form1.color_no = "";
+        this.form1.timer_out = "";
       }
     },
     changese(e) {
@@ -1816,30 +1892,52 @@ export default {
         flex-direction: column;
         flex-wrap: wrap;
         .boxs {
-          width: 280px;
+          width: 400px;
           height: 30px;
+          display: flex;
+          //   width: 280px;
+          //   height: 30px;
           overflow: hidden;
-          margin-bottom: 15px;
-          margin-left: 20px;
+          //   margin-bottom: 15px;
+          //   margin-left: 20px;
+          margin: 0 0 20px 20px;
+          padding: 0 10px;
           background-color: #f2f2f2;
           border-radius: 15px;
+          justify-content: space-between;
+          align-items: center;
           border: none;
-          .el-select {
-            float: left;
+          .el-autocomplete {
+            flex: 1;
+            height: 30px;
+            input {
+              width: 100%;
+            }
           }
           .el-input {
-            float: left;
+            flex: 1;
+            height: 30px;
+            input {
+              width: 100%;
+            }
           }
-          .el-icon-plus {
-            float: left;
-            line-height: 30px;
-            text-align: center;
-          }
-          .el-icon-minus {
-            float: left;
-            line-height: 30px;
-            text-align: center;
-          }
+
+          //   .el-select {
+          //     float: left;
+          //   }
+          //   .el-input {
+          //     float: left;
+          //   }
+          //   .el-icon-plus {
+          //     float: left;
+          //     line-height: 30px;
+          //     text-align: center;
+          //   }
+          //   .el-icon-minus {
+          //     float: left;
+          //     line-height: 30px;
+          //     text-align: center;
+          //   }
         }
       }
       .recognition {

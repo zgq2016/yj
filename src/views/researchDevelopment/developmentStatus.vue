@@ -53,21 +53,21 @@
           <div class="content">
             <el-image
               class="imgSrc"
-              style="width: 160px; height: 160px; margin-right: 5px"
+              style="width: 160px; height: 160px; margin-right: 10px"
               :src="obj.style_pic_url"
               fit="cover"
             ></el-image>
             <img
-              v-if="obj.style_color_pic_url !== ''"
+              v-if="obj.style_color_pic_url != ''"
               class="imgSrc"
-              style="width: 160px; height: 160px"
+              style="width: 160px; height: 160px; margin-right: 10px"
               :src="obj.style_color_pic_url"
               alt
             />
             <div
-              v-if="obj.style_color_pic_url === ''"
+              v-if="obj.style_color_pic_url == ''"
               class="imgSrc"
-              style="width: 160px; height: 160px"
+              style="width: 160px; height: 160px;"
               :style="`background-color:${obj.color_code};`"
             ></div>
             <div class="info">
@@ -84,9 +84,10 @@
           </div>
         </div>
         <div class="editBtn">
-          <div v-if="obj.file != 1" class="jour" @click="handle_filing">
+          <div v-if="obj.file == 0" class="jour" @click="handle_filing">
             存档
           </div>
+          <div v-if="obj.file == 1" class="jours">已存档</div>
           <el-tooltip
             class="edit"
             style="background-color: #f2f2f2"
@@ -202,26 +203,41 @@ export default {
   },
   methods: {
     async handle_filing() {
-      this.$confirm("是否存档?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(async () => {
-          let { id, TL } = this.$route.query;
-          let res = await styleFile({ id });
-          console.log(res);
-          this.$message(res.data.msg);
-          if (res.data.error_code == 0) {
-            this.init();
-          }
+      console.log(this.obj);
+      let design =
+        this.obj.design_status < 5 ? "设计版单未完成" : "设计版单已完成";
+      let materials =
+        this.obj.materials_status < 4 ? "物料工艺未完成" : "物料工艺已完成";
+      if (this.obj.design_status >= 5 && this.obj.materials_status >= 4) {
+        this.$confirm(`${design}, ${materials},是否存档?`, "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消存档",
+          .then(async () => {
+            let { id, TL } = this.$route.query;
+            let res = await styleFile({ id });
+            console.log(res);
+            this.$message(res.data.msg);
+            if (res.data.error_code == 0) {
+              this.init();
+            }
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "已取消存档",
+            });
           });
-        });
+      } else {
+        this.$confirm(`${design},${materials},请先完成`, "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+          .then(async () => {})
+          .catch(() => {});
+      }
     },
     get_view_log() {
       this.log = !this.log;
@@ -300,6 +316,15 @@ export default {
           background: #000000;
           color: #fff;
         }
+        .jours {
+          width: 100px;
+          height: 30px;
+          background: #f2f2f2;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 8px;
+        }
       }
     }
     .orderInformation {
@@ -375,16 +400,12 @@ export default {
         }
       }
     }
-    .basicInfo {
-      font-size: 20px;
-      font-weight: 600;
-    }
     .content {
       display: flex;
       .imgSrc {
         width: 200px;
         height: 200px;
-        margin-right: 30px;
+        margin-right: 10px;
         border-radius: 10px;
       }
       .info {
@@ -396,15 +417,6 @@ export default {
           padding: 2px;
         }
       }
-    }
-    .drawing {
-      margin: 30px 0 10px 10px;
-      font-size: 20px;
-    }
-    .btn {
-      padding: 10px 40px;
-      margin: 30px 400px;
-      border-radius: 5px;
     }
   }
   /deep/ .el-tabs__nav-wrap::after {

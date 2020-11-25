@@ -14,8 +14,8 @@
         :on-preview="handlePictureCardPreview"
         :on-remove="handleRemove"
         :on-success="handleSuccess"
-        :file-list="img_list"
         :before-upload="beforeUpload"
+        :file-list="img_list"
       >
         <i class="el-icon-plus"></i>
       </el-upload>
@@ -308,7 +308,11 @@ export default {
     async handleKeep() {
       let { id } = this.$route.query;
       let { designidea } = this.obj;
-      let res = await styleDesignEdit({ id, designidea });
+      let picurl = this.img_list.filter((v, i) => {
+        return !v.id;
+      });
+      // return;
+      let res = await styleDesignEdit({ id, designidea, picurl });
       if (res.data.error_code) {
         this.$message({
           showClose: true,
@@ -322,11 +326,11 @@ export default {
       }
     }, //成功
     async handleSuccess(response, file, fileList) {
-      let style_id = this.$route.query.id - 0;
+      console.log(file);
+      // let style_id = this.$route.query.id - 0;
       let { pic_file_url } = response.data;
-      let picurl = pic_file_url;
-
-      let res = await styleDesignideaPicAdd({ style_id, picurl });
+      this.img_list.push({ url: pic_file_url, id: 0 });
+      // let res = await styleDesignideaPicAdd({ style_id, picurl });
     },
     // 移除
     async handleRemove(file, fileList) {
@@ -365,7 +369,7 @@ export default {
       }
     },
     async getstylist() {
-      let res = await getStylistList({ role_id: 3 });
+      let res = await getStylistList({ department_id: 2 });
       let { data } = res.data;
       data.map((v) => {
         v["checked"] = false;

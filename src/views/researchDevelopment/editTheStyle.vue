@@ -227,7 +227,7 @@
       </div>
     </el-dialog>
     <el-dialog
-      title="色卡/颜色"
+      :title="`${status == 1 || status == 3 ? '款式图片' : '色卡/颜色'}`"
       :visible.sync="centerDialogVisible"
       width="50%"
       center
@@ -890,6 +890,10 @@ export default {
       this.centerDialogVisible = true;
     },
     async handleEdit() {
+      if (this.obj.style_pic_url == "") {
+        this.$message("请上传款式图片");
+        return;
+      }
       this.$refs["obj"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
@@ -987,12 +991,12 @@ export default {
       this.seasons = data;
     },
     async getstylist() {
-      let res = await getStylistList();
+      let res = await getStylistList({ department_id: 1 });
       let { data } = res.data;
       this.stylists = data;
     },
     async getstylist() {
-      let res = await getStylistList();
+      let res = await getStylistList({ department_id: 1 });
       let { data } = res.data;
       this.obj.user_id_data.map((v) => {
         data.map((v1, i1) => {

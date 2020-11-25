@@ -162,6 +162,7 @@
           <el-form-item label="完成时间" prop="finishtime">
             <el-date-picker
               v-model="obj.finishtime"
+              @change="get_finishtime"
               type="date"
               placeholder="选择日期"
             ></el-date-picker>
@@ -867,6 +868,9 @@ export default {
       // this.option.img = this.obj.picurl;
       this.centerDialogVisible = true;
     },
+    get_finishtime(e) {
+      this.obj['finishtime'] = moment(e).format("YYYY-MM-DD");
+    },
     handleDel() {
       let { id } = this.$route.query;
       this.$confirm("此操作将永久删除该订单, 是否继续?", "提示", {
@@ -960,7 +964,7 @@ export default {
       this.seasons = data;
     },
     async getstylist() {
-      let res = await getStylistList();
+      let res = await getStylistList({ department_id: 1 });
       let { data } = res.data;
       this.obj.user_id_data.map((v) => {
         data.map((v1, i1) => {

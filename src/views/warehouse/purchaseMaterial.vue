@@ -92,7 +92,7 @@
       <el-dialog
         title="添加物料"
         :visible.sync="centerDialogVisible1"
-        width="60%"
+        width="70%"
         center
         class="dialog1"
       >
@@ -393,16 +393,15 @@
                     </template>
                     <template v-slot:description>
                       <div class="dt">
-                        <!-- <span>{{item_g.logname}}</span> -->
                         <span v-if="index_g == 0">{{ "预计回料时间" }}</span>
-                        <span v-if="item_g.state == '2'">{{
+                        <span v-if="item_g.state == '3'">{{
                           "延迟回料时间"
                         }}</span>
-                        <span v-if="item_g.state == '1'">{{
+                        <span v-if="item_g.state == '2'">{{
                           "部分回料时间"
                         }}</span>
-                        <span v-if="item_g.state == '3'">{{ "回料总量" }}</span>
-                        <span v-if="item_g.state == '3'">{{
+                        <span v-if="item_g.state == '4'">{{ "回料总量" }}</span>
+                        <span v-if="item_g.state == '4'">{{
                           item1.quantity + "m"
                         }}</span>
                         <span v-else>{{ item_g.returntime }}</span>
@@ -417,61 +416,91 @@
                   </el-step>
                 </el-steps>
                 <div class="option_name">
-                  <el-button
-                    size="mini"
-                    class="option_name_id"
-                    round
-                    @click="goPanelPurchase(item1)"
+                  <!-- {{ item1.type }} -->
+                  <div v-if="item1.state == 0 || item1.state == 5">
+                    <el-button
+                      size="mini"
+                      class="option_name_id"
+                      round
+                      @click="goPanelPurchase(item1)"
+                      v-if="
+                        item1.type == 'style_purchase' &&
+                        permission.indexOf('purchase_edit') != -1
+                      "
+                      >{{ "采购录入" }}</el-button
+                    >
+                    <el-button
+                      size="mini"
+                      class="option_name_id"
+                      round
+                      @click="goPanelPurchase(item1)"
+                      v-if="
+                        item1.type == 'produce_order_procure' &&
+                        permission.indexOf('produce_order_procure_edit') != -1
+                      "
+                      >{{ "采购录入" }}</el-button
+                    >
+                  </div>
+                  <div
                     v-if="
-                      item1.purchase_log.length === 0 &&
-                      permission.indexOf('purchase_edit') != -1
+                      item1.state == 1 || item1.state == 2 || item1.state == 3
                     "
-                    >{{ "采购录入" }}</el-button
                   >
-                  <el-button
-                    size="mini"
-                    class="option_name_id"
-                    round
-                    @click="updateStatus(item1)"
-                    v-if="
-                      item1.purchase_log.length > 0 &&
-                      item1.purchase_log[item1.purchase_log.length - 1]
-                        .state !== '3' &&
-                      permission.indexOf('style_purchase_log_add') != -1
-                    "
-                    >{{ "更新状态" }}</el-button
-                  >
-                  <el-button
-                    size="mini"
-                    class="option_name_id"
-                    @click.stop="seeDetails2(item1)"
-                    v-if="
-                      item1.purchase_log.length > 0 &&
-                      item1.purchase_log[item1.purchase_log.length - 1].state ==
-                        '3' &&
-                      item1.type != 'materials_purchase'
-                    "
-                    round
-                    >查看内容</el-button
-                  >
-                  <el-button
-                    size="mini"
-                    class="option_name_id"
-                    @click.stop="seeDetails1(item1)"
-                    v-if="
-                      item1.purchase_log.length > 0 &&
-                      item1.purchase_log[item1.purchase_log.length - 1].state ==
-                        '3'
-                    "
-                    round
-                    >查看详情</el-button
-                  >
-
-                  <!-- &&item1.style_purchase_log_data[item1.style_purchase_log_data.length-1].logname!=='全部回料' -->
+                    <el-button
+                      size="mini"
+                      class="option_name_id"
+                      round
+                      @click="updateStatus(item1)"
+                      v-if="
+                        item1.type == 'style_purchase' &&
+                        permission.indexOf('style_purchase_log_add') != -1
+                      "
+                      >{{ "更新状态" }}</el-button
+                    >
+                    <el-button
+                      size="mini"
+                      class="option_name_id"
+                      round
+                      @click="updateStatus(item1)"
+                      v-if="
+                        item1.type == 'produce_order_procure' &&
+                        permission.indexOf('produce_order_procure_log_add') !=
+                          -1
+                      "
+                      >{{ "更新状态" }}</el-button
+                    >
+                    <el-button
+                      size="mini"
+                      class="option_name_id"
+                      round
+                      @click="updateStatus(item1)"
+                      v-if="
+                        item1.type == 'materials_purchase' &&
+                        permission.indexOf('materials_purchase_log') != -1
+                      "
+                      >{{ "更新状态" }}</el-button
+                    >
+                  </div>
+                  <div v-if="item1.state == 4">
+                    <el-button
+                      size="mini"
+                      class="option_name_id"
+                      @click.stop="seeDetails1(item1)"
+                      round
+                      >查看详情</el-button
+                    >
+                    <el-button
+                      size="mini"
+                      class="option_name_id"
+                      @click.stop="seeDetails2(item1)"
+                      v-if="item1.type != 'materials_purchase'"
+                      round
+                      >查看内容</el-button
+                    >
+                  </div>
                 </div>
               </div>
             </div>
-            <!-- <el-divider content-position="right">{{item.mainclass}}</el-divider> -->
           </div>
         </div>
         <el-pagination
@@ -486,7 +515,7 @@
         ></el-pagination>
         <!-- 弹框 -->
         <el-dialog
-          width="30%"
+          width="300"
           title="请选择更新后的状态"
           class="tan"
           :visible.sync="outerVisible"
@@ -494,7 +523,7 @@
         >
           <!-- 全部回料 -->
           <el-dialog
-            width="30%"
+            width="300"
             title="请上传全部回料凭证"
             :visible.sync="innerVisibled1"
             append-to-body
@@ -506,11 +535,24 @@
               :rules="rules2"
               label-width="100px"
             >
-              <el-form-item label="结算金额" prop="money">
+              <el-form-item label="采购量">
+                {{ quantity }}
+              </el-form-item>
+              <el-form-item label="采购单价">
+                {{ price }}
+              </el-form-item>
+              <el-form-item label="金额">
+                {{ totalprice }}
+              </el-form-item>
+              <el-form-item label="已付">
+                {{ paid_money }}
+              </el-form-item>
+              <el-form-item label="余结金额" prop="money">
                 <el-input
                   placeholder="请输入内容"
                   style="width: 50%"
                   v-model="form2.money"
+                  @change="get_form2_money(form2.money)"
                 ></el-input>
               </el-form-item>
               <!-- <el-form-item label="仓库:" prop="storehouse_id">
@@ -557,7 +599,7 @@
           </el-dialog>
           <!-- 部分回料 -->
           <el-dialog
-            width="30%"
+            width="300"
             title="部分回料"
             :visible.sync="innerVisible"
             append-to-body
@@ -591,29 +633,6 @@
                   placeholder="选择日期"
                 ></el-date-picker>
               </el-form-item>
-
-              <!-- <el-form-item label="仓库:" prop="storehouse_id">
-            <el-select
-              clearable
-              v-model="form3.storehouse_id"
-              placeholder="请选择仓库"
-              style="width:50%"
-            >
-              <el-option
-                v-for="item in ware"
-                :key="item.id"
-                :label="item.storehouse_name"
-                :value="item.id"
-              ></el-option>
-              <el-pagination
-                small
-                layout="prev, pager, next"
-                @size-change="handleSize1"
-                @current-change="handleCurrent1"
-                :total="total1"
-              ></el-pagination>
-            </el-select>
-          </el-form-item>-->
               <el-form-item label="余结金额">
                 <span style="width: 50%" :model="form3.money1"></span>
               </el-form-item>
@@ -639,7 +658,7 @@
           </el-dialog>
           <!-- 延迟回料 -->
           <el-dialog
-            width="30%"
+            width="300"
             title="延迟回料"
             :visible.sync="innerVisibled"
             append-to-body
@@ -674,11 +693,27 @@
           </el-dialog>
           <div slot="footer" style="height: 80px" class="dialog-footer">
             <el-button
+              v-if="
+                produce_order_procure_item.state == 1 ||
+                produce_order_procure_item.state == 5
+              "
+              @click="handle_modify_order(produce_order_procure_item)"
+              >修改订单</el-button
+            >
+            <el-button
+              v-if="
+                produce_order_procure_item.state == 1 ||
+                produce_order_procure_item.state == 5
+              "
+              @click="handle_cancel_order(produce_order_procure_item)"
+              >取消订单</el-button
+            >
+            <el-button
               @click="
                 outerVisible = false;
-                innerVisibled1 = true;
+                innerVisibled = true;
               "
-              >全部回料</el-button
+              >延迟回料</el-button
             >
             <el-button
               @click="
@@ -690,9 +725,9 @@
             <el-button
               @click="
                 outerVisible = false;
-                innerVisibled = true;
+                innerVisibled1 = true;
               "
-              >延迟回料</el-button
+              >全部回料</el-button
             >
           </div>
         </el-dialog>
@@ -961,12 +996,62 @@ export default {
       },
       permission: [],
       code: 0,
+      quantity: "",
+      price: "",
+      totalprice: "",
+      paid_money: "",
     };
   },
   methods: {
     /**
      *
-     */
+     */ handle_modify_order(e) {
+      console.log(e);
+      // if(e.type==style_purchase){}
+      // if(e.type==produce_order_procure){}
+      // if(e.type==materials_purchase){}
+      this.$router.push({
+        path: `panelPurchase_edit?materials_id=${
+          e.materials_id
+        }&tabName=${"仓库采购"}&id=${e.style_id}&style_purchase_id=${
+          e.id
+        }&type=${e.type}`,
+      });
+    },
+    handle_cancel_order(e) {
+      console.log(e);
+      this.$confirm("是否取消订单?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          console.log(e);
+          let res = await stylePurchaseDel({
+            id: e.id,
+          });
+          this.$message({
+            showClose: true,
+            message: res.data.msg,
+          });
+          if (res.data.error_code == 0) {
+            this.outerVisible = false;
+            this.init();
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消",
+          });
+        });
+    },
+    get_form2_money(e) {
+      console.log(e);
+      if (this.totalprice - this.paid_money != e) {
+        this.$message("结算金额不匹配");
+      }
+    },
     async onSubmit_no() {
       this.$refs["form_no"].validate(async (valid) => {
         if (!valid) return;
@@ -1023,7 +1108,7 @@ export default {
     },
     async balanc() {
       // 结算账户
-      let res3 = await balanceAccountSelect();
+      let res3 = await balanceAccountSelect({ type: 1 });
       this.options = res3.data.data;
     },
     backtrack() {
@@ -1122,6 +1207,7 @@ export default {
     },
     onSubmit() {
       this.code = 1;
+      this.pageIndexB = 1;
       this.init();
     },
     async getClassData() {
@@ -1191,7 +1277,7 @@ export default {
           style_purchase_id: this.produce_order_procure_item.id, //生产采购单id
           logname: "全部回料", //日志名称
           returntime: "", //预计回料时间/部分回料时间/延迟时间
-          state: "3", //回料状态 1部份回料 2延时回料 3全部回料
+          state: "4", //回料状态 1部份回料 2延时回料 4全部回料
           picurl: this.form2.imageUrl, //凭证图片
           quantity: 0, //回料数量
           amount: Number(this.form2.money), //结算金额
@@ -1205,7 +1291,7 @@ export default {
           produce_order_procure_id: this.produce_order_procure_item.id, //生产采购单id
           logname: "全部回料", //日志名称
           returntime: "", //预计回料时间/部分回料时间/延迟时间
-          state: "3", //回料状态 1部份回料 2延时回料 3全部回料
+          state: "4", //回料状态 1部份回料 2延时回料 4全部回料
           picurl: this.form2.imageUrl, //凭证图片
           quantity: 0, //回料数量
           amount: Number(this.form2.money), //结算金额
@@ -1219,7 +1305,7 @@ export default {
           materials_purchase_id: this.produce_order_procure_item.id, //生产采购单id
           logname: "全部回料", //日志名称
           returntime: "", //预计回料时间/部分回料时间/延迟时间
-          state: "3", //回料状态 1部份回料 2延时回料 3全部回料
+          state: "4", //回料状态 1部份回料 2延时回料 4全部回料
           picurl: this.form2.imageUrl, //凭证图片
           quantity: 0, //回料数量
           amount: Number(this.form2.money), //结算金额
@@ -1242,7 +1328,7 @@ export default {
             style_purchase_id: this.produce_order_procure_item.id, //生产采购单id
             logname: "部分回料", //日志名称
             returntime: this.form3.date, //预计回料时间/部分回料时间/延迟时间
-            state: "1", //回料状态 1部份回料 2延时回料 3全部回料
+            state: "2", //回料状态 2部份回料 2延时回料 3全部回料
             picurl: this.form3.imageUrl, //凭证图片
             quantity: Number(this.form3.number), //回料数量
             amount: Number(this.form3.money), //结算金额
@@ -1259,7 +1345,7 @@ export default {
             produce_order_procure_id: this.produce_order_procure_item.id, //生产采购单id
             logname: "部分回料", //日志名称
             returntime: this.form3.date, //预计回料时间/部分回料时间/延迟时间
-            state: "1", //回料状态 1部份回料 2延时回料 3全部回料
+            state: "2", //回料状态 2部份回料 2延时回料 3全部回料
             picurl: this.form3.imageUrl, //凭证图片
             quantity: Number(this.form3.number), //回料数量
             amount: Number(this.form3.money), //结算金额
@@ -1274,7 +1360,7 @@ export default {
             materials_purchase_id: this.produce_order_procure_item.id, //生产采购单id
             logname: "部分回料", //日志名称
             returntime: this.form3.date, //预计回料时间/部分回料时间/延迟时间
-            state: "1", //回料状态 1部份回料 2延时回料 3全部回料
+            state: "2", //回料状态 2部份回料 2延时回料 3全部回料
             picurl: this.form3.imageUrl, //凭证图片
             quantity: Number(this.form3.number), //回料数量
             amount: Number(this.form3.money), //结算金额
@@ -1297,7 +1383,7 @@ export default {
             style_purchase_id: this.produce_order_procure_id, //生产采购单id
             logname: "延迟回料", //日志名称
             returntime: this.form4.date, //预计回料时间/部分回料时间/延迟时间
-            state: "2", //回料状态 1部份回料 2延时回料 3全部回料
+            state: "3", //回料状态 1部份回料 3延时回料 3全部回料
             picurl: this.form4.imageUrl, //凭证图片
             quantity: 0, //回料数量
             amount: 0, //结算金额
@@ -1312,7 +1398,7 @@ export default {
             style_purchase_id: this.produce_order_procure_id, //生产采购单id
             logname: "延迟回料", //日志名称
             returntime: this.form4.date, //预计回料时间/部分回料时间/延迟时间
-            state: "2", //回料状态 1部份回料 2延时回料 3全部回料
+            state: "3", //回料状态 1部份回料 3延时回料 3全部回料
             picurl: this.form4.imageUrl, //凭证图片
             quantity: 0, //回料数量
             amount: 0, //结算金额
@@ -1327,7 +1413,7 @@ export default {
             style_purchase_id: this.produce_order_procure_id, //生产采购单id
             logname: "延迟回料", //日志名称
             returntime: this.form4.date, //预计回料时间/部分回料时间/延迟时间
-            state: "2", //回料状态 1部份回料 2延时回料 3全部回料
+            state: "3", //回料状态 1部份回料 3延时回料 3全部回料
             picurl: this.form4.imageUrl, //凭证图片
             quantity: 0, //回料数量
             amount: 0, //结算金额
@@ -1392,11 +1478,12 @@ export default {
       this.init();
     },
     goPanelPurchase(e) {
-      this.$router.push({
-        path: `/PanelPurchase?materials_id=${
-          e.materials_id
-        }&tabName=${"仓库采购"}&id=${e.id}&style_id=${e.style_id}`,
-      });
+      console.log(e);
+      // this.$router.push({
+      //   path: `/PanelPurchase?materials_id=${
+      //     e.materials_id
+      //   }&tabName=${"仓库采购"}&id=${e.id}&style_id=${e.style_id}`,
+      // });
     },
     // 更新状态
     async updateStatus(item) {
@@ -1413,6 +1500,8 @@ export default {
       let res2 = await storehouseList({
         page: this.pageIndex1,
         page_size: this.pageSize1,
+        state: 1,
+        storehouse_type: 1,
       });
       let { data } = res2.data;
       this.ware = data;
@@ -1420,7 +1509,6 @@ export default {
     },
     async init() {
       console.log(this.code);
-      this.pageIndexB = 1;
       let { origin, origin_code } = this.$route.query;
       let obj = { page: this.pageIndexB, page_size: this.pageSizeB };
       if (origin !== "" && origin_code != 0) {
@@ -1522,11 +1610,11 @@ export default {
           justify-content: space-around;
           align-items: flex-end;
           .cardStyle {
-            width: 320px;
+            width: 350px;
             height: 100px;
             display: flex;
             .cardStyle_left {
-              width: 270px;
+              width: 290px;
               display: flex;
               background-color: #f2f2f2;
               border-radius: 10px;
@@ -1606,7 +1694,7 @@ export default {
           .cardStyle {
             position: relative;
             width: 320px;
-            height: 100px;
+            height: 120px;
             display: flex;
             .bos {
               position: absolute;
@@ -1630,8 +1718,8 @@ export default {
               overflow: hidden;
               .cardStyle_left_img {
                 img {
-                  width: 100px;
-                  height: 100px;
+                  width: 120px;
+                  height: 120px;
                 }
               }
               .cardStyle_left_content {
@@ -1655,7 +1743,7 @@ export default {
               justify-content: center;
               align-items: center;
               width: 50px;
-              height: 100px;
+              height: 120px;
               background-color: #f2f2f2;
               border-radius: 10px;
               .cardStyle_right_no {
@@ -1670,11 +1758,13 @@ export default {
           border-radius: 10px;
           background-color: #f2f2f2;
           flex: 1;
-          // width: 600px;
+          overflow-x: scroll;
+          overflow-y: hidden;
           display: flex;
           justify-content: space-between;
+          word-spacing: normal;
           align-items: flex-end;
-          height: 100px;
+          height: 120px;
           padding: 10px;
         }
       }

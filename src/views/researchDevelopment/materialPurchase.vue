@@ -352,7 +352,7 @@ export default {
       this.seasons = data;
     },
     async getStylist() {
-      let res = await getStylistList();
+      let res = await getStylistList({ department_id: 1 });
       let { data } = res.data;
       this.stylists = data;
     },

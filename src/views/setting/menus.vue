@@ -310,7 +310,7 @@ export default {
             j["auth_name"] = "否";
           }
           j.children.map((q, w) => {
-            if (j.auth) {
+            if (q.auth) {
               q["auth_name"] = "是";
             } else {
               q["auth_name"] = "否";

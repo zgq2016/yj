@@ -152,6 +152,13 @@ export const materialsPurchase = data => {
         data: data
     });
 };
+export const materialsPurchaseEdit = data => {
+    return axios({
+        url: "?g=materials_purchase_edit",
+        method: "post",
+        data: data
+    });
+};
 // 物料流水
 export const materialStoreRecord = data => {
     return axios({

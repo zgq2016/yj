@@ -288,9 +288,9 @@ export default {
   methods: {
     handleEdit(index, row) {
       this.$router.push({
-        path: `/productionStyle?id=${
+        path: `/sc_purchase?id=${
           row.style_id
-        }&activeNames=${2}&TL=${1}&produce_no=${row.produce_no}`,
+        }&TL=${1}&produce_no=${row.produce_no}`,
       });
     },
     onSubmit(val) {
@@ -320,7 +320,7 @@ export default {
       this.seasons = data;
     },
     async getStylist() {
-      let res = await getStylistList();
+      let res = await getStylistList({ department_id: 1 });
       let { data } = res.data;
       // console.log(data);
       this.stylists = data;

@@ -257,7 +257,7 @@
     <el-dialog
       title="增加款式颜色"
       :visible.sync="centerDialogVisible"
-      width="30%"
+      width="400"
       center
       class="dialog"
     >
@@ -1047,8 +1047,8 @@ export default {
       console.log(res);
       this.obj = res.data.data;
       this.style_color_data_length = res.data.data.style_color_data.length;
-      if (this.active_index == 0 && this.style_color_data_length > 0) {
-      this.color_name_id = this.obj.style_color_data[0].style_color_name;
+      if (this.style_color_data_length > 0) {
+        this.color_name_id = this.obj.style_color_data[0].style_color_name;
         this.card_init();
       }
       let res2 = await getColorSelect();
@@ -1112,7 +1112,7 @@ export default {
   .main {
     .color_num {
       display: flex;
-      margin-left: 20px;
+      // margin-left: 20px;
       font-size: 14px;
       cursor: pointer;
       .color {
@@ -1416,7 +1416,6 @@ export default {
             }
           }
           .cardStyle_right {
-            
             display: flex;
             justify-content: center;
             align-items: center;

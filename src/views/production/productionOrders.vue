@@ -313,9 +313,9 @@ export default {
       // console.log(row);
       // console.log(index);
       this.$router.push({
-        path: `/productionStyle?id=${
-          row.style_id
-        }&activeNames=1&TL=${0}&produce_no=${row.produce_no}`,
+        path: `/sc_Order_information?id=${row.style_id}&TL=${0}&produce_no=${
+          row.produce_no
+        }`,
       });
     },
     // 下单
@@ -356,7 +356,7 @@ export default {
       this.seasons = data;
     },
     async getStylist() {
-      let res = await getStylistList();
+      let res = await getStylistList({ department_id: 1 });
       let { data } = res.data;
       this.stylists = data;
     },
