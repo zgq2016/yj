@@ -254,7 +254,7 @@
 
 <script>
 import moment from "moment";
-import { storehouseList,materialsPurchaseEdit } from "@/api/warehouse.js";
+import { storehouseList, materialsPurchaseEdit } from "@/api/warehouse.js";
 import { url } from "@/api/configuration";
 import {
   getMaterialsInfo, //物料
@@ -264,6 +264,7 @@ import {
 import {
   produceOrderProcureEdit, //编辑物料
   produceOrderInfo,
+  produceOrderProcureList,
 } from "@/api/production";
 import {
   purchaseEdit, //编辑物料
@@ -434,8 +435,66 @@ export default {
       this.$refs[form].validate(async (valid) => {
         if (!valid) return;
 
+        if (tabName == "采购") {
+          let {
+            id,
+            produce_no,
+            materials_id,
+            style_purchase_id,
+          } = this.$route.query;
+          let res1 = await getProduceOrderProcureInfo({
+            id: style_purchase_id,
+          });
+          let arr = [];
+          let v = res1.data.data;
+          arr.push({
+            id: v.id,
+            style_id: v.style_id,
+            produce_no: v.produce_no,
+            style_color_name: v.style_color_name,
+            mainclass: v.mainclass,
+            materials_id: v.materials_id,
+            color: v.color,
+            color_no: v.color_no,
+            picurl: v.picurl,
+          });
+          console.log(arr);
+          let res = await produceOrderProcureEdit({
+            id: arr[0].id,
+            style_id: arr[0].style_id,
+            produce_no: arr[0].produce_no,
+            style_color_name: arr[0].style_color_name,
+            mainclass: arr[0].mainclass,
+            materials_id: arr[0].materials_id,
+            color: arr[0].color,
+            color_no: arr[0].color_no,
+            picurl: arr[0].picurl,
+            id: this.$route.query.style_purchase_id,
+            amountPurchased: this.form.amountPurchased,
+            deposit: this.form.deposit,
+            dosage: this.form.dosage,
+            finishTime: this.form.finishTime,
+            balance_account_id: this.form.balance_account_id,
+            money: this.form.money,
+            payment: this.form.payment,
+            purchasePrice: this.form.purchasePrice,
+            remark: this.form.remark,
+            uploadDocuments: this.form.picurl,
+            storehouse_id: this.form.storehouse_id,
+          });
+          console.log(res);
+          this.$message({
+            showClose: true,
+            message: res.data.msg,
+          });
+          if (res.data.error_code == 0) {
+            this.$router.push({
+              path: `/sc_purchase?id=${id}&produce_no=${produce_no}`,
+            });
+          }
+        }
         if (tabName == "版料采购") {
-          console.log('版料采购');
+          console.log("版料采购");
           let res = await purchaseEdit({
             id: this.$route.query.style_purchase_id,
             amountPurchased: this.form.amountPurchased,
@@ -464,8 +523,8 @@ export default {
           }
         }
         if (tabName == "仓库采购") {
-          console.log('仓库采购');
-          if ((type == "style_purchase")) {
+          console.log("仓库采购");
+          if (type == "style_purchase") {
             let res = await purchaseEdit({
               id: this.$route.query.style_purchase_id,
               amountPurchased: this.form.amountPurchased,
@@ -481,22 +540,20 @@ export default {
               storehouse_id: this.form.storehouse_id,
             });
             console.log(res);
-            if (res.data.error_code) {
-              this.$message({
-                showClose: true,
-                message: res.data.msg,
-                type: "error",
-              });
-            } else {
+            this.$message({
+              showClose: true,
+              message: res.data.msg,
+            });
+            if (res.data.error_code == 0) {
               this.$router.push({
                 path: `/purchaseMaterial`,
               });
             }
           }
-          if ((type == "produce_order_procure")) {
+          if (type == "produce_order_procure") {
           }
-          if ((type == "materials_purchase")) {
-            console.log('materials_purchase');
+          if (type == "materials_purchase") {
+            console.log("materials_purchase");
             let res = await materialsPurchaseEdit({
               id: this.$route.query.style_purchase_id,
               amountPurchased: this.form.amountPurchased,
@@ -548,7 +605,49 @@ export default {
       this.total2 = res.data.count;
     },
     async get_StylePurchaseInfo() {
-      let { style_purchase_id, type } = this.$route.query;
+      let { style_purchase_id, type, tabName } = this.$route.query;
+      if (tabName == "版料采购") {
+        let res = await getStylePurchaseInfo({ id: style_purchase_id });
+        let { data } = res.data;
+        this.form.dosage = data.actualusage;
+        this.form.amountPurchased = data.quantity;
+        this.form.purchasePrice = data.price;
+        this.form.money = data.totalprice;
+        this.form.balance_account_id = data.balance_account_id;
+        this.form.payment = data.payment;
+        if (data.payment == 0) {
+          this.form.deposit = data.deposit;
+        }
+        if (data.payment == 1) {
+          this.form.fullPayout = data.totalprice;
+        }
+        this.form.finishTime = data.finishTime;
+        // this.form.fullPayout = data.totalprice;
+        this.form.picurl = data.picurl;
+        this.form.remark = data.remark;
+        this.form.storehouse_id = data.storehouse_id;
+      }
+      if (tabName == "采购") {
+        let res = await getProduceOrderProcureInfo({ id: style_purchase_id });
+        let { data } = res.data;
+        this.form.dosage = data.dosage;
+        this.form.amountPurchased = data.amountPurchased;
+        this.form.purchasePrice = data.purchasePrice;
+        this.form.money = data.money;
+        this.form.balance_account_id = data.balance_account_id;
+        this.form.payment = data.payment;
+        if (data.payment == 0) {
+          this.form.deposit = data.deposit;
+        }
+        if (data.payment == 1) {
+          this.form.fullPayout = data.totalprice;
+        }
+        this.form.finishTime = data.finishTime;
+        // this.form.fullPayout = data.totalprice;
+        this.form.picurl = data.uploadDocuments;
+        this.form.remark = data.remark;
+        this.form.storehouse_id = data.storehouse_id;
+      }
       if (type == "style_purchase") {
         let res = await getStylePurchaseInfo({ id: style_purchase_id });
         let { data } = res.data;

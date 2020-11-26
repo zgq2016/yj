@@ -1456,12 +1456,13 @@ export default {
     line-height: 30px;
     color: #000;
     width: 130px;
+    margin: 0 10px 0 0;
     .color {
       width: 120px;
       height: 30px;
       line-height: 30px;
       text-align: center;
-      margin: 0 !important;
+      margin: 0  !important;
     }
     .el-icon-close {
       position: absolute;

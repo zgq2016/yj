@@ -475,7 +475,7 @@ export default {
       this.form_data.produce_order.map((v, i) => {
         v["size"] = [];
 
-        let size_arr = [];
+        let produceOrderInfosize_arr = [];
         this.sizes.map((v1, i1) => {
           size_arr.push({
             size: v1.size_name,

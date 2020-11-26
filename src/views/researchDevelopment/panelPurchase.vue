@@ -274,6 +274,7 @@ import {
 import {
   produceOrderProcureEdit, //编辑物料
   produceOrderInfo,
+  produceOrderProcureList,
 } from "@/api/production";
 import {
   purchaseEdit, //编辑物料
@@ -443,22 +444,42 @@ export default {
         // 调用actions的登录方法
 
         if (this.$route.query.tabName === "采购") {
+          // let e1 = this.$route.query.e;
+          // let e = JSON.parse(e1);
+          let { style_id, produce_no, materials_id } = this.$route.query;
+          let res1 = await produceOrderProcureList({
+            style_id,
+            produce_no,
+          });
+          let arr = [];
+          res1.data.data.map((v, i) => {
+            if (v.materials_id == materials_id) {
+              arr.push({
+                id: v.id,
+                style_id: v.style_id,
+                produce_no: v.produce_no,
+                style_color_name: v.style_color_name,
+                mainclass: v.mainclass,
+                materials_id: v.materials_id,
+                color: v.color,
+                color_no: v.color_no,
+                picurl: v.picurl,
+              });
+            }
+          });
           this.form.finishTime = moment(this.form.finishTime).format(
             "YYYY-MM-DD"
           );
-          let e1 = this.$route.query.e;
-          let e = JSON.parse(e1);
           let res = await produceOrderProcureEdit({
-            id: e.id,
-            style_id: Number(e.style_id),
-            produce_no: e.produce_no,
-            style_color_name: e.style_color_name,
-            mainclass: e.mainclass,
-
-            materials_id: this.colors.materials_id,
-            color: this.colors.color,
-            color_no: this.colors.color_no,
-            picurl: this.colors.picurl,
+            id: arr[0].id,
+            style_id: arr[0].style_id,
+            produce_no: arr[0].produce_no,
+            style_color_name: arr[0].style_color_name,
+            mainclass: arr[0].mainclass,
+            materials_id: arr[0].materials_id,
+            color: arr[0].color,
+            color_no: arr[0].color_no,
+            picurl: arr[0].picurl,
             //
             amountPurchased: this.form.amountPurchased,
             deposit: this.form.deposit,
@@ -481,7 +502,7 @@ export default {
             });
           } else {
             this.$router.push({
-              path: `/ProductionStyle?id=${e.style_id}&activeNames=2`,
+              path: `/sc_purchase?id=${style_id}&produce_no=${produce_no}`,
             });
           }
         }

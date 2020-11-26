@@ -326,9 +326,25 @@ export default {
           border-radius: 8px;
         }
       }
+    }    .orderInformation {
+      margin: 10px 0;
+      border-radius: 10px;
+      background-color: #f2f2f2;
+      // flex: 1;
+      overflow-x: scroll;
+      overflow-y: hidden;
+      display: flex;
+      justify-content: space-between;
+      word-spacing: normal;
+      align-items: flex-end;
+      height: 120px;
+      padding: 10px;
+      &::-webkit-scrollbar {
+        // display: none;
+      }
     }
     .orderInformation {
-      width: 1000px;
+      // width: 1000px;
       .el-steps {
         position: relative;
         margin-bottom: 40px;

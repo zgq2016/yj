@@ -145,7 +145,6 @@
               label="出货"
               name="/sc_shipment"
             ></el-tab-pane>
-            <el-tab-pane label="aa" name="/aa"></el-tab-pane>
           </el-tabs>
         </el-header>
         <el-main>

@@ -70,7 +70,6 @@ import Tailor from "@/views/production/tailor.vue";
 import Sc_Order_information from "@/views/production/sc/sc_Order_information.vue";
 import Sc_purchase from "@/views/production/sc/sc_purchase.vue";
 import Sc_materialPurchasing from "@/views/production/sc/sc_materialPurchasing.vue";
-import AA from "@/views/production/sc/aa.vue";
 import Sc_tailor from "@/views/production/sc/sc_tailor.vue";
 import Sc_shipment from "@/views/production/sc/sc_shipment.vue";
 import Shipment from "@/views/production/shipment.vue";
@@ -385,11 +384,6 @@ const routes = [
             path: "/sc_purchase",
             name: "Sc_purchase",
             component: Sc_purchase,
-          },
-          {
-            path: "/aa",
-            name: "AA",
-            component: AA,
           },
           {
             path: "/sc_materialPurchasing",

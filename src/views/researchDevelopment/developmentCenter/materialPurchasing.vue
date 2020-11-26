@@ -1,5 +1,24 @@
 <template>
   <div class="materialPurchasing">
+    <!-- <div
+      class="material_purchase_name"
+      v-if="permission.indexOf('materialPurchasing') != -1"
+    >
+      <div
+        v-for="(item, index) in obj.style_color_data"
+        :key="index"
+        style="display: flex; align-items: center; margin: 20px 0"
+      >
+        <div
+          style="margin: 0 10px; cursor: pointer"
+          @click="handleColorNum(item, index)"
+          :class="active === index ? 'active' : ''"
+          class="backg"
+        >
+          {{ item.style_color_name }}
+        </div>
+      </div>
+    </div> -->
     <div v-if="permission.indexOf('get_style_purchase') != -1">
       <div v-for="(item, index) in style_materials" :key="index">
         <div
@@ -236,29 +255,6 @@
               placeholder="选择日期"
             ></el-date-picker>
           </el-form-item>
-
-          <!-- <el-form-item label="仓库:" prop="storehouse_id">
-            <el-select
-              clearable
-              v-model="form3.storehouse_id"
-              placeholder="请选择仓库"
-              style="width:50%"
-            >
-              <el-option
-                v-for="item in ware"
-                :key="item.id"
-                :label="item.storehouse_name"
-                :value="item.id"
-              ></el-option>
-              <el-pagination
-                small
-                layout="prev, pager, next"
-                @size-change="handleSize1"
-                @current-change="handleCurrent1"
-                :total="total1"
-              ></el-pagination>
-            </el-select>
-          </el-form-item>-->
           <el-form-item label="余结金额">
             <span style="width: 50%">{{ totalprice - paid_money }}</span>
           </el-form-item>
@@ -492,7 +488,7 @@ export default {
       this.$router.push({
         path: `panelPurchase_edit?materials_id=${
           e.materials_id
-        }&tabName=${"仓库采购"}&id=${e.style_id}&style_purchase_id=${e.id}`,
+        }&tabName=${"版料采购"}&id=${e.style_id}&style_purchase_id=${e.id}`,
       });
     },
     get_form2_money(e) {
@@ -616,13 +612,13 @@ export default {
     async handleColorNum(item, index) {
       this.active = index;
       this.tabItem = item;
-      // let res1 = await getMaterialsProcureList({
-      //   style_id: this.tabItem.style_id,
-      //   style_color_name: this.tabItem.style_color_name
-      // });
-      // console.log(res1);
-      // let { data } = res1.data;
-      // this.style_materials = data;
+      let res1 = await getMaterialsProcureList({
+        style_id: this.tabItem.style_id,
+        style_color_name: this.tabItem.style_color_name,
+      });
+      console.log(res1);
+      let { data } = res1.data;
+      this.style_materials = data;
       this.init();
     },
     goPanelPurchase(e) {
