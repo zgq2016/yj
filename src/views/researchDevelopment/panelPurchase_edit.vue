@@ -551,6 +551,62 @@ export default {
             }
           }
           if (type == "produce_order_procure") {
+            let {
+              id,
+              produce_no,
+              materials_id,
+              style_purchase_id,
+            } = this.$route.query;
+            let res1 = await getProduceOrderProcureInfo({
+              id: style_purchase_id,
+            });
+            let arr = [];
+            let v = res1.data.data;
+            arr.push({
+              id: v.id,
+              style_id: v.style_id,
+              produce_no: v.produce_no,
+              style_color_name: v.style_color_name,
+              mainclass: v.mainclass,
+              materials_id: v.materials_id,
+              color: v.color,
+              color_no: v.color_no,
+              picurl: v.picurl,
+            });
+            console.log(arr);
+            let res = await produceOrderProcureEdit({
+              id: arr[0].id,
+              style_id: arr[0].style_id,
+              produce_no: arr[0].produce_no,
+              style_color_name: arr[0].style_color_name,
+              mainclass: arr[0].mainclass,
+              materials_id: arr[0].materials_id,
+              color: arr[0].color,
+              color_no: arr[0].color_no,
+              picurl: arr[0].picurl,
+              id: this.$route.query.style_purchase_id,
+              amountPurchased: this.form.amountPurchased,
+              deposit: this.form.deposit,
+              dosage: this.form.dosage,
+              finishTime: this.form.finishTime,
+              balance_account_id: this.form.balance_account_id,
+              money: this.form.money,
+              payment: this.form.payment,
+              purchasePrice: this.form.purchasePrice,
+              remark: this.form.remark,
+              uploadDocuments: this.form.picurl,
+              storehouse_id: this.form.storehouse_id,
+            });
+            console.log(res);
+            this.$message({
+              showClose: true,
+              message: res.data.msg,
+            });
+            if (res.data.error_code == 0) {
+              this.$router.push({
+                path: `/purchaseMaterial`,
+              });
+            }
           }
           if (type == "materials_purchase") {
             console.log("materials_purchase");
@@ -672,10 +728,10 @@ export default {
       if (type == "produce_order_procure") {
         let res = await getProduceOrderProcureInfo({ id: style_purchase_id });
         let { data } = res.data;
-        this.form.dosage = data.actualusage;
-        this.form.amountPurchased = data.quantity;
-        this.form.purchasePrice = data.price;
-        this.form.money = data.totalprice;
+        this.form.dosage = data.dosage;
+        this.form.amountPurchased = data.amountPurchased;
+        this.form.purchasePrice = data.purchasePrice;
+        this.form.money = data.money;
         this.form.balance_account_id = data.balance_account_id;
         this.form.payment = data.payment;
         if (data.payment == 0) {
@@ -686,7 +742,7 @@ export default {
         }
         this.form.finishTime = data.finishTime;
         // this.form.fullPayout = data.totalprice;
-        this.form.picurl = data.picurl;
+        this.form.picurl = data.uploadDocuments;
         this.form.remark = data.remark;
         this.form.storehouse_id = data.storehouse_id;
       }

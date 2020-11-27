@@ -440,6 +440,14 @@
                       "
                       >{{ "采购录入" }}</el-button
                     >
+                    <el-button
+                      size="mini"
+                      class="option_name_id"
+                      round
+                      @click="goPanelPurchase(item1)"
+                      v-if="item1.type == 'materials_purchase'"
+                      >{{ "采购录入" }}</el-button
+                    >
                   </div>
                   <div
                     v-if="
@@ -578,7 +586,7 @@
             </el-select>
           </el-form-item>-->
               <el-upload
-                class="avatar-uploader1"
+                class="avatar-uploader"
                 :action="url + '/uploadpic.php'"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess1"
@@ -587,7 +595,7 @@
                 <img
                   v-if="form2.imageUrl"
                   :src="form2.imageUrl"
-                  class="avatar1"
+                  class="avatar"
                 />
                 <i v-else class="el-icon-upload avatar-uploader-icon"></i>
               </el-upload>
@@ -634,7 +642,10 @@
                 ></el-date-picker>
               </el-form-item>
               <el-form-item label="余结金额">
-                <span style="width: 50%" :model="form3.money1"></span>
+                <span style="width: 50%">
+                  {{ totalprice }}
+                  {{ paid_money }}
+                </span>
               </el-form-item>
               <el-upload
                 class="avatar-uploader"
@@ -687,7 +698,7 @@
               </el-form-item>
               <div style="width: 200px; margin: 0 auto">
                 <el-button @click="innerVisibled = false">取消</el-button>
-                <el-button @click="delayBack()">确定</el-button>
+                <el-button @click="delayBack">确定</el-button>
               </div>
             </el-form>
           </el-dialog>
@@ -751,8 +762,14 @@ import {
   balanceAccountSelect,
   materialsPurchase,
   materialsPurchaseLog,
+  materialsPurchaseDel,
 } from "@/api/warehouse";
-import { produceOrderProcureLogAdd } from "@/api/production";
+import {
+  produceOrderProcureAdd,
+  produceOrderProcureList,
+  produceOrderProcure_del,
+  produceOrderProcureLogAdd,
+} from "@/api/production";
 import { url } from "@/api/configuration";
 import moment from "moment";
 import { getMaterialsClass, getMaterialsClassInfo } from "@/api/archives.js";
@@ -1007,16 +1024,25 @@ export default {
      *
      */ handle_modify_order(e) {
       console.log(e);
-      // if(e.type==style_purchase){}
-      // if(e.type==produce_order_procure){}
+      if (e.type == "style_purchase") {
+        this.$router.push({
+          path: `panelPurchase_edit?materials_id=${
+            e.materials_id
+          }&tabName=${"仓库采购"}&id=${e.style_id}&style_purchase_id=${
+            e.id
+          }&type=${e.type}`,
+        });
+      }
+      if (e.type == "produce_order_procure") {
+        this.$router.push({
+          path: `panelPurchase_edit?materials_id=${
+            e.materials_id
+          }&tabName=${"仓库采购"}&id=${e.style_id}&style_purchase_id=${
+            e.id
+          }&type=${e.type}&produce_no=${e.produce_no}`,
+        });
+      }
       // if(e.type==materials_purchase){}
-      this.$router.push({
-        path: `panelPurchase_edit?materials_id=${
-          e.materials_id
-        }&tabName=${"仓库采购"}&id=${e.style_id}&style_purchase_id=${
-          e.id
-        }&type=${e.type}`,
-      });
     },
     handle_cancel_order(e) {
       console.log(e);
@@ -1027,16 +1053,44 @@ export default {
       })
         .then(async () => {
           console.log(e);
-          let res = await stylePurchaseDel({
-            id: e.id,
-          });
-          this.$message({
-            showClose: true,
-            message: res.data.msg,
-          });
-          if (res.data.error_code == 0) {
-            this.outerVisible = false;
-            this.init();
+          if (this.produce_order_procure_item.type == "style_purchase") {
+            let res = await stylePurchaseDel({
+              id: e.id,
+            });
+            this.$message({
+              showClose: true,
+              message: res.data.msg,
+            });
+            if (res.data.error_code == 0) {
+              this.outerVisible = false;
+              this.init();
+            }
+          }
+          if (this.produce_order_procure_item.type == "produce_order_procure") {
+            let res = await produceOrderProcure_del({
+              id: e.id,
+            });
+            this.$message({
+              showClose: true,
+              message: res.data.msg,
+            });
+            if (res.data.error_code == 0) {
+              this.outerVisible = false;
+              this.init();
+            }
+          }
+          if (this.produce_order_procure_item.type == "materials_purchase") {
+            let res = await materialsPurchaseDel({
+              id: e.id,
+            });
+            this.$message({
+              showClose: true,
+              message: res.data.msg,
+            });
+            if (res.data.error_code == 0) {
+              this.outerVisible = false;
+              this.init();
+            }
           }
         })
         .catch(() => {
@@ -1271,52 +1325,58 @@ export default {
     },
     // 全部回料
     async allMaterial() {
-      this.innerVisibled1 = false;
-      if (this.produce_order_procure_item.type == "style_purchase") {
-        let res = await stylePurchaseLogAdd({
-          style_purchase_id: this.produce_order_procure_item.id, //生产采购单id
-          logname: "全部回料", //日志名称
-          returntime: "", //预计回料时间/部分回料时间/延迟时间
-          state: "4", //回料状态 1部份回料 2延时回料 4全部回料
-          picurl: this.form2.imageUrl, //凭证图片
-          quantity: 0, //回料数量
-          amount: Number(this.form2.money), //结算金额
-          remarks: "", //原因备注
-          // storehouse_id: Number(this.form2.storehouse_id), //原因备注
-        });
-        this.init();
-      }
-      if (this.produce_order_procure_item.type == "produce_order_procure_log") {
-        let res = await produceOrderProcureLogAdd({
-          produce_order_procure_id: this.produce_order_procure_item.id, //生产采购单id
-          logname: "全部回料", //日志名称
-          returntime: "", //预计回料时间/部分回料时间/延迟时间
-          state: "4", //回料状态 1部份回料 2延时回料 4全部回料
-          picurl: this.form2.imageUrl, //凭证图片
-          quantity: 0, //回料数量
-          amount: Number(this.form2.money), //结算金额
-          remarks: "", //原因备注
-          // storehouse_id: Number(this.form2.storehouse_id), //原因备注
-        });
-        this.init();
-      }
-      if (this.produce_order_procure_item.type == "materials_purchase") {
-        let res = await materialsPurchaseLog({
-          materials_purchase_id: this.produce_order_procure_item.id, //生产采购单id
-          logname: "全部回料", //日志名称
-          returntime: "", //预计回料时间/部分回料时间/延迟时间
-          state: "4", //回料状态 1部份回料 2延时回料 4全部回料
-          picurl: this.form2.imageUrl, //凭证图片
-          quantity: 0, //回料数量
-          amount: Number(this.form2.money), //结算金额
-          remarks: "", //原因备注
-          // storehouse_id: Number(this.form2.storehouse_id), //原因备注
-        });
-        this.init();
-      }
+      this.$refs["form2"].validate(async (valid) => {
+        if (!valid) return;
+        this.innerVisibled1 = false;
+        if (this.produce_order_procure_item.type == "style_purchase") {
+          let res = await stylePurchaseLogAdd({
+            style_purchase_id: this.produce_order_procure_item.id, //生产采购单id
+            logname: "全部回料", //日志名称
+            returntime: "", //预计回料时间/部分回料时间/延迟时间
+            state: "4", //回料状态 1部份回料 2延时回料 4全部回料
+            picurl: this.form2.imageUrl, //凭证图片
+            quantity: 0, //回料数量
+            amount: Number(this.form2.money), //结算金额
+            remarks: "", //原因备注
+            // storehouse_id: Number(this.form2.storehouse_id), //原因备注
+          });
+          this.init();
+        }
+        if (this.produce_order_procure_item.type == "produce_order_procure") {
+          let res = await produceOrderProcureLogAdd({
+            produce_order_procure_id: this.produce_order_procure_item.id, //生产采购单id
+            logname: "全部回料", //日志名称
+            returntime: "", //预计回料时间/部分回料时间/延迟时间
+            state: "4", //回料状态 1部份回料 2延时回料 4全部回料
+            picurl: this.form2.imageUrl, //凭证图片
+            quantity: 0, //回料数量
+            amount: Number(this.form2.money), //结算金额
+            remarks: "", //原因备注
+            // storehouse_id: Number(this.form2.storehouse_id), //原因备注
+          });
+          this.init();
+        }
+        if (this.produce_order_procure_item.type == "materials_purchase") {
+          let res = await materialsPurchaseLog({
+            materials_purchase_id: this.produce_order_procure_item.id, //生产采购单id
+            logname: "全部回料", //日志名称
+            returntime: "", //预计回料时间/部分回料时间/延迟时间
+            state: "4", //回料状态 1部份回料 2延时回料 4全部回料
+            picurl: this.form2.imageUrl, //凭证图片
+            quantity: 0, //回料数量
+            amount: Number(this.form2.money), //结算金额
+            remarks: "", //原因备注
+            // storehouse_id: Number(this.form2.storehouse_id), //原因备注
+          });
+          this.init();
+        }
+        this.form2.imageUrl = "";
+        this.form2.money = "";
+      });
     },
     // 部分回料
     partBack() {
+      console.log(this.produce_order_procure_item);
       this.$refs["form3"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
@@ -1335,11 +1395,10 @@ export default {
             remarks: "", //原因备注
             // storehouse_id: Number(this.form3.storehouse_id), //原因备注
           });
+
           this.init();
         }
-        if (
-          this.produce_order_procure_item.type == "produce_order_procure_log"
-        ) {
+        if (this.produce_order_procure_item.type == "produce_order_procure") {
           // produceOrderProcureLogAdd
           let res = await produceOrderProcureLogAdd({
             produce_order_procure_id: this.produce_order_procure_item.id, //生产采购单id
@@ -1369,18 +1428,23 @@ export default {
           });
           this.init();
         }
+        this.form3.date = "";
+        this.form3.imageUrl = "";
+        this.form3.number = "";
+        this.form3.money = "";
       });
     },
     // 延迟回料
     delayBack() {
+      console.log(this.produce_order_procure_item);
       this.$refs["form4"].validate(async (valid) => {
         if (!valid) return;
         // 调用actions的登录方法
-        if (this.form1.purchaseOption_id == 0) {
+        if (this.produce_order_procure_item.type == "style_purchase") {
           this.innerVisibled = false;
           this.form4.date = moment(this.form4.date).format("YYYY-MM-DD");
           let res = await stylePurchaseLogAdd({
-            style_purchase_id: this.produce_order_procure_id, //生产采购单id
+            style_purchase_id: this.produce_order_procure_item.id, //生产采购单id
             logname: "延迟回料", //日志名称
             returntime: this.form4.date, //预计回料时间/部分回料时间/延迟时间
             state: "3", //回料状态 1部份回料 3延时回料 3全部回料
@@ -1391,11 +1455,11 @@ export default {
           });
           this.init();
         }
-        if (this.form1.purchaseOption_id == 1) {
+        if (this.produce_order_procure_item.type == "produce_order_procure") {
           this.innerVisibled = false;
           this.form4.date = moment(this.form4.date).format("YYYY-MM-DD");
           let res = await produceOrderProcureLogAdd({
-            style_purchase_id: this.produce_order_procure_id, //生产采购单id
+            produce_order_procure_id: this.produce_order_procure_item.id, //生产采购单id
             logname: "延迟回料", //日志名称
             returntime: this.form4.date, //预计回料时间/部分回料时间/延迟时间
             state: "3", //回料状态 1部份回料 3延时回料 3全部回料
@@ -1406,11 +1470,11 @@ export default {
           });
           this.init();
         }
-        if (this.form1.purchaseOption_id == 2) {
+        if (this.produce_order_procure_item.type == "materials_purchase") {
           this.innerVisibled = false;
           this.form4.date = moment(this.form4.date).format("YYYY-MM-DD");
           let res = await materialsPurchaseLog({
-            style_purchase_id: this.produce_order_procure_id, //生产采购单id
+            materials_purchase_id: this.produce_order_procure_item.id, //生产采购单id
             logname: "延迟回料", //日志名称
             returntime: this.form4.date, //预计回料时间/部分回料时间/延迟时间
             state: "3", //回料状态 1部份回料 3延时回料 3全部回料
@@ -1422,6 +1486,10 @@ export default {
           this.init();
         }
       });
+      this.form4.date = "";
+      this.form4.date = "";
+      this.form4.imageUrl = "";
+      this.form4.reason = "";
     },
     beforeAvatarUpload(file) {
       return this.$elUploadBeforeUpload(file);
@@ -1479,16 +1547,38 @@ export default {
     },
     goPanelPurchase(e) {
       console.log(e);
-      // this.$router.push({
-      //   path: `/PanelPurchase?materials_id=${
-      //     e.materials_id
-      //   }&tabName=${"仓库采购"}&id=${e.id}&style_id=${e.style_id}`,
-      // });
+      this.$router.push({
+        path: `/PanelPurchase?materials_id=${
+          e.materials_id
+        }&tabName=${"仓库采购"}&id=${e.id}&style_id=${e.style_id}&type=${
+          e.type
+        }&produce_no=${e.produce_no}`,
+      });
     },
     // 更新状态
     async updateStatus(item) {
+      if (this.produce_order_procure_item.type == "style_purchase") {
+        this.quantity = item.quantity;
+        this.price = item.price;
+        this.totalprice = item.totalprice;
+        this.paid_money = item.deposit;
+      }
+      if (this.produce_order_procure_item.type == "produce_order_procure") {
+        this.quantity = item.quantity;
+        this.price = item.price;
+        this.totalprice = item.totalprice;
+        this.paid_money = item.deposit;
+      }
+      if (this.produce_order_procure_item.type == "materials_purchase") {
+        this.quantity = item.quantity;
+        this.price = item.price;
+        this.totalprice = item.totalprice;
+        this.paid_money = item.deposit;
+      }
+
       this.outerVisible = true;
       this.produce_order_procure_item = item;
+      console.log(this.produce_order_procure_item);
     },
     handleSize1(val) {
       this.pageSize1 = val;

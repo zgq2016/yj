@@ -109,7 +109,11 @@
               :rules="rules"
               label-width="120px"
             >
-              <el-form-item label="用量" prop="dosage">
+              <el-form-item
+                label="用量"
+                prop="dosage"
+                v-if="this.$route.query.type != 'materials_purchase'"
+              >
                 <el-col :span="6">
                   <el-input
                     v-model="form.dosage"
@@ -264,7 +268,7 @@
 
 <script>
 import moment from "moment";
-import { storehouseList } from "@/api/warehouse.js";
+import { storehouseList, materialsPurchase,materialsPurchaseEdit } from "@/api/warehouse.js";
 import { url } from "@/api/configuration";
 import {
   getMaterialsInfo, //物料
@@ -494,47 +498,138 @@ export default {
             storehouse_id: this.form.storehouse_id,
           });
           console.log(res);
-          if (res.data.error_code) {
-            this.$message({
-              showClose: true,
-              message: res.data.msg,
-              type: "error",
-            });
-          } else {
+          this.$message({
+            showClose: true,
+            message: res.data.msg,
+          });
+          if (res.data.error_code == 0) {
             this.$router.push({
               path: `/sc_purchase?id=${style_id}&produce_no=${produce_no}`,
             });
           }
         }
         if (this.$route.query.tabName === "仓库采购") {
-          this.form.finishTime = moment(this.form.finishTime).format(
-            "YYYY-MM-DD"
-          );
-          let res = await purchaseEdit({
-            id: this.$route.query.id,
-            amountPurchased: this.form.amountPurchased,
-            deposit: this.form.deposit,
-            dosage: this.form.dosage,
-            finishTime: this.form.finishTime,
-            balance_account_id: this.form.balance_account_id,
-            money: this.form.money,
-            payment: this.form.payment,
-            purchasePrice: this.form.purchasePrice,
-            remark: this.form.remark,
-            uploadDocuments: this.form.picurl,
-            storehouse_id: this.form.storehouse_id,
-          });
-          console.log(res);
-          if (res.data.error_code) {
+          if (this.$route.query.type == "materials_purchase") {
+            this.form.finishTime = moment(this.form.finishTime).format(
+              "YYYY-MM-DD"
+            );
+            let res = await materialsPurchaseEdit({
+              id: this.$route.query.id,
+              // materials_id: this.$route.query.materials_id,
+              amountPurchased: this.form.amountPurchased,
+              deposit: this.form.deposit,
+              // dosage: this.form.dosage,
+              finishTime: this.form.finishTime,
+              balance_account_id: this.form.balance_account_id,
+              money: this.form.money,
+              payment: this.form.payment,
+              purchasePrice: this.form.purchasePrice,
+              remark: this.form.remark,
+              uploadDocuments: this.form.picurl,
+              storehouse_id: this.form.storehouse_id,
+            });
+            console.log(res);
+            if (res.data.error_code) {
+              this.$message({
+                showClose: true,
+                message: res.data.msg,
+                type: "error",
+              });
+            } else {
+              this.$router.push({
+                path: `/purchaseMaterial`,
+              });
+            }
+          }
+          if (this.$route.query.type == "style_purchase") {
+            this.form.finishTime = moment(this.form.finishTime).format(
+              "YYYY-MM-DD"
+            );
+            let res = await purchaseEdit({
+              id: this.$route.query.id,
+              amountPurchased: this.form.amountPurchased,
+              deposit: this.form.deposit,
+              dosage: this.form.dosage,
+              finishTime: this.form.finishTime,
+              balance_account_id: this.form.balance_account_id,
+              money: this.form.money,
+              payment: this.form.payment,
+              purchasePrice: this.form.purchasePrice,
+              remark: this.form.remark,
+              uploadDocuments: this.form.picurl,
+              storehouse_id: this.form.storehouse_id,
+            });
+            console.log(res);
+            if (res.data.error_code) {
+              this.$message({
+                showClose: true,
+                message: res.data.msg,
+                type: "error",
+              });
+            } else {
+              this.$router.push({
+                path: `/purchaseMaterial`,
+              });
+            }
+          }
+          if (this.$route.query.type == "produce_order_procure") {
+            let { style_id, produce_no, materials_id } = this.$route.query;
+            let res1 = await produceOrderProcureList({
+              style_id,
+              produce_no,
+            });
+            let arr = [];
+            res1.data.data.map((v, i) => {
+              if (v.materials_id == materials_id) {
+                arr.push({
+                  id: v.id,
+                  style_id: v.style_id,
+                  produce_no: v.produce_no,
+                  style_color_name: v.style_color_name,
+                  mainclass: v.mainclass,
+                  materials_id: v.materials_id,
+                  color: v.color,
+                  color_no: v.color_no,
+                  picurl: v.picurl,
+                });
+              }
+            });
+            this.form.finishTime = moment(this.form.finishTime).format(
+              "YYYY-MM-DD"
+            );
+            let res = await produceOrderProcureEdit({
+              id: arr[0].id,
+              style_id: arr[0].style_id,
+              produce_no: arr[0].produce_no,
+              style_color_name: arr[0].style_color_name,
+              mainclass: arr[0].mainclass,
+              materials_id: arr[0].materials_id,
+              color: arr[0].color,
+              color_no: arr[0].color_no,
+              picurl: arr[0].picurl,
+              //
+              amountPurchased: this.form.amountPurchased,
+              deposit: this.form.deposit,
+              dosage: this.form.dosage,
+              finishTime: this.form.finishTime,
+              balance_account_id: this.form.balance_account_id,
+              money: this.form.money,
+              payment: this.form.payment,
+              purchasePrice: this.form.purchasePrice,
+              remark: this.form.remark,
+              uploadDocuments: this.form.picurl,
+              storehouse_id: this.form.storehouse_id,
+            });
+            console.log(res);
             this.$message({
               showClose: true,
               message: res.data.msg,
-              type: "error",
             });
-          } else {
-            this.$router.push({
-              path: `/purchaseMaterial`,
-            });
+            if (res.data.error_code == 0) {
+              this.$router.push({
+                path: `/purchaseMaterial`,
+              });
+            }
           }
         }
         if (this.$route.query.tabName === "版料采购") {

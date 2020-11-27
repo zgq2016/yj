@@ -300,7 +300,7 @@
           </el-form-item>
           <div style="width: 200px; margin: 0 auto">
             <el-button @click="innerVisibled = false">取消</el-button>
-            <el-button @click="delayBack()">确定</el-button>
+            <el-button @click="delayBack">确定</el-button>
           </div>
         </el-form>
       </el-dialog>
@@ -505,21 +505,26 @@ export default {
     },
     // 全部回料
     async allMaterial() {
-      this.innerVisibled1 = false;
+      this.$refs["form2"].validate(async (valid) => {
+        if (!valid) return;
+        this.innerVisibled1 = false;
 
-      let res = await stylePurchaseLogAdd({
-        style_purchase_id: this.produce_order_procure_id, //生产采购单id
-        logname: "全部回料", //日志名称
-        returntime: "", //预计回料时间/部分回料时间/延迟时间
-        state: "4", //回料状态 1部份回料 2延时回料 3全部回料
-        picurl: this.form2.imageUrl, //凭证图片
-        quantity: 0, //回料数量
-        amount: Number(this.form2.money), //结算金额
-        remarks: "", //原因备注
-        // storehouse_id: Number(this.form2.storehouse_id), //原因备注
+        let res = await stylePurchaseLogAdd({
+          style_purchase_id: this.produce_order_procure_id, //生产采购单id
+          logname: "全部回料", //日志名称
+          returntime: "", //预计回料时间/部分回料时间/延迟时间
+          state: "4", //回料状态 1部份回料 2延时回料 3全部回料
+          picurl: this.form2.imageUrl, //凭证图片
+          quantity: 0, //回料数量
+          amount: Number(this.form2.money), //结算金额
+          remarks: "", //原因备注
+          // storehouse_id: Number(this.form2.storehouse_id), //原因备注
+        });
+        this.form2.imageUrl = "";
+        this.form2.money = "";
+        console.log(res);
+        this.init();
       });
-      console.log(res);
-      this.init();
     },
     // 部分回料
     partBack() {
@@ -539,6 +544,11 @@ export default {
           remarks: "", //原因备注
           // storehouse_id: Number(this.form3.storehouse_id), //原因备注
         });
+        this.form3.date = "";
+        this.form3.date = "";
+        this.form3.imageUrl = "";
+        this.form3.number = "";
+        this.form3.money = "";
         this.init();
         console.log(res);
       });
@@ -561,8 +571,11 @@ export default {
           amount: 0, //结算金额
           remarks: this.form4.reason, //原因备注
         });
+        this.form4.date = "";
+        this.form4.date = "";
+        this.form4.imageUrl = "";
+        this.form4.reason = "";
         this.init();
-        console.log(res);
       });
     },
     beforeAvatarUpload(file) {

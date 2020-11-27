@@ -352,13 +352,17 @@ export default {
     },
     // 确定下单
     async OrderCreate() {
+      if(this.ids.length<1){
+        this.$message('勾选下单物料')
+        return
+      }
       this.$confirm("提交已选下单, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
         .then(async () => {
-          // console.log(this.ids);
+
           let res = await produceOrderCreateAdd({
             style_id_data: this.ids,
           });

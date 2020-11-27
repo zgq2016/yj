@@ -475,7 +475,7 @@ export default {
       this.form_data.produce_order.map((v, i) => {
         v["size"] = [];
 
-        let produceOrderInfosize_arr = [];
+        let size_arr = [];
         this.sizes.map((v1, i1) => {
           size_arr.push({
             size: v1.size_name,
@@ -679,7 +679,7 @@ export default {
       this.form_data.produce_order.map((v, i) => {
         if (index == i) {
           v.produce_order_size.map((v1, i1) => {
-            v1.quantity = Math.round((v.total / res) * v1.ratio);
+            v1.quantity = Math.round((v.total / res) * v1.ratio) || "";
           });
         }
       });
@@ -709,7 +709,7 @@ export default {
       this.form_data.produce_order.map((v, i) => {
         if (index == i) {
           v.produce_order_size.map((v1, i1) => {
-            v1.quantity = Math.round((v.total / res) * v1.ratio);
+            v1.quantity = Math.round((v.total / res) * v1.ratio) || "";
           });
         }
       });

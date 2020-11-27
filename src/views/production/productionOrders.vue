@@ -324,9 +324,9 @@ export default {
       // console.log(res);
 
       this.$router.push({
-        path: `/productionStyle?id=${
-          row.style_id
-        }&activeNames=1&TL=${0}&produce_no=${row.produce_no}`,
+        path: `/sc_Order_information?id=${row.style_id}&TL=${0}&produce_no=${
+          row.produce_no
+        }`,
       });
     },
     // 查询

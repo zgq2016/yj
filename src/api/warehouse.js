@@ -175,3 +175,17 @@ export const materialsPurchaseLog = data => {
         data: data
     });
 };
+export const materialsPurchaseDel = data => {
+    return axios({
+        url: "?g=materials_purchase_del",
+        method: "post",
+        data: data
+    });
+};
+// export const materialsPurchaseEdit = data => {
+//     return axios({
+//         url: "?g=materials_purchase_edit",
+//         method: "post",
+//         data: data
+//     });
+// };
