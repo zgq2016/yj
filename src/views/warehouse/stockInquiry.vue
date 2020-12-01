@@ -265,6 +265,7 @@ export default {
       this.pageIndex = 1;
       this.ruleForm.ctime_start = "";
       this.ruleForm.ctime_end = "";
+      this.ruleForm.no = this.ruleForm.no.trim();
       if (this.ruleForm.ctime) {
         this.ruleForm.ctime_start = this.ruleForm.ctime[0];
         this.ruleForm.ctime_end = this.ruleForm.ctime[1];

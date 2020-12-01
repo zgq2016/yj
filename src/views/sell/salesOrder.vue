@@ -225,6 +225,8 @@ export default {
       this.page = 1;
       this.formInline.ctime_start = "";
       this.formInline.ctime_end = "";
+      
+      this.formInline.no = this.formInline.no.trim();
       if (this.formInline.ctime) {
         this.formInline.ctime_start = this.formInline.ctime[0];
         this.formInline.ctime_end = this.formInline.ctime[1];

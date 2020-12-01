@@ -528,7 +528,7 @@ export default {
     },
     async onSubmit() {
       this.pageIndex = 1;
-      console.log(this.formInline);
+      this.formInline["account_no"] = this.formInline.account_no.trim();
       this.supplierInit();
     },
     handlePayment() {

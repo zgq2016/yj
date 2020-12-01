@@ -40,12 +40,15 @@
       <div class="particulars">
         <div style="display: flex; justify-content: space-between">
           <div class="content">
-            <el-image
+            <!-- <el-image
               class="imgSrc"
               style="width: 160px; height: 160px; margin-right: 5px"
               :src="obj.style_pic_url"
               fit="cover"
-            ></el-image>
+            ></el-image> -->
+            <div class="image1">
+              <img :src="obj.style_pic_url" alt="" />
+            </div>
             <img
               v-if="obj.style_color_pic_url !== ''"
               class="imgSrc"
@@ -391,6 +394,22 @@ export default {
         height: 200px;
         margin-right: 30px;
         border-radius: 10px;
+      }
+      .image1 {
+        position: relative;
+        width: 160px;
+        height: 160px;
+        margin: 0 10px;
+        overflow: hidden;
+        border-radius: 10px;
+        img {
+          width: 160px;
+          height: 300px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
       }
       .info {
         .name {

@@ -54,7 +54,7 @@
           </div>
           <div class="">
             <div style="display: flex">
-              <div style="margin:5px 100px 0 0">
+              <div style="margin: 5px 100px 0 0">
                 <div>颜色 : {{ item.color }}</div>
                 <div>色号 : {{ item.color_no }}</div>
               </div>
@@ -93,7 +93,11 @@
             </div>
           </div>
         </div>
-        <router-link
+        <div class="right" v-if="permission.indexOf('materials_edit') != -1">
+          <div class="el-icon-edit" @click="go_editSupplier"></div>
+          <div class="el-icon-delete" @click="is_delete"></div>
+        </div>
+        <!-- <router-link
           :to="`/editrouteCard?id=${upData.id}&TL=2`"
           :data="upData"
           v-if="permission.indexOf('materials_edit') != -1 && index == 0"
@@ -102,7 +106,7 @@
             class="el-icon-edit"
             style="font-size: 30px; cursor: pointer"
           ></span>
-        </router-link>
+        </router-link> -->
       </div>
     </div>
     <el-dialog :visible.sync="dialogVisible">
@@ -115,7 +119,11 @@
 </template>
 
 <script>
-import { getMaterialsInfo, getSupplierInfo } from "@/api/archives";
+import {
+  getMaterialsInfo,
+  getSupplierInfo,
+  materialsDel,
+} from "@/api/archives";
 export default {
   data() {
     return {
@@ -127,6 +135,33 @@ export default {
     };
   },
   methods: {
+    go_editSupplier() {
+      this.$router.push({
+        path: `editrouteCard?id=${this.$route.query.id}&TL=2`,
+      });
+    },
+    is_delete() {
+      this.$confirm("此操作将永久删除该物料, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          let { id } = this.$route.query;
+          let res = await materialsDel({ id });
+          this.$router.push({ path: "/routeCard_list" });
+          this.$message({
+            type: "success",
+            message: "删除成功!",
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
     handlePreview() {
       this.dialogVisible = true;
     },
@@ -185,6 +220,21 @@ export default {
         div {
           margin: 2px;
         }
+      }
+    }
+    .right {
+      width: 100px;
+      display: flex;
+      height: 100px;
+      flex-direction: column;
+      justify-content: space-between;
+      .el-icon-edit {
+        font-size: 30px;
+        cursor: pointer;
+      }
+      .el-icon-delete {
+        font-size: 30px;
+        cursor: pointer;
       }
     }
     .supplier {

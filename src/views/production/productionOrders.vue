@@ -373,6 +373,7 @@ export default {
     async init() {
       this.formInline.page = this.page;
       this.formInline.page_size = this.page_size;
+      this.formInline["styleno"] = this.formInline.styleno.trim();
       let res = await getProduceList(this.formInline);
       console.log(res);
       this.count = res.data.count;

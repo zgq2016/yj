@@ -269,6 +269,7 @@ export default {
     async init(obj) {
       this.formInline.page = this.page;
       this.formInline.page_size = this.page_size;
+      this.formInline["styleno"] = this.formInline.styleno.trim();
       let res = await getProduceFactoryList(this.formInline);
       this.count = res.data.count;
       let { data } = res.data;

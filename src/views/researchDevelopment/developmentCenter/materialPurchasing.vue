@@ -114,36 +114,36 @@
                 </template>
               </el-step>
             </el-steps>
-            <div>
-              <el-button
-                size="mini"
-                round
-                @click="goPanelPurchase(item1)"
-                v-if="
-                  permission.indexOf('purchase_edit') != -1 &&
-                  (item1.state == 0 || item1.state == 5)
-                "
-                >{{ "采购录入" }}</el-button
-              >
+          </div>
+          <div class="option_name">
+            <div
+              v-if="
+                permission.indexOf('purchase_edit') != -1 && item1.state == 0
+              "
+            >
+              <el-button size="mini" round @click="goPanelPurchase(item1)">{{
+                "采购录入"
+              }}</el-button>
+            </div>
 
+            <div v-if="item1.state != 0">
               <el-button
                 size="mini"
-                round
-                @click="updateStatus(item, item1)"
-                v-if="
-                  (item1.state == 1 || item1.state == 2 || item1.state == 3) &&
-                  permission.indexOf('style_purchase_log_add') != -1
-                "
-                >{{ "更新状态" }}</el-button
-              >
-              <el-button
-                size="mini"
-                style="margin-left: 10px"
+                style="margin: 0"
                 @click.stop="seeDetails1(item1)"
-                v-if="item1.state == 4"
                 round
-                >查看详情</el-button
+                >查看账单</el-button
               >
+            </div>
+            <div
+              v-if="
+                item1.state > 0 &&
+                permission.indexOf('style_purchase_log_add') != -1
+              "
+            >
+              <el-button size="mini" round @click="updateStatus(item, item1)">{{
+                "更新状态"
+              }}</el-button>
             </div>
           </div>
         </div>
@@ -186,28 +186,6 @@
               @change="get_form2_money(form2.money)"
             ></el-input>
           </el-form-item>
-          <!-- <el-form-item label="仓库:" prop="storehouse_id">
-            <el-select
-              clearable
-              v-model="form2.storehouse_id"
-              placeholder="请选择仓库"
-              style="width:50%"
-            >
-              <el-option
-                v-for="item in ware"
-                :key="item.id"
-                :label="item.storehouse_name"
-                :value="item.id"
-              ></el-option>
-              <el-pagination
-                small
-                layout="prev, pager, next"
-                @size-change="handleSize1"
-                @current-change="handleCurrent1"
-                :total="total1"
-              ></el-pagination>
-            </el-select>
-          </el-form-item>-->
           <el-upload
             class="avatar-uploader1"
             :action="url + '/uploadpic.php'"
@@ -274,7 +252,34 @@
           </div>
         </el-form>
       </el-dialog>
-      <!-- 延迟回料 -->
+      <el-dialog
+        width="300"
+        title="退单"
+        :visible.sync="innerVisibled5"
+        append-to-body
+        center
+      >
+        <el-form label-width="120px">
+          <el-form-item label="退货数量" v-if="chargebackForm.amount == 0">
+            <el-input
+              placeholder="请输入内容"
+              style="width: 50%"
+              v-model="chargebackForm.amount"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="退款金额">
+            <el-input
+              placeholder="请输入内容"
+              style="width: 50%"
+              v-model="chargebackForm.refund_money"
+            ></el-input>
+          </el-form-item>
+          <div style="width: 200px; margin: 0 auto">
+            <el-button @click="innerVisibled5 = false">取消</el-button>
+            <el-button @click="chargeback()">确定</el-button>
+          </div>
+        </el-form>
+      </el-dialog>
       <el-dialog
         width="300"
         title="延迟回料"
@@ -306,16 +311,20 @@
       </el-dialog>
       <div slot="footer" style="height: 80px" class="dialog-footer">
         <el-button
-          v-if="item1_state.state == 1 || item1_state.state == 5"
+          v-if="item1_state.state == 1"
           @click="handle_modify_order(item1_state)"
           >修改订单</el-button
         >
         <el-button
-          v-if="item1_state.state == 1 || item1_state.state == 5"
-          @click="handle_cancel_order(item1_state)"
-          >取消订单</el-button
+          v-if="item1_state.state > 0"
+          @click="
+            outerVisible = false;
+            innerVisibled5 = true;
+          "
+          >退单</el-button
         >
         <el-button
+          v-if="item1_state.state != 5"
           @click="
             outerVisible = false;
             innerVisibled = true;
@@ -324,6 +333,7 @@
         >
 
         <el-button
+          v-if="item1_state.state != 5"
           @click="
             outerVisible = false;
             innerVisible = true;
@@ -331,6 +341,7 @@
           >部分回料</el-button
         >
         <el-button
+          v-if="item1_state.state != 5"
           @click="
             outerVisible = false;
             innerVisibled1 = true;
@@ -447,9 +458,26 @@ export default {
       totalprice: "",
       paid_money: "",
       item1_state: "",
+      chargebackForm: { refund_money: "", amount: "" },
+      innerVisibled5: false,
     };
   },
   methods: {
+    async chargeback(e) {
+      let res = await stylePurchaseDel({
+        id: this.item1_state.id,
+        refund_money: this.chargebackForm.refund_money,
+        amount: this.chargebackForm.amount,
+      });
+      this.$message({
+        showClose: true,
+        message: res.data.msg,
+      });
+      if (res.data.error_code == 0) {
+        this.innerVisibled5 = false;
+        this.init();
+      }
+    },
     handle_cancel_order(e) {
       console.log(e);
       this.$confirm("是否取消订单?", "提示", {
@@ -499,8 +527,9 @@ export default {
     },
     // 采购查看
     async seeDetails1(item) {
+      console.log(item);
       this.$router.push({
-        path: `/materialTable?materials_id=${item.materials_id}`,
+        path: `/materialTable?materials_id=${item.materials_id}&type=style_purchase&id=${item.id}`,
       });
     },
     // 全部回料
@@ -651,6 +680,8 @@ export default {
       this.price = item1.price;
       this.totalprice = item1.totalprice;
       this.paid_money = item1.paid_money;
+      this.chargebackForm.refund_money = item1.paid_money;
+      this.chargebackForm.amount = item1.received_quantity - 0;
       this.item1_state = item1;
       this.outerVisible = true;
       this.produce_order_procure_id = item1.id;
@@ -784,12 +815,19 @@ export default {
       display: flex;
       justify-content: space-between;
       word-spacing: normal;
-      align-items: flex-end;
+      // align-items: flex-end;
       height: 120px;
-      padding: 10px;
-      &::-webkit-scrollbar {
-        // display: none;
-      }
+      padding: 15px;
+    }
+    .option_name {
+      width: 100px;
+      height: 120px;
+      background-color: #f2f2f2;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
     }
   }
   .active {

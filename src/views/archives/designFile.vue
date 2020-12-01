@@ -272,6 +272,8 @@ export default {
         this.formInline.style_type = this.formInline.style_type.pop();
       }
       this.page = 1;
+      
+      this.formInline["styleno"] = this.formInline.styleno.trim();
       this.init(this.formInline);
     },
     handleUser_id(v) {

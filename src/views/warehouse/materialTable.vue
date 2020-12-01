@@ -18,7 +18,7 @@
             <div class="cardInfoTitle">物料卡信息</div>
             <div class="cardInfoContent">
               <div class="cardInfoContentImg">
-                <img :src="header.picurl" alt />
+                <img :src="header.picurl" alt @click="go_material_card" />
               </div>
               <div class="cardInfoContentText">
                 <div class="cardInfoContentTextName">
@@ -85,7 +85,7 @@
             <div class="supplierInfoTitle">供应商信息</div>
             <div class="supplierInfoContent" ref="supplier">
               <div class="supplierInfoContentImg">
-                <img :src="supplier.cardpicurl" alt />
+                <img :src="supplier.cardpicurl" alt @click="go_supplier" />
               </div>
               <div class="supplierInfoContentText">
                 <div class="supplierInfoContentTextName">
@@ -110,6 +110,8 @@
             :data="tableData"
             style="width: 100%; margin-top: 15px"
             size="mini"
+            :row-key="getRowKeys"
+            :expand-row-keys="expands"
           >
             <!-- <el-table-column align="center" type="index" label="采购批次" width="50"></el-table-column> -->
 
@@ -139,6 +141,22 @@
                     prop="balance"
                     label="余结金额"
                   ></el-table-column>
+                  <el-table-column prop="details" label="凭证">
+                    <template slot-scope="scope">
+                      <div
+                        v-if="scope.row.picurl"
+                        @click="see_voucher(scope.row.picurl)"
+                      >
+                        查看凭证
+                      </div>
+                      <div
+                        v-if="!scope.row.picurl&&permission.indexOf('purchase_log_picurl_upload') != -1"
+                        @click="upload_voucher(scope.row)"
+                      >
+                        上传凭证
+                      </div>
+                    </template>
+                  </el-table-column>
                 </el-table>
               </template>
             </el-table-column>
@@ -213,17 +231,42 @@
         ></el-pagination>
       </div>
     </div>
+    <el-dialog :visible.sync="dialogVisible">
+      <img width="100%" :src="voucher" alt />
+    </el-dialog>
+    <el-dialog :visible.sync="dialogVisible1">
+      <el-upload
+        class="avatar-uploader"
+        :action="url + '/uploadpic.php'"
+        :show-file-list="false"
+        :on-success="handleAvatarSuccess_no"
+        :before-upload="beforeAvatarUpload_no"
+      >
+        <img v-if="picurl" :src="picurl" class="avatar" />
+        <i v-else class="el-icon-upload avatar-uploader-icon"></i>
+      </el-upload>
+      <div style="width: 200px; margin: 0 auto">
+        <el-button @click="dialogVisible1 = false">取消</el-button>
+        <el-button @click="partBack()">确定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
-import { materialStoreRecord, materialStoreDetail } from "@/api/warehouse";
+import {
+  materialStoreRecord,
+  materialStoreDetail,
+  purchaseLogPicurlUpload,
+} from "@/api/warehouse";
 import {
   getMaterialsInfo, //物料
   getSupplierInfo, //供应商
 } from "@/api/archives";
+import { url } from "@/api/configuration";
 export default {
   data() {
     return {
+      url: url,
       header: [], //物料信息
       supplier: [], //供应商
       colors: {},
@@ -231,9 +274,57 @@ export default {
       pageIndex: 1,
       pageSize: 9,
       total: 0,
+      // 获取row的key值
+      getRowKeys(row) {
+        return row.id;
+      },
+      expands: [],
+      // 要展开的行，数
+      dialogVisible: false,
+      dialogVisible1: false,
+      voucher: "",
+      picurl: "",
+      item: {},
     };
   },
   methods: {
+    async partBack() {
+      let { type } = this.$route.query;
+      let res = await purchaseLogPicurlUpload({
+        id: this.item.id,
+        type,
+        picurl: this.picurl,
+      });
+      console.log(res);
+      this.init();
+      this.materials();
+      this.dialogVisible1 = false;
+      this.picurl = "";
+    },
+    handleAvatarSuccess_no(res, file) {
+      this.picurl = res.data.pic_file_url;
+    },
+    beforeAvatarUpload_no(file) {
+      return this.$elUploadBeforeUpload(file);
+    },
+    see_voucher(e) {
+      this.dialogVisible = true;
+      this.voucher = e;
+    },
+    upload_voucher(e) {
+      this.dialogVisible1 = true;
+      this.item = e;
+    },
+    go_supplier() {
+      console.log(this.supplier);
+      this.$router.push({ path: `listDeital?id=${this.supplier.id}` });
+    },
+    go_material_card() {
+      console.log(this.header);
+      this.$router.push({
+        path: `routeCardDeital?id=${this.header.id}`,
+      });
+    },
     handleSizeChange(val) {
       this.pageSize = val;
       this.materials();
@@ -289,6 +380,8 @@ export default {
           v.stock_quantity += Number(j.quantity);
         });
       });
+
+      this.expands.push(this.tableData[0].id);
     },
   },
   mounted() {
@@ -304,7 +397,7 @@ export default {
       .cardInfo {
         margin-right: 80px;
         .cardInfoTitle {
-          padding:0 10px 30px 0;
+          padding: 0 10px 30px 0;
           font-size: 16px;
         }
         .cardInfoContent {
@@ -345,7 +438,7 @@ export default {
       }
       .supplierInfo {
         .supplierInfoTitle {
-          padding:0 10px 30px 0;
+          padding: 0 10px 30px 0;
           font-size: 16px;
         }
         .supplierInfoContent {
@@ -388,6 +481,10 @@ export default {
         }
       }
     }
+  }
+  .pagination {
+    margin: 20px;
+    text-align: right;
   }
 }
 </style>

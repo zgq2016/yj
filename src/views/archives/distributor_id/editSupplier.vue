@@ -926,35 +926,7 @@ export default {
         .replace(/\./g, "")
         .replace("$#$", ".");
     },
-    async handleDel() {
-      this.$confirm("此操作将永久删除该供应商, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(async () => {
-          let res = await supplierDel({ id: this.form.id });
-          if (res.data.error_code) {
-            this.$message({
-              showClose: true,
-              message: res.data.msg,
-              type: "error",
-            });
-          } else {
-            this.$router.push({ path: "/distributor_list" });
-            this.$message({
-              type: "success",
-              message: "删除成功!",
-            });
-          }
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除",
-          });
-        });
-    },
+   
     async handleEdit() {
       let data = this.$route.query;
       if (

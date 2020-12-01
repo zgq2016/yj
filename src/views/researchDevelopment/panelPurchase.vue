@@ -168,13 +168,9 @@
                   style="width: 200px"
                 ></el-input>
               </el-form-item>
-              <el-form-item
-                v-if="form.payment == 1"
-                label="全额付款"
-                prop="fullPayout"
-              >
+              <el-form-item v-if="form.payment == 1" label="全额付款">
                 <el-input
-                  v-model="form.fullPayout"
+                  v-model="form.money"
                   disabled
                   placeholder="请输入金额"
                   style="width: 200px"
@@ -268,7 +264,11 @@
 
 <script>
 import moment from "moment";
-import { storehouseList, materialsPurchase,materialsPurchaseEdit } from "@/api/warehouse.js";
+import {
+  storehouseList,
+  materialsPurchase,
+  materialsPurchaseEdit,
+} from "@/api/warehouse.js";
 import { url } from "@/api/configuration";
 import {
   getMaterialsInfo, //物料
@@ -408,9 +408,9 @@ export default {
             trigger: "blur",
           },
         ],
-        fullPayout: [
-          { required: true, message: "请输入全部金额", trigger: "blur" },
-        ],
+        // fullPayout: [
+        //   { required: true, message: "请输入全部金额", trigger: "blur" },
+        // ],
         storehouse_id: [
           { required: true, message: "请选择仓库类型", trigger: "change" },
         ],
@@ -426,7 +426,7 @@ export default {
         this.form.amountPurchased * this.form.purchasePrice
       ).toFixed(2);
       // this.form.money = String(this.form.money);
-      this.form.fullPayout = this.form.money;
+      // this.form.fullPayout = this.form.money;
     },
     async changed1() {
       this.form.purchasePrice = (
@@ -450,14 +450,14 @@ export default {
         if (this.$route.query.tabName === "采购") {
           // let e1 = this.$route.query.e;
           // let e = JSON.parse(e1);
-          let { style_id, produce_no, materials_id } = this.$route.query;
+          let { id, style_id, produce_no, materials_id } = this.$route.query;
           let res1 = await produceOrderProcureList({
             style_id,
             produce_no,
           });
           let arr = [];
           res1.data.data.map((v, i) => {
-            if (v.materials_id == materials_id) {
+            if (v.id == id) {
               arr.push({
                 id: v.id,
                 style_id: v.style_id,
@@ -573,14 +573,14 @@ export default {
             }
           }
           if (this.$route.query.type == "produce_order_procure") {
-            let { style_id, produce_no, materials_id } = this.$route.query;
+            let { style_id, produce_no, materials_id, id } = this.$route.query;
             let res1 = await produceOrderProcureList({
               style_id,
               produce_no,
             });
             let arr = [];
             res1.data.data.map((v, i) => {
-              if (v.materials_id == materials_id) {
+              if (v.id == id) {
                 arr.push({
                   id: v.id,
                   style_id: v.style_id,
@@ -711,7 +711,7 @@ export default {
     },
     async selectPayment(value) {
       if (value == 1) {
-        this.form.deposit = this.form.fullPayout;
+        this.form.deposit = this.form.money;
       } else {
         this.form.deposit = "";
       }
@@ -800,6 +800,10 @@ export default {
         margin: 30px 10px;
       }
     }
+  }
+  .pagination {
+    margin: 20px;
+    text-align: right;
   }
 }
 </style>

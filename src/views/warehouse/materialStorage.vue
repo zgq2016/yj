@@ -212,6 +212,7 @@ export default {
     onSubmit() {
       this.form.ctime_start = "";
       this.form.ctime_end = "";
+      this.form.materials_name = this.form.materials_name.trim();
       if (this.form.business_time) {
         this.form.ctime_start = this.form.business_time[0];
         this.form.ctime_end = this.form.business_time[1];

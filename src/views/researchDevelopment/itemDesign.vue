@@ -349,6 +349,7 @@ export default {
     async init() {
       this.formInline["page"] = this.pageIndex;
       this.formInline["page_size"] = this.pageSize;
+      this.formInline["stylekeyword"] = this.formInline.stylekeyword.trim();
       let res = await getDataList(this.formInline);
       // if (res.data.error_code === 0) {
       console.log(res);

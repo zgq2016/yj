@@ -530,6 +530,7 @@ export default {
       this.handleSearchInput();
     },
     onSubmit() {
+      this.form.materialsname = this.form.materialsname.trim();
       if (this.form.checked == true) {
         this.form.hide_empty = 1;
       } else {

@@ -355,6 +355,7 @@ export default {
     },
     onSubmit() {
       this.page = 1;
+      
       this.init(this.formInline);
     },
     handleUser_id(e) {

@@ -369,6 +369,7 @@ export default {
     async init() {
       this.formInline["page"] = this.pageIndex;
       this.formInline["page_size"] = this.pageSize;
+      this.formInline["styleno"] = this.formInline.styleno.trim();
       let res = await getStylePurchase(this.formInline);
       console.log(res);
       this.count = res.data.count;

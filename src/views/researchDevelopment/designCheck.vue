@@ -17,17 +17,8 @@
       <div class="detail">
         <div class="left_img">
           <div v-if="obj.picurl !== ''">
-            <el-image
-              v-if="obj.picurl !== ''"
-              style="
-                width: 340px;
-                height: 187px;
-                border-radius: 15px;
-                margin-right: 20px;
-              "
-              :src="obj.picurl"
-              fit="cover"
-            ></el-image>
+            <img v-if="obj.picurl !== ''" style=" width: 340px; height: 187px;
+            border-radius: 15px; margin-right: 20px; " :src="obj.picurl" />
           </div>
 
           <div v-if="obj.picurl === ''">
@@ -672,7 +663,7 @@ export default {
     height: 200px;
     padding: 0 0 15px 0;
     .detail {
-        width: 500px;
+      width: 500px;
       display: flex;
       img {
         width: 160px;

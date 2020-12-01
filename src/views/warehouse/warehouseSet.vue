@@ -357,6 +357,7 @@ export default {
   methods: {
     onSubmit() {
       this.page = 1;
+      this.form.storehouse_name = this.form.storehouse_name.trim();
       this.init(this.form);
     },
     handleEdit(index, row) {

@@ -1,5 +1,5 @@
 <template>
-  <div class="sc_tailor">
+  <div class="sc_tailor" v-if="permission.indexOf('tailor') != -1">
     <div class="add" v-if="active == 1">
       <div class="form_add" v-for="(item, index) in cut_order_add" :key="index">
         <div class="form_data_add">
@@ -64,7 +64,7 @@
       </div>
       <div class="bom">
         <el-button @click="add_Bed_time">增加床次</el-button>
-        <el-button @click="Determine_the_cutting">确定裁剪</el-button>
+        <el-button @click="Determine_the_cutting" >确定裁剪</el-button>
       </div>
     </div>
     <div v-if="active == 0">
@@ -119,7 +119,13 @@
             </div> -->
           </div>
         </div>
-        <div class="table_edit" @click="table_edit">修改</div>
+        <div
+          class="table_edit"
+          @click="table_edit"
+          v-if="permission.indexOf('produce_cut_order_edit') != -1"
+        >
+          修改
+        </div>
       </div>
       <div class="edit" v-if="active_set == true">
         <div class="form_add" v-for="(item, index) in table_list" :key="index">
@@ -180,6 +186,7 @@
           </div>
           <div
             class="add_close"
+            v-if="permission.indexOf('produce_cut_order_del') != -1"
             @click="edit_close(item, index)"
           >
             删除
@@ -187,7 +194,11 @@
         </div>
         <div class="bom">
           <el-button @click="edit_Bed_time">增加床次</el-button>
-          <el-button @click="Determine_the_cutting_edit">确定裁剪</el-button>
+          <el-button
+            @click="Determine_the_cutting_edit"
+            v-if="permission.indexOf('produce_cut_order_add') != -1"
+            >确定裁剪</el-button
+          >
         </div>
       </div>
     </div>
@@ -213,9 +224,11 @@ export default {
       img_index: "",
       active: 1,
       active_set: false,
+      permission: [],
     };
   },
   mounted() {
+    this.permission = localStorage.getItem("permission").split(",");
     this.init();
   },
   methods: {

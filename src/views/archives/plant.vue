@@ -488,6 +488,13 @@ export default {
     onSubmit() {
       // console.log(this.form);
       this.page = 1;
+
+
+
+
+      this.form["keyword"] = this.form.keyword.trim();
+      this.form["contacts"] = this.form.contacts.trim();
+      this.form["phone"] = this.form.phone.trim();
       this.init(this.form);
     },
     // 点击menu

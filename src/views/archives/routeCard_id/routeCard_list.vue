@@ -155,7 +155,7 @@ export default {
     async init() {
       this.form["page"] = this.pageIndex;
       this.form["page_size"] = this.pageSize;
-      this.form["materialsname"] = this.form.materialsname;
+      this.form["materialsname"] = this.form.materialsname.trim();
       let res = await getMaterialsList(this.form);
       console.log(res);
       let { data, count } = res.data;

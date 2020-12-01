@@ -171,10 +171,9 @@
               <el-form-item
                 v-if="form.payment == 1"
                 label="全额付款"
-                prop="fullPayout"
               >
                 <el-input
-                  v-model="form.fullPayout"
+                  v-model="form.money"
                   disabled
                   placeholder="请输入金额"
                   style="width: 200px"
@@ -393,9 +392,6 @@ export default {
             trigger: "blur",
           },
         ],
-        fullPayout: [
-          { required: true, message: "请输入全部金额", trigger: "blur" },
-        ],
         storehouse_id: [
           { required: true, message: "请选择仓库类型", trigger: "change" },
         ],
@@ -417,7 +413,7 @@ export default {
       this.form.purchasePrice = (
         this.form.money / this.form.amountPurchased
       ).toFixed(2);
-      // this.form.purchasePrice = String(this.form.purchasePrice);
+      this.form.deposit = this.form.money;
     },
     handleSize(val) {
       this.pageSize2 = val;
@@ -795,8 +791,8 @@ export default {
     },
     async selectPayment(value) {
       if (value == 1) {
-        this.form.fullPayout = this.form.money;
-        this.form.deposit = this.form.fullPayout;
+        // this.form.fullPayout = this.form.money;
+        this.form.deposit = this.form.money;
       } else {
         this.form.deposit = "";
       }

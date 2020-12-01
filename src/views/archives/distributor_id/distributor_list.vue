@@ -138,7 +138,7 @@ export default {
     async init() {
       this.form["page"] = this.pageIndex;
       this.form["page_size"] = this.pageSize;
-      this.form["companyname"] = this.form.companyname;
+      this.form["companyname"] = this.form.companyname.trim();
       let res = await getSupplierList(this.form);
       // console.log(res);
       let { data, count } = res.data;

@@ -51,12 +51,12 @@
       <div class="particulars">
         <div style="display: flex; justify-content: space-between">
           <div class="content">
-            <el-image
-              class="imgSrc"
-              style="width: 160px; height: 160px; margin-right: 10px"
-              :src="obj.style_pic_url"
-              fit="cover"
-            ></el-image>
+            <div class="image1">
+              <img
+                :src="obj.style_pic_url"
+                alt=""
+              />
+            </div>
             <img
               v-if="obj.style_color_pic_url != ''"
               class="imgSrc"
@@ -67,7 +67,7 @@
             <div
               v-if="obj.style_color_pic_url == ''"
               class="imgSrc"
-              style="width: 160px; height: 160px;"
+              style="width: 160px; height: 160px"
               :style="`background-color:${obj.color_code};`"
             ></div>
             <div class="info">
@@ -326,7 +326,8 @@ export default {
           border-radius: 8px;
         }
       }
-    }    .orderInformation {
+    }
+    .orderInformation {
       margin: 10px 0;
       border-radius: 10px;
       background-color: #f2f2f2;
@@ -423,6 +424,22 @@ export default {
         height: 200px;
         margin-right: 10px;
         border-radius: 10px;
+      }
+      .image1 {
+        position: relative;
+        width: 160px;
+        height: 160px;
+        margin: 0 10px;
+        overflow: hidden;
+        border-radius: 10px;
+        img {
+          width: 160px;
+          height: 300px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
       }
       .info {
         .name {

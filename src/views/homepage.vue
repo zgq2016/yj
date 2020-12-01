@@ -119,7 +119,7 @@
         <div class="tet">
           <ul v-if="works_2.length > 0">
             <li
-              @click.stop="rout2(item.id, 1)"
+              @click.stop="rout2(item, 1)"
               v-for="(item, index) in works_2"
               :key="index"
             >
@@ -152,7 +152,7 @@
         <div class="tet">
           <ul v-if="works_3.length > 0">
             <li
-              @click.stop="rout2(item.id, 2)"
+              @click.stop="rout2(item, 2)"
               v-for="(item, index) in works_3"
               :key="index"
             >
@@ -182,7 +182,7 @@
         <div class="tet">
           <ul v-if="works_3_1.length > 0">
             <li
-              @click.stop="rout2(item.id, 3)"
+              @click.stop="rout2(item, 3)"
               v-for="(item, index) in works_3_1"
               :key="index"
             >
@@ -212,7 +212,7 @@
         <div class="tet">
           <ul v-if="works_3_2.length > 0">
             <li
-              @click.stop="rout2(item.id, 4)"
+              @click.stop="rout2(item, 4)"
               v-for="(item, index) in works_3_2"
               :key="index"
             >
@@ -244,7 +244,7 @@
         <div class="tet">
           <ul v-if="works_4.length > 0">
             <li
-              @click.stop="rout2(item.id, 5)"
+              @click.stop="rout2(item, 5)"
               v-for="(item, index) in works_4"
               :key="index"
             >
@@ -274,7 +274,7 @@
         <div class="tet">
           <ul v-if="works_5.length > 0">
             <li
-              @click.stop="rout2(item.id, 6)"
+              @click.stop="rout2(item, 6)"
               v-for="(item, index) in works_5"
               :key="index"
             >
@@ -306,7 +306,7 @@
         <div class="tet">
           <ul v-if="works_6.length > 0">
             <li
-              @click.stop="rout2(item.id, 7)"
+              @click.stop="rout2(item, 7)"
               v-for="(item, index) in works_6"
               :key="index"
             >
@@ -336,7 +336,7 @@
         <div class="tet">
           <ul v-if="works_7.length > 0">
             <li
-              @click.stop="rout2(item.id, 8)"
+              @click.stop="rout2(item, 8)"
               v-for="(item, index) in works_7"
               :key="index"
             >
@@ -366,7 +366,7 @@
         <div class="tet">
           <ul v-if="works_8.length > 0">
             <li
-              @click.stop="rout2(item.id, 9)"
+              @click.stop="rout2(item, 9)"
               v-for="(item, index) in works_8"
               :key="index"
             >
@@ -807,26 +807,38 @@ export default {
       document.body.style = null;
       this.$router.push({ path: `/designCheck?id=${id}` });
     },
-    rout2(id, index) {
+    rout2(item, index) {
+      console.log(item);
       document.body.style = null;
       if (index == 1) {
-        this.$router.push({ path: `/designNote?id=${id}` });
+        this.$router.push({ path: `/designNote?id=${item.id}` });
       } else if (index == 2) {
-        this.$router.push({ path: `/materialPurchasing?id=${id}` });
+        this.$router.push({ path: `/materialPurchasing?id=${item.id}` });
       } else if (index == 3) {
-        this.$router.push({ path: `/patternStatus?id=${id}` });
+        this.$router.push({ path: `/patternStatus?id=${item.id}` });
       } else if (index == 4) {
-        this.$router.push({ path: `/sampleDress?id=${id}` });
+        this.$router.push({ path: `/sampleDress?id=${item.id}` });
       } else if (index == 5) {
-        this.$router.push({ path: `/productionStyle?id=${id}&activeNames=1` });
+        // id=172&TL=0&produce_no=2020112803615
+        this.$router.push({
+          path: `/sc_Order_information?id=${item.style_id}&produce_no=${item.produce_no}`,
+        });
       } else if (index == 6) {
-        this.$router.push({ path: `/productionStyle?id=${id}&activeNames=2` });
+        this.$router.push({
+          path: `/sc_purchase?id=${item.style_id}&produce_no=${item.produce_no}`,
+        });
       } else if (index == 7) {
-        this.$router.push({ path: `/productionStyle?id=${id}&activeNames=3` });
+        this.$router.push({
+          path: `/sc_materialPurchasing?id=${item.style_id}&produce_no=${item.produce_no}`,
+        });
       } else if (index == 8) {
-        this.$router.push({ path: `/productionStyle?id=${id}&activeNames=4` });
+        this.$router.push({
+          path: `/sc_tailor?id=${item.style_id}&produce_no=${item.produce_no}`,
+        });
       } else if (index == 9) {
-        this.$router.push({ path: `/productionStyle?id=${id}&activeNames=5` });
+        this.$router.push({
+          path: `/sc_shipment?id=${item.style_id}&produce_no=${item.produce_no}`,
+        });
       }
     },
     //根据某年某月计算出具体日期

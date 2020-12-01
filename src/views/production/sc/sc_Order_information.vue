@@ -1,5 +1,8 @@
 <template>
-  <div class="sc_Order_information">
+  <div
+    class="sc_Order_information"
+    v-if="permission.indexOf('productionOrders') != -1"
+  >
     <div v-if="active == 1">
       <div class="form_add">
         <div class="form_data_add">
@@ -161,7 +164,10 @@
           <div class="btn">
             <el-button
               @click="Confirm_the_order"
-              v-if="form_data.produce_order.length > 0"
+              v-if="
+                form_data.produce_order.length > 0 &&
+                permission.indexOf('produce_order_add') != -1
+              "
               >确认下单</el-button
             >
           </div>
@@ -169,7 +175,12 @@
       </div>
     </div>
     <div v-if="active == 0">
-      <div class="table" v-if="active_set == false">
+      <div
+        class="table"
+        v-if="
+          active_set == false && permission.indexOf('produce_order_edit') != -1
+        "
+      >
         <div class="tableData">
           <div class="time">
             <div>出货时间: {{ expect_date }}</div>
@@ -338,7 +349,11 @@
                   </div>
                 </el-form-item>
               </div>
-              <div class="edit_close" @click="edit_close_edit(item, index)">
+              <div
+                class="edit_close"
+                @click="edit_close_edit(item, index)"
+                v-if="permission.indexOf('produce_order_del') != -1"
+              >
                 删除
               </div>
             </div>
@@ -363,7 +378,10 @@
           <div class="btn">
             <el-button
               @click="Confirm_the_order_edit"
-              v-if="form_data.produce_order.length > 0"
+              v-if="
+                form_data.produce_order.length > 0 &&
+                permission.indexOf('produce_order_add') != -1
+              "
               >确认下单</el-button
             >
           </div>
@@ -438,9 +456,11 @@ export default {
       produceOrderInfo: [],
       t_size: [],
       expect_date: "",
+      permission: [],
     };
   },
   mounted() {
+    this.permission = localStorage.getItem("permission").split(",");
     this.init();
     this.color_init();
     this.size_init();

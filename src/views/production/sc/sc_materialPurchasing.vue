@@ -1,5 +1,8 @@
 <template>
-  <div class="sc_materialPurchasing">
+  <div
+    class="sc_materialPurchasing"
+    v-if="permission.indexOf('productionScheduling') != -1"
+  >
     <div v-if="active == 1">
       <div class="form_add">
         <div class="form_data_add">
@@ -89,7 +92,10 @@
           <div class="btn">
             <el-button
               @click="Confirm_scheduling"
-              v-if="form_data.produce_factory_order.length > 0"
+              v-if="
+                form_data.produce_factory_order.length > 0 &&
+                permission.indexOf('produce_factory_order_add') != -1
+              "
               >确认排单</el-button
             >
           </div>
@@ -191,7 +197,13 @@
                   <el-input type="textarea" v-model="item.remarks"></el-input>
                 </el-form-item>
               </div>
-              <div class="add_close" @click="edit_close(item, index)">删除</div>
+              <div
+                class="add_close"
+                v-if="permission.indexOf('produce_factory_order_del') != -1"
+                @click="edit_close(item, index)"
+              >
+                删除
+              </div>
             </div>
           </el-form>
         </div>
@@ -214,7 +226,10 @@
           <div class="btn">
             <el-button
               @click="Confirm_scheduling_edit"
-              v-if="form_data.produce_factory_order.length > 0"
+              v-if="
+                form_data.produce_factory_order.length > 0 &&
+                permission.indexOf('produce_factory_order_add') != -1
+              "
               >确认排单</el-button
             >
           </div>
@@ -279,9 +294,11 @@ export default {
       active: 1,
       active_set: false,
       table: [],
+      permission: [],
     };
   },
   mounted() {
+    this.permission = localStorage.getItem("permission").split(",");
     let { produce_no, id } = this.$route.query;
     this.form_data.produce_no = produce_no;
     this.form_data.style_id = id;

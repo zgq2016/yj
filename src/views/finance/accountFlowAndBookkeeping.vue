@@ -109,7 +109,7 @@
                     >账户互转</el-dropdown-item
                   >
                   <el-dropdown-item
-                    v-if="permission.indexOf('my_account_add') != -1"
+                    v-if="permission.indexOf('balance_adjust') != -1"
                     command="b"
                     >期初调整</el-dropdown-item
                   >
@@ -122,7 +122,7 @@
             </el-tooltip>
             <div
               class="addStyle"
-              style="background-color: #e3e3e3; color: #fff"
+              style="background-color: #e3e3e3; color: #000"
               v-if="permission.indexOf('my_account_add') != -1"
               @click="onexpend"
             >
@@ -244,7 +244,7 @@
           <el-table-column prop="data" label="操作">
             <template slot-scope="scope">
               <el-button
-                v-if="(scope.row.origin != '' && scope.row.origin_code != 0)"
+                v-if="scope.row.origin != '' && scope.row.origin_code != 0"
                 @click="handleClick(scope.row)"
                 type="text"
                 size="small"
@@ -301,21 +301,21 @@
         <el-form-item label="账户余额:" prop="balance">
           <div>{{ form3.balance }}</div>
         </el-form-item>
-        <el-form-item label="期初金额:" prop="total_money">
+        <el-form-item label="期初金额:" prop="money">
           <el-input
-            v-model="form3.total_money"
+            v-model="form3.money"
             placeholder="请输入内容"
             style="width: 70%"
           ></el-input>
         </el-form-item>
-        <el-form-item label="业务时间" prop="service_time">
+        <!-- <el-form-item label="业务时间" prop="business_time">
           <el-date-picker
-            v-model="form3.service_time"
+            v-model="form3.business_time"
             type="date"
             placeholder="选择日期"
             style="width: 70%"
           ></el-date-picker>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="备注" prop="remarks">
           <el-input
             type="textarea"
@@ -377,7 +377,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="收入金额:" prop="total_money">
+        <el-form-item label="转账金额:" prop="total_money">
           <el-input
             v-model="form2.total_money"
             placeholder="请输入内容"
@@ -453,7 +453,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="收入金额:" prop="total_money">
+        <el-form-item label="支出金额:" prop="total_money">
           <el-input
             v-model="form1.total_money"
             placeholder="请输入内容"
@@ -608,6 +608,7 @@ import {
   myAccountList,
   settlementModesSelect,
   transactionTypeSelect,
+  balanceAdjust,
 } from "@/api/finance";
 export default {
   data() {
@@ -729,12 +730,10 @@ export default {
         balance_account_id: [
           { required: true, message: "账户", trigger: "change" },
         ],
-        total_money: [
-          { required: true, message: "期初金额", trigger: "change" },
-        ],
-        service_time: [
-          { required: true, message: "业务时间", trigger: "change" },
-        ],
+        money: [{ required: true, message: "期初金额", trigger: "change" }],
+        // business_time: [
+        //   { required: true, message: "业务时间", trigger: "change" },
+        // ],
       },
       BalanceAccount: [],
       BalanceAccountType: [],
@@ -812,15 +811,10 @@ export default {
     async handleAddForm3(form) {
       this.$refs["form3"].validate(async (valid) => {
         if (!valid) return;
-        this.form3.service_time = moment(this.form3.service_time).format(
+        this.form3.business_time = moment(this.form3.business_time).format(
           "YYYY-MM-DD"
         );
-        this.form3.total_money = Number(this.form3.total_money);
-        this.form3["opay_money"] = this.form3.total_money;
-        this.form3["cope_money"] = this.form3.total_money;
-        this.form3["pay_money"] = this.form3.total_money;
-        this.form3["user_id"] = localStorage.getItem("user_id");
-        let res = await myAccountAdd(this.form3);
+        let res = await balanceAdjust(this.form3);
         this.$refs[form].resetFields();
         this.init();
         this.dialogVisible3 = false;
@@ -958,6 +952,7 @@ export default {
     async init() {
       this.formInline["page"] = this.pageIndex;
       this.formInline["page_size"] = this.pageSize;
+      this.formInline["account_no"] = this.formInline.account_no.trim();
       let res = await myAccountList(this.formInline);
       console.log(res);
       let {

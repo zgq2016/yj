@@ -55,16 +55,10 @@
           </div>
         </div>
       </div>
-      <router-link
-        :to="`/editSupplier?id=${obj.id}&TL=2`"
-        :data="obj"
-        v-if="permission.indexOf('editSupplier') != -1"
-      >
-        <span
-          class="el-icon-edit"
-          style="font-size: 30px; cursor: pointer"
-        ></span>
-      </router-link>
+      <div class="right" v-if="permission.indexOf('editSupplier') != -1">
+        <div class="el-icon-edit" @click="go_editSupplier"></div>
+        <div class="el-icon-delete" @click="is_delete"></div>
+      </div>
     </div>
     <el-dialog :visible.sync="dialogVisible">
       <img width="100%" :src="obj.cardpicurl" alt />
@@ -76,7 +70,8 @@
 </template>
 
 <script>
-import { getSupplierInfo } from "@/api/archives";
+import { getSupplierInfo, supplierDel } from "@/api/archives";
+
 export default {
   data() {
     return {
@@ -88,6 +83,38 @@ export default {
     };
   },
   methods: {
+    go_editSupplier() {
+      this.$router.push({ path: `editSupplier?id=${this.obj.id}&TL=2` });
+    },
+    is_delete() {
+      this.$confirm("此操作将永久删除该供应商, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          let res = await supplierDel({ id: this.$route.query.id - 0 });
+          if (res.data.error_code) {
+            this.$message({
+              showClose: true,
+              message: res.data.msg,
+              type: "error",
+            });
+          } else {
+            this.$router.push({ path: "/distributor_list" });
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
     handlePreview() {
       this.dialogVisible = true;
     },
@@ -120,34 +147,50 @@ export default {
     justify-content: space-between;
     padding: 20px;
     font-size: 14px;
-    .main_left {
-      display: flex;
-      margin-bottom: 50px;
-      .main_left_img {
-        margin-right: 20px;
-        img {
-          width: 200px;
-          height: 200px;
-          border-radius: 15px;
+    .left {
+      flex: 1;
+      .main_left {
+        display: flex;
+        margin-bottom: 50px;
+        .main_left_img {
+          margin-right: 20px;
+          img {
+            width: 200px;
+            height: 200px;
+            border-radius: 15px;
+          }
         }
-      }
-      .main_left_deital {
-        .bz {
-          width: 43em;
-          word-wrap: break-word;
-          word-break: break-all;
-          overflow: hidden;
-        }
-        .main_left_deital_name {
-          font-size: 16px;
-          font-weight: 600;
-        }
-        div {
-          margin: 5px 0px;
+        .main_left_deital {
+          .bz {
+            width: 43em;
+            word-wrap: break-word;
+            word-break: break-all;
+            overflow: hidden;
+          }
+          .main_left_deital_name {
+            font-size: 16px;
+            font-weight: 600;
+          }
+          div {
+            margin: 5px 0px;
+          }
         }
       }
     }
-    .main_right {
+    .right {
+      width: 100px;
+      display: flex;
+      height: 100px;
+      flex-direction: column;
+      justify-content: space-between;
+      .el-icon-edit {
+        font-size: 30px;
+        cursor: pointer;
+      }
+      .el-icon-delete {
+        font-size: 30px;
+        cursor: pointer;
+      }
     }
   }
 }

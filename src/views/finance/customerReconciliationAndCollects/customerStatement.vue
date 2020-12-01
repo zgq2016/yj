@@ -408,6 +408,8 @@ export default {
     },
     async onSubmit() {
       this.pageIndex = 1;
+      
+      this.formInline["account_no"] = this.formInline.account_no.trim();
       this.supplierInit();
     },
     handlePayment() {

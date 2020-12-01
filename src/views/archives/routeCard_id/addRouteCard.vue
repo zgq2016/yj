@@ -1370,14 +1370,42 @@ export default {
           this.form.grammage = "";
           this.form.material_data = "";
         }
-
+        this.form.confirm = 0;
         let res = await materialsAdd(this.form);
         // this.$router.go(-1);
-        this.router.push({ path: "routeCard_list" });
-        let back = this.$route.query.back - 0;
-        let id = this.$route.query.id - 0;
-        if (back == 1) {
-          this.router.push({ path: `materialProcess?id=${id}` });
+
+        if (res.data.error_code == 0) {
+          this.$router.push({ path: "routeCard_list" });
+          let back = this.$route.query.back - 0;
+          let id = this.$route.query.id - 0;
+          if (back == 1) {
+            this.$router.push({ path: `materialProcess?id=${id}` });
+          }
+        }
+        if (res.data.error_code == 2) {
+          this.$confirm(res.data.msg, "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning",
+          })
+            .then(async () => {
+              this.form.confirm = 1;
+              let res = await materialsAdd(this.form);
+              if (res.data.error_code == 0) {
+                this.$router.push({ path: "routeCard_list" });
+                let back = this.$route.query.back - 0;
+                let id = this.$route.query.id - 0;
+                if (back == 1) {
+                  this.$router.push({ path: `materialProcess?id=${id}` });
+                }
+              }
+            })
+            .catch(() => {
+              this.$message({
+                type: "info",
+                message: "已取消",
+              });
+            });
         }
       }
     },

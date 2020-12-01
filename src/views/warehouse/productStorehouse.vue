@@ -258,6 +258,7 @@ export default {
     },
     async init(obj) {
       // 分类
+      obj.stylename = obj.stylename.trim();
       let res = await getCategoryList();
       this.cate = res.data.data;
       // console.log(res);

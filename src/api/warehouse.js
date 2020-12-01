@@ -182,10 +182,10 @@ export const materialsPurchaseDel = data => {
         data: data
     });
 };
-// export const materialsPurchaseEdit = data => {
-//     return axios({
-//         url: "?g=materials_purchase_edit",
-//         method: "post",
-//         data: data
-//     });
-// };
+export const purchaseLogPicurlUpload = data => {
+    return axios({
+        url: "?g=purchase_log_picurl_upload",
+        method: "post",
+        data: data
+    });
+};

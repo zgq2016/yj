@@ -243,7 +243,7 @@
                 prop="fullPayout"
               >
                 <el-input
-                  v-model="form_no.fullPayout"
+                  v-model="form_no.money"
                   disabled
                   placeholder="请输入金额"
                   style="width: 200px"
@@ -415,97 +415,95 @@
                     </template>
                   </el-step>
                 </el-steps>
-                <div class="option_name">
-                  <!-- {{ item1.type }} -->
-                  <div v-if="item1.state == 0 || item1.state == 5">
-                    <el-button
-                      size="mini"
-                      class="option_name_id"
-                      round
-                      @click="goPanelPurchase(item1)"
-                      v-if="
-                        item1.type == 'style_purchase' &&
-                        permission.indexOf('purchase_edit') != -1
-                      "
-                      >{{ "采购录入" }}</el-button
-                    >
-                    <el-button
-                      size="mini"
-                      class="option_name_id"
-                      round
-                      @click="goPanelPurchase(item1)"
-                      v-if="
-                        item1.type == 'produce_order_procure' &&
-                        permission.indexOf('produce_order_procure_edit') != -1
-                      "
-                      >{{ "采购录入" }}</el-button
-                    >
-                    <el-button
-                      size="mini"
-                      class="option_name_id"
-                      round
-                      @click="goPanelPurchase(item1)"
-                      v-if="item1.type == 'materials_purchase'"
-                      >{{ "采购录入" }}</el-button
-                    >
-                  </div>
-                  <div
+              </div>
+              <div class="option_name">
+                <!-- {{ item1.type }} -->
+                <div v-if="item1.state == 0">
+                  <el-button
+                    size="mini"
+                    class="option_name_id"
+                    round
+                    @click="goPanelPurchase(item1)"
                     v-if="
-                      item1.state == 1 || item1.state == 2 || item1.state == 3
+                      item1.type == 'style_purchase' &&
+                      permission.indexOf('purchase_edit') != -1
                     "
+                    >{{ "采购录入" }}</el-button
                   >
-                    <el-button
-                      size="mini"
-                      class="option_name_id"
-                      round
-                      @click="updateStatus(item1)"
-                      v-if="
-                        item1.type == 'style_purchase' &&
-                        permission.indexOf('style_purchase_log_add') != -1
-                      "
-                      >{{ "更新状态" }}</el-button
-                    >
-                    <el-button
-                      size="mini"
-                      class="option_name_id"
-                      round
-                      @click="updateStatus(item1)"
-                      v-if="
-                        item1.type == 'produce_order_procure' &&
-                        permission.indexOf('produce_order_procure_log_add') !=
-                          -1
-                      "
-                      >{{ "更新状态" }}</el-button
-                    >
-                    <el-button
-                      size="mini"
-                      class="option_name_id"
-                      round
-                      @click="updateStatus(item1)"
-                      v-if="
-                        item1.type == 'materials_purchase' &&
-                        permission.indexOf('materials_purchase_log') != -1
-                      "
-                      >{{ "更新状态" }}</el-button
-                    >
-                  </div>
-                  <div v-if="item1.state == 4">
-                    <el-button
-                      size="mini"
-                      class="option_name_id"
-                      @click.stop="seeDetails1(item1)"
-                      round
-                      >查看详情</el-button
-                    >
-                    <el-button
-                      size="mini"
-                      class="option_name_id"
-                      @click.stop="seeDetails2(item1)"
-                      v-if="item1.type != 'materials_purchase'"
-                      round
-                      >查看内容</el-button
-                    >
-                  </div>
+                  <el-button
+                    size="mini"
+                    class="option_name_id"
+                    round
+                    @click="goPanelPurchase(item1)"
+                    v-if="
+                      item1.type == 'produce_order_procure' &&
+                      permission.indexOf('produce_order_procure_edit') != -1
+                    "
+                    >{{ "采购录入" }}</el-button
+                  >
+                  <el-button
+                    size="mini"
+                    class="option_name_id"
+                    round
+                    @click="goPanelPurchase(item1)"
+                    v-if="item1.type == 'materials_purchase'"
+                    >{{ "采购录入" }}</el-button
+                  >
+                </div>
+                <div v-if="item1.state > 1">
+                  <el-button
+                    size="mini"
+                    class="option_name_id"
+                    @click.stop="seeDetails2(item1)"
+                    v-if="item1.type != 'materials_purchase'"
+                    round
+                    style="margin: 10px"
+                    >采购事件</el-button
+                  >
+                </div>
+                <div v-if="item1.state > 1">
+                  <el-button
+                    size="mini"
+                    class="option_name_id"
+                    @click.stop="seeDetails1(item1)"
+                    round
+                    >查看账单</el-button
+                  >
+                </div>
+                <div v-if="item1.state > 0">
+                  <el-button
+                    size="mini"
+                    class="option_name_id"
+                    round
+                    @click="updateStatus(item1)"
+                    v-if="
+                      item1.type == 'style_purchase' &&
+                      permission.indexOf('style_purchase_log_add') != -1
+                    "
+                    >{{ "更新状态" }}</el-button
+                  >
+                  <el-button
+                    size="mini"
+                    class="option_name_id"
+                    round
+                    @click="updateStatus(item1)"
+                    v-if="
+                      item1.type == 'produce_order_procure' &&
+                      permission.indexOf('produce_order_procure_log_add') != -1
+                    "
+                    >{{ "更新状态" }}</el-button
+                  >
+                  <el-button
+                    size="mini"
+                    class="option_name_id"
+                    round
+                    @click="updateStatus(item1)"
+                    v-if="
+                      item1.type == 'materials_purchase' &&
+                      permission.indexOf('materials_purchase_log') != -1
+                    "
+                    >{{ "更新状态" }}</el-button
+                  >
                 </div>
               </div>
             </div>
@@ -608,6 +606,34 @@
           <!-- 部分回料 -->
           <el-dialog
             width="300"
+            title="退单"
+            :visible.sync="innerVisibled5"
+            append-to-body
+            center
+          >
+            <el-form label-width="120px">
+              <el-form-item label="退货数量" v-if="chargebackForm.amount == 0">
+                <el-input
+                  placeholder="请输入内容"
+                  style="width: 50%"
+                  v-model="chargebackForm.amount"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="退款金额">
+                <el-input
+                  placeholder="请输入内容"
+                  style="width: 50%"
+                  v-model="chargebackForm.refund_money"
+                ></el-input>
+              </el-form-item>
+              <div style="width: 200px; margin: 0 auto">
+                <el-button @click="innerVisibled5 = false">取消</el-button>
+                <el-button @click="chargeback()">确定</el-button>
+              </div>
+            </el-form>
+          </el-dialog>
+          <el-dialog
+            width="300"
             title="部分回料"
             :visible.sync="innerVisible"
             append-to-body
@@ -643,8 +669,7 @@
               </el-form-item>
               <el-form-item label="余结金额">
                 <span style="width: 50%">
-                  {{ totalprice }}
-                  {{ paid_money }}
+                  {{ totalprice - paid_money }}
                 </span>
               </el-form-item>
               <el-upload
@@ -704,22 +729,20 @@
           </el-dialog>
           <div slot="footer" style="height: 80px" class="dialog-footer">
             <el-button
-              v-if="
-                produce_order_procure_item.state == 1 ||
-                produce_order_procure_item.state == 5
-              "
+              v-if="produce_order_procure_item.state == 1"
               @click="handle_modify_order(produce_order_procure_item)"
               >修改订单</el-button
             >
             <el-button
-              v-if="
-                produce_order_procure_item.state == 1 ||
-                produce_order_procure_item.state == 5
+              v-if="produce_order_procure_item.state > 0"
+              @click="
+                outerVisible = false;
+                innerVisibled5 = true;
               "
-              @click="handle_cancel_order(produce_order_procure_item)"
-              >取消订单</el-button
+              >退单</el-button
             >
             <el-button
+              v-if="produce_order_procure_item.state != 5"
               @click="
                 outerVisible = false;
                 innerVisibled = true;
@@ -727,6 +750,7 @@
               >延迟回料</el-button
             >
             <el-button
+              v-if="produce_order_procure_item.state != 5"
               @click="
                 outerVisible = false;
                 innerVisible = true;
@@ -734,6 +758,7 @@
               >部分回料</el-button
             >
             <el-button
+              v-if="produce_order_procure_item.state != 5"
               @click="
                 outerVisible = false;
                 innerVisibled1 = true;
@@ -844,6 +869,7 @@ export default {
       pageSizeB: 20,
       totalB: 0,
 
+      chargebackForm: { refund_money: "", amount: "" },
       produce_order_procure_item: {},
       pageIndex1: 1,
       pageSize1: 10,
@@ -891,6 +917,7 @@ export default {
       outerVisible: false,
       innerVisible: false,
       innerVisibled: false,
+      innerVisibled5: false,
       innerVisibled1: false,
       form2: {
         imageUrl: "",
@@ -1044,61 +1071,20 @@ export default {
       }
       // if(e.type==materials_purchase){}
     },
-    handle_cancel_order(e) {
-      console.log(e);
-      this.$confirm("是否取消订单?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(async () => {
-          console.log(e);
-          if (this.produce_order_procure_item.type == "style_purchase") {
-            let res = await stylePurchaseDel({
-              id: e.id,
-            });
-            this.$message({
-              showClose: true,
-              message: res.data.msg,
-            });
-            if (res.data.error_code == 0) {
-              this.outerVisible = false;
-              this.init();
-            }
-          }
-          if (this.produce_order_procure_item.type == "produce_order_procure") {
-            let res = await produceOrderProcure_del({
-              id: e.id,
-            });
-            this.$message({
-              showClose: true,
-              message: res.data.msg,
-            });
-            if (res.data.error_code == 0) {
-              this.outerVisible = false;
-              this.init();
-            }
-          }
-          if (this.produce_order_procure_item.type == "materials_purchase") {
-            let res = await materialsPurchaseDel({
-              id: e.id,
-            });
-            this.$message({
-              showClose: true,
-              message: res.data.msg,
-            });
-            if (res.data.error_code == 0) {
-              this.outerVisible = false;
-              this.init();
-            }
-          }
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消",
-          });
-        });
+    async chargeback(e) {
+      let res = await stylePurchaseDel({
+        id: this.produce_order_procure_item.id,
+        refund_money: this.chargebackForm.refund_money,
+        amount: this.chargebackForm.amount,
+      });
+      this.$message({
+        showClose: true,
+        message: res.data.msg,
+      });
+      if (res.data.error_code == 0) {
+        this.innerVisibled5 = false;
+        this.init();
+      }
     },
     get_form2_money(e) {
       console.log(e);
@@ -1144,7 +1130,7 @@ export default {
     },
     async selectPayment(value) {
       if (value == 1) {
-        this.form1_no.deposit = this.form1_no.fullPayout;
+        this.form1_no.deposit = this.form1_no.money;
       } else {
         this.form1_no.deposit = "";
       }
@@ -1561,21 +1547,23 @@ export default {
         this.quantity = item.quantity;
         this.price = item.price;
         this.totalprice = item.totalprice;
-        this.paid_money = item.deposit;
+        this.paid_money = item.paid_money;
       }
       if (this.produce_order_procure_item.type == "produce_order_procure") {
         this.quantity = item.quantity;
         this.price = item.price;
         this.totalprice = item.totalprice;
-        this.paid_money = item.deposit;
+        this.paid_money = item.paid_money;
       }
       if (this.produce_order_procure_item.type == "materials_purchase") {
         this.quantity = item.quantity;
         this.price = item.price;
         this.totalprice = item.totalprice;
-        this.paid_money = item.deposit;
+        this.paid_money = item.paid_money;
       }
 
+      this.chargebackForm.refund_money = item.paid_money;
+      this.chargebackForm.amount = item.received_quantity - 0;
       this.outerVisible = true;
       this.produce_order_procure_item = item;
       console.log(this.produce_order_procure_item);
@@ -1606,12 +1594,10 @@ export default {
         obj["origin_code"] = origin_code;
       }
       if (this.code == 1) {
-        let {
-          materialsname,
-          purchaseOption_id,
-          materials_class_id_id,
-        } = this.form1;
-        obj["materialsname"] = materialsname;
+        let { purchaseOption_id, materials_class_id_id } = this.form1;
+
+        obj["materialsname"] = this.form1.materialsname.trim();
+        // obj["materialsname"] = materialsname.trim();
         obj["type"] = purchaseOption_id;
         obj["materials_class_id"] = materials_class_id_id;
         obj["origin"] = "";
@@ -1853,9 +1839,19 @@ export default {
           display: flex;
           justify-content: space-between;
           word-spacing: normal;
-          align-items: flex-end;
+          // align-items: flex-end;
           height: 120px;
-          padding: 10px;
+          padding: 5px;
+        }
+        .option_name {
+          width: 100px;
+          height: 120px;
+          background-color: #f2f2f2;
+          border-radius: 10px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          align-items: center;
         }
       }
       .active {
@@ -2019,7 +2015,7 @@ export default {
     display: flex;
     flex-direction: column;
     /deep/ .option_name_id {
-      margin: 5px 0px !important;
+      margin: 5px 0px 0 0 !important;
     }
   }
 }

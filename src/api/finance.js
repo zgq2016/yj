@@ -199,3 +199,10 @@ export const customerBalance = (data) => {
     data: data,
   });
 };
+export const balanceAdjust = (data) => {
+  return axios({
+    url: "?g=balance_adjust",
+    method: "post",
+    data: data,
+  });
+};

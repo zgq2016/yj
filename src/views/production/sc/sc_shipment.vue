@@ -1,5 +1,5 @@
 <template>
-  <div class="sc_shipment">
+  <div class="sc_shipment" v-if="permission.indexOf('shipment') != -1">
     <div class="add" v-if="active == 1">
       <div class="add_form" v-for="(item, index) in shipment_list" :key="index">
         <div>
@@ -40,9 +40,9 @@
                       ></el-input>
                     </div>
                   </div>
-                  <div class="color">{{ item2.num }}</div>
+                  <div class="color">{{ item2.finished_num }}</div>
                   <div class="color" v-if="item1.t_color.length - 1 == index2">
-                    {{ item2.total_num }}
+                    {{ item2.finished_total_num }}
                   </div>
                 </div>
               </div>
@@ -85,9 +85,9 @@
                       ></el-input>
                     </div>
                   </div>
-                  <div class="color">{{ item2.num }}</div>
+                  <div class="color">{{ item2.rejects_num }}</div>
                   <div class="color" v-if="item1.t_color.length - 1 == index2">
-                    {{ item2.total_num }}
+                    {{ item2.rejects_total_num }}
                   </div>
                 </div>
               </div>
@@ -258,7 +258,13 @@
             </el-form>
           </div>
         </div>
-        <div class="table_edit" @click="table_edit">修改</div>
+        <div
+          class="table_edit"
+          @click="table_edit"
+          v-if="permission.indexOf('produce_complete_edit') != -1"
+        >
+          修改
+        </div>
       </div>
       <div class="edit" v-if="active_set == true">
         <div class="add_form" v-for="(item, index) in table_list" :key="index">
@@ -407,11 +413,21 @@
               </el-form-item>
             </el-form>
           </div>
-          <div class="add_close" @click="edit_close(item, index)">删除</div>
+          <div
+            class="add_close"
+            @click="edit_close(item, index)"
+            v-if="permission.indexOf('produce_complete_del') != -1"
+          >
+            删除
+          </div>
         </div>
         <div class="bom">
           <el-button @click="edit_shipment">增加出货</el-button>
-          <el-button @click="edit_confirm_shipment">确定出货</el-button>
+          <el-button
+            @click="edit_confirm_shipment"
+            v-if="permission.indexOf('produce_complete_add') != -1"
+            >确定出货</el-button
+          >
         </div>
       </div>
     </div>
@@ -446,9 +462,11 @@ export default {
       table_list: [],
       finished: [],
       rejects: [],
+      permission: [],
     };
   },
   mounted() {
+    this.permission = localStorage.getItem("permission").split(",");
     this.init();
     this.factory_init();
     this.ware_init();
@@ -917,14 +935,14 @@ export default {
               v2["arr"] = [];
               v2["arr1"] = [];
               v1.t_color_size.map((v3, i3) => {
-                if (v2.color == v3.color) {
+                if (v2.color == v3.style_color_name) {
                   v2.arr.push(v3);
-                  v2.num = v2.arr.reduce((value, inde) => {
+                  v2.rejects_num = v2.arr.reduce((value, inde) => {
                     return value + Number(inde.quantity);
                   }, 0);
                 }
                 v2.arr1.push(Number(v3.quantity));
-                v2.total_num = v2.arr1.reduce((value, inde) => {
+                v2.rejects_total_num = v2.arr1.reduce((value, inde) => {
                   return value + Number(inde);
                 }, 0);
               });
@@ -940,15 +958,17 @@ export default {
             v1.t_color.map((v2, i2) => {
               v2["arr"] = [];
               v2["arr1"] = [];
+
               v1.t_color_size.map((v3, i3) => {
-                if (v2.color == v3.color) {
+                if (v2.color == v3.style_color_name) {
                   v2.arr.push(v3);
-                  v2.num = v2.arr.reduce((value, inde) => {
+                  console.log(v2.arr);
+                  v2.finished_num = v2.arr.reduce((value, inde) => {
                     return value + Number(inde.quantity);
                   }, 0);
                 }
                 v2.arr1.push(Number(v3.quantity));
-                v2.total_num = v2.arr1.reduce((value, inde) => {
+                v2.finished_total_num = v2.arr1.reduce((value, inde) => {
                   return value + Number(inde);
                 }, 0);
               });
@@ -992,8 +1012,8 @@ export default {
       });
       t_color = t_color.map((v, i) => {
         v = { color: v };
-        v["num"] = 0;
-        v["total_num"] = 0;
+        v["finished_num"] = 0;
+        v["finished_total_num"] = 0;
         return v;
       });
       t_size.map((v2, i2) => {
@@ -1034,8 +1054,9 @@ export default {
       });
       t_color = t_color.map((v, i) => {
         v = { color: v };
-        v["num"] = 0;
-        v["total_num"] = 0;
+
+        v["rejects_num"] = 0;
+        v["rejects_total_num"] = 0;
         return v;
       });
       t_size.map((v2, i2) => {
