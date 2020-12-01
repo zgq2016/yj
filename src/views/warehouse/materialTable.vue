@@ -285,6 +285,7 @@ export default {
       voucher: "",
       picurl: "",
       item: {},
+      permission: [],
     };
   },
   methods: {
@@ -387,6 +388,7 @@ export default {
   mounted() {
     this.init();
     this.materials();
+    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>

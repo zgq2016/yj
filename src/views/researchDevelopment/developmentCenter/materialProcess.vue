@@ -138,9 +138,17 @@
                           <div class="colourNumberList">
                             <div
                               class="colourNumber"
-                              @click.stop="handleColourNumber2(item2, item3)"
-                              v-for="(item3,
-                              index3) in item2.materials_color_data"
+                              @click.stop="
+                                handleColourNumber2(
+                                  item2,
+                                  item3,
+                                  index1,
+                                  index2
+                                )
+                              "
+                              v-for="(
+                                item3, index3
+                              ) in item2.materials_color_data"
                               :key="index3"
                             >
                               <img :src="item3.picurl" alt />
@@ -269,7 +277,6 @@
         @change="handleChange"
       ></el-cascader>
       <div
-        style="position: relative"
         v-if="
           style_color_data_length !== 0 &&
           permission.indexOf('get_style_materials_list') != -1
@@ -342,8 +349,9 @@
                             <div
                               class="colourNumber"
                               @click.stop="handleColourNumber1(item2, item3)"
-                              v-for="(item3,
-                              index3) in item2.materials_color_data"
+                              v-for="(
+                                item3, index3
+                              ) in item2.materials_color_data"
                               :key="index3"
                             >
                               <img :src="item3.picurl" alt />
@@ -742,12 +750,10 @@ export default {
       this.materials_color_id1 = item3.id;
       item2["color"] = item3.color;
       item2["color_no"] = item3.color_no;
+      item2["picurl"] = item3.picurl;
       this.visible1 = false;
     },
-    async handleColourNumber2(item2, item3) {
-      this.materials_color_id2 = item3.id;
-      item2["color"] = item3.color;
-      item2["color_no"] = item3.color_no;
+    async handleColourNumber2(item2, item3, i1, i2) {
       let res = await styleMaterialsListColorEdit({
         id: item2.id,
         materials_color_id: item3.id,
@@ -760,6 +766,10 @@ export default {
         });
       } else {
         this.visible2 = false;
+        this.materials_color_id2 = item3.id;
+        item2["color"] = item3.color;
+        item2["color_no"] = item3.color_no;
+        item2["picurl"] = item3.picurl;
       }
     },
     handlePopoverId(item) {
@@ -1299,7 +1309,9 @@ export default {
   .dialog {
     .cardList {
       margin: 30px 0;
-      overflow: hidden;
+      display: flex;
+      flex-wrap: wrap;
+      // overflow: hidden;
       .cards {
         height: 110px;
         position: relative;
@@ -1318,57 +1330,57 @@ export default {
           padding: 4px 5px;
           font-size: 10px;
         }
-      }
-      .card {
-        .cardStyle {
-          width: 320px;
-          height: 100px;
-          display: flex;
-          .cardStyle_left {
-            width: 300px;
+        .card {
+          .cardStyle {
+            width: 320px;
+            height: 100px;
             display: flex;
-            background-color: #f2f2f2;
-            border-radius: 10px;
-            overflow: hidden;
-            .cardStyle_left_img {
-              img {
-                width: 100px;
-                height: 100px;
+            .cardStyle_left {
+              width: 300px;
+              display: flex;
+              background-color: #f2f2f2;
+              border-radius: 10px;
+              overflow: hidden;
+              .cardStyle_left_img {
+                img {
+                  width: 100px;
+                  height: 100px;
+                }
+              }
+              .cardStyle_left_content {
+                flex: 1;
+                div {
+                  margin: 3px;
+                }
+                .cardStyle_left_content_name {
+                  font-weight: 600;
+                  font-size: 14px;
+                  display: flex;
+                  justify-content: space-between;
+                }
               }
             }
-            .cardStyle_left_content {
-              flex: 1;
-              div {
-                margin: 3px;
-              }
-              .cardStyle_left_content_name {
-                font-weight: 600;
-                font-size: 14px;
-                display: flex;
-                justify-content: space-between;
-              }
-            }
-          }
-          .cardStyle_right {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            align-items: center;
-            width: 50px;
-            background-color: #f2f2f2;
-            border-radius: 10px;
-            .colourNumberList {
-              .colourNumber {
-                display: flex;
-                justify-content: space-around;
-                align-items: center;
-                padding: 10px;
-                cursor: pointer;
-                border-bottom: 1px solid #ccc;
-              }
-              img {
-                width: 30px;
-                height: 30px;
+            .cardStyle_right {
+              display: flex;
+              flex-direction: column;
+              justify-content: space-around;
+              align-items: center;
+              width: 50px;
+              background-color: #f2f2f2;
+              border-radius: 10px;
+              .colourNumberList {
+                .colourNumber {
+                  display: flex;
+                  justify-content: space-around;
+                  align-items: center;
+                  padding: 10px;
+                  cursor: pointer;
+                  border-bottom: 1px solid #ccc;
+                }
+                img {
+                  width: 30px;
+                  height: 30px;
+                }
               }
             }
           }
@@ -1462,7 +1474,7 @@ export default {
       height: 30px;
       line-height: 30px;
       text-align: center;
-      margin: 0  !important;
+      margin: 0 !important;
     }
     .el-icon-close {
       position: absolute;

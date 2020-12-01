@@ -145,103 +145,89 @@
         >
         </el-option>
       </el-select>
-      <div style="position: relative">
-        <div class="cardList">
-          <div v-for="(item1, index1) in material_list" :key="index1">
-            <div v-if="item1.style_materials_data.length != 0">
-              <div
-                class="cards"
-                v-for="(item2, index2) in item1.style_materials_data"
-                :key="index2"
-                style="margin-right: 20px"
-              >
-                <div class="card" style="margin: 10px 0">
-                  <div class="cardStyle">
-                    <div
-                      class="cardStyle_left"
-                      @click="go_routeCardDeital(item2)"
-                    >
-                      <div class="cardStyle_left_img">
-                        <img :src="item2.picurl" alt />
-                        <span class="bos">{{
-                          item2.materials_mainclass_name.slice(0, 1)
-                        }}</span>
+      <div class="cardList">
+        <div v-for="(item1, index1) in material_list" :key="index1">
+          <div v-if="item1.style_materials_data.length != 0">
+            <div
+              class="cards"
+              v-for="(item2, index2) in item1.style_materials_data"
+              :key="index2"
+              style="margin-right: 20px"
+            >
+              <div class="card" style="margin: 10px 0">
+                <div class="cardStyle">
+                  <div
+                    class="cardStyle_left"
+                    @click="go_routeCardDeital(item2)"
+                  >
+                    <div class="cardStyle_left_img">
+                      <img :src="item2.picurl" alt />
+                      <span class="bos">{{
+                        item2.materials_mainclass_name.slice(0, 1)
+                      }}</span>
+                    </div>
+                    <div class="cardStyle_left_content">
+                      <div class="cardStyle_left_content_name">
+                        <div>
+                          {{ item2.materials_data.materialsname || "已删除" }}
+                        </div>
                       </div>
-                      <div class="cardStyle_left_content">
-                        <div class="cardStyle_left_content_name">
-                          <div>
-                            {{ item2.materials_data.materialsname || "已删除" }}
-                          </div>
-                        </div>
-                        <div>
-                          内部编号:{{ item2.materials_data.materialsno }}
-                        </div>
-                        <div
-                          v-if="item2.style_materials_supplier_data.length > 0"
-                        >
-                          {{
-                            item2.style_materials_supplier_data[0].companyname
-                          }}
-                        </div>
-                        <div>
-                          {{ item2.materials_mainclass_name }} ({{
-                            item2.materials_class_name
-                          }})
-                        </div>
+                      <div>内部编号:{{ item2.materials_data.materialsno }}</div>
+                      <div
+                        v-if="item2.style_materials_supplier_data.length > 0"
+                      >
+                        {{ item2.style_materials_supplier_data[0].companyname }}
+                      </div>
+                      <div>
+                        {{ item2.materials_mainclass_name }} ({{
+                          item2.materials_class_name
+                        }})
                       </div>
                     </div>
-                    <div class="cardStyle_right" @mouseleave="visible2 = false">
-                      <div
-                        style="cursor: pointer"
-                        @click="handlePopoverId2(item2)"
+                  </div>
+                  <div class="cardStyle_right" @mouseleave="visible2 = false">
+                    <div
+                      style="cursor: pointer"
+                      @click="handlePopoverId2(item2)"
+                    >
+                      <el-popover
+                        placement="right"
+                        v-model="visible2"
+                        v-if="item2.id == popoverId2"
                       >
-                        <el-popover
-                          placement="right"
-                          v-model="visible2"
-                          v-if="item2.id == popoverId2"
-                        >
-                          <div class="colourNumberList">
-                            <div
-                              class="colourNumber"
-                              @click.stop="handleColourNumber2(item2, item3)"
-                              v-for="(
-                                item3, index3
-                              ) in item2.materials_color_data"
-                              :key="index3"
-                            >
-                              <img :src="item3.picurl" alt />
-                              <div>
-                                <div>{{ item3.color }}</div>
-                                <div class="cardStyle_right_no">
-                                  {{ item3.color_no }}
-                                </div>
+                        <div class="colourNumberList">
+                          <div
+                            class="colourNumber"
+                            @click.stop="handleColourNumber2(item2, item3)"
+                            v-for="(
+                              item3, index3
+                            ) in item2.materials_color_data"
+                            :key="index3"
+                          >
+                            <img :src="item3.picurl" alt />
+                            <div>
+                              <div>{{ item3.color }}</div>
+                              <div class="cardStyle_right_no">
+                                {{ item3.color_no }}
                               </div>
                             </div>
-                            <div
-                              class="Add_color_no"
-                              @click="Add_color_no(item2)"
-                            >
-                              添加色号
-                            </div>
                           </div>
-                        </el-popover>
-                        <div>
-                          {{
-                            item2.color || item2.materials_color_data[0].color
-                          }}
                         </div>
-                        <div class="cardStyle_right_no">
-                          {{
-                            item2.color_no ||
-                            item2.materials_color_data[0].color_no
-                          }}
-                        </div>
+                      </el-popover>
+                      <div>
+                        {{ item2.color || item2.materials_color_data[0].color }}
                       </div>
-                      <el-checkbox
-                        v-model="item2.isCheckList1"
-                        @change="isCheckListBox1(item2)"
-                      ></el-checkbox>
+                      <div class="cardStyle_right_no">
+                        {{
+                          item2.color_no ||
+                          item2.materials_color_data[0].color_no
+                        }}
+                      </div>
                     </div>
+                    <el-checkbox
+                      v-model="item2.isCheckList1"
+                      @change="isCheckListBox1(item2)"
+                    ></el-checkbox>
                   </div>
                 </div>
               </div>
@@ -747,9 +733,6 @@ export default {
       this.visible2 = true;
     },
     async handleColourNumber2(item2, item3) {
-      this.materials_color_id2 = item3.id;
-      item2["color"] = item3.color;
-      item2["color_no"] = item3.color_no;
       let res = await styleMaterialsListColorEdit({
         id: item2.id,
         materials_color_id: item3.id,
@@ -760,6 +743,10 @@ export default {
       });
       if (res.data.error_code == 0) {
         this.visible2 = false;
+        this.materials_color_id2 = item3.id;
+        item2["color"] = item3.color;
+        item2["color_no"] = item3.color_no;
+        item2["picurl"] = item3.picurl;
       }
     },
     async order_material_init() {
@@ -1086,7 +1073,8 @@ export default {
   .dialog {
     .cardList {
       margin: 30px 0;
-      overflow: hidden;
+      display: flex;
+      flex-wrap: wrap;
       .cards {
         height: 110px;
         position: relative;
@@ -1105,57 +1093,57 @@ export default {
           padding: 4px 5px;
           font-size: 10px;
         }
-      }
-      .card {
-        .cardStyle {
-          width: 320px;
-          height: 100px;
-          display: flex;
-          .cardStyle_left {
-            width: 300px;
+        .card {
+          .cardStyle {
+            width: 320px;
+            height: 100px;
             display: flex;
-            background-color: #f2f2f2;
-            border-radius: 10px;
-            overflow: hidden;
-            .cardStyle_left_img {
-              img {
-                width: 100px;
-                height: 100px;
+            .cardStyle_left {
+              width: 300px;
+              display: flex;
+              background-color: #f2f2f2;
+              border-radius: 10px;
+              overflow: hidden;
+              .cardStyle_left_img {
+                img {
+                  width: 100px;
+                  height: 100px;
+                }
+              }
+              .cardStyle_left_content {
+                flex: 1;
+                div {
+                  margin: 3px;
+                }
+                .cardStyle_left_content_name {
+                  font-weight: 600;
+                  font-size: 14px;
+                  display: flex;
+                  justify-content: space-between;
+                }
               }
             }
-            .cardStyle_left_content {
-              flex: 1;
-              div {
-                margin: 3px;
-              }
-              .cardStyle_left_content_name {
-                font-weight: 600;
-                font-size: 14px;
-                display: flex;
-                justify-content: space-between;
-              }
-            }
-          }
-          .cardStyle_right {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            align-items: center;
-            width: 50px;
-            background-color: #f2f2f2;
-            border-radius: 10px;
-            .colourNumberList {
-              .colourNumber {
-                display: flex;
-                justify-content: space-around;
-                align-items: center;
-                padding: 10px;
-                cursor: pointer;
-                border-bottom: 1px solid #ccc;
-              }
-              img {
-                width: 30px;
-                height: 30px;
+            .cardStyle_right {
+              display: flex;
+              flex-direction: column;
+              justify-content: space-around;
+              align-items: center;
+              width: 50px;
+              background-color: #f2f2f2;
+              border-radius: 10px;
+              .colourNumberList {
+                .colourNumber {
+                  display: flex;
+                  justify-content: space-around;
+                  align-items: center;
+                  padding: 10px;
+                  cursor: pointer;
+                  border-bottom: 1px solid #ccc;
+                }
+                img {
+                  width: 30px;
+                  height: 30px;
+                }
               }
             }
           }

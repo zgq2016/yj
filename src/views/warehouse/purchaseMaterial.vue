@@ -1044,12 +1044,28 @@ export default {
       price: "",
       totalprice: "",
       paid_money: "",
+      materials_color_id: "",
+      visible: false,
+      popoverId: "",
     };
   },
   methods: {
     /**
      *
-     */ handle_modify_order(e) {
+     */
+    handleColourNumber(item, item1) {
+      this.form_no["color_id"] = item1.id;
+      item["color"] = item1.color;
+      item["color_no"] = item1.color_no;
+      item["picurl"] = item1.picurl;
+      item.picurl = item1.picurl;
+      this.visible = false;
+    },
+    handlePopoverId(item) {
+      this.popoverId = item.id;
+      this.visible = true;
+    },
+    handle_modify_order(e) {
       console.log(e);
       if (e.type == "style_purchase") {
         this.$router.push({
@@ -1112,6 +1128,7 @@ export default {
           remark: this.form_no.remark,
           uploadDocuments: this.form_no.picurl,
           storehouse_id: this.form_no.storehouse_id,
+          color_id: this.form_no.color_id,
         });
         if (res.data.error_code) {
           this.$message({
@@ -1121,6 +1138,18 @@ export default {
           });
         }
         this.centerDialogVisible2 = false;
+        this.materials_id = "";
+        this.form_no.amountPurchased = "";
+        this.form_no.deposit = "";
+        this.form_no.finishTime = "";
+        this.form_no.balance_account_id = "";
+        this.form_no.money = "";
+        this.form_no.payment = "";
+        this.form_no.purchasePrice = "";
+        this.form_no.remark = "";
+        this.form_no.picurl = "";
+        this.form_no.storehouse_id = "";
+        this.form_no.color_id = "";
         // else {
         //   this.$router.push({
         //     path: `/materialPurchasing?id=${this.$route.query.style_id}`,
@@ -1195,6 +1224,7 @@ export default {
       this.form_no.fullPayout = this.form_no.money;
     },
     async addMaterialsList(item) {
+      console.log(item);
       this.$confirm("确定选择", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -1205,6 +1235,7 @@ export default {
         this.form1_no = {};
         this.uploadDocuments = "";
         this.materials_id = item.id;
+        this.form_no.color_id = item.materials_color_data[0].id;
       });
     },
     async handleSearchInput() {
