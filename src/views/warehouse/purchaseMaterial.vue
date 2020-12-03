@@ -237,13 +237,9 @@
                   style="width: 200px"
                 ></el-input>
               </el-form-item>
-              <el-form-item
-                v-if="form_no.payment == 1"
-                label="全额付款"
-                prop="fullPayout"
-              >
+              <el-form-item v-if="form_no.payment == 1" label="全额付款">
                 <el-input
-                  v-model="form_no.money"
+                  v-model="form_no.deposit"
                   disabled
                   placeholder="请输入金额"
                   style="width: 200px"
@@ -450,7 +446,7 @@
                     >{{ "采购录入" }}</el-button
                   >
                 </div>
-                <div v-if="item1.state > 1">
+                <div v-if="item1.state > 0">
                   <el-button
                     size="mini"
                     class="option_name_id"
@@ -461,7 +457,7 @@
                     >采购事件</el-button
                   >
                 </div>
-                <div v-if="item1.state > 1">
+                <div v-if="item1.state > 0">
                   <el-button
                     size="mini"
                     class="option_name_id"
@@ -1119,7 +1115,7 @@ export default {
           // id: this.$route.query.id,
           materials_id: this.materials_id,
           amountPurchased: this.form_no.amountPurchased,
-          deposit: this.form_no.deposit,
+          deposit: this.form_no.deposit || this.form_no.money,
           finishTime: this.form_no.finishTime,
           balance_account_id: this.form_no.balance_account_id,
           money: this.form_no.money,
@@ -1130,26 +1126,25 @@ export default {
           storehouse_id: this.form_no.storehouse_id,
           color_id: this.form_no.color_id,
         });
-        if (res.data.error_code) {
-          this.$message({
-            showClose: true,
-            message: res.data.msg,
-            type: "error",
-          });
+        this.$message({
+          showClose: true,
+          message: res.data.msg,
+        });
+        if (res.data.error_code == 0) {
+          this.centerDialogVisible2 = false;
+          this.materials_id = "";
+          this.form_no.amountPurchased = "";
+          this.form_no.deposit = "";
+          this.form_no.finishTime = "";
+          this.form_no.balance_account_id = "";
+          this.form_no.money = "";
+          this.form_no.payment = "";
+          this.form_no.purchasePrice = "";
+          this.form_no.remark = "";
+          this.form_no.picurl = "";
+          this.form_no.storehouse_id = "";
+          this.form_no.color_id = "";
         }
-        this.centerDialogVisible2 = false;
-        this.materials_id = "";
-        this.form_no.amountPurchased = "";
-        this.form_no.deposit = "";
-        this.form_no.finishTime = "";
-        this.form_no.balance_account_id = "";
-        this.form_no.money = "";
-        this.form_no.payment = "";
-        this.form_no.purchasePrice = "";
-        this.form_no.remark = "";
-        this.form_no.picurl = "";
-        this.form_no.storehouse_id = "";
-        this.form_no.color_id = "";
         // else {
         //   this.$router.push({
         //     path: `/materialPurchasing?id=${this.$route.query.style_id}`,
@@ -1157,11 +1152,12 @@ export default {
         // }
       });
     },
-    async selectPayment(value) {
-      if (value == 1) {
-        this.form1_no.deposit = this.form1_no.money;
+    selectPayment(value) {
+      console.log(value);
+      if (this.form_no.payment == 1) {
+        this.form_no.deposit = this.form_no.money;
       } else {
-        this.form1_no.deposit = "";
+        this.form_no.deposit = "";
       }
     },
     handlepurchaseOption_id(e) {
@@ -1179,6 +1175,7 @@ export default {
       // 结算账户
       let res3 = await balanceAccountSelect({ type: 1 });
       this.options = res3.data.data;
+      console.log(this.options);
     },
     backtrack() {
       this.centerDialogVisible1 = true;

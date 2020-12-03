@@ -771,6 +771,16 @@ export default {
     },
     get_user_id(e) {
       this.pageIndex = 1;
+      if (e != "") {
+        this.BalanceAccount = this.BalanceAccounts;
+        this.BalanceAccount = this.BalanceAccount.filter((v, i) => {
+          if (v.user.indexOf(String(e)) != -1) {
+            return v;
+          }
+        });
+      } else {
+        this.BalanceAccount = this.BalanceAccounts;
+      }
       this.init();
     },
     handleCommand(command) {
@@ -919,7 +929,9 @@ export default {
     async getBalanceAccount() {
       let res = await balanceAccountSelect();
       let { data } = res.data;
+
       this.BalanceAccount = data;
+      this.BalanceAccounts = data;
     },
     async getSettlementModes() {
       let res = await settlementModesSelect();
