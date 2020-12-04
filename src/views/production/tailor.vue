@@ -281,12 +281,7 @@ export default {
   },
   methods: {
     handleEdit(index, row) {
-      // console.log(row);
-      // console.log(index);
 
-      // this.$router.push({
-      //   path: "/productionStyle?id=" + row.style_id + "&activeNames=4"
-      // });
       this.$router.push({
         path: `/sc_tailor?id=${row.style_id}&TL=${3}&produce_no=${
           row.produce_no

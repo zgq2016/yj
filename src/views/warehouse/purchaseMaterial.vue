@@ -55,7 +55,7 @@
               :value="item.id"
             ></el-option>
           </el-select>
-          <el-select
+          <!-- <el-select
             v-model="form1.purchaseOptionname"
             @change="handlepurchaseOption_id($event)"
             placeholder="请选择分类"
@@ -69,7 +69,7 @@
               :label="item.option"
               :value="item.id"
             ></el-option>
-          </el-select>
+          </el-select> -->
         </el-form-item>
         <el-form-item>
           <!-- <el-button type="primary">导出</el-button> -->
@@ -330,28 +330,29 @@
                       <img :src="item1.picurl" alt />
                     </div>
                     <div class="cardStyle_left_content">
-                      <div class="cardStyle_left_content_name">
-                        <div>{{ item1.materialsname || "已删除" }}</div>
-
-                        <div
-                          class="el-icon-close"
-                          style="cursor: pointer"
-                          v-if="
-                            item1.purchase_log.length === 0 &&
-                            permission.indexOf('style_purchase_del') != -1
-                          "
-                          @click.stop="handleStyleMaterialsDel(item1)"
-                        ></div>
-                      </div>
-                      <div>内部编号:{{ item1.materialsno }}</div>
                       <div>
-                        {{ item1.companyname }}
+                        <div class="cardStyle_left_content_name">
+                          {{ item1.materialsname || "已删除" }}
+                        </div>
+                        <div>内部编号:{{ item1.materialsno }}</div>
+                        <div>
+                          {{ item1.companyname }}
+                        </div>
+                        <div>
+                          {{ item1.materials_mainclass_name }} ({{
+                            item1.materials_class_name
+                          }})
+                        </div>
                       </div>
-                      <div>
-                        {{ item1.materials_mainclass_name }} ({{
-                          item1.materials_class_name
-                        }})
-                      </div>
+                      <div
+                        class="el-icon-close"
+                        style="cursor: pointer"
+                        v-if="
+                          item1.purchase_log.length === 0 &&
+                          permission.indexOf('style_purchase_del') != -1
+                        "
+                        @click.stop="handleStyleMaterialsDel(item1)"
+                      ></div>
                     </div>
                   </div>
                   <div class="cardStyle_right">
@@ -413,93 +414,25 @@
                 </el-steps>
               </div>
               <div class="option_name">
-                <!-- {{ item1.type }} -->
-                <div v-if="item1.state == 0">
-                  <el-button
-                    size="mini"
-                    class="option_name_id"
-                    round
-                    @click="goPanelPurchase(item1)"
-                    v-if="
-                      item1.type == 'style_purchase' &&
-                      permission.indexOf('purchase_edit') != -1
-                    "
-                    >{{ "采购录入" }}</el-button
-                  >
-                  <el-button
-                    size="mini"
-                    class="option_name_id"
-                    round
-                    @click="goPanelPurchase(item1)"
-                    v-if="
-                      item1.type == 'produce_order_procure' &&
-                      permission.indexOf('produce_order_procure_edit') != -1
-                    "
-                    >{{ "采购录入" }}</el-button
-                  >
-                  <el-button
-                    size="mini"
-                    class="option_name_id"
-                    round
-                    @click="goPanelPurchase(item1)"
-                    v-if="item1.type == 'materials_purchase'"
-                    >{{ "采购录入" }}</el-button
-                  >
-                </div>
-                <div v-if="item1.state > 0">
-                  <el-button
-                    size="mini"
-                    class="option_name_id"
-                    @click.stop="seeDetails2(item1)"
-                    v-if="item1.type != 'materials_purchase'"
-                    round
-                    style="margin: 10px"
+                <div v-if="item1.type != 'materials_purchase'">
+                  <el-button size="mini" @click.stop="seeDetails2(item1)" round
                     >采购事件</el-button
                   >
                 </div>
-                <div v-if="item1.state > 0">
-                  <el-button
-                    size="mini"
-                    class="option_name_id"
-                    @click.stop="seeDetails1(item1)"
-                    round
+                <div>
+                  <el-button size="mini" @click.stop="seeDetails1(item1)" round
                     >查看账单</el-button
                   >
                 </div>
-                <div v-if="item1.state > 0">
-                  <el-button
-                    size="mini"
-                    class="option_name_id"
-                    round
-                    @click="updateStatus(item1)"
-                    v-if="
-                      item1.type == 'style_purchase' &&
-                      permission.indexOf('style_purchase_log_add') != -1
-                    "
-                    >{{ "更新状态" }}</el-button
-                  >
-                  <el-button
-                    size="mini"
-                    class="option_name_id"
-                    round
-                    @click="updateStatus(item1)"
-                    v-if="
-                      item1.type == 'produce_order_procure' &&
-                      permission.indexOf('produce_order_procure_log_add') != -1
-                    "
-                    >{{ "更新状态" }}</el-button
-                  >
-                  <el-button
-                    size="mini"
-                    class="option_name_id"
-                    round
-                    @click="updateStatus(item1)"
-                    v-if="
-                      item1.type == 'materials_purchase' &&
-                      permission.indexOf('materials_purchase_log') != -1
-                    "
-                    >{{ "更新状态" }}</el-button
-                  >
+                <div
+                  v-if="
+                    item1.type == 'materials_purchase' &&
+                    permission.indexOf('materials_purchase_log') != -1
+                  "
+                >
+                  <el-button size="mini" round @click="updateStatus(item1)">{{
+                    "更新状态"
+                  }}</el-button>
                 </div>
               </div>
             </div>
@@ -738,7 +671,7 @@
               >退单</el-button
             >
             <el-button
-              v-if="produce_order_procure_item.state != 5"
+              v-if="produce_order_procure_item.state < 4"
               @click="
                 outerVisible = false;
                 innerVisibled = true;
@@ -746,7 +679,7 @@
               >延迟回料</el-button
             >
             <el-button
-              v-if="produce_order_procure_item.state != 5"
+              v-if="produce_order_procure_item.state < 4"
               @click="
                 outerVisible = false;
                 innerVisible = true;
@@ -754,7 +687,7 @@
               >部分回料</el-button
             >
             <el-button
-              v-if="produce_order_procure_item.state != 5"
+              v-if="produce_order_procure_item.state < 4"
               @click="
                 outerVisible = false;
                 innerVisibled1 = true;
@@ -1063,7 +996,7 @@ export default {
     },
     handle_modify_order(e) {
       console.log(e);
-      if (e.type == "style_purchase") {
+      if (e.type == "materials_purchase") {
         this.$router.push({
           path: `panelPurchase_edit?materials_id=${
             e.materials_id
@@ -1072,15 +1005,15 @@ export default {
           }&type=${e.type}`,
         });
       }
-      if (e.type == "produce_order_procure") {
-        this.$router.push({
-          path: `panelPurchase_edit?materials_id=${
-            e.materials_id
-          }&tabName=${"仓库采购"}&id=${e.style_id}&style_purchase_id=${
-            e.id
-          }&type=${e.type}&produce_no=${e.produce_no}`,
-        });
-      }
+      // if (e.type == "materials_purchase") {
+      //   this.$router.push({
+      //     path: `panelPurchase_edit?materials_id=${
+      //       e.materials_id
+      //     }&tabName=${"仓库采购"}&id=${e.style_id}&style_purchase_id=${
+      //       e.id
+      //     }&type=${e.type}&produce_no=${e.produce_no}`,
+      //   });
+      // }
       // if(e.type==materials_purchase){}
     },
     async chargeback(e) {
@@ -1132,6 +1065,7 @@ export default {
         });
         if (res.data.error_code == 0) {
           this.centerDialogVisible2 = false;
+          this.init();
           this.materials_id = "";
           this.form_no.amountPurchased = "";
           this.form_no.deposit = "";
@@ -1160,11 +1094,11 @@ export default {
         this.form_no.deposit = "";
       }
     },
-    handlepurchaseOption_id(e) {
-      this.form1.purchaseOption_id = e;
-      this.code = 1;
-      this.init();
-    },
+    // handlepurchaseOption_id(e) {
+    //   this.form1.purchaseOption_id = e;
+    //   this.code = 1;
+    //   this.init();
+    // },
     handleAvatarSuccess_no(res, file) {
       this.form_no.picurl = res.data.pic_file_url;
     },
@@ -1297,8 +1231,10 @@ export default {
           this.form1.materials_class = this.class_datas.class_data[0].classname;
           this.form1.materials_class_id = this.class_datas.class_data[0].id;
         }
+        this.form1.materials_class_id_id = this.class_datas.class_data[0].id;
+      } else {
+        this.form1.materials_class_id_id = "";
       }
-      this.form1.materials_class_id_id = this.class_datas.class_data[0].id;
       this.onSubmit();
     },
     async handleClassDatasId1(e) {
@@ -1326,6 +1262,7 @@ export default {
       });
     },
     async seeDetails2(item) {
+      console.log(item);
       if (item.type == "style_purchase") {
         this.$router.push({
           path: `materialPurchasing?id=${item.style_id}&project_id=0&TL=100`,
@@ -1333,7 +1270,7 @@ export default {
       }
       if (item.type == "produce_order_procure") {
         this.$router.push({
-          path: `productionStyle?id=${item.s}&activeNames=2&TL=1`,
+          path: `sc_purchase?id=${item.style_id}&produce_no=${item.produce_no}`,
         });
       }
     },
@@ -1559,30 +1496,30 @@ export default {
       // this.style_materials = data;
       this.init();
     },
-    goPanelPurchase(e) {
-      console.log(e);
-      this.$router.push({
-        path: `/PanelPurchase?materials_id=${
-          e.materials_id
-        }&tabName=${"仓库采购"}&id=${e.id}&style_id=${e.style_id}&type=${
-          e.type
-        }&produce_no=${e.produce_no}`,
-      });
-    },
+    // goPanelPurchase(e) {
+    //   console.log(e);
+    //   this.$router.push({
+    //     path: `/PanelPurchase?materials_id=${
+    //       e.materials_id
+    //     }&tabName=${"仓库采购"}&id=${e.id}&style_id=${e.style_id}&type=${
+    //       e.type
+    //     }&produce_no=${e.produce_no}`,
+    //   });
+    // },
     // 更新状态
     async updateStatus(item) {
-      if (this.produce_order_procure_item.type == "style_purchase") {
-        this.quantity = item.quantity;
-        this.price = item.price;
-        this.totalprice = item.totalprice;
-        this.paid_money = item.paid_money;
-      }
-      if (this.produce_order_procure_item.type == "produce_order_procure") {
-        this.quantity = item.quantity;
-        this.price = item.price;
-        this.totalprice = item.totalprice;
-        this.paid_money = item.paid_money;
-      }
+      // if (this.produce_order_procure_item.type == "style_purchase") {
+      //   this.quantity = item.quantity;
+      //   this.price = item.price;
+      //   this.totalprice = item.totalprice;
+      //   this.paid_money = item.paid_money;
+      // }
+      // if (this.produce_order_procure_item.type == "produce_order_procure") {
+      //   this.quantity = item.quantity;
+      //   this.price = item.price;
+      //   this.totalprice = item.totalprice;
+      //   this.paid_money = item.paid_money;
+      // }
       if (this.produce_order_procure_item.type == "materials_purchase") {
         this.quantity = item.quantity;
         this.price = item.price;
@@ -1617,7 +1554,7 @@ export default {
       console.log(this.code);
       let { origin, origin_code } = this.$route.query;
       let obj = { page: this.pageIndexB, page_size: this.pageSizeB };
-      if (origin !== "" && origin_code != 0) {
+      if (origin != "" && origin_code != 0) {
         obj["origin"] = origin;
         obj["origin_code"] = origin_code;
       }
@@ -1626,10 +1563,12 @@ export default {
 
         obj["materialsname"] = this.form1.materialsname.trim();
         // obj["materialsname"] = materialsname.trim();
-        obj["type"] = purchaseOption_id;
+        obj["type"] = 3;
         obj["materials_class_id"] = materials_class_id_id;
         obj["origin"] = "";
         obj["origin_code"] = "";
+      } else {
+        obj["type"] = 3;
       }
       let res1 = await getMaterialsPurchaseList(obj);
 
@@ -1732,7 +1671,7 @@ export default {
               .cardStyle_left_content {
                 flex: 1;
                 div {
-                  margin: 3px;
+                  margin: 5px;
                 }
                 .cardStyle_left_content_name {
                   font-weight: 600;
@@ -1829,7 +1768,7 @@ export default {
               .cardStyle_left_content {
                 flex: 1;
                 div {
-                  margin: 3px;
+                  margin: 5px;
                 }
                 .cardStyle_left_content_name {
                   font-weight: 600;
@@ -1869,7 +1808,7 @@ export default {
           word-spacing: normal;
           // align-items: flex-end;
           height: 120px;
-          padding: 5px;
+          padding: 15px;
         }
         .option_name {
           width: 100px;
@@ -2037,14 +1976,9 @@ export default {
       }
     }
   }
-  .option_name {
-    width: 100px;
-    height: 70px;
-    display: flex;
-    flex-direction: column;
-    /deep/ .option_name_id {
-      margin: 5px 0px 0 0 !important;
-    }
+  .pagination {
+    margin: 20px;
+    text-align: right;
   }
 }
 </style>

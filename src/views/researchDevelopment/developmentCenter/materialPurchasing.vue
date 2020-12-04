@@ -324,7 +324,7 @@
           >退单</el-button
         >
         <el-button
-          v-if="item1_state.state != 5"
+          v-if="item1_state.state < 4"
           @click="
             outerVisible = false;
             innerVisibled = true;
@@ -333,7 +333,7 @@
         >
 
         <el-button
-          v-if="item1_state.state != 5"
+          v-if="item1_state.state < 4"
           @click="
             outerVisible = false;
             innerVisible = true;
@@ -341,7 +341,7 @@
           >部分回料</el-button
         >
         <el-button
-          v-if="item1_state.state != 5"
+          v-if="item1_state.state < 4"
           @click="
             outerVisible = false;
             innerVisibled1 = true;
@@ -777,7 +777,7 @@ export default {
           .cardStyle_left_content {
             flex: 1;
             div {
-              margin: 3px;
+              margin: 5px;
             }
             .cardStyle_left_content_name {
               font-weight: 600;

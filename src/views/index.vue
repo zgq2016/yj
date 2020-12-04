@@ -396,10 +396,10 @@
           </el-submenu>
         </el-menu>
       </el-aside>
-      <div class="user-solid">
-        <div @click="show">
+      <div class="user-solid" @mouseleave="hide">
+        <div @mouseenter="show">
           <el-avatar class="icon" icon="el-icon-user-solid"></el-avatar>
-          <span class="user-name">{{name}}</span>
+          <span class="user-name">{{ name }}</span>
         </div>
         <div class="quit">
           <span class="box" @click="toIssue" v-show="hidde">问题反馈</span>
@@ -423,7 +423,7 @@ export default {
       isCollapse: true,
       permission: [],
       hidde: false,
-      name:''
+      name: "",
     };
   },
   methods: {
@@ -442,12 +442,15 @@ export default {
       this.hidde = false;
     },
     show() {
-      this.hidde = !this.hidde;
+      this.hidde = true;
+    },
+    hide() {
+      this.hidde = false;
     },
   },
   mounted() {
     this.permission = localStorage.getItem("permission").split(",");
-    this.name = localStorage.getItem("name")
+    this.name = localStorage.getItem("name");
   },
 };
 </script>

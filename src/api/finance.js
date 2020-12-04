@@ -206,3 +206,24 @@ export const balanceAdjust = (data) => {
     data: data,
   });
 };
+export const advanceReimbursementAdd = (data) => {
+  return axios({
+    url: "?g=advance_reimbursement_add",
+    method: "post",
+    data: data,
+  });
+};
+export const advanceReimbursementList = (data) => {
+  return axios({
+    url: "?g=advance_reimbursement_list",
+    method: "post",
+    data: data,
+  });
+};
+export const advanceReimbursementHandle = (data) => {
+  return axios({
+    url: "?g=advance_reimbursement_handle",
+    method: "post",
+    data: data,
+  });
+};
