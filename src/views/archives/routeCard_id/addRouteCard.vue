@@ -1491,23 +1491,26 @@ export default {
         });
       } else {
         for (let index = 0; index < this.form.color_data.length; index++) {
-          if (this.form.color_data[index].color == this.form1.color) {
-            this.$message({
-              type: "error",
-              message: "颜色不可重复",
-            });
-            return;
-          }
           if (
-            this.form.color_data[index].color_no == this.form1.color_no &&
-            this.form.color_data[index].color_no != "无编号"
+            this.form.color_data[index].color == this.form1.color &&
+            this.form.color_data[index].color_no == this.form1.color_no 
           ) {
             this.$message({
               type: "error",
-              message: "色号不可重复",
+              message: "颜色和色号不可一样",
             });
             return;
           }
+          // if (
+          //   this.form.color_data[index].color_no == this.form1.color_no &&
+          //   this.form.color_data[index].color_no != "无编号"
+          // ) {
+          //   this.$message({
+          //     type: "error",
+          //     message: "色号不可重复",
+          //   });
+          //   return;
+          // }
         }
       }
       if (

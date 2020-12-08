@@ -280,6 +280,79 @@
         <el-button type="primary" @click="handleEditList">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      title="编辑分类"
+      :visible.sync="centerDialogVisible2"
+      width="40%"
+      center
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
+      <el-form
+        ref="obj"
+        :model="obj"
+        :rules="rules"
+        label-width="80px"
+        resetFields
+      >
+        <el-form-item label="分类名称" prop="goods_category_name">
+          <el-input
+            v-model="obj.goods_category_name"
+            style="width: 80%"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="编号" prop="no">
+          <el-input
+            type="text"
+            placeholder="请输入编号"
+            style="width: 80%"
+            v-model.number="obj.no"
+            maxlength="2"
+            show-word-limit
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="上级分类" v-if="rowLevel === '1'">
+          <el-select
+            v-model="region"
+            clearable
+            @change="get_goods_category_id($event)"
+            style="width: 80%"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.goods_category_name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="region != '' && rowLevel === '1'" label="计量单位">
+          <el-select v-model="obj.unit" clearable placeholder="请选择">
+            <el-option
+              v-for="item in units"
+              :key="item.id"
+              :label="item.unit_name"
+              :value="item.unit_name"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="分类描述">
+          <el-input
+            type="textarea"
+            style="width: 80%"
+            v-model="obj.describe"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="排序">
+          <el-input v-model="obj.sort" style="width: 80%"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleClose1">取 消</el-button>
+        <el-button type="primary" @click="handleEditList">确 定</el-button>
+      </span>
+    </el-dialog>
     <!-- 分页 -->
     <el-pagination
       class="pagination"
@@ -333,6 +406,7 @@ export default {
       tableData: [],
       centerDialogVisible: false, //添加分类
       centerDialogVisible1: false, //编辑分类
+      centerDialogVisible2: false, //编辑分类
       form: {
         goods_category_name: "",
         goods_category_id: "",
@@ -402,7 +476,9 @@ export default {
       this.init();
     },
     handleClose1() {
+      this.centerDialogVisible = false;
       this.centerDialogVisible1 = false;
+      this.centerDialogVisible2 = false;
       this.vh1 = false;
       this.init();
     },
@@ -424,7 +500,9 @@ export default {
           this.$refs["obj"].resetFields();
           this.obj.goods_category_id = 0;
           this.region = "";
+          this.centerDialogVisible = false;
           this.centerDialogVisible1 = false;
+          this.centerDialogVisible2 = false;
           this.init();
         }
       });
@@ -434,13 +512,17 @@ export default {
       this.region = row.goods_category_id;
       this.rowLevel = row.level;
       this.obj = row;
-      this.obj.no = Number(row.no);
+      this.obj.no = row.no - 0;
       let arr = [];
-      row.position.map((v, i) => {
-        arr.push(v.id);
-      });
-      this.obj.position = arr;
-      this.centerDialogVisible1 = true;
+      if (row.level == 0 && row.position != undefined) {
+        row.position.map((v, i) => {
+          arr.push(v.id);
+        });
+        this.obj.position = arr;
+        this.centerDialogVisible1 = true;
+      } else {
+        this.centerDialogVisible2 = true;
+      }
     },
     async handleDelete(index, row) {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {

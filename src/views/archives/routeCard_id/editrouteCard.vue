@@ -1478,20 +1478,13 @@ export default {
         });
       } else {
         for (let index = 0; index < this.form.color_data.length; index++) {
-          if (this.form.color_data[index].color == this.form1.color) {
-            this.$message({
-              type: "error",
-              message: "颜色不可重复",
-            });
-            return;
-          }
           if (
-            this.form.color_data[index].color_no == this.form1.color_no &&
-            this.form.color_data[index].color_no != "无编号"
+            this.form.color_data[index].color == this.form1.color &&
+            this.form.color_data[index].color_no == this.form1.color_no
           ) {
             this.$message({
               type: "error",
-              message: "色号不可重复",
+              message: "颜色和色号不可一样",
             });
             return;
           }
@@ -1555,9 +1548,9 @@ export default {
           page: 1,
           page_size: 1,
         });
-        let { data, count } = res.data;
-        this.total1 = count;
-        this.SupplierList_item = data;
+        // let { data, count } = res.data;
+        // this.total1 = count;
+        this.SupplierList_item = res.data.data;
       }
       if (item) {
         let res = await getSupplierList({
@@ -1565,9 +1558,9 @@ export default {
           page: 1,
           page_size: 1,
         });
-        let { data, count } = res.data;
-        this.total1 = count;
-        this.SupplierList_item = data;
+        // let { data, count } = res.data;
+        // this.total1 = count;
+        this.SupplierList_item = res.data.data;
         this.form.materials_supplier_id = item.id;
       }
     },

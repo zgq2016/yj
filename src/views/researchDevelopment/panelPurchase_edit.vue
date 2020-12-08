@@ -168,10 +168,7 @@
                   style="width: 200px"
                 ></el-input>
               </el-form-item>
-              <el-form-item
-                v-if="form.payment == 1"
-                label="全额付款"
-              >
+              <el-form-item v-if="form.payment == 1" label="全额付款">
                 <el-input
                   v-model="form.money"
                   disabled
@@ -661,6 +658,7 @@ export default {
       if (tabName == "版料采购") {
         let res = await getStylePurchaseInfo({ id: style_purchase_id });
         let { data } = res.data;
+        console.log(data);
         this.form.dosage = data.actualusage;
         this.form.amountPurchased = data.quantity;
         this.form.purchasePrice = data.price;
@@ -671,7 +669,7 @@ export default {
           this.form.deposit = data.deposit;
         }
         if (data.payment == 1) {
-          this.form.fullPayout = data.totalprice;
+          this.form.deposit = data.totalprice;
         }
         this.form.finishTime = data.finishTime;
         // this.form.fullPayout = data.totalprice;
@@ -692,7 +690,7 @@ export default {
           this.form.deposit = data.deposit;
         }
         if (data.payment == 1) {
-          this.form.fullPayout = data.totalprice;
+          this.form.deposit = data.totalprice;
         }
         this.form.finishTime = data.finishTime;
         // this.form.fullPayout = data.totalprice;
@@ -713,7 +711,7 @@ export default {
           this.form.deposit = data.deposit;
         }
         if (data.payment == 1) {
-          this.form.fullPayout = data.totalprice;
+          this.form.deposit = data.totalprice;
         }
         this.form.finishTime = data.finishTime;
         // this.form.fullPayout = data.totalprice;
@@ -734,7 +732,7 @@ export default {
           this.form.deposit = data.deposit;
         }
         if (data.payment == 1) {
-          this.form.fullPayout = data.totalprice;
+          this.form.deposit = data.totalprice;
         }
         this.form.finishTime = data.finishTime;
         // this.form.fullPayout = data.totalprice;
@@ -755,7 +753,7 @@ export default {
           this.form.deposit = data.deposit;
         }
         if (data.payment == 1) {
-          this.form.fullPayout = data.totalprice;
+          this.form.deposit = data.totalprice;
         }
         this.form.finishTime = data.finishTime;
         // this.form.fullPayout = data.totalprice;

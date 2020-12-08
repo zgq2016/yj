@@ -151,12 +151,23 @@
                       </div>
                     </div>
                   </el-popover>
-                  <div>
+                  <div class="cardStyle_right_no">
+                    <div>
+                      {{ item.color || item.materials_color_data[0].color }}
+                    </div>
+                    <div>
+                      {{
+                        item.color_no || item.materials_color_data[0].color_no
+                      }}
+                    </div>
+                    <div class="el-icon-arrow-down"></div>
+                  </div>
+                  <!-- <div>
                     {{ item.color || item.materials_color_data[0].color }}
                   </div>
                   <div>
                     {{ item.color_no || item.materials_color_data[0].color_no }}
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </div>
@@ -1688,6 +1699,12 @@ export default {
               width: 50px;
               background-color: #f2f2f2;
               border-radius: 10px;
+              .cardStyle_right_no {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+              }
               .colourNumberList {
                 .colourNumber {
                   display: flex;

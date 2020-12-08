@@ -167,17 +167,21 @@
                             </div>
                           </div>
                         </el-popover>
-                        <div>
-                          {{
-                            item2.color || item2.materials_color_data[0].color
-                          }}
-                        </div>
                         <div class="cardStyle_right_no">
-                          {{
-                            item2.color_no ||
-                            item2.materials_color_data[0].color_no
-                          }}
+                          <div>
+                            {{
+                              item2.color || item2.materials_color_data[0].color
+                            }}
+                          </div>
+                          <div>
+                            {{
+                              item2.color_no ||
+                              item2.materials_color_data[0].color_no
+                            }}
+                          </div>
+                          <div class="el-icon-arrow-down"></div>
                         </div>
+                        <!-- <div class="cardStyle_right_no"></div> -->
                       </div>
                       <el-checkbox
                         v-model="item2.isCheckList1"
@@ -370,16 +374,19 @@
                             </div>
                           </div>
                         </el-popover>
-                        <div>
-                          {{
-                            item2.color || item2.materials_color_data[0].color
-                          }}
-                        </div>
                         <div class="cardStyle_right_no">
-                          {{
-                            item2.color_no ||
-                            item2.materials_color_data[0].color_no
-                          }}
+                          <div>
+                            {{
+                              item2.color || item2.materials_color_data[0].color
+                            }}
+                          </div>
+                          <div>
+                            {{
+                              item2.color_no ||
+                              item2.materials_color_data[0].color_no
+                            }}
+                          </div>
+                          <div class="el-icon-arrow-down"></div>
                         </div>
                       </div>
                       <el-checkbox
@@ -483,11 +490,14 @@
                     </div>
                   </div>
                 </el-popover>
-                <div>
-                  {{ item.color || item.materials_color_data[0].color }}
-                </div>
-                <div>
-                  {{ item.color_no || item.materials_color_data[0].color_no }}
+                <div class="cardStyle_right_no">
+                  <div>
+                    {{ item.color || item.materials_color_data[0].color }}
+                  </div>
+                  <div>
+                    {{ item.color_no || item.materials_color_data[0].color_no }}
+                  </div>
+                  <div class="el-icon-arrow-down"></div>
                 </div>
               </div>
             </div>
@@ -1229,6 +1239,12 @@ export default {
               width: 50px;
               background-color: #f2f2f2;
               border-radius: 10px;
+              .cardStyle_right_no {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+              }
               .colourNumberList {
                 .colourNumber {
                   font-size: 12px;
@@ -1368,6 +1384,12 @@ export default {
               width: 50px;
               background-color: #f2f2f2;
               border-radius: 10px;
+              .cardStyle_right_no {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+              }
               .colourNumberList {
                 .colourNumber {
                   display: flex;
@@ -1434,6 +1456,12 @@ export default {
             width: 50px;
             background-color: #f2f2f2;
             border-radius: 10px;
+            .cardStyle_right_no {
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+            }
             .colourNumberList {
               .colourNumber {
                 display: flex;

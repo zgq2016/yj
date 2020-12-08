@@ -33,7 +33,6 @@
             v-model="formInline.date"
             type="daterange"
             range-separator="至"
-            clearable
             class="timer"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
@@ -632,7 +631,7 @@ export default {
       dialogVisible2: false,
       dialogVisible3: false,
       formInline: {
-        date: "",
+        date: [],
         account_type_name: "",
         balance_account_id: "",
         user_id: "",
@@ -980,15 +979,27 @@ export default {
       this.total_pay_money = total_pay_money;
       this.total_opay_money = total_opay_money;
     },
+    day() {
+      this.permission = localStorage.getItem("permission").split(",");
+      var date = new Date();
+      var year = date.getFullYear();
+      var month = date.getMonth() + 1;
+      var d = new Date(year, month, 0);
+      var day = d.getDate();
+      this.formInline.date[0] = `${year}-${month}-${1}`;
+      this.formInline.date[1] = `${year}-${month}-${day}`;
+      this.formInline["ctime_start"] = `${year}-${month}-${1}`;
+      this.formInline["ctime_end"] = `${year}-${month}-${day}`;
+      this.init();
+    },
   },
   mounted() {
-    this.init();
+    this.day();
     this.getStylist();
     this.getBalanceAccount();
     this.getBalanceAccountType();
     this.getSettlementModes();
     this.getTransactionType();
-    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>
@@ -1019,6 +1030,9 @@ export default {
   }
   /deep/ .el-range-editor /deep/ .el-range-input {
     background-color: #f2f2f2;
+  }
+  .timer {
+    width: 300px !important;
   }
   /deep/ .el-input__icon {
     line-height: 30px;
@@ -1055,6 +1069,12 @@ export default {
   .el-pagination {
     margin: 20px;
     text-align: right;
+  }
+  /deep/.el-date-editor /deep/.el-range-separator {
+    padding: 0 0px;
+    line-height: 25px;
+    width: 5%;
+    color: #303133;
   }
   .addStyle {
     margin: 0 0px 0px 30px;

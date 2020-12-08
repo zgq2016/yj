@@ -14,26 +14,25 @@
     <div class="mianA">
       <el-form :inline="true" :model="form1">
         <el-form-item>
-          <el-select
-            size="small"
-            v-model="form1.status"
-            placeholder="请选择状态"
-            style="width: 140px; margin-right: 10px"
-            clearable
-            @change="onSubmit"
-          >
-            <el-option
-              v-for="item in status_list"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+          <el-date-picker
+            v-model="form1.date"
+            type="daterange"
+            range-separator="至"
+            class="timer"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd"
+            @change="gte_date($event)"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item>
           <el-select
             v-model="form1.type"
             placeholder="请选择类型"
             style="width: 140px; margin-right: 10px"
             size="small"
+            clearable
             @change="onSubmit"
           >
             <el-option
@@ -44,6 +43,7 @@
             ></el-option>
           </el-select>
           <el-select
+            v-if="level != 2"
             v-model="form1.user_id"
             placeholder="请选择申请人"
             style="width: 140px; margin-right: 10px"
@@ -60,10 +60,6 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <!-- <el-button type="primary">导出</el-button> -->
-          <!-- <el-button v-print="'#printTest'" type="primary">打印</el-button> -->
-        </el-form-item>
-        <el-form-item>
           <div
             style="
               display: flex;
@@ -72,12 +68,42 @@
             "
             v-if="permission.indexOf('advance_reimbursement_add') != -1"
           >
-            <div class="addStyle">展示统计数据</div>
+            <div
+              class="addStyle"
+              :style="
+                active_show
+                  ? 'background-color: #000;color: #fff;'
+                  : 'background-color: #e3e3e3;color: #000;'
+              "
+              @click="handleShow"
+            >
+              展示统计数据
+            </div>
             <div class="addStyle" @click="handleAdvance">预支</div>
             <div class="addStyle" @click="applyForReimbursement">报销</div>
           </div>
         </el-form-item>
       </el-form>
+      <div class="account" v-show="active_show">
+        <div class="tb">
+          <div class="dv">
+            账户进账
+            <span style="color: orange"> {{ advance_money }} </span>
+          </div>
+          <div class="dv">
+            支出
+            <span style="color: orange">{{ advance_pay }}</span>
+          </div>
+          <div class="dv">
+            结余
+            <span style="color: orange">{{ advance_money - advance_pay }}</span>
+          </div>
+          <div class="dv">
+            账户余额
+            <span style="color: orange">{{ advance_balance }}</span>
+          </div>
+        </div>
+      </div>
       <el-dialog
         title="预支"
         :visible.sync="payment"
@@ -112,30 +138,12 @@
           <el-form-item label="账户余额:">
             <div>{{ pay_form.balance }}</div>
           </el-form-item>
-          <el-form-item label="账目类型:" prop="account_type_id">
-            <el-select v-model="pay_form.account_type_id" style="width: 70%">
-              <el-option
-                v-for="item in BalanceAccountType"
-                :key="item.id"
-                :label="item.account_type_name"
-                :value="item.id"
-              ></el-option>
-            </el-select>
-          </el-form-item>
           <el-form-item label="预支金额:" prop="money">
             <el-input
               v-model="pay_form.money"
               placeholder="请输入内容"
               style="width: 70%"
             ></el-input>
-          </el-form-item>
-          <el-form-item label="业务时间" prop="business_time">
-            <el-date-picker
-              v-model="pay_form.business_time"
-              type="date"
-              placeholder="选择日期"
-              style="width: 70%"
-            ></el-date-picker>
           </el-form-item>
           <el-form-item label="事由" prop="reason">
             <el-input
@@ -144,22 +152,6 @@
               placeholder="请输入内容"
               style="width: 70%"
             ></el-input>
-          </el-form-item>
-          <el-form-item label="附图" prop="picurl">
-            <el-upload
-              class="avatar-uploader"
-              :action="url + '/uploadpic.php'"
-              :show-file-list="false"
-              :on-success="handleSuccess2"
-              :before-upload="beforeUpload"
-            >
-              <img
-                v-if="pay_form.picurl"
-                :src="pay_form.picurl"
-                class="avatar"
-              />
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -259,72 +251,167 @@
     </div>
     <div class="mianB">
       <div class="materialPurchasing">
-        <div v-if="style_materials.length > 0">
-          <div
-            v-for="(item1, index) in style_materials"
-            :key="index"
-            class="content"
-          >
-            <div class="card">
-              <div class="card_img">
-                <img :src="item1.picurl" alt />
-              </div>
-              <div class="card_con">
-                <div class="cardStyle_left_content_name">
-                  {{ item1.account_type_name }}
+        <div v-if="style_materials != undefined">
+          <div v-for="(item1, index) in style_materials" :key="index">
+            <div class="content" v-if="item1.from == 'advance_reimbursement'">
+              <div class="card">
+                <div class="card_img">
+                  <img :src="item1.picurl" alt />
                 </div>
-                <div v-if="item1.type == 0">类型: 预支</div>
-                <div v-if="item1.type == 1">类型: 报销</div>
-                <div>金额: {{ item1.money }}</div>
-                <div>账户: {{ item1.user_name }}</div>
+                <div class="card_con">
+                  <div
+                    class="cardStyle_left_content_name"
+                    v-if="item1.type == 0"
+                  >
+                    预支
+                  </div>
+                  <div
+                    class="cardStyle_left_content_name"
+                    v-if="item1.type == 1"
+                  >
+                    报销
+                  </div>
+                  <div>类型: {{ item1.account_type_name }}</div>
+                  <div>金额: {{ item1.money }}</div>
+                  <div>账户: {{ item1.user_name }}</div>
+                </div>
+              </div>
+              <div class="orderInformation">
+                <el-steps finish-status="wait">
+                  <el-step
+                    style="width: 125px"
+                    v-for="(item_g, index_g) in item1.log"
+                    :key="index_g"
+                    title
+                    description
+                    icon="el-icon-success"
+                  >
+                    <template v-slot:title>
+                      <div class="tt">
+                        <div v-if="item_g.status == 0">申请中</div>
+                        <div v-if="item_g.status == 1">拒绝</div>
+                        <div v-if="item_g.status == 2">通过</div>
+                      </div>
+                    </template>
+                    <template v-slot:description>
+                      <div class="dt">
+                        <div>{{ item_g.reason }}</div>
+                        <div>{{ item_g.ctime }}</div>
+                      </div>
+                    </template>
+                  </el-step>
+                </el-steps>
+              </div>
+              <div
+                class="option_name"
+                v-if="permission.indexOf('advance_reimbursement_handle') != -1"
+              >
+                <div>
+                  <el-button
+                    size="mini"
+                    round
+                    @click="pass(item1)"
+                    v-if="item1.status < 1"
+                    >通过</el-button
+                  >
+                </div>
+                <div>
+                  <el-button
+                    size="mini"
+                    round
+                    @click="no_pass(item1)"
+                    v-if="item1.status < 1"
+                    >拒绝</el-button
+                  >
+                </div>
               </div>
             </div>
-            <div class="orderInformation">
-              <el-steps finish-status="wait">
-                <el-step
-                  style="width: 125px"
-                  v-for="(item_g, index_g) in item1.log"
-                  :key="index_g"
-                  title
-                  description
-                  icon="el-icon-success"
-                >
-                  <template v-slot:title>
-                    <div class="tt">
-                      <div v-if="item_g.status == 0">申请中</div>
-                      <div v-if="item_g.status == 1">拒绝</div>
-                      <div v-if="item_g.status == 2">通过</div>
+            <div class="contents" v-else>
+              <div class="card">
+                <div class="cardStyle">
+                  <span class="bos">{{ item1.mainclass.slice(0, 1) }}</span>
+                  <div class="cardStyle_left">
+                    <div class="cardStyle_left_img">
+                      <img :src="item1.picurl" alt />
                     </div>
-                  </template>
-                  <template v-slot:description>
-                    <div class="dt">
-                      <div>{{ item_g.reason }}</div>
-                      <div>{{ item_g.ctime }}</div>
+                    <div class="cardStyle_left_content">
+                      <div>
+                        <div class="cardStyle_left_content_name">
+                          {{ item1.materialsname || "已删除" }}
+                        </div>
+                        <div>内部编号:{{ item1.materialsno }}</div>
+                        <div>
+                          {{ item1.companyname }}
+                        </div>
+                        <div>
+                          {{ item1.materials_mainclass_name }} ({{
+                            item1.materials_class_name
+                          }})
+                        </div>
+                      </div>
                     </div>
-                  </template>
-                </el-step>
-              </el-steps>
-            </div>
-            <div
-              class="option_name"
-              v-if="permission.indexOf('advance_reimbursement_handle') != -1"
-            >
-              <div>
-                <el-button
-                  size="mini"
-                  round
-                  @click="pass(item1)"
-                  v-if="item1.status < 1"
-                  >通过</el-button
-                >
+                  </div>
+                  <div class="cardStyle_right">
+                    <div>
+                      <div>{{ item1.color }}</div>
+                      <span class="cardStyle_right_no">{{
+                        item1.color_no
+                      }}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div>
-                <el-button
-                  size="mini"
-                  round
-                  @click="no_pass(item1)"
-                  v-if="item1.status < 1"
-                  >拒绝</el-button
+              <div class="orderInformation">
+                <el-steps finish-status="wait">
+                  <el-step
+                    style="width: 125px"
+                    v-for="(item_g, index_g) in item1.purchase_log"
+                    :key="index_g"
+                    title
+                    description
+                    icon="el-icon-success"
+                  >
+                    <template v-slot:title>
+                      <div class="tt">
+                        <span>
+                          {{ item_g.logname }}
+                          <em>{{ "" }}</em>
+                          <!-- <em v-if="item_g.state == '1'">{{item_g.quantity+"m"}}</em> -->
+                        </span>
+                        <span>{{ item_g.ctime }}</span>
+                      </div>
+                    </template>
+                    <template v-slot:description>
+                      <div class="dt">
+                        <span v-if="index_g == 0">{{ "预计回料时间" }}</span>
+                        <span v-if="item_g.state == '3'">{{
+                          "延迟回料时间"
+                        }}</span>
+                        <span v-if="item_g.state == '2'">{{
+                          "部分回料时间"
+                        }}</span>
+                        <span v-if="item_g.state == '4'">{{ "回料总量" }}</span>
+                        <span v-if="item_g.state == '4'">{{
+                          item1.quantity + "m"
+                        }}</span>
+                        <span v-else>{{ item_g.returntime }}</span>
+                        <!-- ****************************************************************** -->
+                        <!-- <span v-if="item_g.state == '2'">{{"延迟回料时间"}}</span>
+                  <span v-if="item_g.state == '1'">{{"部分回料时间"}}</span>
+                  <span v-if="item_g.state == '3'">{{"回料总量"}}</span>
+                  <span v-else-if="item_g.state == '0'">{{item1.finishTime}}</span>
+                    <span v-else>{{item_g.returntime}}</span>-->
+                      </div>
+                    </template>
+                  </el-step>
+                </el-steps>
+              </div>
+              <div class="option_name">
+                <el-button size="mini" @click.stop="seeDetails2(item1)" round
+                  >采购事件</el-button
+                >
+                <el-button size="mini" @click.stop="seeDetails1(item1)" round
+                  >查看账单</el-button
                 >
               </div>
             </div>
@@ -342,6 +429,37 @@
         ></el-pagination>
 
         <el-dialog
+          title="拒绝"
+          :visible.sync="no_pass_lieva"
+          width="30%"
+          center
+          class="dialog"
+          :show-close="false"
+          :close-on-click-modal="false"
+          :close-on-press-escape="false"
+        >
+          <el-form
+            :model="no_pass_form"
+            ref="no_pass_form"
+            :rules="no_pass_rules"
+            label-width="140px"
+            class="demo-form"
+          >
+            <el-form-item label="理由" prop="reason">
+              <el-input
+                type="textarea"
+                placeholder="请输入内容"
+                v-model="no_pass_form.reason"
+              >
+              </el-input>
+            </el-form-item>
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="no_pass_now">提 交</el-button>
+            <el-button @click="no_close_pass">取 消</el-button>
+          </span>
+        </el-dialog>
+        <el-dialog
           title="通过"
           :visible.sync="pass_lieva"
           width="30%"
@@ -358,11 +476,7 @@
             label-width="140px"
             class="demo-form"
           >
-            <el-form-item
-              label="支付账户"
-              v-if="pass_form.status == 2"
-              prop="account_id"
-            >
+            <el-form-item label="支付账户" prop="account_id">
               <el-select v-model="pass_form.account_id" style="width: 70%">
                 <el-option
                   v-for="item in BalanceAccounts"
@@ -372,13 +486,28 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="理由" prop="reason">
+            <el-form-item label="金额" prop="money">
               <el-input
-                type="textarea"
-                v-model="pass_form.reason"
+                v-model="pass_form.money"
                 placeholder="请输入内容"
                 style="width: 70%"
               ></el-input>
+            </el-form-item>
+            <el-form-item label="附图" prop="picurl">
+              <el-upload
+                class="avatar-uploader"
+                :action="url + '/uploadpic.php'"
+                :show-file-list="false"
+                :on-success="handleSuccess2"
+                :before-upload="beforeUpload"
+              >
+                <img
+                  v-if="pass_form.picurl"
+                  :src="pass_form.picurl"
+                  class="avatar"
+                />
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload>
             </el-form-item>
           </el-form>
           <span slot="footer" class="dialog-footer">
@@ -432,11 +561,14 @@ export default {
         { name: "通过", id: 2 },
       ],
       type_list: [
-        { name: "预支", id: 0 },
-        { name: "报销", id: 1 },
+        { name: "预支", id: 1 },
+        { name: "报销", id: 2 },
+        { name: "研发", id: 3 },
+        { name: "生产", id: 4 },
+        { name: "仓库", id: 5 },
       ],
       uploadDocuments: "",
-      form1: {},
+      form1: { date: [] },
 
       form: {
         checked: false,
@@ -452,11 +584,11 @@ export default {
       },
       pay_form: {
         account_id: "",
-        account_type_id: "",
+        // account_type_id: "",
         money: "",
-        business_time: "",
+        // business_time: "",
         reason: "",
-        picurl: "",
+        // picurl: "",
         type: "",
       },
       classData: [],
@@ -494,32 +626,94 @@ export default {
       },
       rules2: {
         account: [{ required: true, message: "结算账户", trigger: "change" }],
-        account_type_id: [
-          { required: true, message: "账目类型", trigger: "change" },
-        ],
+        // account_type_id: [
+        //   { required: true, message: "账目类型", trigger: "change" },
+        // ],
         money: [{ required: true, message: "收入金额", trigger: "change" }],
-        business_time: [
-          { required: true, message: "业务时间", trigger: "change" },
-        ],
+        // business_time: [
+        //   { required: true, message: "业务时间", trigger: "change" },
+        // ],
         reason: [{ required: true, message: "事由", trigger: "change" }],
-        picurl: [{ required: true, message: "附图", trigger: "change" }],
+        // picurl: [{ required: true, message: "附图", trigger: "change" }],
       },
       pass_rules: {
         account_id: [
           { required: true, message: "支付账户", trigger: "change" },
         ],
+        money: [{ required: true, message: "金额", trigger: "change" }],
+        picurl: [{ required: true, message: "凭证", trigger: "change" }],
+      },
+      no_pass_rules: {
         reason: [{ required: true, message: "事由", trigger: "change" }],
       },
-      pass_form: {},
+      pass_form: {
+        account_id: "",
+        money: "",
+        picurl: "",
+      },
       pass_lieva: false,
+      no_pass_form: { reason: "" },
+      no_pass_lieva: false,
       BalanceAccounts: [],
       stylists: [],
+      permission: [],
+      level: "",
+      advance_pay: "",
+      advance_money: "",
+      advance_balance: "",
+      active_show: false,
     };
   },
   methods: {
     /**
      *
      */
+    handleShow() {
+      this.active_show = !this.active_show;
+    },
+
+    async seeDetails2(item) {
+      console.log(item);
+      if (item.type == "style_purchase") {
+        this.$router.push({
+          path: `materialPurchasing?id=${item.style_id}&project_id=0&TL=100`,
+        });
+      }
+      if (item.type == "produce_order_procure") {
+        this.$router.push({
+          path: `sc_purchase?id=${item.style_id}&produce_no=${item.produce_no}`,
+        });
+      }
+      if (item.type == "materials_purchase") {
+        this.$router.push({
+          path: `/purchaseMaterial?origin=${item.origin}&origin_code=${item.origin_code}`,
+        });
+      }
+    },
+    async seeDetails1(item) {
+      this.$router.push({
+        path: `/materialTable?materials_id=${item.materials_id}&type=${item.type}&id=${item.id}`,
+      });
+    },
+    async no_pass_now() {
+      this.$refs["no_pass_form"].validate(async (valid) => {
+        if (!valid) return;
+        let res = await advanceReimbursementHandle(this.no_pass_form);
+        this.$message({
+          showClose: true,
+          message: res.data.msg,
+        });
+        if (res.data.error_code == 0) {
+          this.no_pass_form.reason = "";
+          this.init();
+          this.no_pass_lieva = false;
+        }
+      });
+    },
+    no_close_pass() {
+      this.no_pass_lieva = false;
+      this.no_pass_form.reason = "";
+    },
     async pass_now() {
       this.$refs["pass_form"].validate(async (valid) => {
         if (!valid) return;
@@ -529,7 +723,9 @@ export default {
           message: res.data.msg,
         });
         if (res.data.error_code == 0) {
-          this.pass_form = {};
+          this.pass_form.account_id = "";
+          this.pass_form.money = "";
+          this.pass_form.picurl = "";
           this.init();
           this.pass_lieva = false;
         }
@@ -537,19 +733,23 @@ export default {
     },
     close_pass() {
       this.pass_lieva = false;
-      this.pass_form = {};
+      this.pass_form.account_id = "";
+      this.pass_form.money = "";
+      this.pass_form.picurl = "";
     },
     async pass(e) {
+      console.log(e);
       let res1 = await balanceAccountSelect();
       this.BalanceAccounts = res1.data.data;
       this.pass_form["id"] = e.id;
       this.pass_form["status"] = 2;
+      this.pass_form["money"] = e.money;
       this.pass_lieva = true;
     },
     no_pass(e) {
-      this.pass_form["id"] = e.id;
-      this.pass_form["status"] = 1;
-      this.pass_lieva = true;
+      this.no_pass_form["id"] = e.id;
+      this.no_pass_form["status"] = 1;
+      this.no_pass_lieva = true;
     },
     handleClose1(form) {
       this.$refs[form].resetFields();
@@ -582,6 +782,7 @@ export default {
         this.$refs[form].resetFields();
         this.re_form.balance = "";
         this.reimbursement = false;
+        this.pageIndexB = 1;
         this.init();
       });
     },
@@ -589,13 +790,14 @@ export default {
       this.$refs["pay_form"].validate(async (valid) => {
         if (!valid) return;
         this.pay_form["type"] = 0;
-        this.pay_form.business_time = moment(
-          this.pay_form.business_time
-        ).format("YYYY-MM-DD");
+        this.pay_form.business_time = "";
+        this.pay_form.picurl = "";
+        this.pay_form.account_type_id = "";
         let res = await advanceReimbursementAdd(this.pay_form);
         this.$refs[form].resetFields();
         this.pay_form.balance = "";
         this.payment = false;
+        this.pageIndexB = 1;
         this.init();
       });
     },
@@ -621,9 +823,8 @@ export default {
       this.re_form.picurl = response.data.pic_file_url;
     },
     async handleSuccess2(response, file, fileList) {
-      this.pay_form.picurl = response.data.pic_file_url;
+      this.pass_form.picurl = response.data.pic_file_url;
     },
-
     handleSizeChangB(val) {
       this.pageSizeB = val;
       this.init();
@@ -646,21 +847,46 @@ export default {
       let { data } = res.data;
       this.stylists = data;
     },
+    gte_date(e) {
+      this.pageIndex = 1;
+      this.form1["ctime_start"] = e === null ? "" : e[0];
+      this.form1["ctime_end"] = e === null ? "" : e[1];
+      console.log(e);
+      this.init();
+    },
     async init() {
       this.form1["page"] = this.pageIndexB;
       this.form1["page_size"] = this.pageSizeB;
       let res1 = await advanceReimbursementList(this.form1);
-      this.totalB = res1.data.count;
-      this.style_materials = res1.data.data;
+      console.log(res1.data.data);
+      this.totalB = res1.data.count - 0;
+      this.advance_pay = res1.data.data.pay;
+      this.advance_money = res1.data.data.money;
+      this.advance_balance = res1.data.data.balance;
+      this.style_materials = res1.data.data.data;
+    },
+    day() {
+      this.permission = localStorage.getItem("permission").split(",");
+      this.level = localStorage.getItem("level");
+      console.log(this.level);
+      var date = new Date();
+      var year = date.getFullYear();
+      var month = date.getMonth() + 1;
+      var d = new Date(year, month, 0);
+      var day = d.getDate();
+      this.form1.date[0] = `${year}-${month}-${1}`;
+      this.form1.date[1] = `${year}-${month}-${day}`;
+      this.form1["ctime_start"] = `${year}-${month}-${1}`;
+      this.form1["ctime_end"] = `${year}-${month}-${day}`;
+      this.init();
     },
   },
   mounted() {
-    this.init();
+    this.day();
     this.getClassData();
     this.getBalanceAccount();
     this.getBalanceAccountType();
     this.getStylist();
-    this.permission = localStorage.getItem("permission").split(",");
   },
 };
 </script>
@@ -668,11 +894,41 @@ export default {
 <style lang="less" scoped>
 .purchaseMaterial {
   .mianA {
+    .account {
+      display: flex;
+      justify-content: flex-end;
+      .tb {
+        display: flex;
+        // width: 500px;
+        height: 30px;
+        line-height: 30px;
+        margin: 15px 0;
+        .dv {
+          width: 150px;
+          // margin: 0 10px;
+          span {
+            font-size: 18px;
+          }
+        }
+      }
+    }
     overflow: hidden;
 
     .el-pagination {
       margin: 20px;
       text-align: right;
+    }
+    .timer {
+      width: 300px !important;
+    }
+    /deep/.el-date-editor /deep/.el-range-separator {
+      padding: 0 0px;
+      line-height: 25px;
+      width: 5%;
+      color: #303133;
+    }
+    /deep/ .el-input__icon {
+      line-height: 25px !important;
     }
     /deep/ .el-input__inner {
       width: 100%;
@@ -758,6 +1014,101 @@ export default {
               justify-content: space-between;
               .el-icon-close {
                 cursor: pointer;
+              }
+            }
+          }
+        }
+        .orderInformation {
+          border-radius: 10px;
+          background-color: #f2f2f2;
+          flex: 1;
+          overflow-x: scroll;
+          overflow-y: hidden;
+          display: flex;
+          justify-content: space-between;
+          word-spacing: normal;
+          // align-items: flex-end;
+          height: 120px;
+          padding: 15px;
+        }
+        .option_name {
+          width: 100px;
+          height: 120px;
+          background-color: #f2f2f2;
+          border-radius: 10px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          align-items: center;
+        }
+      }
+      .contents {
+        width: 100%;
+        display: flex;
+        margin: 10px 0px;
+        .card {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+          .cardStyle {
+            position: relative;
+            width: 320px;
+            height: 120px;
+            display: flex;
+            .bos {
+              position: absolute;
+              bottom: 3px;
+              left: 3px;
+              border-radius: 50%;
+              background: rgba(15, 15, 15, 0.8);
+              display: block;
+              text-align: center;
+              color: #fff;
+              width: 25px;
+              height: 25px;
+              padding: 4px 5px;
+              font-size: 10px;
+            }
+            .cardStyle_left {
+              width: 270px;
+              display: flex;
+              background-color: #f2f2f2;
+              border-radius: 10px;
+              overflow: hidden;
+              .cardStyle_left_img {
+                img {
+                  width: 120px;
+                  height: 120px;
+                }
+              }
+              .cardStyle_left_content {
+                flex: 1;
+                div {
+                  margin: 5px;
+                }
+                .cardStyle_left_content_name {
+                  font-weight: 600;
+                  font-size: 14px;
+                  display: flex;
+                  justify-content: space-between;
+                  .el-icon-close {
+                    cursor: pointer;
+                  }
+                }
+              }
+            }
+            .cardStyle_right {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: 50px;
+              height: 120px;
+              background-color: #f2f2f2;
+              border-radius: 10px;
+              .cardStyle_right_no {
+                text-justify: newspaper;
+                word-break: break-all;
+                text-align: justify;
               }
             }
           }

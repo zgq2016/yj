@@ -150,7 +150,10 @@
                         查看凭证
                       </div>
                       <div
-                        v-if="!scope.row.picurl&&permission.indexOf('purchase_log_picurl_upload') != -1"
+                        v-if="
+                          !scope.row.picurl &&
+                          permission.indexOf('purchase_log_picurl_upload') != -1
+                        "
                         @click="upload_voucher(scope.row)"
                       >
                         上传凭证
@@ -381,8 +384,9 @@ export default {
           v.stock_quantity += Number(j.quantity);
         });
       });
-
-      this.expands.push(this.tableData[0].id);
+      if (this.tableData.length > 0) {
+        this.expands.push(this.tableData[0].id);
+      }
     },
   },
   mounted() {
