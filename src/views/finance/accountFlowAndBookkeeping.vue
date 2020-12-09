@@ -608,6 +608,7 @@ import {
   settlementModesSelect,
   transactionTypeSelect,
   balanceAdjust,
+  getPurchaseById,
 } from "@/api/finance";
 export default {
   data() {
@@ -741,11 +742,26 @@ export default {
     };
   },
   methods: {
-    handleClick(e) {
+    async handleClick(e) {
       console.log(e);
-      this.$router.push({
-        path: `/purchaseMaterial?origin=${e.origin}&origin_code=${e.origin_code}`,
-      });
+      // return;
+      let res = await getPurchaseById({ id: e.origin_code, type: e.origin });
+      console.log(res);
+      if (e.origin == "style_purchase") {
+        this.$router.push({
+          path: `materialPurchasing?id=${res.data.data.style_id}`,
+        });
+      }
+      if (e.origin == "produce_order_procure") {
+        this.$router.push({
+          path: `sc_purchase?id=${res.data.data.style_id}&produce_no=${res.data.data.produce_no}`,
+        });
+      }
+      if (e.origin == "materials_purchase") {
+        this.$router.push({
+          path: `/purchaseMaterial?origin=${e.origin}&origin_code=${e.origin_code}`,
+        });
+      }
     },
     get_account_type_name(e) {
       this.pageIndex = 1;

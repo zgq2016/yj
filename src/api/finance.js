@@ -227,3 +227,17 @@ export const advanceReimbursementHandle = (data) => {
     data: data,
   });
 };
+export const advanceReimbursementCancel = (data) => {
+  return axios({
+    url: "?g=advance_reimbursement_cancel",
+    method: "post",
+    data: data,
+  });
+};
+export const getPurchaseById = (data) => {
+  return axios({
+    url: "?g=get_purchase_by_id",
+    method: "post",
+    data: data,
+  });
+};
