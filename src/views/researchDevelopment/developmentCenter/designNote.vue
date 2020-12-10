@@ -452,6 +452,7 @@ export default {
   }
   .print {
     display: none;
+    
   }
 }
 </style>

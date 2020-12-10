@@ -146,6 +146,7 @@
                       <div
                         v-if="scope.row.picurl"
                         @click="see_voucher(scope.row.picurl)"
+                        style="cursor: pointer"
                       >
                         查看凭证
                       </div>
@@ -155,6 +156,7 @@
                           permission.indexOf('purchase_log_picurl_upload') != -1
                         "
                         @click="upload_voucher(scope.row)"
+                        style="cursor: pointer"
                       >
                         上传凭证
                       </div>

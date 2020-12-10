@@ -771,7 +771,13 @@ export default {
       console.log(res);
       let { data } = res.data;
       this.header = data;
-      this.colors = this.header.color_data[0];
+      if (this.header != undefined) {
+        // this.colors = this.header.color_data[0];
+
+        let { color, color_no } = this.$route.query;
+        this.colors["color"] = color;
+        this.colors["color_no"] = color_no;
+      }
       //  {
       //   color: this.header.color_data[0].color,
       //   color_no: this.header.color_data[0].color_no,

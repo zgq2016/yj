@@ -516,7 +516,9 @@ export default {
       this.$router.push({
         path: `panelPurchase_edit?materials_id=${
           e.materials_id
-        }&tabName=${"版料采购"}&id=${e.style_id}&style_purchase_id=${e.id}`,
+        }&tabName=${"版料采购"}&id=${e.style_id}&style_purchase_id=${
+          e.id
+        }&color=${e.color}&color_no=${e.color_no}`,
       });
     },
     get_form2_money(e) {
@@ -670,7 +672,7 @@ export default {
           e.materials_id
         }&tabName=${"版料采购"}&id=${e.id}&style_id=${e.style_id}&project_id=${
           this.$route.query.project_id
-        }`,
+        }&color=${e.color}&color_no=${e.color_no}`,
       });
     },
     // 更新状态

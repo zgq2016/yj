@@ -1013,7 +1013,7 @@ export default {
             e.materials_id
           }&tabName=${"仓库采购"}&id=${e.style_id}&style_purchase_id=${
             e.id
-          }&type=${e.type}`,
+          }&type=${e.type}&color=${e.color}&color_no=${e.color_no}`,
         });
       }
       // if (e.type == "materials_purchase") {

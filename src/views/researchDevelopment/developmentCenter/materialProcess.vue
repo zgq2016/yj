@@ -734,7 +734,7 @@ export default {
             type: "error",
           });
         } else {
-          this.init();
+          // this.init();
           let style_id = this.$route.query.id;
           let e = {
             style_id: style_id,
@@ -744,6 +744,9 @@ export default {
           let index = this.active;
           this.active_index = 1;
           this.handleColorNum(e, index);
+          this.init(e, index);
+
+          this.init(e, index);
 
           this.centerDialogVisible1 = false;
         }
@@ -850,7 +853,8 @@ export default {
               type: "error",
             });
           } else {
-            this.init();
+            this.init(undefined);
+            this.active = 0;
             this.$message({
               type: "success",
               message: "删除成功!",
@@ -886,9 +890,8 @@ export default {
               type: "error",
             });
           } else {
-            this.init();
+            // this.init();
             this.centerDialogVisible = false;
-            this.designColor = "";
             let e = {
               style_id: id,
               style_color_name: this.designColor,
@@ -896,6 +899,8 @@ export default {
             let index = this.obj.style_color_data.length - 0;
             this.active_index = 1;
             this.handleColorNum(e, index);
+            this.init(e, index);
+            this.designColor = "";
           }
         }
         if (this.isCheckListBoxEvent.isCheckList === true) {
@@ -913,35 +918,16 @@ export default {
               type: "error",
             });
           } else {
-            this.init();
-            // this.active = 0;
             this.centerDialogVisible = false;
             let e = {
               style_id: id,
               style_color_name: this.designColor,
             };
             let index = this.obj.style_color_data.length - 0;
-            this.active = index;
-            this.activeItem = e;
-            let res1 = await getStyleMaterialsList({
-              style_id: e.style_id,
-              style_color_name: e.style_color_name,
-            });
-
-            if (res1.data.data.length != 0) {
-              res.data.data.forEach((v, i) => {
-                v.style_materials_data.forEach((v1, i1) => {
-                  v1["isCheckList1"] = false;
-                  v1["isCheckList"] = false;
-                });
-              });
-            }
-
-            this.card = res1.data.data;
-
-            console.log(this.card);
-            this.handleAllCheck(false);
             this.active_index = 1;
+            this.handleColorNum(e, index);
+            this.init(e, index);
+            this.designColor = "";
           }
         }
       }
@@ -995,6 +981,7 @@ export default {
     },
     // 切换颜色
     async handleColorNum(item, index) {
+      console.log(item, index);
       this.color_name_id = item.style_color_name;
       this.active = index;
       console.log(item);
@@ -1061,13 +1048,15 @@ export default {
         });
       }
     },
-    async init() {
+    async init(e, index) {
+      console.log(e);
       let { id } = this.$route.query;
       let res = await getStyle({ id });
       console.log(res);
       this.obj = res.data.data;
       this.style_color_data_length = res.data.data.style_color_data.length;
-      if (this.style_color_data_length > 0) {
+
+      if (this.style_color_data_length > 0 && e == undefined) {
         this.color_name_id = this.obj.style_color_data[0].style_color_name;
         this.card_init();
       }

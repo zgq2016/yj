@@ -573,7 +573,7 @@ export default {
           e.materials_id
         }&tabName=${"采购"}&id=${e.style_id}&style_purchase_id=${
           e.id
-        }&produce_no=${e.produce_no}`,
+        }&produce_no=${e.produce_no}&color=${e.color}&color_no=${e.color_no}`,
       });
     },
     handle_cancel_order(e) {
@@ -730,7 +730,7 @@ export default {
           e.materials_id
         }&tabName=${"采购"}&id=${e.id}&style_id=${e.style_id}&produce_no=${
           e.produce_no
-        }`,
+        }&color=${e.color}&color_no=${e.color_no}`,
       });
     },
     handlePopoverId2(item) {
@@ -1126,6 +1126,7 @@ export default {
                   display: flex;
                   justify-content: space-between;
                 }
+                
               }
             }
             .cardStyle_right {

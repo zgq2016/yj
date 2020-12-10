@@ -305,6 +305,7 @@
                     <template v-slot:title>
                       <div
                         class="tt"
+                        style="cursor: pointer"
                         @click="submit_applications(item1, item_g)"
                       >
                         <div v-if="item_g.status == 0">提交申请</div>
@@ -316,6 +317,7 @@
                     <template v-slot:description>
                       <div
                         class="dt"
+                        style="cursor: pointer"
                         @click="submit_applications(item1, item_g)"
                       >
                         <div v-if="item_g.status == 0 || item_g.status == 1">
@@ -566,12 +568,12 @@
         :visible.sync="applications1"
         width="30%"
         center
-        class="dialog"
+        class="dialog1"
         :before-close="handle_applications"
         :close-on-click-modal="false"
         :close-on-press-escape="false"
       >
-        <el-form label-width="140px" class="demo-form">
+        <el-form label-width="140px" class="demo-form" id="printTest">
           <el-form-item label="结算账户:" v-if="applications_form1.account">
             {{ applications_form1.account }}
           </el-form-item>
@@ -584,7 +586,10 @@
           >
             {{ applications_form1.account_type }}
           </el-form-item>
-          <el-form-item label="报销金额:" v-if="applications_form1.money">
+          <el-form-item
+            :label="applications_form1.label"
+            v-if="applications_form1.money"
+          >
             {{ applications_form1.money }}
           </el-form-item>
           <el-form-item
@@ -606,23 +611,21 @@
             alt=""
           />
         </el-form>
-        <!-- <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="handle_applications"
-            >确定</el-button
-          >&yen;
-        </span> -->
+        <span slot="footer" class="dialog-footer" style="text-align: right">
+          <el-button type="primary" v-print="'#printTest'">打印</el-button>
+        </span>
       </el-dialog>
       <el-dialog
         :title="applications_form.name"
         :visible.sync="applications"
         width="30%"
         center
-        class="dialog"
+        class="dialog1"
         :before-close="handle_applications"
         :close-on-click-modal="false"
         :close-on-press-escape="false"
       >
-        <el-form label-width="140px" class="demo-form">
+        <el-form label-width="140px" class="demo-form" id="printTest1">
           <el-form-item label="结算账户:" v-if="applications_form.account">
             {{ applications_form.account }}
           </el-form-item>
@@ -632,7 +635,10 @@
           <el-form-item label="账目类型:" v-if="applications_form.account_type">
             {{ applications_form.account_type }}
           </el-form-item>
-          <el-form-item label="报销金额:" v-if="applications_form.money">
+          <el-form-item
+            :label="applications_form.label"
+            v-if="applications_form.money"
+          >
             {{ applications_form.money }}
           </el-form-item>
           <el-form-item label="业务时间" v-if="applications_form.business_time">
@@ -651,11 +657,9 @@
             alt=""
           />
         </el-form>
-        <!-- <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="handle_applications"
-            >确定</el-button
-          >
-        </span> -->
+        <span slot="footer" class="dialog-footer" style="text-align: right">
+          <el-button type="primary" v-print="'#printTest1'">打印</el-button>
+        </span>
       </el-dialog>
     </div>
   </div>
@@ -865,6 +869,7 @@ export default {
       if (item1.type == 0) {
         if (item_g.status == 0) {
           this.applications_form1.name = "预支申请";
+          this.applications_form1.label = "预支金额";
           this.applications_form1.account = item1.account_name;
           this.applications_form1.money = item1.money;
           this.applications_form1.reason = item1.reason;
@@ -877,6 +882,7 @@ export default {
         }
         if (item_g.status == 2) {
           this.applications_form1.name = "预支通过";
+          this.applications_form1.label = "通过金额";
           this.BalanceAccount_view.map((v, i) => {
             if (v.id == item1.pay_account_id) {
               this.applications_form1.account = v.account_name;
@@ -890,6 +896,7 @@ export default {
       if (item1.type == 1) {
         if (item_g.status == 0) {
           this.applications_form.name = "报销申请";
+          this.applications_form.label = "报销金额";
           this.applications_form.account = item1.account_name;
           this.applications_form.account_type = item1.account_type_name;
           this.applications_form.money = item1.money;
@@ -905,6 +912,7 @@ export default {
         }
         if (item_g.status == 2) {
           this.applications_form.name = "报销通过";
+          this.applications_form.label = "通过金额";
           this.BalanceAccount_view.map((v, i) => {
             if (v.id == item1.pay_account_id) {
               this.applications_form.account = v.account_name;
@@ -1491,6 +1499,11 @@ export default {
   .pagination {
     margin: 20px;
     text-align: right;
+  }
+  .dialog1 {
+    /deep/ .el-dialog__footer {
+      text-align: right;
+    }
   }
 }
 </style>
