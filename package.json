@@ -13,7 +13,7 @@
     "element-ui": "^2.13.2",
     "file-saver": "^2.0.2",
     "image-conversion": "^2.1.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "quill": "^1.3.7",
     "quill-image-drop-module": "^1.0.3",
     "quill-image-paste-module": "^1.0.6",
